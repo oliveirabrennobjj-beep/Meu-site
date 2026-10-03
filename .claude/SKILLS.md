@@ -76,7 +76,7 @@ python3 -m venv .venv && .venv/bin/pip install playwright
 .venv/bin/python -m playwright install chromium
 ```
 
-Para automatizar na nuvem, dá para pôr os comandos acima num hook SessionStart (skill `session-start-hook`) ou no script de setup do ambiente.
+**Automático na nuvem.** O hook SessionStart `.claude/hooks/session-start.sh` (registrado em `.claude/settings.json`) faz isso sozinho: cria `.venv/` no projeto, instala `playwright==1.56.0` se faltar e põe `.venv/bin` no PATH, então `python` já importa o Playwright. Só roda quando `CLAUDE_CODE_REMOTE=true`; em máquina local não faz nada. Se a revisão do Chromium em `/opt/pw-browsers` mudar, o hook avisa e basta ajustar `PLAYWRIGHT_VERSION` nele.
 
 ### Estado verificado em 2026-10-03 (nuvem)
 
