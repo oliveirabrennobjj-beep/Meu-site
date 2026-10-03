@@ -1,0 +1,21 @@
+# Caches Python
+__pycache__/
+*.py[cod]
+
+# Ambientes virtuais
+.venv/
+venv/
+
+# Dependências e navegadores (reinstalar a cada sessão, ver .claude/SKILLS.md)
+node_modules/
+ms-playwright/
+.cache/
+
+# Saídas de teste do Playwright
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+
+# Configuração local do Claude Code
+.claude/settings.local.json
