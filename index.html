@@ -5,28 +5,51 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Barber Club | Barbearia em Casimiro de Abreu, RJ</title>
   <meta name="description" content="Barber Club, barbearia em Casimiro de Abreu (RJ) desde 2019. Corte de cabelo, barba e corte infantil. Consulte um horário.">
-  <meta name="theme-color" content="#0f0d0b">
+  <meta name="theme-color" content="#0c0a08">
   <meta name="color-scheme" content="dark">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Barber Club | Barbearia em Casimiro de Abreu, RJ">
   <meta property="og:description" content="Corte de cabelo, barba e corte infantil em Casimiro de Abreu desde 2019.">
+  <meta property="og:image" content="assets/img/barba-navalha-1122.webp">
   <meta property="og:locale" content="pt_BR">
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
-  <link rel="preload" href="assets/fonts/big-shoulders-display.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="assets/fonts/barlow-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/outfit.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/dm-serif-display-italic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/img/barba-navalha-1122.webp" as="image" imagesrcset="assets/img/barba-navalha-640.webp 640w, assets/img/barba-navalha-1122.webp 1122w" imagesizes="100vw">
+  <script>
+    /* Tela de entrada: aparece uma vez por visita, só na abertura da página inicial. */
+    (function () {
+      var seen = false;
+      try { seen = sessionStorage.getItem("bc-entrada") === "1"; } catch (e) {}
+      if (!seen && !location.hash) document.documentElement.classList.add("intro-open");
+    })();
+  </script>
   <link rel="stylesheet" href="assets/css/styles.css">
   <script src="assets/js/site-config.js" defer></script>
   <script src="assets/js/main.js" defer></script>
 </head>
 <body>
+  <!-- Tela de entrada -->
+  <div class="intro" data-intro role="dialog" aria-modal="true" aria-labelledby="intro-nome">
+    <div class="intro-glow" aria-hidden="true"></div>
+    <div class="intro-pole" aria-hidden="true">
+      <span class="pole-cap pole-cap-top"></span>
+      <span class="pole-glass"><span class="pole-stripes"></span></span>
+      <span class="pole-cap pole-cap-bottom"></span>
+    </div>
+    <div class="intro-content">
+      <p class="intro-name" id="intro-nome" translate="no">Barber Club</p>
+      <p class="intro-tagline">Barbearia em Casimiro de Abreu</p>
+      <span class="intro-rule" aria-hidden="true"></span>
+      <button type="button" class="btn btn-intro" data-intro-enter>Entrar</button>
+    </div>
+  </div>
+
   <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
 
   <header class="site-header" data-header>
     <div class="container header-inner">
       <a class="brand" href="#inicio" data-brand aria-label="Barber Club, voltar ao início">
-        <span class="brand-mark" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><path d="M8.12 8.12 12 12"/><path d="M20 4 8.12 15.88"/><circle cx="6" cy="18" r="3"/><path d="M14.8 14.8 20 20"/></svg>
-        </span>
         <span class="brand-name" translate="no">Barber Club</span>
       </a>
 
@@ -38,7 +61,10 @@
           <li><a href="#avaliacoes" data-nav-link>Avaliações</a></li>
           <li><a href="#contato" data-nav-link>Contato</a></li>
         </ul>
-        <a class="btn btn-primary nav-cta" href="#contato" data-agendar>Agendar horário</a>
+        <div class="nav-actions">
+          <a class="btn btn-ghost btn-sm nav-instagram" data-instagram-link href="#" target="_blank" rel="noopener">Instagram</a>
+          <a class="btn btn-primary btn-sm nav-cta" href="#contato" data-agendar>Agendar horário</a>
+        </div>
       </nav>
 
       <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="menu-principal" data-menu-toggle>
@@ -51,21 +77,20 @@
   <main id="conteudo" tabindex="-1">
     <!-- Seção principal -->
     <section class="hero" id="inicio" aria-labelledby="hero-titulo">
-      <div class="container hero-inner">
-        <div class="hero-copy">
-          <p class="hero-place">Barbearia em Casimiro de Abreu, RJ</p>
-          <h1 id="hero-titulo" class="hero-title">Seu estilo começa com um bom corte.</h1>
-          <p class="hero-lead">Corte de cabelo, barba e corte infantil na Barber Club. Escolha o serviço e consulte um horário com a gente.</p>
-          <div class="hero-actions">
-            <a class="btn btn-primary" href="#contato" data-agendar>Agendar horário</a>
-            <a class="btn btn-ghost" href="#servicos">Conhecer os serviços</a>
-          </div>
-          <p class="hero-since"><span class="since-rule" aria-hidden="true"></span>Desde 2019</p>
+      <div class="hero-media" data-hero-media></div>
+      <div class="hero-shade" aria-hidden="true"></div>
+      <div class="container hero-content">
+        <p class="hero-kicker">Casimiro de Abreu, RJ</p>
+        <h1 id="hero-titulo" class="hero-title">
+          <span class="hero-title-sans">Seu estilo começa</span>
+          <span class="hero-title-serif">com um bom corte.</span>
+        </h1>
+        <p class="hero-lead">Corte de cabelo, barba e corte infantil na Barber Club. Escolha o serviço e consulte um horário com a gente.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#contato" data-agendar>Agendar horário</a>
+          <a class="btn btn-ghost" href="#servicos">Conhecer os serviços</a>
         </div>
-
-        <figure class="hero-mirror">
-          <div class="mirror-frame" data-hero-media></div>
-        </figure>
+        <p class="hero-since">Desde 2019</p>
       </div>
     </section>
 
@@ -83,25 +108,25 @@
     <!-- Sobre e ambiente -->
     <section class="section space" id="espaco" aria-labelledby="espaco-titulo">
       <div class="container space-inner">
+        <figure class="space-photo">
+          <div class="space-frame" data-about-media></div>
+        </figure>
         <div class="space-copy">
           <h2 id="espaco-titulo" class="section-title">Nosso espaço</h2>
           <p class="space-text" data-about></p>
+          <p class="space-since"><span class="space-year" data-since-year>2019</span><span>Ano em que a Barber Club começou a atender.</span></p>
         </div>
-        <ul class="gallery gallery-space" role="list" data-gallery="espaco" aria-label="Fotos do espaço"></ul>
       </div>
     </section>
 
     <!-- Resultados -->
     <section class="section results" id="resultados" aria-labelledby="resultados-titulo">
       <div class="container">
-        <div class="section-head section-head-row">
-          <div>
-            <h2 id="resultados-titulo" class="section-title">Cortes recentes</h2>
-            <p class="section-lead">Alguns trabalhos feitos na cadeira da Barber Club.</p>
-          </div>
-          <a class="text-link" data-instagram-link href="#" target="_blank" rel="noopener">Veja mais no Instagram</a>
+        <div class="section-head">
+          <h2 id="resultados-titulo" class="section-title">Cortes recentes</h2>
+          <p class="section-lead">Toque numa foto para ver em tamanho maior.</p>
         </div>
-        <ul class="gallery gallery-results" role="list" data-gallery="resultados" aria-label="Fotos de cortes"></ul>
+        <ul class="gallery" role="list" data-gallery="resultados" aria-label="Fotos de cortes"></ul>
       </div>
     </section>
 

@@ -98,28 +98,38 @@ window.BARBER_CLUB = {
     },
   ],
 
-  // Fotos originais. Coloque os arquivos em assets/img/ e preencha "src".
+  // Fotos. Coloque os arquivos em assets/img/ e preencha "src".
+  // "srcset" é opcional (versões menores para celular).
   // Enquanto "src" estiver vazio, o site mostra um espaço reservado.
   imagens: {
     // Logo em boa resolução (SVG ou PNG transparente). Vazio = nome em texto.
     logo: "",
+    // Fundo da seção principal.
     hero: {
-      src: "",
-      alt: "Interior da Barber Club em Casimiro de Abreu",
-      reservado: "Foto principal do salão",
+      src: "assets/img/barba-navalha-1122.webp",
+      srcset: "assets/img/barba-navalha-640.webp 640w, assets/img/barba-navalha-1122.webp 1122w",
+      alt: "",
+      posicao: "50% 38%",
     },
-    espaco: [
-      { src: "", alt: "", reservado: "Fachada" },
-      { src: "", alt: "", reservado: "Cadeiras e bancada" },
-      { src: "", alt: "", reservado: "Detalhes do ambiente" },
-    ],
+    // Foto da seção "Nosso espaço".
+    sobre: {
+      src: "assets/img/barbeiro-1122.webp",
+      srcset: "assets/img/barbeiro-640.webp 640w, assets/img/barbeiro-1122.webp 1122w",
+      alt: "Barbeiro de avental de couro apoiado no encosto de uma cadeira de barbearia",
+      reservado: "Foto do espaço",
+    },
+    // Galeria "Cortes recentes": toque para ampliar.
     resultados: [
-      { src: "", alt: "", reservado: "Corte" },
-      { src: "", alt: "", reservado: "Barba" },
-      { src: "", alt: "", reservado: "Corte infantil" },
-      { src: "", alt: "", reservado: "Corte" },
-      { src: "", alt: "", reservado: "Acabamento" },
-      { src: "", alt: "", reservado: "Corte" },
+      {
+        src: "assets/img/corte-degrade-1122.webp",
+        srcset: "assets/img/corte-degrade-640.webp 640w, assets/img/corte-degrade-1122.webp 1122w",
+        alt: "Degradê sendo acertado com máquina e pente na lateral da cabeça",
+      },
+      {
+        src: "assets/img/barba-navalha-1122.webp",
+        srcset: "assets/img/barba-navalha-640.webp 640w, assets/img/barba-navalha-1122.webp 1122w",
+        alt: "Barba sendo feita com navalha e espuma",
+      },
     ],
   },
 };

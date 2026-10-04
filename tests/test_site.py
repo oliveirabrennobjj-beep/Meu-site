@@ -66,8 +66,11 @@ SAMPLE_OVERRIDES = """
 """
 
 
-def new_page(browser, base, width=390, height=844, sample=False, **kw):
+def new_page(browser, base, width=390, height=844, sample=False, intro=False, **kw):
     ctx = browser.new_context(viewport={"width": width, "height": height}, **kw)
+    if not intro:
+        # pula a tela de entrada, como numa segunda página vista na mesma visita
+        ctx.add_init_script("try { sessionStorage.setItem('bc-entrada', '1') } catch (e) {}")
     page = ctx.new_page()
     errors = []
     page.on("pageerror", lambda e: errors.append(str(e)))
@@ -115,6 +118,11 @@ def test_default(browser, base, shots):
     check(page.locator('a[href="https://www.instagram.com/barber_club.oficial_/"]').count() >= 2, "links do Instagram")
     check(page.locator('a[href="https://linktr.ee/barber_club_123"]').count() >= 1, "link da bio")
     check(page.locator("h1").count() == 1, "um único h1")
+    check(page.locator(".gallery-btn").count() == 2, "galeria com as 2 fotos de cortes")
+    check(page.locator(".gallery-more a").get_attribute("href") == "https://www.instagram.com/barber_club.oficial_/",
+          "galeria termina com link para o Instagram")
+    alts = page.evaluate("[...document.querySelectorAll('.space-frame img')].map(i => i.alt)")
+    check(len(alts) == 1 and alts[0], "foto do espaço com texto alternativo")
 
     # pular para o conteúdo
     page.keyboard.press("Tab")
@@ -243,6 +251,52 @@ def test_sample(browser, base, shots):
     ctx.close()
 
 
+def test_intro(browser, base, shots):
+    print("\nTela de entrada")
+    ctx, page, errors = new_page(browser, base, intro=True)
+    intro = page.locator("[data-intro]")
+    check(intro.is_visible(), "aparece na primeira abertura")
+    txt = intro.inner_text().lower()
+    check("barber club" in txt and "entrar" in txt, "mostra o nome e o botão Entrar")
+    check(page.evaluate("document.activeElement.hasAttribute('data-intro-enter')"), "foco no botão Entrar")
+    check(page.evaluate("document.querySelector('main').inert"), "conteúdo por trás fica inativo")
+    page.keyboard.press("Tab")
+    check(page.evaluate("document.activeElement.hasAttribute('data-intro-enter')"), "Tab não sai da tela de entrada")
+    if shots:
+        page.wait_for_timeout(1200)
+        page.screenshot(path=os.path.join(shots, "celular-entrada.png"))
+    page.keyboard.press("Enter")
+    page.wait_for_selector("[data-intro]", state="detached", timeout=3000)
+    check(True, "Entrar fecha a tela de entrada")
+    check(not page.evaluate("document.querySelector('main').inert"), "conteúdo volta a ficar ativo")
+    check(page.evaluate("getComputedStyle(document.documentElement).overflow") != "hidden", "rolagem liberada")
+    page.reload()
+    page.wait_for_load_state("networkidle")
+    check(page.locator("[data-intro]").count() == 0, "não reaparece na mesma visita")
+    check(not errors, f"sem erros no console {errors if errors else ''}")
+    ctx.close()
+
+    ctx, page, _ = new_page(browser, base, intro=True)
+    page.keyboard.press("Escape")
+    page.wait_for_selector("[data-intro]", state="detached", timeout=3000)
+    check(True, "Esc também entra no site")
+    ctx.close()
+
+    ctx = browser.new_context(viewport={"width": 390, "height": 844})
+    page = ctx.new_page()
+    page.goto(base + "#contato")
+    page.wait_for_load_state("networkidle")
+    check(page.locator("[data-intro]").count() == 0, "link direto para uma seção pula a entrada")
+    ctx.close()
+
+    ctx, page, _ = new_page(browser, base, intro=True, reduced_motion="reduce")
+    check(page.evaluate("getComputedStyle(document.querySelector('.pole-stripes')).animationIterationCount") == "1",
+          "poste parado com movimento reduzido")
+    page.click("[data-intro-enter]")
+    check(page.locator("[data-intro]").count() == 0, "com movimento reduzido, entra sem transição")
+    ctx.close()
+
+
 def test_reduced_motion(browser, base):
     print("\nMovimento reduzido")
     ctx, page, _ = new_page(browser, base, reduced_motion="reduce")
@@ -267,6 +321,7 @@ def main():
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         test_layout(browser, base)
+        test_intro(browser, base, args.shots)
         test_default(browser, base, args.shots)
         test_sample(browser, base, args.shots)
         test_reduced_motion(browser, base)

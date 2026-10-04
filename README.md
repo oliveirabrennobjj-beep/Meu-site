@@ -21,8 +21,8 @@ index.html                 página única: cabeçalho, seções e rodapé
 assets/js/site-config.js   DADOS DO NEGÓCIO: contatos, serviços, fotos, horários, endereço, avaliações
 assets/js/main.js          monta o conteúdo a partir do site-config.js e cuida das interações
 assets/css/styles.css      visual (cores e tipografia definidas no topo, em :root)
-assets/fonts/              Big Shoulders Display e Barlow, servidas localmente (licença OFL)
-assets/img/                favicon e, futuramente, as fotos reais
+assets/fonts/              Outfit e DM Serif Display, servidas localmente (licença OFL)
+assets/img/                fotos em WebP (versões de 640 e 1122 px) e favicon
 tests/test_site.py         testes automatizados com Playwright
 docs/capturas/             capturas de tela da versão atual
 ```
@@ -42,7 +42,14 @@ Quase tudo muda em um único arquivo: `assets/js/site-config.js`. Campos vazios 
 | Preço e duração | `servicos[].preco`, `servicos[].duracao` | Aparecem no card do serviço |
 | Avaliações | `avaliacoes: [{ nome, texto }]` e `google.perfilUrl` | Mostra depoimentos e o link para o Google |
 | Nota do Google | `google.nota`, `google.totalAvaliacoes`, `google.registradoEm` | Atualize à mão; o site não consulta o Google |
-| Fotos e logo | `imagens.*.src` (arquivo em `assets/img/`) e `alt` | Troca o espaço reservado pela foto; fotos de "Cortes recentes" e "Nosso espaço" abrem ampliadas ao tocar |
+| Fotos e logo | `imagens.hero`, `imagens.sobre`, `imagens.resultados` (`src`, `srcset`, `alt`) e `imagens.logo` | Foto de fundo da seção principal, foto em arco de "Nosso espaço" e galeria "Cortes recentes" (abre ampliada ao tocar) |
+
+## Tela de entrada
+
+Na primeira abertura da página, aparece uma tela com o nome Barber Club sobre um poste de barbeiro e o botão **Entrar**.
+Ela some com o botão, com Esc ou ao rolar a página, e não volta durante a mesma visita.
+Quem chega por um link direto para uma seção (por exemplo, `…/#contato`) vai direto ao conteúdo.
+Com movimento reduzido ativado no aparelho, o poste fica parado e a saída é imediata.
 
 ## Agendamento nesta versão
 
@@ -63,15 +70,15 @@ Antes de publicar, confirme com a barbearia:
 5. **Link do perfil no Google** e a data em que a nota 4,9 / 33 avaliações foi vista (hoje está como “outubro de 2026”, a data desta versão).
 6. **Depoimentos.** Só entram textos reais, copiados como aparecem, com o nome exibido.
 7. **Preços e duração dos serviços**, se a barbearia quiser mostrar.
+8. **Origem das fotos.** As três fotos atuais (barbeiro de avental, degradê e barba com navalha) foram enviadas para esta versão. Antes de publicar, confirme que são da Barber Club e que as pessoas que aparecem autorizam o uso. Se forem ilustrativas ou geradas por IA, troque por fotos reais, porque o site as apresenta como o ambiente e o trabalho da barbearia.
 
 ### Arquivos para enviar
 
 | Arquivo sugerido | Uso | Formato |
 |---|---|---|
 | `logo.svg` (ou PNG com fundo transparente) | Cabeçalho | Vetor ou PNG com pelo menos 400 px de largura |
-| `hero.jpg` | Foto principal, moldura em arco | Vertical, 4:5, pelo menos 1200 × 1500 px |
-| `espaco-1.jpg` a `espaco-3.jpg` | Nosso espaço (fachada, cadeiras/bancada, detalhes) | A primeira horizontal (16:10); as outras verticais (4:5) |
-| `corte-1.jpg` a `corte-6.jpg` | Cortes recentes | Verticais (4:5), pelo menos 1000 × 1250 px |
+| Fotos de cortes | Mais itens em "Cortes recentes" | Verticais (4:5), pelo menos 1000 × 1250 px |
+| Foto da fachada ou do salão | Pode substituir ou complementar as atuais | Pelo menos 1600 px de largura para o fundo da seção principal |
 
 Use fotos originais da barbearia. Capturas do Instagram ou do Google Maps não servem como foto do site, e fotos de banco de imagens não devem aparecer como clientes, equipe ou ambiente reais.
 Para cada foto, escreva também um texto alternativo (`alt`) curto descrevendo a imagem.
