@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Barber Club | Barbearia em Casimiro de Abreu, RJ</title>
+  <meta name="description" content="Barber Club, barbearia em Casimiro de Abreu (RJ) desde 2019. Corte de cabelo, barba e corte infantil. Consulte um horário.">
+  <meta name="theme-color" content="#0f0d0b">
+  <meta name="color-scheme" content="dark">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Barber Club | Barbearia em Casimiro de Abreu, RJ">
+  <meta property="og:description" content="Corte de cabelo, barba e corte infantil em Casimiro de Abreu desde 2019.">
+  <meta property="og:locale" content="pt_BR">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/big-shoulders-display.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/barlow-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <script src="assets/js/site-config.js" defer></script>
+  <script src="assets/js/main.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+  <header class="site-header" data-header>
+    <div class="container header-inner">
+      <a class="brand" href="#inicio" data-brand aria-label="Barber Club, voltar ao início">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><path d="M8.12 8.12 12 12"/><path d="M20 4 8.12 15.88"/><circle cx="6" cy="18" r="3"/><path d="M14.8 14.8 20 20"/></svg>
+        </span>
+        <span class="brand-name" translate="no">Barber Club</span>
+      </a>
+
+      <nav class="site-nav" id="menu-principal" aria-label="Principal" data-nav>
+        <ul class="nav-list">
+          <li><a href="#inicio" data-nav-link>Início</a></li>
+          <li><a href="#servicos" data-nav-link>Serviços</a></li>
+          <li><a href="#espaco" data-nav-link>Nosso espaço</a></li>
+          <li><a href="#avaliacoes" data-nav-link>Avaliações</a></li>
+          <li><a href="#contato" data-nav-link>Contato</a></li>
+        </ul>
+        <a class="btn btn-primary nav-cta" href="#contato" data-agendar>Agendar horário</a>
+      </nav>
+
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="menu-principal" data-menu-toggle>
+        <span class="menu-toggle-bars" aria-hidden="true"></span>
+        <span class="menu-toggle-label">Menu</span>
+      </button>
+    </div>
+  </header>
+
+  <main id="conteudo" tabindex="-1">
+    <!-- Seção principal -->
+    <section class="hero" id="inicio" aria-labelledby="hero-titulo">
+      <div class="container hero-inner">
+        <div class="hero-copy">
+          <p class="hero-place">Barbearia em Casimiro de Abreu, RJ</p>
+          <h1 id="hero-titulo" class="hero-title">Seu estilo começa com um bom corte.</h1>
+          <p class="hero-lead">Corte de cabelo, barba e corte infantil na Barber Club. Escolha o serviço e consulte um horário com a gente.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#contato" data-agendar>Agendar horário</a>
+            <a class="btn btn-ghost" href="#servicos">Conhecer os serviços</a>
+          </div>
+          <p class="hero-since"><span class="since-rule" aria-hidden="true"></span>Desde 2019</p>
+        </div>
+
+        <figure class="hero-mirror">
+          <div class="mirror-frame" data-hero-media></div>
+        </figure>
+      </div>
+    </section>
+
+    <!-- Serviços -->
+    <section class="section services" id="servicos" aria-labelledby="servicos-titulo">
+      <div class="container">
+        <div class="section-head">
+          <h2 id="servicos-titulo" class="section-title">Serviços</h2>
+          <p class="section-lead">Escolha o que você precisa hoje e consulte o próximo horário livre.</p>
+        </div>
+        <ul class="service-list" role="list" data-services></ul>
+      </div>
+    </section>
+
+    <!-- Sobre e ambiente -->
+    <section class="section space" id="espaco" aria-labelledby="espaco-titulo">
+      <div class="container space-inner">
+        <div class="space-copy">
+          <h2 id="espaco-titulo" class="section-title">Nosso espaço</h2>
+          <p class="space-text" data-about></p>
+        </div>
+        <ul class="gallery gallery-space" role="list" data-gallery="espaco" aria-label="Fotos do espaço"></ul>
+      </div>
+    </section>
+
+    <!-- Resultados -->
+    <section class="section results" id="resultados" aria-labelledby="resultados-titulo">
+      <div class="container">
+        <div class="section-head section-head-row">
+          <div>
+            <h2 id="resultados-titulo" class="section-title">Cortes recentes</h2>
+            <p class="section-lead">Alguns trabalhos feitos na cadeira da Barber Club.</p>
+          </div>
+          <a class="text-link" data-instagram-link href="#" target="_blank" rel="noopener">Veja mais no Instagram</a>
+        </div>
+        <ul class="gallery gallery-results" role="list" data-gallery="resultados" aria-label="Fotos de cortes"></ul>
+      </div>
+    </section>
+
+    <!-- Avaliações -->
+    <section class="section reviews" id="avaliacoes" aria-labelledby="avaliacoes-titulo">
+      <div class="container reviews-inner">
+        <div class="rating" data-rating>
+          <h2 id="avaliacoes-titulo" class="section-title">Avaliações</h2>
+          <p class="rating-score">
+            <span class="rating-number" data-rating-number></span>
+            <span class="rating-of">de 5</span>
+          </p>
+          <div class="rating-stars" aria-hidden="true" data-rating-stars></div>
+          <p class="rating-meta" data-rating-meta></p>
+          <p class="rating-note" data-rating-note></p>
+          <a class="btn btn-ghost" data-google-link href="#" target="_blank" rel="noopener" hidden>Ver avaliações no Google</a>
+        </div>
+        <ul class="testimonials" role="list" data-testimonials hidden></ul>
+      </div>
+    </section>
+
+    <!-- Contato e localização -->
+    <section class="section contact" id="contato" aria-labelledby="contato-titulo">
+      <div class="container contact-inner">
+        <div class="booking">
+          <h2 id="contato-titulo" class="section-title">Agende seu horário</h2>
+          <p class="booking-lead">Escolha o serviço e mande sua mensagem. O horário fica marcado quando a Barber Club responder confirmando.</p>
+
+          <form class="booking-form" data-booking-form novalidate>
+            <label class="field-label" for="servico">Serviço</label>
+            <div class="select-wrap">
+              <select id="servico" name="servico" autocomplete="off" data-service-select>
+                <option value="">Ainda não sei</option>
+              </select>
+            </div>
+
+            <div class="message-preview">
+              <span class="field-label" id="mensagem-rotulo">Sua mensagem</span>
+              <p class="message-text" data-message-preview aria-labelledby="mensagem-rotulo"></p>
+            </div>
+
+            <div class="booking-actions" data-booking-actions></div>
+            <p class="booking-help" data-booking-help></p>
+            <p class="visually-hidden" role="status" aria-live="polite" data-booking-status></p>
+          </form>
+        </div>
+
+        <div class="location">
+          <h3 class="location-title">Onde estamos</h3>
+          <dl class="info-list" data-info-list></dl>
+          <div class="map" data-map></div>
+          <div class="route" data-route></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <p class="footer-name" translate="no">Barber Club</p>
+        <p class="footer-place" data-footer-place>Casimiro de Abreu, RJ</p>
+      </div>
+      <nav aria-label="Rodapé">
+        <ul class="footer-nav">
+          <li><a href="#inicio">Início</a></li>
+          <li><a href="#servicos">Serviços</a></li>
+          <li><a href="#espaco">Nosso espaço</a></li>
+          <li><a href="#avaliacoes">Avaliações</a></li>
+          <li><a href="#contato">Contato</a></li>
+        </ul>
+      </nav>
+      <ul class="footer-contacts" data-footer-contacts></ul>
+      <p class="footer-legal"><small>© <span data-year>2026</span> Barber Club</small></p>
+    </div>
+  </footer>
+
+  <dialog class="lightbox" data-lightbox aria-label="Foto ampliada">
+    <div class="lightbox-inner">
+      <figure class="lightbox-figure">
+        <img data-lightbox-img alt="">
+        <figcaption class="lightbox-caption" data-lightbox-caption></figcaption>
+      </figure>
+      <div class="lightbox-controls">
+        <button type="button" class="icon-btn" data-lightbox-prev aria-label="Foto anterior">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+        </button>
+        <span class="lightbox-count" data-lightbox-count></span>
+        <button type="button" class="icon-btn" data-lightbox-next aria-label="Próxima foto">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+      </div>
+      <button type="button" class="icon-btn lightbox-close" data-lightbox-close aria-label="Fechar foto">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+  </dialog>
+
+  <noscript>
+    <p class="noscript">Para consultar um horário, fale com a Barber Club pelo Instagram <a href="https://www.instagram.com/barber_club.oficial_/">@barber_club.oficial_</a>.</p>
+  </noscript>
+</body>
+</html>
