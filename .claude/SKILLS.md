@@ -91,3 +91,18 @@ python3 -m venv .venv && .venv/bin/pip install playwright
 
 Ver `.gitignore`: caches Python (`__pycache__/`, `*.pyc`), ambientes virtuais (`.venv/`, `venv/`), `node_modules/`, navegadores do Playwright, relatórios e resultados de teste, além de `.claude/settings.local.json`.
 Os 24 arquivos `__pycache__/*.pyc` que tinham sido versionados por engano (em docx, xlsx, pptx e skill-creator) saíram do Git; o Python os recria quando precisa.
+
+## 21st.dev (MCP e skills)
+
+Configurado em 2026-10-04 com o CLI `@21st-dev/cli` 1.17.1:
+
+- `npx @21st-dev/cli init --client cursor --write` → `.cursor/mcp.json`
+- `npx @21st-dev/cli init --client claude --write` → `.mcp.json` (Claude Code)
+
+As duas configurações apontam para `https://21st.dev/api/mcp` e leem a chave da variável de ambiente `API_KEY_21ST`. Nenhuma chave fica no Git.
+Para usar, gere a chave em <https://21st.dev/mcp>, defina `API_KEY_21ST` e reinicie o editor. No Claude Code, o servidor de `.mcp.json` precisa ser aprovado na primeira vez.
+
+**Pendente:** as skills verificadas do 21st (`npx @21st-dev/cli skills install --agent claude`) não foram instaladas.
+Na nuvem, o domínio `21st.dev` está bloqueado pela política de rede (o manifesto das skills respondeu HTTP 403), e o MCP também não conecta.
+Numa máquina local, rode o comando acima. Ele instala as skills no projeto (`.claude/skills/`).
+Para usar na nuvem, é preciso liberar `21st.dev` na política de rede do ambiente e cadastrar `API_KEY_21ST` nas variáveis do ambiente.
