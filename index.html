@@ -28,16 +28,20 @@
   <link rel="stylesheet" href="assets/css/styles.css">
   <script src="assets/js/site-config.js" defer></script>
   <script src="assets/js/main.js" defer></script>
+  <script src="assets/js/motion.js" defer></script>
 </head>
 <body>
   <!-- Tela de entrada -->
   <div class="intro" data-intro role="dialog" aria-modal="true" aria-labelledby="intro-nome">
     <div class="intro-glow" aria-hidden="true"></div>
     <div class="intro-pole" aria-hidden="true">
+      <span class="pole-finial"></span>
       <span class="pole-cap pole-cap-top"></span>
-      <span class="pole-glass"><span class="pole-stripes"></span></span>
+      <span class="pole-glass"><span class="pole-stripes"></span><span class="pole-shine"></span></span>
       <span class="pole-cap pole-cap-bottom"></span>
+      <span class="pole-base"></span>
     </div>
+    <span class="intro-floor" aria-hidden="true"></span>
     <div class="intro-content">
       <div class="intro-logo" data-intro-logo></div>
       <p class="intro-name" id="intro-nome" translate="no">Barber Club</p>
@@ -48,6 +52,7 @@
   </div>
 
   <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+  <div class="scroll-progress" aria-hidden="true" data-scroll-progress></div>
 
   <header class="site-header" data-header>
     <div class="container header-inner">
@@ -84,8 +89,8 @@
       <div class="container hero-content">
         <p class="hero-kicker">Casimiro de Abreu, RJ</p>
         <h1 id="hero-titulo" class="hero-title">
-          <span class="hero-title-sans">Seu estilo começa</span>
-          <span class="hero-title-serif">com um bom corte.</span>
+          <span class="line"><span class="line-inner hero-title-sans">Seu estilo começa</span></span>
+          <span class="line"><span class="line-inner hero-title-serif">com um bom corte.</span></span>
         </h1>
         <p class="hero-lead">Corte de cabelo, barba e corte infantil na Barber Club. Escolha o serviço e consulte um horário com a gente.</p>
         <div class="hero-actions">
@@ -96,12 +101,19 @@
       </div>
     </section>
 
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track">
+        <div class="marquee-group"><span class="marquee-item">Corte de cabelo</span><span class="marquee-star">✦</span><span class="marquee-item marquee-serif">Barba</span><span class="marquee-star">✦</span><span class="marquee-item">Corte infantil</span><span class="marquee-star">✦</span><span class="marquee-item marquee-serif">Casimiro de Abreu</span><span class="marquee-star">✦</span><span class="marquee-item">Desde 2019</span><span class="marquee-star">✦</span></div>
+        <div class="marquee-group"><span class="marquee-item">Corte de cabelo</span><span class="marquee-star">✦</span><span class="marquee-item marquee-serif">Barba</span><span class="marquee-star">✦</span><span class="marquee-item">Corte infantil</span><span class="marquee-star">✦</span><span class="marquee-item marquee-serif">Casimiro de Abreu</span><span class="marquee-star">✦</span><span class="marquee-item">Desde 2019</span><span class="marquee-star">✦</span></div>
+      </div>
+    </div>
+
     <!-- Serviços -->
     <section class="section services" id="servicos" aria-labelledby="servicos-titulo">
       <div class="container">
         <div class="section-head">
-          <h2 id="servicos-titulo" class="section-title">Serviços</h2>
-          <p class="section-lead">Escolha o que você precisa hoje e consulte o próximo horário livre.</p>
+          <h2 id="servicos-titulo" class="section-title" data-reveal="mask">Serviços</h2>
+          <p class="section-lead" data-reveal="up">Escolha o que você precisa hoje e consulte o próximo horário livre.</p>
         </div>
         <ul class="service-list" role="list" data-services></ul>
       </div>
@@ -110,13 +122,13 @@
     <!-- Sobre e ambiente -->
     <section class="section space" id="espaco" aria-labelledby="espaco-titulo">
       <div class="container space-inner">
-        <figure class="space-photo">
+        <figure class="space-photo" data-reveal="wipe">
           <div class="space-frame" data-about-media></div>
         </figure>
         <div class="space-copy">
-          <h2 id="espaco-titulo" class="section-title">Nosso espaço</h2>
-          <p class="space-text" data-about></p>
-          <p class="space-since"><span class="space-year" data-since-year>2019</span><span>Ano em que a Barber Club começou a atender.</span></p>
+          <h2 id="espaco-titulo" class="section-title" data-reveal="mask">Nosso espaço</h2>
+          <p class="space-text" data-about data-reveal="up"></p>
+          <p class="space-since" data-reveal="up"><span class="space-year" data-since-year>2019</span><span>Ano em que a Barber Club começou a atender.</span></p>
           <ul class="gallery gallery-space" role="list" data-gallery="espaco" aria-label="Mais fotos do espaço"></ul>
         </div>
       </div>
@@ -126,8 +138,8 @@
     <section class="section results" id="resultados" aria-labelledby="resultados-titulo">
       <div class="container">
         <div class="section-head">
-          <h2 id="resultados-titulo" class="section-title">Cortes recentes</h2>
-          <p class="section-lead">Toque numa foto para ver em tamanho maior.</p>
+          <h2 id="resultados-titulo" class="section-title" data-reveal="mask">Cortes recentes</h2>
+          <p class="section-lead" data-reveal="up">Toque numa foto para ver em tamanho maior.</p>
         </div>
         <ul class="gallery" role="list" data-gallery="resultados" aria-label="Fotos de cortes"></ul>
       </div>
@@ -137,7 +149,7 @@
     <section class="section reviews" id="avaliacoes" aria-labelledby="avaliacoes-titulo">
       <div class="container reviews-inner">
         <div class="rating" data-rating>
-          <h2 id="avaliacoes-titulo" class="section-title">Avaliações</h2>
+          <h2 id="avaliacoes-titulo" class="section-title" data-reveal="mask">Avaliações</h2>
           <p class="rating-score">
             <span class="rating-number" data-rating-number></span>
             <span class="rating-of">de 5</span>
@@ -154,8 +166,8 @@
     <!-- Contato e localização -->
     <section class="section contact" id="contato" aria-labelledby="contato-titulo">
       <div class="container contact-inner">
-        <div class="booking">
-          <h2 id="contato-titulo" class="section-title">Agende seu horário</h2>
+        <div class="booking" data-reveal="up">
+          <h2 id="contato-titulo" class="section-title" data-reveal="mask">Agende seu horário</h2>
           <p class="booking-lead">Escolha o serviço e mande sua mensagem. O horário fica marcado quando a Barber Club responder confirmando.</p>
 
           <form class="booking-form" data-booking-form novalidate>
@@ -177,7 +189,7 @@
           </form>
         </div>
 
-        <div class="location">
+        <div class="location" data-reveal="up" style="--reveal-delay: 120ms">
           <h3 class="location-title">Onde estamos</h3>
           <dl class="info-list" data-info-list></dl>
           <div class="map" data-map></div>

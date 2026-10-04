@@ -20,6 +20,7 @@ Abrir o `index.html` direto (duplo clique) também funciona, mas o servidor loca
 index.html                 página única: cabeçalho, seções e rodapé
 assets/js/site-config.js   DADOS DO NEGÓCIO: contatos, serviços, fotos, horários, endereço, avaliações
 assets/js/main.js          monta o conteúdo a partir do site-config.js e cuida das interações
+assets/js/motion.js        efeitos de movimento ao rolar (opcional)
 assets/css/styles.css      visual (cores e tipografia definidas no topo, em :root)
 assets/fonts/              Outfit e DM Serif Display, servidas localmente (licença OFL)
 assets/img/                fotos em WebP (versões de 640 e 1122 px) e favicon
@@ -50,6 +51,20 @@ Na primeira abertura da página, aparece uma tela com o nome Barber Club sobre u
 Ela some com o botão, com Esc ou ao rolar a página, e não volta durante a mesma visita.
 Quem chega por um link direto para uma seção (por exemplo, `…/#contato`) vai direto ao conteúdo.
 Com movimento reduzido ativado no aparelho, o poste fica parado e a saída é imediata.
+
+## Movimento
+
+Os efeitos ficam em `assets/js/motion.js`, com os estilos no fim de `assets/css/styles.css` (e as animações da entrada e do título nas seções correspondentes):
+
+- **Tela de entrada:** poste com as listras girando e um brilho passando pelo vidro. Ao entrar, a logo cresce e a tela abre de baixo para cima.
+- **Seção principal:** o título sobe linha por linha, uma faixa dourada passa atrás do texto pequeno e a foto se aproxima devagar. Ao rolar, a foto e o texto se movem em velocidades diferentes (parallax).
+- **Faixa rolando:** serviços, cidade e "Desde 2019" passam sem parar. Ela pausa quando o mouse está em cima.
+- **Ao rolar:** títulos e textos aparecem, os cartões entram em sequência, as fotos se abrem como cortina e a nota 4,9 conta a partir do zero.
+- **Barra de progresso** dourada no topo, e o cabeçalho sai ao descer e volta ao subir.
+- **No computador:** os cartões de serviço inclinam seguindo o mouse.
+
+Tudo usa só `transform` e `opacity`, sem bibliotecas. Com "reduzir movimento" ativado no aparelho, ou sem JavaScript, nada se mexe e todo o conteúdo aparece direto.
+Para desligar os efeitos de rolagem, basta remover a linha `<script src="assets/js/motion.js" defer></script>` do `index.html`.
 
 ## Agendamento nesta versão
 

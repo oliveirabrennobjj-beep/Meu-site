@@ -600,7 +600,7 @@
         overlay.addEventListener("transitionend", function (event) {
           if (event.target === overlay) done();
         });
-        setTimeout(done, 1200);
+        setTimeout(done, 1700);
       }
       $("main").focus({ preventScroll: true });
     }
