@@ -58,6 +58,7 @@ Com movimento reduzido ativado no aparelho, o poste fica parado e a saída é im
 O poste da entrada é um **vídeo curto em loop** (`assets/video/poste.webm` e `poste.mp4`, 1,8 s, menos de 110 KB), tocado pelo chip de vídeo do aparelho. Assim ele gira liso até em celular simples, e aparece na hora.
 
 - Enquanto o vídeo carrega, ou com "reduzir movimento" ativado, aparece o primeiro quadro (`poste.webp`).
+- Alguns navegadores internos de apps (Instagram, visualizadores de arquivo) não deixam vídeo tocar sozinho. Se o vídeo não começar em 1,8 s, o site troca por `poste-anim.webp`, a mesma animação como imagem animada (406 KB), que toca em qualquer lugar.
 - O vídeo foi desenhado em 3D com [three.js](https://threejs.org) (licença MIT): latão polido, tubo de vidro, listras dourado/creme/preto e luz de estúdio montada em código. Não é imagem gerada por IA.
 - As bordas do vídeo têm a cor exata do fundo da página (`#0c0a08`), então ele se funde sem emenda.
 - Para mudar cores, velocidade ou formato, edite `tools/intro-3d/pole-video.src.js` e gere de novo (precisa de Node, Python com Playwright e ffmpeg):

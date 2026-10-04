@@ -8,6 +8,8 @@ e monta os arquivos em assets/video/:
   poste.mp4   H.264, toca em qualquer celular
   poste.webm  VP9, menor, para navegadores que aceitam
   poste.webp  primeiro quadro, aparece na hora enquanto o vídeo carrega
+  poste-anim.webp  WebP animado: usado onde o navegador não deixa vídeo tocar
+                   sozinho (navegadores internos de apps, como o do Instagram)
 """
 import base64
 import os
@@ -24,6 +26,7 @@ FPS = 30
 # 54 quadros a 30 fps = meia volta em 1,8 s, e o loop fecha sem emenda.
 FRAMES = 54
 SIZE = "900:1600"
+ANIM_SIZE = "720:1280"
 
 
 def main():
@@ -51,9 +54,12 @@ def main():
              "-row-mt", "1", "-pix_fmt", "yuv420p", "-an", os.path.join(OUT, "poste.webm")])
         run(["ffmpeg", "-y", "-i", os.path.join(frames_dir, "f000.png"), *scale,
              "-quality", "82", os.path.join(OUT, "poste.webp")])
+        run(["ffmpeg", "-y", *src, "-vf", f"scale={ANIM_SIZE}:flags=lanczos", "-c:v", "libwebp_anim",
+             "-lossless", "0", "-quality", "70", "-compression_level", "6", "-loop", "0",
+             os.path.join(OUT, "poste-anim.webp")])
     finally:
         shutil.rmtree(frames_dir, ignore_errors=True)
-    for name in ("poste.mp4", "poste.webm", "poste.webp"):
+    for name in ("poste.mp4", "poste.webm", "poste.webp", "poste-anim.webp"):
         print(name, round(os.path.getsize(os.path.join(OUT, name)) / 1024), "KB")
 
 

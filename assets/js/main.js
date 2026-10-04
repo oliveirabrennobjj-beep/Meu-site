@@ -3,6 +3,7 @@
   "use strict";
 
   var cfg = window.BARBER_CLUB;
+  var INTRO_ANIMATION = "assets/video/poste-anim.webp";
   if (!cfg) return;
 
   var contato = cfg.contato || {};
@@ -580,12 +581,31 @@
     enterBtn.focus({ preventScroll: true });
 
     // Poste em vídeo (loop de 1,8 s, tocado pelo chip de vídeo do aparelho).
+    // Navegadores internos de apps (Instagram, visualizadores) às vezes não deixam
+    // vídeo tocar sozinho: nesse caso entra a mesma animação como WebP animado.
     // Com "reduzir movimento", fica a imagem parada do primeiro quadro.
     var video = $("[data-intro-video]");
     if (video && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      var settled = false;
+      var useAnimatedImage = function () {
+        if (settled) return;
+        settled = true;
+        var img = new Image();
+        img.className = "intro-video";
+        img.alt = "";
+        img.setAttribute("aria-hidden", "true");
+        img.onload = function () {
+          if (video.parentNode) video.parentNode.replaceChild(img, video);
+        };
+        img.src = INTRO_ANIMATION;
+      };
+      video.addEventListener("playing", function () { settled = true; });
       video.preload = "auto";
       var playing = video.play();
-      if (playing && playing.catch) playing.catch(function () {});
+      if (playing && playing.catch) playing.catch(useAnimatedImage);
+      setTimeout(function () {
+        if (video.paused || video.currentTime === 0) useAnimatedImage();
+      }, 1800);
     }
 
     function enter() {

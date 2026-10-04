@@ -319,6 +319,17 @@ def test_intro(browser, base, shots):
     check(not errors, f"sem erros no console {errors if errors else ''}")
     ctx.close()
 
+    # navegador que não deixa vídeo tocar sozinho (como o de alguns apps)
+    ctx = browser.new_context(viewport={"width": 390, "height": 844})
+    ctx.add_init_script("HTMLMediaElement.prototype.play = function () { return Promise.reject(new DOMException('bloqueado', 'NotAllowedError')); };")
+    page = ctx.new_page()
+    page.goto(base)
+    page.wait_for_function("(i => i && i.tagName === 'IMG' && i.complete && i.naturalWidth > 0)(document.querySelector('.intro-video'))", timeout=8000)
+    check(page.evaluate("document.querySelector('.intro-video').src.endsWith('poste-anim.webp')"),
+          "sem vídeo automático, o poste gira como imagem animada")
+    check(page.locator("video").count() == 0, "o vídeo parado sai de cena")
+    ctx.close()
+
     ctx, page, _ = new_page(browser, base, intro=True)
     page.keyboard.press("Escape")
     page.wait_for_selector("[data-intro]", state="detached", timeout=3000)
