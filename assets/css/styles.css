@@ -194,20 +194,52 @@ main:focus { outline: none; }
 }
 .intro-leaving .intro,
 .intro-leaving .intro-content,
-.intro-leaving .intro-video { will-change: transform, opacity; }
+.intro-leaving .pole-stage { will-change: transform, opacity; }
 .intro-content,
-.intro-video { transition: transform 700ms var(--ease-in-out), opacity 500ms ease; }
+.pole-stage { transition: transform 700ms var(--ease-in-out), opacity 500ms ease; }
 .intro-leaving .intro-content { transform: scale(1.12); opacity: 0; }
-.intro-leaving .intro-video { transform: scale(1.18); opacity: 0; }
+.intro-leaving .pole-stage { transform: translateX(-50%) scale(1.18); opacity: 0; }
 
-/* o vídeo traz o foco de luz e o poste; as bordas dele têm a cor exata do fundo */
-.intro-video {
+/* Poste em três camadas (fundo, listras, frente), desenhadas em 3D e salvas
+   como imagem. Só a faixa de listras se move, por trás do vidro: girar uma
+   espiral é igual a ela subir. Animação de transform = placa de vídeo, leve
+   em qualquer celular. O palco tem a proporção 9:16 das imagens e a altura
+   da tela; em celular em pé, as laterais (fundo liso) ficam de fora. */
+.pole-stage {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  height: 100%;
+  aspect-ratio: 9 / 16;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.pole-layer {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  pointer-events: none;
+}
+.pole-strip {
+  position: absolute;
+  left: var(--pole-strip-left);
+  top: var(--pole-strip-top);
+  width: var(--pole-strip-width);
+  height: var(--pole-strip-height);
+  overflow: hidden;
+}
+.pole-strip-inner {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: var(--pole-strip-tall);
+  max-width: none;
+  animation: pole-strip var(--pole-strip-duration) linear infinite;
+  will-change: transform;
+}
+@keyframes pole-strip {
+  to { transform: translate3d(0, var(--pole-strip-step), 0); }
 }
 
 .intro-content {
@@ -266,12 +298,10 @@ main:focus { outline: none; }
 }
 .site-header.is-scrolled,
 .site-header.menu-open {
-  background: rgba(12, 10, 8, 0.92);
+  background: rgba(12, 10, 8, 0.95);
   border-bottom-color: var(--line);
 }
-@supports (backdrop-filter: blur(8px)) {
-  .site-header.is-scrolled { background: rgba(12, 10, 8, 0.78); backdrop-filter: blur(14px); }
-}
+/* sem backdrop-filter: o desfoque atrás do cabeçalho pesa muito ao rolar no celular */
 
 .header-inner {
   display: flex;
@@ -1182,7 +1212,7 @@ main:focus { outline: none; }
 /* ---------- tela de entrada: estúdio com poste 3D ---------- */
 
 /* fundo como uma foto de produto: parede grafite com um foco de luz atrás do poste */
-.intro-open .intro { background: var(--ink); }
+.intro-open .intro { background: #0d0b09; } /* mesma cor das bordas de fundo.webp */
 
 /* o 3D ocupa só a coluna do poste: bem menos pixels para desenhar a cada quadro */
 .intro-content { gap: 1.25rem; }
@@ -1233,11 +1263,6 @@ main:focus { outline: none; }
   vertical-align: middle;
 }
 
-/* em telas mais estreitas que o vídeo (celular em pé), corta só as laterais lisas
-   para o poste ficar maior */
-@media (max-aspect-ratio: 9/16) {
-  .intro-video { object-fit: cover; }
-}
 
 /* ---------- movimento reduzido (fica por último para valer sobre as regras acima) ---------- */
 
@@ -1246,8 +1271,8 @@ main:focus { outline: none; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .intro-leaving .intro { transform: none; opacity: 0; transition: opacity 600ms ease; }
-  .intro-leaving .intro-content,
-  .intro-leaving .intro-video { transform: none; }
+  .intro-leaving .intro-content { transform: none; }
+  .intro-leaving .pole-stage { transform: translateX(-50%); }
   .motion [data-reveal]:not(.is-revealed) { transform: none; }
   .motion [data-reveal="wipe"]::after,
   .motion .space-photo[data-reveal="wipe"] .space-frame::after { transition: opacity 900ms ease var(--reveal-delay, 0ms); }
@@ -1259,3 +1284,15 @@ main:focus { outline: none; }
   .btn:active:not(:disabled) { transform: none; }
   .gallery-btn:hover img { transform: none; }
 }
+
+/* poste:inicio (gerado por tools/intro-3d/render-poste.py, não edite à mão) */
+.pole-stage {
+  --pole-strip-left: 36.3950%;
+  --pole-strip-top: 27.3415%;
+  --pole-strip-width: 27.2100%;
+  --pole-strip-height: 48.7401%;
+  --pole-strip-tall: 135.0701%;
+  --pole-strip-step: -25.9940%;
+  --pole-strip-duration: 1.8s;
+}
+/* poste:fim */

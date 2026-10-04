@@ -312,22 +312,15 @@ def test_intro(browser, base, shots):
     ctx.close()
 
     ctx, page, errors = new_page(browser, base, intro=True)
-    page.wait_for_function("(v => v && !v.paused && v.currentTime > 0)(document.querySelector('[data-intro-video]'))", timeout=8000)
-    check(True, "poste em vídeo tocando na entrada")
-    check(page.evaluate("document.querySelector('[data-intro-video]').loop"), "vídeo em loop")
-    check(page.evaluate("document.querySelector('[data-intro-video]').muted"), "vídeo sem som")
+    spin = "getComputedStyle(document.querySelector('.pole-strip-inner')).animationName"
+    check(page.evaluate(spin) == "pole-strip", "listras do poste girando (animação da faixa)")
+    loaded = page.evaluate("[...document.querySelectorAll('.pole-stage img')].every(i => i.complete && i.naturalWidth > 0)")
+    check(loaded, "as três camadas do poste carregam")
+    t1 = page.evaluate("getComputedStyle(document.querySelector('.pole-strip-inner')).transform")
+    page.wait_for_timeout(400)
+    t2 = page.evaluate("getComputedStyle(document.querySelector('.pole-strip-inner')).transform")
+    check(t1 != t2, "a faixa de listras se move")
     check(not errors, f"sem erros no console {errors if errors else ''}")
-    ctx.close()
-
-    # navegador que não deixa vídeo tocar sozinho (como o de alguns apps)
-    ctx = browser.new_context(viewport={"width": 390, "height": 844})
-    ctx.add_init_script("HTMLMediaElement.prototype.play = function () { return Promise.reject(new DOMException('bloqueado', 'NotAllowedError')); };")
-    page = ctx.new_page()
-    page.goto(base)
-    page.wait_for_function("(i => i && i.tagName === 'IMG' && i.complete && i.naturalWidth > 0)(document.querySelector('.intro-video'))", timeout=8000)
-    check(page.evaluate("document.querySelector('.intro-video').src.endsWith('poste-anim.webp')"),
-          "sem vídeo automático, o poste gira como imagem animada")
-    check(page.locator("video").count() == 0, "o vídeo parado sai de cena")
     ctx.close()
 
     ctx, page, _ = new_page(browser, base, intro=True)
@@ -344,8 +337,8 @@ def test_intro(browser, base, shots):
     ctx.close()
 
     ctx, page, _ = new_page(browser, base, intro=True, reduced_motion="reduce")
-    page.wait_for_function("(v => v && (v.tagName === 'IMG' || (!v.paused && v.currentTime > 0)))(document.querySelector('.intro-video'))", timeout=8000)
-    check(True, "poste gira também com movimento reduzido (movimento pequeno, no lugar)")
+    check(page.evaluate("getComputedStyle(document.querySelector('.pole-strip-inner')).animationName") == "pole-strip",
+          "poste gira também com movimento reduzido (movimento pequeno, no lugar)")
     page.click("[data-intro-enter]")
     check(page.evaluate("getComputedStyle(document.querySelector('[data-intro]')).transform") == "none",
           "com movimento reduzido, a entrada esmaece em vez de subir")

@@ -33,11 +33,11 @@
 <body>
   <!-- Tela de entrada -->
   <div class="intro" data-intro role="dialog" aria-modal="true" aria-labelledby="intro-nome">
-    <video class="intro-video" data-intro-video muted loop playsinline preload="none"
-      poster="assets/video/poste.webp" aria-hidden="true" tabindex="-1" disablepictureinpicture>
-      <source src="assets/video/poste.webm" type="video/webm">
-      <source src="assets/video/poste.mp4" type="video/mp4">
-    </video>
+    <div class="pole-stage" aria-hidden="true">
+      <img class="pole-layer" src="assets/img/poste/fundo.webp" alt="" width="900" height="1600">
+      <div class="pole-strip"><img class="pole-strip-inner" src="assets/img/poste/listras.webp" alt="" width="245" height="1053"></div>
+      <img class="pole-layer" src="assets/img/poste/frente.webp" alt="" width="900" height="1600">
+    </div>
     <div class="intro-content">
       <p class="intro-name" id="intro-nome" translate="no">Barber Club</p>
       <p class="intro-tagline">Barbearia em Casimiro de Abreu</p>

@@ -20,5 +20,5 @@ playwright/.cache/
 # Configuração local do Claude Code
 .claude/settings.local.json
 
-# Saída do gerador do vídeo do poste
+# Saída do gerador das camadas do poste
 tools/intro-3d/dist/

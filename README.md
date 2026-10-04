@@ -21,7 +21,7 @@ index.html                 página única: cabeçalho, seções e rodapé
 assets/js/site-config.js   DADOS DO NEGÓCIO: contatos, serviços, fotos, horários, endereço, avaliações
 assets/js/main.js          monta o conteúdo a partir do site-config.js e cuida das interações
 assets/js/motion.js        efeitos de movimento ao rolar (opcional)
-assets/video/              vídeo em loop do poste da entrada (gerado em tools/intro-3d)
+assets/img/poste/          camadas do poste da entrada (geradas em tools/intro-3d)
 assets/css/styles.css      visual (cores e tipografia definidas no topo, em :root)
 assets/fonts/              Outfit e DM Serif Display, servidas localmente (licença OFL)
 assets/img/                fotos em WebP (versões de 640 e 1122 px) e favicon
@@ -55,25 +55,29 @@ Com movimento reduzido ativado no aparelho, o poste fica parado e a saída é im
 
 ## Poste da tela de entrada
 
-O poste da entrada é um **vídeo curto em loop** (`assets/video/poste.webm` e `poste.mp4`, 1,8 s, menos de 110 KB), tocado pelo chip de vídeo do aparelho. Assim ele gira liso até em celular simples, e aparece na hora.
+O poste da entrada foi desenhado em 3D com [three.js](https://threejs.org) (licença MIT): latão polido, tubo de vidro, listras dourado/creme/preto e luz de estúdio montada em código. Não é imagem gerada por IA.
 
-- Enquanto o vídeo carrega, aparece o primeiro quadro (`poste.webp`).
-- Alguns navegadores internos de apps (Instagram, visualizadores de arquivo) não deixam vídeo tocar sozinho. Se o vídeo não começar, não avançar de verdade ou parar várias vezes para carregar, o site troca por `poste-anim.webp`, a mesma animação como imagem animada (406 KB), que toca em qualquer lugar.
-- O vídeo foi desenhado em 3D com [three.js](https://threejs.org) (licença MIT): latão polido, tubo de vidro, listras dourado/creme/preto e luz de estúdio montada em código. Não é imagem gerada por IA.
-- As bordas do vídeo têm a cor exata do fundo da página (`#0c0a08`), então ele se funde sem emenda.
-- Para mudar cores, velocidade ou formato, edite `tools/intro-3d/pole-video.src.js` e gere de novo (precisa de Node, Python com Playwright e ffmpeg):
+Na página, ele são **três imagens leves em camadas** (`assets/img/poste/`, 45 KB no total):
 
-  ```bash
-  cd tools/intro-3d
-  npm install
-  npm run video
-  ```
+1. `fundo.webp` — estúdio com foco de luz; as bordas têm a cor do fundo da entrada (`#0d0b09`), sem emenda.
+2. `listras.webp` — uma faixa alta de listras que desliza por trás do vidro.
+3. `frente.webp` — metal, vidro e sombra, transparente onde as listras aparecem.
+
+Girar uma espiral é visualmente igual a ela subir. Por isso, só a faixa de listras se move, com uma animação CSS de `transform` que a placa de vídeo faz sozinha. Fica liso até em celular simples, funciona em navegadores internos de apps (que bloqueiam vídeo) e continua girando com "reduzir movimento", já que é um movimento pequeno e no lugar.
+
+Para mudar cores, velocidade ou formato, edite `tools/intro-3d/poste-camadas.src.js` e gere de novo. O script também atualiza no CSS a posição da faixa (bloco `poste:inicio`). Precisa de Node, Python com Playwright e ImageMagick:
+
+```bash
+cd tools/intro-3d
+npm install
+npm run poste
+```
 
 ## Movimento
 
 Os efeitos ficam em `assets/js/motion.js`, com os estilos no fim de `assets/css/styles.css` (e as animações da entrada e do título nas seções correspondentes):
 
-- **Tela de entrada:** poste em vídeo com as listras girando (ver acima). Ao entrar, o nome e o poste crescem e a tela sobe como uma cortina.
+- **Tela de entrada:** poste com as listras girando (ver acima). Ao entrar, o nome e o poste crescem e a tela sobe como uma cortina.
 - **Seção principal:** o título sobe linha por linha, uma faixa dourada passa atrás do texto pequeno e a foto se aproxima devagar. Ao rolar, a foto e o texto se movem em velocidades diferentes (parallax).
 - **Faixa rolando:** serviços, cidade e "Desde 2019" passam sem parar. Ela pausa quando o mouse está em cima.
 - **Ao rolar:** títulos e textos aparecem, os cartões entram em sequência, as fotos se abrem como cortina e a nota 4,9 conta a partir do zero.

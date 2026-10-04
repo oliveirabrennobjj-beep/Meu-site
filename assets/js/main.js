@@ -3,7 +3,6 @@
   "use strict";
 
   var cfg = window.BARBER_CLUB;
-  var INTRO_ANIMATION = "assets/video/poste-anim.webp";
   if (!cfg) return;
 
   var contato = cfg.contato || {};
@@ -580,53 +579,6 @@
     behind.forEach(function (node) { node.setAttribute("inert", ""); });
     enterBtn.focus({ preventScroll: true });
 
-    // Poste em vídeo (loop de 1,8 s, tocado pelo chip de vídeo do aparelho).
-    // Navegadores internos de apps (Instagram, visualizadores) às vezes não deixam
-    // vídeo tocar sozinho: nesse caso entra a mesma animação como WebP animado.
-    // O giro do poste é pequeno e no lugar, então toca também com "reduzir
-    // movimento" (muitos celulares ligam isso sozinhos na economia de bateria).
-    var video = $("[data-intro-video]");
-    if (video) {
-      var settled = false;
-      var swapped = false;
-      var useAnimatedImage = function (force) {
-        if (swapped || (settled && !force)) return;
-        settled = true;
-        swapped = true;
-        var img = new Image();
-        img.className = "intro-video";
-        img.alt = "";
-        img.setAttribute("aria-hidden", "true");
-        img.onload = function () {
-          if (video.parentNode) video.parentNode.replaceChild(img, video);
-        };
-        img.src = INTRO_ANIMATION;
-      };
-      video.preload = "auto";
-      var playing = video.play();
-      if (playing && playing.catch) playing.catch(useAnimatedImage);
-      // Confere se o vídeo andou de verdade: há visualizadores que dizem "tocando"
-      // mas deixam a imagem congelada. Se não andou, entra a imagem animada.
-      var checkAt = function (ms, minTime) {
-        setTimeout(function () {
-          if (!settled && (video.paused || video.currentTime < minTime)) useAnimatedImage();
-        }, ms);
-      };
-      checkAt(1500, 0.3);
-      checkAt(3500, 1.5);
-      // vídeo que vive parando para carregar ("waiting") também dá lugar à imagem
-      var waits = 0;
-      video.addEventListener("waiting", function () {
-        waits++;
-        if (waits >= 4 && video.currentTime < 6) useAnimatedImage(true);
-      });
-      video.addEventListener("timeupdate", function onTime() {
-        if (video.currentTime > 1.6) {
-          settled = true;
-          video.removeEventListener("timeupdate", onTime);
-        }
-      });
-    }
 
     function enter() {
       if (leaving) return;

@@ -1,6 +1,11 @@
 /*
- * Renderizador do vídeo do poste (three.js), usado só para GERAR o vídeo.
- * Rode: npm install && npm run video   (ver render-video.py)
+ * Gera as camadas do poste da tela de entrada (three.js), usado só OFFLINE.
+ * Rode: npm install && npm run poste   (ver render-poste.py)
+ *
+ * Camadas: fundo (estúdio), listras (faixa alta que desliza por trás do vidro)
+ * e frente (metal e vidro, com transparência onde as listras aparecem).
+ * Girar a espiral é visualmente igual a ela subir: na página, só a faixa de
+ * listras se move, com uma animação CSS barata para qualquer celular.
  *
  * Latão polido, tubo de vidro e listras dourado/creme/preto girando dentro.
  * A luz vem de um "estúdio" montado em código (softboxes), sem imagens externas.
@@ -19,6 +24,7 @@ import {
   Mesh,
   MeshBasicMaterial,
   MeshStandardMaterial,
+  OrthographicCamera,
   PerspectiveCamera,
   PlaneGeometry,
   PMREMGenerator,
@@ -26,6 +32,7 @@ import {
   SphereGeometry,
   SRGBColorSpace,
   Vector2,
+  Vector3,
   WebGLRenderer,
 } from "three";
 
@@ -79,25 +86,32 @@ window.PoleRender = (function () {
 
   /* ---------- listras (textura feita em código) ---------- */
 
-  function stripeTexture() {
-    // faixas diagonais desenhadas com formas 2D (rápido); 2 voltas ao redor = sem emenda
+  // período vertical da espiral (unidades do mundo): a cada P a imagem se repete
+  var PERIOD = 2.5 / 2.6;
+  function stripeTexture(heightWorld) {
+    // faixas diagonais desenhadas com formas 2D; 2 voltas ao redor = sem emenda.
+    // A densidade é por unidade de altura, então um cilindro mais alto continua igual.
+    heightWorld = heightWorld || 2.5;
     var size = 2048;
+    var tall = Math.round(size * (heightWorld / 2.5));
     var canvas = document.createElement("canvas");
-    canvas.width = canvas.height = size;
+    canvas.width = size;
+    canvas.height = tall;
     var ctx = canvas.getContext("2d");
     var colors = ["#c99a48", "#f0e8d8", "#18130e", "#f0e8d8"];
     var turns = 2;
     var period = size / turns;
     var band = period / colors.length;
-    var slope = size * 1.3; // deslocamento horizontal ao longo da altura
-    for (var k = -2; k < 21; k++) {
+    var slope = size * 1.3 * (heightWorld / 2.5); // deslocamento horizontal ao longo da altura
+    var kMax = Math.ceil((size + slope) / band) + 2;
+    for (var k = -2; k < kMax; k++) {
       ctx.fillStyle = colors[((k % 4) + 4) % 4];
       var x0 = k * band;
       ctx.beginPath();
       ctx.moveTo(x0, 0);
       ctx.lineTo(x0 + band + 0.6, 0);
-      ctx.lineTo(x0 + band + 0.6 - slope, size);
-      ctx.lineTo(x0 - slope, size);
+      ctx.lineTo(x0 + band + 0.6 - slope, tall);
+      ctx.lineTo(x0 - slope, tall);
       ctx.closePath();
       ctx.fill();
     }
@@ -220,14 +234,65 @@ window.PoleRender = (function () {
     octx.setTransform(1, 0, 0, 1, 0, 0);
   }
 
+  function png(canvas) { return canvas.toDataURL("image/png"); }
+  function project(x, y, z) {
+    var v = new Vector3(x, y, z).project(camera);
+    return [(v.x + 1) / 2 * W, (1 - v.y) / 2 * H];
+  }
+
   return {
     size: [W, H],
-    frame: function (angle) {
-      stripes.rotation.y = -angle;
-      renderer.render(scene, camera);
+    layers: function () {
+      pole.updateMatrixWorld(true);
+      var R = TUBE_R * 0.86;
+      var axisY = pole.position.y;
+
+      // 1) fundo: só o estúdio
       background();
-      octx.drawImage(gl, 0, 0);
-      return out.toDataURL("image/png");
+      var back = png(out);
+
+      // 2) frente: tudo menos as listras, com fundo transparente
+      stripes.visible = false;
+      renderer.render(scene, camera);
+      var front = png(gl);
+      stripes.visible = true;
+
+      // 3) listras: cilindro alto, câmera ortográfica na mesma escala da câmera real
+      var left = project(-R, axisY, 0);
+      var right = project(R, axisY, 0);
+      var scale = (right[0] - left[0]) / (2 * R); // pixels por unidade, no eixo do poste
+      var margin = 0.12; // passa por baixo dos anéis de metal
+      var top = project(0, axisY + TUBE_H / 2 + margin, 0)[1];
+      var bottom = project(0, axisY - TUBE_H / 2 - margin, 0)[1];
+      var periodPx = PERIOD * scale;
+      var rect = { x: left[0], y: top, w: right[0] - left[0], h: bottom - top };
+      var stripW = Math.round(rect.w);
+      var stripH = Math.round(rect.h + periodPx);
+      var tallWorld = stripH / scale;
+
+      var tallMesh = new Mesh(
+        new CylinderGeometry(R, R, tallWorld, 200, 1, true),
+        new MeshStandardMaterial({ map: stripeTexture(tallWorld), roughness: 0.42, metalness: 0 })
+      );
+      var stripScene = new Scene();
+      stripScene.environment = scene.environment;
+      scene.children.filter(function (o) { return o.isLight; }).forEach(function (l) { stripScene.add(l.clone()); });
+      stripScene.add(tallMesh);
+      var half = tallWorld / 2;
+      var ortho = new OrthographicCamera(-R, R, half, -half, 0.1, 50);
+      ortho.position.set(0, 0, camera.position.z);
+      ortho.lookAt(0, 0, 0);
+      renderer.setSize(stripW, stripH, false);
+      renderer.render(stripScene, ortho);
+      var strip = png(gl);
+      renderer.setSize(W, H, false);
+
+      return {
+        back: back,
+        front: front,
+        strip: strip,
+        meta: { frame: [W, H], rect: rect, periodPx: periodPx, strip: [stripW, stripH] },
+      };
     },
   };
 })();
