@@ -21,7 +21,7 @@ index.html                 página única: cabeçalho, seções e rodapé
 assets/js/site-config.js   DADOS DO NEGÓCIO: contatos, serviços, fotos, horários, endereço, avaliações
 assets/js/main.js          monta o conteúdo a partir do site-config.js e cuida das interações
 assets/js/motion.js        efeitos de movimento ao rolar (opcional)
-assets/js/intro-3d.js      poste 3D da tela de entrada (gerado a partir de tools/intro-3d)
+assets/video/              vídeo em loop do poste da entrada (gerado em tools/intro-3d)
 assets/css/styles.css      visual (cores e tipografia definidas no topo, em :root)
 assets/fonts/              Outfit e DM Serif Display, servidas localmente (licença OFL)
 assets/img/                fotos em WebP (versões de 640 e 1122 px) e favicon
@@ -53,27 +53,26 @@ Ela some com o botão, com Esc ou ao rolar a página, e não volta durante a mes
 Quem chega por um link direto para uma seção (por exemplo, `…/#contato`) vai direto ao conteúdo.
 Com movimento reduzido ativado no aparelho, o poste fica parado e a saída é imediata.
 
-## Poste 3D da tela de entrada
+## Poste da tela de entrada
 
-O poste da entrada é um objeto 3D desenhado em tempo real com [three.js](https://threejs.org) (licença MIT): latão polido, tubo de vidro e listras girando, com luz de estúdio montada em código, sem imagens externas.
+O poste da entrada é um **vídeo curto em loop** (`assets/video/poste.webm` e `poste.mp4`, 1,8 s, menos de 110 KB), tocado pelo chip de vídeo do aparelho. Assim ele gira liso até em celular simples, e aparece na hora.
 
-- O arquivo pronto é `assets/js/intro-3d.js`. Ele só é baixado quando a tela de entrada aparece (cerca de 137 KB comprimido).
-- A fonte fica em `tools/intro-3d/intro-3d.src.js`. Para mudar cores, velocidade ou formato, edite a fonte e gere de novo:
+- Enquanto o vídeo carrega, ou com "reduzir movimento" ativado, aparece o primeiro quadro (`poste.webp`).
+- O vídeo foi desenhado em 3D com [three.js](https://threejs.org) (licença MIT): latão polido, tubo de vidro, listras dourado/creme/preto e luz de estúdio montada em código. Não é imagem gerada por IA.
+- As bordas do vídeo têm a cor exata do fundo da página (`#0c0a08`), então ele se funde sem emenda.
+- Para mudar cores, velocidade ou formato, edite `tools/intro-3d/pole-video.src.js` e gere de novo (precisa de Node, Python com Playwright e ffmpeg):
 
   ```bash
   cd tools/intro-3d
   npm install
-  npm run build
+  npm run video
   ```
-
-- Se o aparelho não tiver WebGL, ou o arquivo não carregar em até 2,5 s, aparece o poste desenhado em CSS. Com "reduzir movimento", o poste 3D aparece parado.
-- No computador, o poste acompanha o mouse de leve.
 
 ## Movimento
 
 Os efeitos ficam em `assets/js/motion.js`, com os estilos no fim de `assets/css/styles.css` (e as animações da entrada e do título nas seções correspondentes):
 
-- **Tela de entrada:** poste 3D com as listras girando (ver acima). Ao entrar, o nome cresce e a tela abre de baixo para cima.
+- **Tela de entrada:** poste em vídeo com as listras girando (ver acima). Ao entrar, o nome e o poste crescem e a tela sobe como uma cortina.
 - **Seção principal:** o título sobe linha por linha, uma faixa dourada passa atrás do texto pequeno e a foto se aproxima devagar. Ao rolar, a foto e o texto se movem em velocidades diferentes (parallax).
 - **Faixa rolando:** serviços, cidade e "Desde 2019" passam sem parar. Ela pausa quando o mouse está em cima.
 - **Ao rolar:** títulos e textos aparecem, os cartões entram em sequência, as fotos se abrem como cortina e a nota 4,9 conta a partir do zero.

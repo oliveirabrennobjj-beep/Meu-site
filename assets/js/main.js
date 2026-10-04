@@ -579,16 +579,14 @@
     behind.forEach(function (node) { node.setAttribute("inert", ""); });
     enterBtn.focus({ preventScroll: true });
 
-    // Poste 3D: só é baixado quando a tela de entrada aparece. Se não carregar
-    // a tempo (ou o aparelho não tiver WebGL), fica o poste desenhado em CSS.
-    var poleScript = document.createElement("script");
-    poleScript.src = "assets/js/intro-3d.js";
-    poleScript.async = true;
-    poleScript.onerror = function () { root.classList.add("pole-css"); };
-    document.head.appendChild(poleScript);
-    setTimeout(function () {
-      if (!root.classList.contains("pole-3d")) root.classList.add("pole-css");
-    }, 2500);
+    // Poste em vídeo (loop de 1,8 s, tocado pelo chip de vídeo do aparelho).
+    // Com "reduzir movimento", fica a imagem parada do primeiro quadro.
+    var video = $("[data-intro-video]");
+    if (video && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      video.preload = "auto";
+      var playing = video.play();
+      if (playing && playing.catch) playing.catch(function () {});
+    }
 
     function enter() {
       if (leaving) return;

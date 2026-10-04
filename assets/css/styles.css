@@ -184,140 +184,30 @@ main:focus { outline: none; }
   background:
     radial-gradient(60% 50% at 50% 42%, rgba(236, 170, 84, 0.16), transparent 70%),
     linear-gradient(180deg, #14110e 0%, var(--ink) 100%);
-  clip-path: inset(0 0 0 0);
-  transition: clip-path 1000ms var(--ease-in-out) 250ms;
+  transition: transform 900ms var(--ease-in-out) 200ms;
 }
-/* saída: a logo cresce e some, e a tela abre de baixo para cima como uma cortina */
+/* saída: o nome cresce e some, e a tela sobe como uma cortina.
+   Só transform e opacity: o celular faz isso na placa de vídeo, sem repintar. */
 .intro-leaving .intro {
-  clip-path: inset(0 0 100% 0);
+  transform: translate3d(0, -100%, 0);
   pointer-events: none;
 }
+.intro-leaving .intro,
+.intro-leaving .intro-content,
+.intro-leaving .intro-video { will-change: transform, opacity; }
 .intro-content,
-.intro-pole,
-.intro-floor { transition: transform 700ms var(--ease-in-out), opacity 500ms ease; }
+.intro-video { transition: transform 700ms var(--ease-in-out), opacity 500ms ease; }
 .intro-leaving .intro-content { transform: scale(1.12); opacity: 0; }
-.intro-leaving .intro-pole { transform: translate(-50%, -50%) scale(1.25); opacity: 0; }
-.intro-leaving .intro-floor { opacity: 0; }
+.intro-leaving .intro-video { transform: scale(1.18); opacity: 0; }
 
-.intro-glow {
-  position: absolute;
-  left: 50%; top: 0;
-  width: 1px; height: 18vh;
-  background: linear-gradient(180deg, transparent, var(--gold));
-  opacity: 0.6;
-}
-
-/* poste de barbeiro em dourado, creme e preto */
-.intro-pole {
-  position: absolute;
-  left: 50%; top: 50%;
-  transform: translate(-50%, -50%);
-  display: grid;
-  justify-items: center;
-  width: clamp(92px, 22vw, 150px);
-  filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.6));
-}
-/* bola cromada no topo */
-.pole-finial {
-  display: block;
-  width: 46%;
-  aspect-ratio: 1;
-  margin-bottom: -4px;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at 34% 30%, #fffbe9 0 8%, #f3d895 20%, #b98c3a 52%, #5a4019 80%, #2a1d0b 100%);
-  box-shadow: inset -6px -8px 14px rgba(0, 0, 0, 0.45);
-}
-.pole-cap {
-  position: relative;
-  display: block;
-  width: 118%;
-  height: clamp(30px, 6vh, 46px);
-  background: linear-gradient(90deg, #4f3b17 0%, #f1d595 22%, #fff6d8 30%, #b38737 52%, #f6e2ad 74%, #4f3b17 100%);
-}
-/* anéis do acabamento */
-.pole-cap::after {
-  content: "";
-  position: absolute;
-  left: 4%; right: 4%;
-  height: 4px;
-  background: linear-gradient(90deg, #3d2d10, #f6e2ad 30%, #8a6526 60%, #3d2d10);
-}
-.pole-cap-top::after { bottom: 6px; }
-.pole-cap-bottom::after { top: 6px; }
-.pole-base {
-  display: block;
-  width: 70%;
-  height: 12px;
-  margin-top: -2px;
-  border-radius: 0 0 10px 10px;
-  background: linear-gradient(90deg, #3d2d10, #e9cd88 35%, #8a6526 65%, #3d2d10);
-}
-/* reflexo no chão */
-.intro-floor {
-  position: absolute;
-  left: 50%;
-  top: calc(50% + clamp(190px, 34vh, 330px));
-  width: clamp(160px, 40vw, 300px);
-  height: 26px;
-  transform: translateX(-50%);
-  border-radius: 50%;
-  background: radial-gradient(closest-side, rgba(212, 168, 83, 0.28), transparent);
-  filter: blur(4px);
-}
-.pole-cap-top { border-radius: 999px 999px 8px 8px; }
-.pole-cap-bottom { border-radius: 8px 8px 999px 999px; }
-.pole-glass {
-  position: relative;
-  display: block;
-  width: 100%;
-  height: clamp(280px, 56vh, 520px);
-  overflow: hidden;
-  border-inline: 1px solid rgba(246, 226, 173, 0.35);
-}
-.pole-stripes {
-  position: absolute;
-  inset: -160px 0;
-  background: repeating-linear-gradient(
-    -55deg,
-    var(--gold) 0 22px,
-    #f5efe4 22px 44px,
-    #15100a 44px 66px,
-    #f5efe4 66px 88px
-  );
-  animation: pole-spin 9s linear infinite;
-}
-/* brilho de luz que passa pelo vidro */
-.pole-shine {
-  position: absolute;
-  top: -20%;
-  bottom: -20%;
-  left: -60%;
-  width: 45%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
-  transform: skewX(-12deg);
-  animation: pole-shine 5.5s ease-in-out 1.2s infinite;
-  z-index: 1;
-}
-@keyframes pole-shine {
-  0% { left: -60%; }
-  35%, 100% { left: 130%; }
-}
-.pole-glass::after {
-  content: "";
+/* o vídeo traz o foco de luz e o poste; as bordas dele têm a cor exata do fundo */
+.intro-video {
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg,
-    rgba(0, 0, 0, 0.55) 0%,
-    rgba(0, 0, 0, 0.05) 30%,
-    rgba(255, 255, 255, 0.35) 42%,
-    rgba(0, 0, 0, 0.05) 55%,
-    rgba(0, 0, 0, 0.6) 100%);
-}
-/* 88px de padrão a -55deg = 153,42px na vertical: o ciclo fecha sem pulo */
-@keyframes pole-spin {
-  from { transform: translateY(0); }
-  to { transform: translateY(153.42px); }
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
 }
 
 .intro-content {
@@ -346,22 +236,6 @@ main:focus { outline: none; }
   text-shadow: 0 2px 18px rgba(0, 0, 0, 0.9);
 }
 .intro-rule { width: 72px; height: 2px; background: var(--gold); }
-.intro-logo { display: none; }
-.has-logo .intro-logo {
-  display: block;
-  width: clamp(230px, 64vw, 360px);
-  aspect-ratio: 1;
-  border-radius: 50%;
-  box-shadow: 0 0 0 2px rgba(212, 168, 83, 0.7), 0 0 0 10px rgba(12, 10, 8, 0.6), 0 30px 80px rgba(0, 0, 0, 0.8);
-  margin-bottom: 0.25rem;
-}
-.intro-logo img { width: 100%; height: 100%; border-radius: 50%; }
-.has-logo .intro-name {
-  position: absolute !important;
-  width: 1px; height: 1px;
-  overflow: hidden; clip: rect(0 0 0 0);
-  white-space: nowrap;
-}
 .btn-intro {
   min-width: 170px;
   border-color: rgba(245, 240, 232, 0.6);
@@ -370,7 +244,6 @@ main:focus { outline: none; }
   letter-spacing: 0.22em;
   text-transform: uppercase;
   font-size: 0.875rem;
-  backdrop-filter: blur(6px);
 }
 .btn-intro:focus-visible { outline-color: rgba(230, 196, 122, 0.8); outline-offset: 5px; border-radius: 999px; }
 .btn-intro:hover { background: var(--gold); border-color: var(--gold); color: var(--on-gold); }
@@ -668,8 +541,8 @@ main:focus { outline: none; }
   to { transform: none; }
 }
 @keyframes track-in {
-  from { opacity: 0; letter-spacing: 0.7em; }
-  to { opacity: 1; }
+  from { opacity: 0; transform: translateY(8px) scaleX(1.12); }
+  to { opacity: 1; transform: none; }
 }
 @keyframes band-sweep {
   0% { transform: scaleX(0); opacity: 1; }
@@ -1319,31 +1192,9 @@ main:focus { outline: none; }
 /* ---------- tela de entrada: estúdio com poste 3D ---------- */
 
 /* fundo como uma foto de produto: parede grafite com um foco de luz atrás do poste */
-.intro-open .intro {
-  background:
-    radial-gradient(42% 46% at 50% 44%, rgba(108, 98, 86, 0.55), transparent 72%),
-    radial-gradient(90% 70% at 50% 40%, #3b3631 0%, #221e1a 48%, #0d0b09 100%);
-}
-.intro-glow { display: none; }
+.intro-open .intro { background: var(--ink); }
 
-.intro-3d {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  transition: opacity 1400ms ease, transform 900ms var(--ease-in-out);
-}
-.intro-3d canvas { display: block; width: 100%; height: 100%; }
-.pole-3d .intro-3d { opacity: 1; }
-.intro-leaving .intro-3d { opacity: 0; transform: scale(1.12); }
-
-/* o poste desenhado em CSS só aparece como reserva */
-.intro-open .intro-pole,
-.intro-open .intro-floor { opacity: 0; }
-.intro-open.pole-css .intro-pole,
-.intro-open.pole-css .intro-floor { opacity: 1; transition: opacity 900ms ease; }
-.intro-open.pole-3d .intro-pole,
-.intro-open.pole-3d .intro-floor { display: none; }
-
+/* o 3D ocupa só a coluna do poste: bem menos pixels para desenhar a cada quadro */
 .intro-content { gap: 1.25rem; }
 .intro-name {
   max-width: none;
@@ -1390,4 +1241,10 @@ main:focus { outline: none; }
   background: var(--gold);
   font-size: 0;
   vertical-align: middle;
+}
+
+/* em telas mais estreitas que o vídeo (celular em pé), corta só as laterais lisas
+   para o poste ficar maior */
+@media (max-aspect-ratio: 9/16) {
+  .intro-video { object-fit: cover; }
 }
