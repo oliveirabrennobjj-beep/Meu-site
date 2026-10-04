@@ -372,6 +372,7 @@ main:focus { outline: none; }
   font-size: 0.875rem;
   backdrop-filter: blur(6px);
 }
+.btn-intro:focus-visible { outline-color: rgba(230, 196, 122, 0.8); outline-offset: 5px; border-radius: 999px; }
 .btn-intro:hover { background: var(--gold); border-color: var(--gold); color: var(--on-gold); }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -379,7 +380,6 @@ main:focus { outline: none; }
   .intro-open .intro-content > :nth-child(2) { animation-delay: 150ms; }
   .intro-open .intro-content > :nth-child(3) { animation-delay: 260ms; }
   .intro-open .intro-content > :nth-child(4) { animation-delay: 360ms; }
-  .intro-open .intro-pole { animation: fade-in 1200ms ease backwards; }
 }
 
 /* ---------- cabeçalho ---------- */
@@ -1314,4 +1314,80 @@ main:focus { outline: none; }
     pointer-events: none;
   }
   .motion .service.is-tilting::after { opacity: 1; }
+}
+
+/* ---------- tela de entrada: estúdio com poste 3D ---------- */
+
+/* fundo como uma foto de produto: parede grafite com um foco de luz atrás do poste */
+.intro-open .intro {
+  background:
+    radial-gradient(42% 46% at 50% 44%, rgba(108, 98, 86, 0.55), transparent 72%),
+    radial-gradient(90% 70% at 50% 40%, #3b3631 0%, #221e1a 48%, #0d0b09 100%);
+}
+.intro-glow { display: none; }
+
+.intro-3d {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1400ms ease, transform 900ms var(--ease-in-out);
+}
+.intro-3d canvas { display: block; width: 100%; height: 100%; }
+.pole-3d .intro-3d { opacity: 1; }
+.intro-leaving .intro-3d { opacity: 0; transform: scale(1.12); }
+
+/* o poste desenhado em CSS só aparece como reserva */
+.intro-open .intro-pole,
+.intro-open .intro-floor { opacity: 0; }
+.intro-open.pole-css .intro-pole,
+.intro-open.pole-css .intro-floor { opacity: 1; transition: opacity 900ms ease; }
+.intro-open.pole-3d .intro-pole,
+.intro-open.pole-3d .intro-floor { display: none; }
+
+.intro-content { gap: 1.25rem; }
+.intro-name {
+  max-width: none;
+  font-weight: 800;
+  font-size: clamp(3.6rem, 15.5vw, 12rem);
+  line-height: 0.88;
+  letter-spacing: 0.035em;
+  color: #fbf8f2;
+  text-shadow: 0 10px 50px rgba(0, 0, 0, 0.45), 0 2px 3px rgba(0, 0, 0, 0.35);
+}
+.intro-tagline {
+  font-size: clamp(1.3rem, 3.6vw, 2.1rem);
+  color: #e6c47a;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.6);
+  margin-top: 0.4rem;
+}
+.intro-rule { width: min(42vw, 230px); height: 1px; background: linear-gradient(90deg, transparent, #e6c47a, transparent); }
+.btn-intro {
+  min-width: 200px;
+  min-height: 54px;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  background: linear-gradient(90deg, rgba(14, 11, 8, 0.82) 0%, rgba(58, 44, 22, 0.78) 55%, rgba(176, 134, 58, 0.78) 100%);
+  color: #fff;
+  letter-spacing: 0.32em;
+  font-weight: 700;
+  box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+.btn-intro:hover { background: linear-gradient(90deg, rgba(14, 11, 8, 0.9), rgba(212, 168, 83, 0.92)); color: #fff; border-color: #fff; }
+
+@media (max-width: 599px) {
+  .intro-name { max-width: 7ch; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .intro-open .intro-name { animation: rise 1100ms var(--ease-out) 200ms both; }
+}
+
+/* ---------- menos enfeite no resto do site ---------- */
+
+.btn-primary { box-shadow: none; }
+.marquee-star {
+  display: inline-block;
+  width: clamp(1.5rem, 4vw, 2.5rem);
+  height: 1px;
+  background: var(--gold);
+  font-size: 0;
+  vertical-align: middle;
 }

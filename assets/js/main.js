@@ -87,11 +87,6 @@
     $("[data-brand]").insertBefore(logoImg("44", "brand-logo"), $("[data-brand] .brand-name"));
     var footerBrand = $(".footer-brand");
     footerBrand.insertBefore(logoImg("88", "footer-logo"), footerBrand.firstChild);
-    var introLogo = $("[data-intro-logo]");
-    if (introLogo) {
-      introLogo.appendChild(el("img", { src: imagens.logo, alt: cfg.nome, width: "480", height: "480", decoding: "async" }));
-      document.documentElement.classList.add("has-logo");
-    }
   }
 
   /* ---------- seção principal ---------- */
@@ -583,6 +578,17 @@
 
     behind.forEach(function (node) { node.setAttribute("inert", ""); });
     enterBtn.focus({ preventScroll: true });
+
+    // Poste 3D: só é baixado quando a tela de entrada aparece. Se não carregar
+    // a tempo (ou o aparelho não tiver WebGL), fica o poste desenhado em CSS.
+    var poleScript = document.createElement("script");
+    poleScript.src = "assets/js/intro-3d.js";
+    poleScript.async = true;
+    poleScript.onerror = function () { root.classList.add("pole-css"); };
+    document.head.appendChild(poleScript);
+    setTimeout(function () {
+      if (!root.classList.contains("pole-3d")) root.classList.add("pole-css");
+    }, 2500);
 
     function enter() {
       if (leaving) return;

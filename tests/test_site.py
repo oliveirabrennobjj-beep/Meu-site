@@ -311,6 +311,23 @@ def test_intro(browser, base, shots):
     check(not errors, f"sem erros no console {errors if errors else ''}")
     ctx.close()
 
+    ctx, page, errors = new_page(browser, base, intro=True)
+    page.wait_for_function("['pole-3d', 'pole-css'].some(c => document.documentElement.classList.contains(c))", timeout=4000)
+    mode = "3D" if page.evaluate("document.documentElement.classList.contains('pole-3d')") else "CSS"
+    check(True, f"poste aparece (modo {mode})")
+    if mode == "3D":
+        check(page.locator("[data-intro-3d] canvas").count() == 1, "poste 3D desenhado num canvas")
+    check(not errors, f"sem erros no console {errors if errors else ''}")
+    ctx.close()
+
+    ctx, page, _ = new_page(browser, base, intro=True)
+    page.route("**/assets/js/intro-3d.js", lambda r: r.abort())
+    page.reload()
+    page.wait_for_function("document.documentElement.classList.contains('pole-css')", timeout=4000)
+    check(page.evaluate("getComputedStyle(document.querySelector('.intro-pole')).display") != "none",
+          "sem o 3D, aparece o poste desenhado em CSS")
+    ctx.close()
+
     ctx, page, _ = new_page(browser, base, intro=True)
     page.keyboard.press("Escape")
     page.wait_for_selector("[data-intro]", state="detached", timeout=3000)

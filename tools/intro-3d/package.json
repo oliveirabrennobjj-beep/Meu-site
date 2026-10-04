@@ -1,0 +1,12 @@
+{
+  "name": "barber-club-intro-3d",
+  "private": true,
+  "description": "Gera assets/js/intro-3d.js (poste 3D da tela de entrada). Rode: npm install && npm run build",
+  "scripts": {
+    "build": "esbuild intro-3d.src.js --bundle --minify --format=iife --target=es2019 --legal-comments=eof --outfile=../../assets/js/intro-3d.js"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.10",
+    "three": "0.186.1"
+  }
+}
