@@ -42,7 +42,7 @@ Quase tudo muda em um único arquivo: `assets/js/site-config.js`. Campos vazios 
 | Preço e duração | `servicos[].preco`, `servicos[].duracao` | Aparecem no card do serviço |
 | Avaliações | `avaliacoes: [{ nome, texto }]` e `google.perfilUrl` | Mostra depoimentos e o link para o Google |
 | Nota do Google | `google.nota`, `google.totalAvaliacoes`, `google.registradoEm` | Atualize à mão; o site não consulta o Google |
-| Fotos e logo | `imagens.hero`, `imagens.sobre`, `imagens.resultados` (`src`, `srcset`, `alt`) e `imagens.logo` | Foto de fundo da seção principal, foto em arco de "Nosso espaço" e galeria "Cortes recentes" (abre ampliada ao tocar) |
+| Fotos e logo | `imagens.hero`, `imagens.sobre`, `imagens.espaco`, `imagens.resultados` (`src`, `srcset`, `alt`) e `imagens.logo` | Foto de fundo da seção principal, foto em arco e fotos extras de "Nosso espaço" e galeria "Cortes recentes" (as fotos abrem ampliadas ao tocar) |
 
 ## Tela de entrada
 
@@ -61,22 +61,28 @@ O site deixa claro que o horário só fica marcado quando a barbearia responder.
 
 ## Informações pendentes
 
-Antes de publicar, confirme com a barbearia:
+### Já cadastrado
+
+- **Logo**, recortada da foto de perfil do Instagram (cabeçalho, tela de entrada, rodapé e ícone da aba).
+- **Endereço**, R. Pastor Luís Laurentino da Silva, 957, Casimiro de Abreu, RJ, 28860-000.
+- **Mapa e rota.** O mapa busca o lugar pelo nome no Google Maps, e "Como chegar" abre o perfil da Barber Club no Google Maps.
+- **Avaliações no Google**, com dois depoimentos reais, copiados como aparecem (Marcos Cesar e Jim Torres), e o link para o perfil.
+
+### Ainda falta
 
 1. **WhatsApp de agendamento.** O telefone exibido, (31) 99780-3143, tem DDD de Minas Gerais, e Casimiro de Abreu usa o 22. Vale confirmar se é o número certo e se atende pelo WhatsApp.
-2. **Endereço.** O texto da captura cita duas ruas (“Rua pastor Luiz Laurentino da Silva, R. Rodolfo Motta”). Ele está guardado em `endereco.referenciaDaCaptura` e não aparece no site.
-3. **Ponto no mapa e link de rota**, depois de confirmar o endereço.
-4. **Horários de funcionamento completos.**
-5. **Link do perfil no Google** e a data em que a nota 4,9 / 33 avaliações foi vista (hoje está como “outubro de 2026”, a data desta versão).
-6. **Depoimentos.** Só entram textos reais, copiados como aparecem, com o nome exibido.
-7. **Preços e duração dos serviços**, se a barbearia quiser mostrar.
-8. **Origem das fotos.** As três fotos atuais (barbeiro de avental, degradê e barba com navalha) foram enviadas para esta versão. Antes de publicar, confirme que são da Barber Club e que as pessoas que aparecem autorizam o uso. Se forem ilustrativas ou geradas por IA, troque por fotos reais, porque o site as apresenta como o ambiente e o trabalho da barbearia.
+2. **Número do endereço.** O 957 veio do Street View, que mostra um número aproximado. Confirme na fachada.
+3. **Horários de funcionamento completos.** O perfil do Google, na captura, mostra só "abre seg. às 08:00". Basta uma captura com o quadro "Horário de funcionamento" aberto.
+4. **Mapa com o ponto exato (opcional).** Em Google Maps › Compartilhar › Incorporar um mapa, copie o `src` para `endereco.mapaEmbedUrl`.
+5. **Preços e duração dos serviços**, se a barbearia quiser mostrar. A faixa "R$ 20–80" do Google não foi usada como preço de serviço.
+6. **Logo original** em alta resolução. A atual saiu de uma captura de tela e serve bem até uns 360 px.
+7. **Origem das fotos.** As cinco fotos atuais (três de barbeiros de avental, degradê e barba com navalha) foram enviadas para esta versão. Antes de publicar, confirme que são da Barber Club e que as pessoas que aparecem autorizam o uso. Se forem ilustrativas ou geradas por IA, troque por fotos reais, porque o site as apresenta como o ambiente e o trabalho da barbearia. As fotos do perfil no Google (espelho, bancada, corte com desenho) parecem ser do salão real: os arquivos originais delas seriam ótimos aqui.
 
 ### Arquivos para enviar
 
 | Arquivo sugerido | Uso | Formato |
 |---|---|---|
-| `logo.svg` (ou PNG com fundo transparente) | Cabeçalho | Vetor ou PNG com pelo menos 400 px de largura |
+| `logo.svg` (ou PNG com fundo transparente) | Substituir a logo recortada | Vetor ou PNG com pelo menos 800 px de largura |
 | Fotos de cortes | Mais itens em "Cortes recentes" | Verticais (4:5), pelo menos 1000 × 1250 px |
 | Foto da fachada ou do salão | Pode substituir ou complementar as atuais | Pelo menos 1600 px de largura para o fundo da seção principal |
 

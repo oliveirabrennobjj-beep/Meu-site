@@ -81,10 +81,17 @@
   /* ---------- marca ---------- */
 
   if (imagens.logo) {
-    var brand = $("[data-brand]");
-    brand.innerHTML = "";
-    brand.appendChild(el("img", { src: imagens.logo, alt: "", className: "brand-logo", height: "36" }));
-    brand.appendChild(el("span", { className: "brand-name visually-hidden", text: cfg.nome }));
+    var logoImg = function (size, className) {
+      return el("img", { src: imagens.logo, alt: "", width: size, height: size, className: className, decoding: "async" });
+    };
+    $("[data-brand]").insertBefore(logoImg("44", "brand-logo"), $("[data-brand] .brand-name"));
+    var footerBrand = $(".footer-brand");
+    footerBrand.insertBefore(logoImg("88", "footer-logo"), footerBrand.firstChild);
+    var introLogo = $("[data-intro-logo]");
+    if (introLogo) {
+      introLogo.appendChild(el("img", { src: imagens.logo, alt: cfg.nome, width: "480", height: "480", decoding: "async" }));
+      document.documentElement.classList.add("has-logo");
+    }
   }
 
   /* ---------- seção principal ---------- */
@@ -163,7 +170,7 @@
 
   var galleries = {};
 
-  function renderGallery(name, emptyState) {
+  function renderGallery(name, emptyState, instagramTile) {
     var list = $('[data-gallery="' + name + '"]');
     var items = (imagens[name] || []);
     var withPhotos = items.filter(function (item) { return item.src; });
@@ -196,7 +203,7 @@
       list.appendChild(li);
     });
 
-    if (withPhotos.length && instagramUrl) {
+    if (instagramTile && withPhotos.length && instagramUrl) {
       list.appendChild(el("li", { className: "gallery-item gallery-more" }, [
         el("a", { href: instagramUrl, target: "_blank", rel: "noopener" }, [
           icon("instagram", 30),
@@ -218,7 +225,8 @@
       instagramUrl ? el("a", { className: "btn btn-outline", href: instagramUrl, target: "_blank", rel: "noopener" }, [icon("instagram"), "Veja mais no Instagram"]) : null,
     ]);
   }
-  renderGallery("resultados", resultsEmpty);
+  renderGallery("resultados", resultsEmpty, true);
+  renderGallery("espaco");
 
   $all("[data-instagram-link]").forEach(function (link) {
     if (instagramUrl) link.href = instagramUrl;
@@ -325,10 +333,17 @@
     var reviews = (cfg.avaliacoes || []).filter(function (r) { return r.texto && r.nome; });
     var list = $("[data-testimonials]");
     if (!reviews.length) return;
+    var star = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M12 2.5l2.94 5.96 6.58.96-4.76 4.64 1.12 6.55L12 17.52l-5.88 3.09 1.12-6.55L2.48 9.42l6.58-.96z"/></svg>';
     reviews.forEach(function (review) {
+      var nota = Math.round(Number(review.nota) || 0);
       list.appendChild(el("li", { className: "testimonial" }, [
-        el("blockquote", {}, [el("p", { text: review.texto })]),
+        nota ? el("p", { className: "testimonial-stars" }, [
+          el("span", { className: "visually-hidden", text: nota + " de 5 estrelas" }),
+          el("span", { "aria-hidden": "true", html: new Array(nota + 1).join(star) }),
+        ]) : null,
+        el("blockquote", {}, [el("p", { text: "“" + review.texto + "”" })]),
         el("p", { className: "testimonial-name", text: review.nome }),
+        el("p", { className: "testimonial-source", text: "Avaliação no Google" }),
       ]));
     });
     list.hidden = false;

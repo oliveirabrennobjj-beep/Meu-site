@@ -66,7 +66,18 @@ SAMPLE_OVERRIDES = """
 """
 
 
-def new_page(browser, base, width=390, height=844, sample=False, intro=False, **kw):
+PENDING_OVERRIDES = """
+(function () {
+  var c = window.BARBER_CLUB;
+  c.endereco.confirmado = false;
+  c.google.perfilUrl = "";
+  c.avaliacoes = [];
+  c.imagens.resultados = [];
+})();
+"""
+
+
+def new_page(browser, base, width=390, height=844, sample=False, pending=False, intro=False, **kw):
     ctx = browser.new_context(viewport={"width": width, "height": height}, **kw)
     if not intro:
         # pula a tela de entrada, como numa segunda página vista na mesma visita
@@ -75,10 +86,13 @@ def new_page(browser, base, width=390, height=844, sample=False, intro=False, **
     errors = []
     page.on("pageerror", lambda e: errors.append(str(e)))
     page.on("console", lambda m: errors.append(m.text) if m.type == "error" else None)
-    if sample:
+    # o Google Maps não carrega no ambiente de teste; o iframe recebe uma página vazia
+    page.route("https://www.google.com/**", lambda r: r.fulfill(body="<html></html>", content_type="text/html"))
+    if sample or pending:
+        extra = SAMPLE_OVERRIDES if sample else PENDING_OVERRIDES
         def config(route):
             original = open(os.path.join(ROOT, "assets/js/site-config.js"), encoding="utf-8").read()
-            route.fulfill(body=original + SAMPLE_OVERRIDES, content_type="application/javascript")
+            route.fulfill(body=original + extra, content_type="application/javascript")
         page.route("**/assets/js/site-config.js", config)
         for n, color in [(1, "#5a3b22"), (2, "#2d3a4a"), (3, "#3e2d4a")]:
             page.route(f"**/assets/img/teste-{n}.svg",
@@ -99,26 +113,33 @@ def test_layout(browser, base):
 
 
 def test_default(browser, base, shots):
-    print("\nDados atuais (pendências não confirmadas)")
+    print("\nDados atuais")
     ctx, page, _ = new_page(browser, base, permissions=["clipboard-read", "clipboard-write"])
     body = page.inner_text("body")
 
     check(page.locator('a[href*="wa.me"]').count() == 0, "nenhum link de WhatsApp enquanto o número não é cadastrado")
-    check("Rodolfo" not in body and "Laurentino" not in body, "endereço não confirmado não aparece")
+    check("R. Pastor Luís Laurentino da Silva, 957" in body, "endereço confirmado aparece")
     check("aberto agora" not in body.lower(), "não exibe 'aberto agora'")
     check("agendamento confirmado" not in body.lower(), "não exibe 'agendamento confirmado'")
     check("R$" not in body, "nenhum preço exibido")
-    check(page.locator("iframe").count() == 0, "mapa não é carregado sem endereço confirmado")
-    check(page.get_by_role("button", name="Como chegar").is_disabled(), "botão de rota desabilitado")
-    check(page.locator("[data-google-link]").is_hidden(), "link do Google oculto sem URL cadastrada")
-    check(page.locator("[data-testimonials]").is_hidden(), "nenhum depoimento inventado")
+    check(page.locator("iframe[title^='Mapa']").count() == 1, "mapa do endereço confirmado")
+    check(page.get_by_role("link", name="Como chegar").get_attribute("href") == "https://maps.app.goo.gl/kbnvWGg5mPYj4y746",
+          "'Como chegar' abre o perfil no Google Maps")
+    check(page.locator("[data-google-link]").get_attribute("href") == "https://maps.app.goo.gl/kbnvWGg5mPYj4y746",
+          "link 'Ver avaliações no Google'")
+    names = page.locator(".testimonial-name").all_inner_texts()
+    check(names == ["Marcos Cesar", "Jim Torres"], f"depoimentos reais com o nome exibido: {names}")
+    check("“Melhor barbearia da cidade, qualidade e talento no atendimento.”" in body, "texto do depoimento preservado")
+    check("Em breve" in page.inner_text("[data-info-list]"), "horários seguem pendentes, sem inventar")
+    check(page.locator(".brand-logo").count() == 1 and page.locator(".footer-logo").count() == 1, "logo no cabeçalho e no rodapé")
     check("4,9" in body and "33 avaliações no Google" in body, "nota 4,9 e 33 avaliações exibidas")
     check("registrados em" in body, "nota identificada como registro, sem atualização ao vivo")
     check(page.locator('a[href="tel:+5531997803143"]').count() >= 1, "telefone com link tel:")
     check(page.locator('a[href="https://www.instagram.com/barber_club.oficial_/"]').count() >= 2, "links do Instagram")
     check(page.locator('a[href="https://linktr.ee/barber_club_123"]').count() >= 1, "link da bio")
     check(page.locator("h1").count() == 1, "um único h1")
-    check(page.locator(".gallery-btn").count() == 2, "galeria com as 2 fotos de cortes")
+    check(page.locator("[data-gallery=resultados] .gallery-btn").count() == 2, "galeria com as 2 fotos de cortes")
+    check(page.locator("[data-gallery=espaco] .gallery-btn").count() == 2, "2 fotos extras em Nosso espaço")
     check(page.locator(".gallery-more a").get_attribute("href") == "https://www.instagram.com/barber_club.oficial_/",
           "galeria termina com link para o Instagram")
     alts = page.evaluate("[...document.querySelectorAll('.space-frame img')].map(i => i.alt)")
@@ -179,6 +200,20 @@ def test_default(browser, base, shots):
     page.locator(".site-header [data-agendar]").click()
     page.wait_for_timeout(700)
     check(page.url.endswith("#contato"), "desktop: 'Agendar horário' do cabeçalho leva ao contato")
+    ctx.close()
+
+
+def test_pending(browser, base):
+    print("\nDados não confirmados (simulação)")
+    ctx, page, errors = new_page(browser, base, pending=True)
+    body = page.inner_text("body")
+    check("Laurentino" not in body, "endereço não confirmado não aparece")
+    check(page.locator("iframe").count() == 0, "mapa não é carregado sem endereço confirmado")
+    check(page.get_by_role("button", name="Como chegar").is_disabled(), "botão de rota desabilitado")
+    check(page.locator("[data-google-link]").is_hidden(), "link do Google oculto sem URL cadastrada")
+    check(page.locator("[data-testimonials]").is_hidden(), "sem depoimentos cadastrados, nada é inventado")
+    check(page.locator(".gallery-empty").count() == 1, "sem fotos de cortes, aparece o aviso com link do Instagram")
+    check(not errors, f"sem erros no console {errors if errors else ''}")
     ctx.close()
 
 
@@ -323,6 +358,7 @@ def main():
         test_layout(browser, base)
         test_intro(browser, base, args.shots)
         test_default(browser, base, args.shots)
+        test_pending(browser, base)
         test_sample(browser, base, args.shots)
         test_reduced_motion(browser, base)
         browser.close()

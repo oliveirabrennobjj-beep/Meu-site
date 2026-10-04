@@ -38,22 +38,20 @@ window.BARBER_CLUB = {
   },
 
   endereco: {
-    // PENDENTE: mude para true só depois de conferir o endereço com a barbearia.
-    confirmado: false,
-    // Endereço definitivo, exibido quando confirmado = true.
-    texto: "",
-    // Texto que aparece na captura do Google. Fica guardado apenas como referência
-    // e NÃO é exibido no site.
-    referenciaDaCaptura:
-      "Rua pastor Luiz Laurentino da Silva, R. Rodolfo Motta, Casimiro de Abreu - RJ, 28860-000",
-    // URL de incorporação do Google Maps (Compartilhar > Incorporar um mapa > src).
-    mapaEmbedUrl: "",
-    // Destino do botão "Como chegar": link do Google Maps do local confirmado.
-    rotaUrl: "",
+    // Confirmado pelo responsável a partir do Street View e do perfil no Google.
+    // O número 957 vem do Street View, que é aproximado: confira na fachada.
+    confirmado: true,
+    texto: "R. Pastor Luís Laurentino da Silva, 957, Casimiro de Abreu, RJ, 28860-000",
+    // Mapa incorporado, buscando pelo nome do lugar no Google Maps. Para fixar o ponto
+    // exato, troque pelo "src" de Google Maps > Compartilhar > Incorporar um mapa.
+    mapaEmbedUrl:
+      "https://www.google.com/maps?q=Barber+Club+-+Rua+pastor+Luiz+Laurentino+da+Silva%2C+R.+Rodolfo+Motta%2C+Casimiro+de+Abreu+-+RJ&output=embed",
+    // Destino do botão "Como chegar": perfil da Barber Club no Google Maps.
+    rotaUrl: "https://maps.app.goo.gl/kbnvWGg5mPYj4y746",
   },
 
-  // PENDENTE: horários completos. Exemplo:
-  // [{ dias: "Terça a sexta", horas: "9h às 19h" }, { dias: "Sábado", horas: "8h às 17h" }]
+  // PENDENTE: horários completos (o perfil do Google mostra só "abre seg. às 08:00").
+  // Exemplo: [{ dias: "Segunda a sexta", horas: "8h às 19h" }, { dias: "Sábado", horas: "8h às 17h" }]
   horarios: [],
 
   google: {
@@ -61,13 +59,23 @@ window.BARBER_CLUB = {
     totalAvaliacoes: 33,
     // Quando os números foram vistos no perfil. O site não atualiza sozinho.
     registradoEm: "outubro de 2026",
-    // PENDENTE: link do perfil da Barber Club no Google.
-    perfilUrl: "",
+    perfilUrl: "https://maps.app.goo.gl/kbnvWGg5mPYj4y746",
   },
 
   // Depoimentos reais, copiados exatamente como aparecem no Google.
   // Formato: { nome: "Nome exibido", texto: "Texto do depoimento", nota: 5 }
-  avaliacoes: [],
+  avaliacoes: [
+    {
+      nome: "Marcos Cesar",
+      texto: "Espaço incrível com profissionais super qualificados e um tratamento nota 1000 !! Recomendo e sou cliente constante",
+      nota: 5,
+    },
+    {
+      nome: "Jim Torres",
+      texto: "Melhor barbearia da cidade, qualidade e talento no atendimento.",
+      nota: 5,
+    },
+  ],
 
   // preco e duracao são opcionais: só aparecem quando preenchidos.
   // Exemplo: preco: "R$ 00,00", duracao: "30 min"
@@ -102,8 +110,9 @@ window.BARBER_CLUB = {
   // "srcset" é opcional (versões menores para celular).
   // Enquanto "src" estiver vazio, o site mostra um espaço reservado.
   imagens: {
-    // Logo em boa resolução (SVG ou PNG transparente). Vazio = nome em texto.
-    logo: "",
+    // Logo recortada da foto de perfil do Instagram. Troque pelo arquivo original
+    // em alta resolução (SVG ou PNG transparente) quando tiver.
+    logo: "assets/img/logo-barber-club.webp",
     // Fundo da seção principal.
     hero: {
       src: "assets/img/barba-navalha-1122.webp",
@@ -118,6 +127,19 @@ window.BARBER_CLUB = {
       alt: "Barbeiro de avental de couro apoiado no encosto de uma cadeira de barbearia",
       reservado: "Foto do espaço",
     },
+    // Fotos extras de "Nosso espaço": toque para ampliar.
+    espaco: [
+      {
+        src: "assets/img/barbeiro-tesoura-1122.webp",
+        srcset: "assets/img/barbeiro-tesoura-640.webp 640w, assets/img/barbeiro-tesoura-1122.webp 1122w",
+        alt: "Barbeiro de avental de couro segurando tesoura e pente",
+      },
+      {
+        src: "assets/img/barbeiro-maquinas-1122.webp",
+        srcset: "assets/img/barbeiro-maquinas-640.webp 640w, assets/img/barbeiro-maquinas-1122.webp 1122w",
+        alt: "Barbeiro de óculos com os braços cruzados segurando duas máquinas de corte",
+      },
+    ],
     // Galeria "Cortes recentes": toque para ampliar.
     resultados: [
       {
