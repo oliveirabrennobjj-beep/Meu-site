@@ -599,13 +599,24 @@
         };
         img.src = INTRO_ANIMATION;
       };
-      video.addEventListener("playing", function () { settled = true; });
       video.preload = "auto";
       var playing = video.play();
       if (playing && playing.catch) playing.catch(useAnimatedImage);
-      setTimeout(function () {
-        if (video.paused || video.currentTime === 0) useAnimatedImage();
-      }, 1800);
+      // Confere se o vídeo andou de verdade: há visualizadores que dizem "tocando"
+      // mas deixam a imagem congelada. Se não andou, entra a imagem animada.
+      var checkAt = function (ms, minTime) {
+        setTimeout(function () {
+          if (!settled && (video.paused || video.currentTime < minTime)) useAnimatedImage();
+        }, ms);
+      };
+      checkAt(1500, 0.3);
+      checkAt(3500, 1.5);
+      video.addEventListener("timeupdate", function onTime() {
+        if (video.currentTime > 1.6) {
+          settled = true;
+          video.removeEventListener("timeupdate", onTime);
+        }
+      });
     }
 
     function enter() {
