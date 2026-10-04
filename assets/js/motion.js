@@ -1,14 +1,17 @@
 /* Barber Club: movimento ao rolar a página.
- * Tudo aqui é enfeite: sem este arquivo (ou com "reduzir movimento" ativado no
- * aparelho), o conteúdo aparece normalmente, parado. */
+ * Tudo aqui é enfeite: sem este arquivo o conteúdo aparece normalmente, parado.
+ * Com "reduzir movimento" ativado no aparelho, fica o modo calmo: os blocos só
+ * esmaecem ao aparecer, sem deslizar, e saem parallax, inclinação e contagem. */
 (function () {
   "use strict";
 
   var root = document.documentElement;
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
-  if (reduce.matches || !("IntersectionObserver" in window)) return;
+  if (!("IntersectionObserver" in window)) return;
 
+  var calm = reduce.matches;
   root.classList.add("motion");
+  if (calm) root.classList.add("motion-calm");
 
   function $all(sel, scope) { return Array.prototype.slice.call((scope || document).querySelectorAll(sel)); }
 
@@ -47,7 +50,7 @@
 
   /* ---------- nota contando ---------- */
 
-  var ratingNumber = document.querySelector("[data-rating-number]");
+  var ratingNumber = calm ? null : document.querySelector("[data-rating-number]");
   if (ratingNumber && ratingNumber.textContent) {
     var finalText = ratingNumber.textContent;
     var target = parseFloat(finalText.replace(",", "."));
@@ -87,7 +90,7 @@
     var y = window.scrollY;
     var vh = window.innerHeight;
 
-    if (hero && y < hero.offsetHeight) {
+    if (!calm && hero && y < hero.offsetHeight) {
       var p = y / hero.offsetHeight;
       if (heroMedia) heroMedia.style.transform = "translate3d(0," + (y * 0.35) + "px,0)";
       if (heroContent) {
@@ -96,7 +99,7 @@
       }
     }
 
-    if (spaceImg) {
+    if (!calm && spaceImg) {
       var r = spaceImg.parentNode.getBoundingClientRect();
       if (r.bottom > 0 && r.top < vh) {
         var offset = ((r.top + r.height / 2) - vh / 2) / vh;
@@ -110,7 +113,7 @@
     }
 
     // o cabeçalho sai ao descer e volta ao subir; o menu aberto e o foco o mantêm
-    if (header && !header.classList.contains("menu-open") && !header.contains(document.activeElement)) {
+    if (!calm && header && !header.classList.contains("menu-open") && !header.contains(document.activeElement)) {
       var hide = y > lastY + 4 && y > vh * 0.6;
       var show = y < lastY - 4 || y < vh * 0.6;
       if (hide) header.classList.add("is-hidden");
@@ -134,7 +137,7 @@
 
   /* ---------- cartões que inclinam com o mouse ---------- */
 
-  if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+  if (!calm && window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
     $all(".service").forEach(function (card) {
       card.addEventListener("pointermove", function (event) {
         var r = card.getBoundingClientRect();
@@ -153,14 +156,14 @@
     });
   }
 
-  // Se a pessoa ativar "reduzir movimento" com a página aberta, tudo para.
+  // Se a pessoa ativar "reduzir movimento" com a página aberta, passa ao modo calmo.
   reduce.addEventListener("change", function (event) {
     if (!event.matches) return;
-    root.classList.remove("motion");
-    $all("[data-reveal]").forEach(function (node) { node.classList.add("is-revealed"); });
-    window.removeEventListener("scroll", onScroll);
+    calm = true;
+    root.classList.add("motion-calm");
     [heroMedia, heroContent, spaceImg].forEach(function (node) {
       if (node) { node.style.transform = ""; node.style.opacity = ""; }
     });
+    if (header) header.classList.remove("is-hidden");
   });
 })();

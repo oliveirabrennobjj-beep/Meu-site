@@ -57,8 +57,8 @@ Com movimento reduzido ativado no aparelho, o poste fica parado e a saída é im
 
 O poste da entrada é um **vídeo curto em loop** (`assets/video/poste.webm` e `poste.mp4`, 1,8 s, menos de 110 KB), tocado pelo chip de vídeo do aparelho. Assim ele gira liso até em celular simples, e aparece na hora.
 
-- Enquanto o vídeo carrega, ou com "reduzir movimento" ativado, aparece o primeiro quadro (`poste.webp`).
-- Alguns navegadores internos de apps (Instagram, visualizadores de arquivo) não deixam vídeo tocar sozinho. Se o vídeo não começar em 1,8 s, o site troca por `poste-anim.webp`, a mesma animação como imagem animada (406 KB), que toca em qualquer lugar.
+- Enquanto o vídeo carrega, aparece o primeiro quadro (`poste.webp`).
+- Alguns navegadores internos de apps (Instagram, visualizadores de arquivo) não deixam vídeo tocar sozinho. Se o vídeo não começar, não avançar de verdade ou parar várias vezes para carregar, o site troca por `poste-anim.webp`, a mesma animação como imagem animada (406 KB), que toca em qualquer lugar.
 - O vídeo foi desenhado em 3D com [three.js](https://threejs.org) (licença MIT): latão polido, tubo de vidro, listras dourado/creme/preto e luz de estúdio montada em código. Não é imagem gerada por IA.
 - As bordas do vídeo têm a cor exata do fundo da página (`#0c0a08`), então ele se funde sem emenda.
 - Para mudar cores, velocidade ou formato, edite `tools/intro-3d/pole-video.src.js` e gere de novo (precisa de Node, Python com Playwright e ffmpeg):
@@ -80,7 +80,9 @@ Os efeitos ficam em `assets/js/motion.js`, com os estilos no fim de `assets/css/
 - **Barra de progresso** dourada no topo, e o cabeçalho sai ao descer e volta ao subir.
 - **No computador:** os cartões de serviço inclinam seguindo o mouse.
 
-Tudo usa só `transform` e `opacity`, sem bibliotecas. Com "reduzir movimento" ativado no aparelho, ou sem JavaScript, nada se mexe e todo o conteúdo aparece direto.
+Tudo usa só `transform` e `opacity`, sem bibliotecas. Sem JavaScript, nada se mexe e todo o conteúdo aparece direto.
+
+**Com "reduzir movimento" ativado no aparelho** (muitos celulares ligam isso sozinhos, por exemplo na economia de bateria), o site entra no modo calmo: o poste da entrada continua girando, porque é um movimento pequeno e no lugar; textos e fotos só esmaecem ao aparecer, sem deslizar; e ficam desligados o parallax, a aproximação da foto, a faixa rolando, a inclinação dos cartões e a contagem da nota.
 Para desligar os efeitos de rolagem, basta remover a linha `<script src="assets/js/motion.js" defer></script>` do `index.html`.
 
 ## Agendamento nesta versão

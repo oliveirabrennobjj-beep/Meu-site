@@ -1064,16 +1064,6 @@ main:focus { outline: none; }
 
 /* ---------- movimento reduzido ---------- */
 
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
 
 /* ---------- faixa rolando ---------- */
 
@@ -1247,4 +1237,25 @@ main:focus { outline: none; }
    para o poste ficar maior */
 @media (max-aspect-ratio: 9/16) {
   .intro-video { object-fit: cover; }
+}
+
+/* ---------- movimento reduzido (fica por último para valer sobre as regras acima) ---------- */
+
+/* "Reduzir movimento": nada desliza, aproxima ou balança. O que muda de estado
+   só esmaece. O poste da entrada continua girando (é pequeno e no lugar). */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .intro-leaving .intro { transform: none; opacity: 0; transition: opacity 600ms ease; }
+  .intro-leaving .intro-content,
+  .intro-leaving .intro-video { transform: none; }
+  .motion [data-reveal]:not(.is-revealed) { transform: none; }
+  .motion [data-reveal="wipe"]::after,
+  .motion .space-photo[data-reveal="wipe"] .space-frame::after { transition: opacity 900ms ease var(--reveal-delay, 0ms); }
+  .motion [data-reveal="wipe"].is-revealed::after,
+  .motion .space-photo[data-reveal="wipe"].is-revealed .space-frame::after { transform: none; opacity: 0; }
+  .motion [data-reveal="wipe"]:not(.is-revealed) img { transform: none; }
+  .site-header.is-hidden { transform: none; }
+  .gallery-btn img,
+  .btn:active:not(:disabled) { transform: none; }
+  .gallery-btn:hover img { transform: none; }
 }

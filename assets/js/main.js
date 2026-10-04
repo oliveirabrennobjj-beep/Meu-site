@@ -583,13 +583,16 @@
     // Poste em vídeo (loop de 1,8 s, tocado pelo chip de vídeo do aparelho).
     // Navegadores internos de apps (Instagram, visualizadores) às vezes não deixam
     // vídeo tocar sozinho: nesse caso entra a mesma animação como WebP animado.
-    // Com "reduzir movimento", fica a imagem parada do primeiro quadro.
+    // O giro do poste é pequeno e no lugar, então toca também com "reduzir
+    // movimento" (muitos celulares ligam isso sozinhos na economia de bateria).
     var video = $("[data-intro-video]");
-    if (video && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    if (video) {
       var settled = false;
-      var useAnimatedImage = function () {
-        if (settled) return;
+      var swapped = false;
+      var useAnimatedImage = function (force) {
+        if (swapped || (settled && !force)) return;
         settled = true;
+        swapped = true;
         var img = new Image();
         img.className = "intro-video";
         img.alt = "";
@@ -611,6 +614,12 @@
       };
       checkAt(1500, 0.3);
       checkAt(3500, 1.5);
+      // vídeo que vive parando para carregar ("waiting") também dá lugar à imagem
+      var waits = 0;
+      video.addEventListener("waiting", function () {
+        waits++;
+        if (waits >= 4 && video.currentTime < 6) useAnimatedImage(true);
+      });
       video.addEventListener("timeupdate", function onTime() {
         if (video.currentTime > 1.6) {
           settled = true;
@@ -628,9 +637,8 @@
         overlay.remove();
         root.classList.remove("intro-open", "intro-leaving");
       };
-      if (prefersReducedMotion()) {
-        done();
-      } else {
+      {
+        // com "reduzir movimento", o CSS troca a cortina por um esmaecer
         root.classList.add("intro-leaving");
         overlay.addEventListener("transitionend", function (event) {
           if (event.target === overlay) done();
