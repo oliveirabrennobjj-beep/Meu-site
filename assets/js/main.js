@@ -506,7 +506,7 @@
   var header = $("[data-header]");
   var toggle = $("[data-menu-toggle]");
   var nav = $("[data-nav]");
-  var desktop = window.matchMedia("(min-width: 960px)");
+  var desktop = window.matchMedia("(min-width: 1000px)");
 
   function setMenu(open) {
     toggle.setAttribute("aria-expanded", String(open));
