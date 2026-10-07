@@ -96,3 +96,14 @@ Nas sessões na nuvem, o Playwright é preparado pelo hook descrito em `.claude/
 ## Publicação
 
 Fica para uma etapa posterior. Por ser um site estático, ele pode ser publicado em qualquer hospedagem de arquivos (GitHub Pages, Netlify, Cloudflare Pages, etc.).
+
+## Estilos de demonstração
+
+A pasta `estilos/` tem o mesmo conteúdo do site com o visual de outros design systems da pasta `awesome-design-md/`:
+
+- `estilos/apple.html`: segue `awesome-design-md/design-md/apple/DESIGN.md`
+- `estilos/nike.html`: segue `awesome-design-md/design-md/nike/DESIGN.md`
+- `estilos/index.html`: página para comparar os estilos
+
+São só demonstrações (marcadas com `noindex`). O site oficial continua sendo o `index.html` da raiz.
+As fontes Inter e Anton ficam em `estilos/fonts/` (licença OFL). Capturas em `docs/capturas/estilos/`.

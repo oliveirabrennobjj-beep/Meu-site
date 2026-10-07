@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Barber Club | Comparar estilos</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+  <style>
+    :root { --bg: #f4f4f2; --ink: #161616; --mute: #666; --line: #ddd; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+    main { max-width: 880px; margin: 0 auto; padding: 40px 16px 64px; }
+    h1 { font-size: 28px; line-height: 1.2; margin: 0 0 8px; }
+    .lead { color: var(--mute); margin: 0 0 32px; max-width: 60ch; }
+    ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+    @media (min-width: 640px) { ul { grid-template-columns: repeat(3, 1fr); } }
+    a.card { display: block; height: 100%; background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 20px; color: inherit; text-decoration: none; }
+    a.card:hover { border-color: var(--ink); }
+    .card strong { display: block; font-size: 18px; margin-bottom: 4px; }
+    .card span { color: var(--mute); font-size: 14px; }
+    .note { color: var(--mute); font-size: 14px; margin-top: 32px; }
+    code { font-size: 0.95em; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Barber Club em estilos diferentes</h1>
+    <p class="lead">O mesmo conteúdo e as mesmas fotos, com o visual de cada <code>DESIGN.md</code> da pasta <code>awesome-design-md</code>.</p>
+    <ul>
+      <li><a class="card" href="../index.html"><strong>Site atual</strong><span>Escuro, dourado, com tela de entrada.</span></a></li>
+      <li><a class="card" href="apple.html"><strong>Estilo Apple</strong><span>Claro, limpo, muito espaço, botões azuis arredondados.</span></a></li>
+      <li><a class="card" href="nike.html"><strong>Estilo Nike</strong><span>Fotos grandes, título gigante em maiúsculas, botões pretos.</span></a></li>
+    </ul>
+    <p class="note">Estas páginas são demonstrações. O site oficial continua sendo o <code>index.html</code> da raiz.</p>
+  </main>
+</body>
+</html>
