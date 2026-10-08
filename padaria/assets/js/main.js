@@ -91,9 +91,12 @@
     var list = el("ul", { class: "menu-list" });
     cat.itens.forEach(function (it) {
       list.appendChild(el("li", { class: "menu-item" }, [
-        el("h3", { text: it.nome }),
-        it.desc ? el("p", { text: it.desc }) : null,
-        priceNode(it.preco)
+        el("div", { class: "menu-line" }, [
+          el("h3", { text: it.nome }),
+          el("span", { class: "leader", "aria-hidden": "true" }),
+          priceNode(it.preco)
+        ]),
+        it.desc ? el("p", { text: it.desc }) : null
       ]));
     });
     var panel = el("div", { class: "menu-panel", role: "tabpanel", id: id, "aria-labelledby": id + "-btn", tabindex: "0" }, [list]);
