@@ -12,7 +12,7 @@ static HTML/CSS/JS (sem build), na pasta `hortifruti/`, como os sites da padaria
 
 ## Users
 
-Moradores de Casimiro de Abreu, Arraial do Cabo e Rio das Ostras (RJ), atendidos por 5 lojas,, quase sempre no celular, que querem saber o que a Kitanda tem de fresco, onde fica a loja mais perto e como pedir pelo WhatsApp.
+Moradores de Casimiro de Abreu, Arraial do Cabo e Rio das Ostras (RJ), atendidos por 5 lojas, quase sempre no celular, que querem saber o que a Kitanda tem de fresco, onde fica a loja mais perto e como pedir pelo WhatsApp.
 
 ## Product Purpose
 
