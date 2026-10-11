@@ -1,13 +1,13 @@
 # Kitanda Hortifruti — site
 
-Site estático (HTML, CSS e JS, sem build) da Rede Kitanda Hortifruti:
+Site estático (HTML, CSS e JS, sem build) da Rede Kitanda Hortifruti.
 Por enquanto o site é só da **loja do Centro, em Casimiro de Abreu**.
 As outras unidades (Mataruna, Arraial do Cabo x2, Rio das Ostras) ficam guardadas
 em `outrasLojas` no `config.js`; para mostrar uma, mova o bloco para `lojas`.
 Com mais de uma loja, o site volta sozinho ao layout de várias lojas.
 
 **Fase atual: só o design da loja.** Carrinho, preços, pagamento e delivery pelo site
-ficam para a próxima fase. Por enquanto os botões levam ao WhatsApp de cada loja.
+ficam para a próxima fase. Por enquanto os botões levam ao WhatsApp da loja.
 
 ## Ver no computador
 
