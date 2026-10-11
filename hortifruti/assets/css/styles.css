@@ -268,6 +268,37 @@ html { scrollbar-color: var(--linha) var(--mata-800); }
 .prod-unit { font-size: .82rem; color: var(--tinta-2); margin: 2px 0 12px; }
 .prod-body .btn { margin-top: auto; }
 
+/* Receitas e dicas */
+.posts-lead { margin: -8px 0 22px; color: var(--texto-2); max-width: 62ch; }
+.post-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.post-destaque { grid-column: 1 / -1; }
+.post-btn {
+  position: relative; display: block; width: 100%; padding: 0; border: 0; cursor: zoom-in;
+  border-radius: var(--r-md); overflow: hidden; background: var(--creme-2); box-shadow: var(--sombra-card);
+  aspect-ratio: 1; font: inherit; color: inherit;
+}
+.post-btn img { width: 100%; height: 100%; object-fit: cover; object-position: top; transition: transform .6s var(--ease); }
+.post-btn:hover img { transform: scale(1.04); }
+.post-title {
+  position: absolute; left: 0; right: 0; bottom: 0; padding: 26px 12px 10px; text-align: left;
+  font: 800 .9rem/1.2 var(--f-display); color: #fff;
+  background: linear-gradient(to top, rgb(8 40 26 / .92), rgb(8 40 26 / 0));
+}
+.post-dialog {
+  width: min(92vw, 720px); max-height: 92dvh; padding: 0; border: 0; border-radius: var(--r-lg);
+  background: var(--mata-800); color: var(--texto); box-shadow: 0 30px 60px -20px rgb(0 0 0 / .8); overflow: auto;
+}
+.post-dialog::backdrop { background: rgb(4 20 12 / .78); }
+.post-dialog-head { position: sticky; top: 0; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 12px 12px 20px; background: var(--mata-800); z-index: 1; }
+.post-dialog-head h2 { font-size: 1.15rem; font-weight: 800; }
+.post-close { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--linha); background: var(--mata-600); color: var(--texto); cursor: pointer; flex: none; }
+.post-close .ic { width: 22px; height: 22px; }
+.post-dialog img { width: 100%; height: auto; }
+@media (prefers-reduced-motion: no-preference) {
+  .post-dialog[open] { animation: abrir .35s var(--ease); }
+}
+@keyframes abrir { from { opacity: 0; transform: translateY(16px) scale(.97); } }
+
 /* Pedido */
 .order { margin-top: 64px; }
 .order-card {
@@ -308,8 +339,8 @@ html { scrollbar-color: var(--linha) var(--mata-800); }
 .store-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .loja-unica .store-grid { display: block; }
 .loja-unica .store-info h3 { font-size: clamp(1.6rem, 6vw, 2.2rem); }
-.loja-unica .order-btn { justify-content: center; padding: .9em 1.4em; }
-.loja-unica .order-btn strong { font-size: 1.08rem; }
+.loja-unica .order-btn, .um-botao .order-btn { justify-content: center; padding: .9em 1.4em; }
+.loja-unica .order-btn strong, .um-botao .order-btn strong { font-size: 1.08rem; }
 
 /* Rodapé */
 .footer { margin-top: 72px; background: var(--mata-900); border-top: 1px solid var(--linha); padding: 48px 0 0; }
@@ -387,6 +418,9 @@ html { scrollbar-color: var(--linha) var(--mata-800); }
   .promo-badge { width: 128px; height: 128px; font-size: 1.05rem; right: 26px; bottom: 26px; }
 
   .why-grid { grid-template-columns: repeat(4, 1fr); }
+  .post-grid { grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .post-destaque { grid-column: span 2; grid-row: span 2; }
+  .post-destaque .post-title { font-size: 1.2rem; padding: 40px 18px 16px; }
   .prod-grid { grid-template-columns: repeat(4, 1fr); gap: 16px; }
 
   .order-card { grid-template-columns: auto 1fr; align-items: center; gap: 24px 28px; padding: 32px; }
@@ -410,8 +444,8 @@ html { scrollbar-color: var(--linha) var(--mata-800); }
   .loja-unica .store-photo img { position: absolute; inset: 0; }
   .loja-unica .store-info { padding: 40px; justify-content: center; }
   .loja-unica .store-actions { margin-top: 12px; }
-  .loja-unica .order-card { grid-template-columns: auto 1fr auto; }
-  .loja-unica .order-buttons { grid-column: auto; grid-template-columns: 1fr; min-width: 300px; }
+  .loja-unica .order-card, .order-card.um-botao { grid-template-columns: auto 1fr auto; }
+  .loja-unica .order-buttons, .um-botao .order-buttons { grid-column: auto; grid-template-columns: 1fr; min-width: 300px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

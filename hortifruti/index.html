@@ -62,7 +62,7 @@
         <a href="#inicio" aria-current="page">Início</a>
         <a href="#categorias">Categorias</a>
         <a href="#vitrine">Produtos</a>
-        <a href="#ofertas">Ofertas</a>
+        <a href="#receitas">Receitas</a>
         <a href="#lojas">Lojas</a>
         <a href="#pedido">Delivery</a>
       </nav>
@@ -200,12 +200,23 @@
       </div>
     </section>
 
+    <section class="section posts" id="receitas" aria-labelledby="receitas-title">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 id="receitas-title"><svg class="ic head-leaf" aria-hidden="true"><use href="#i-leaf"/></svg>Receitas e dicas da Kitanda</h2>
+          <a class="link-arrow" href="#" data-insta>Ver mais no Instagram <svg class="ic" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        </div>
+        <p class="posts-lead">Da Semana das Saladas às receitas com laranja pera: tudo com ingredientes que você encontra fresquinhos na loja. Toque para ver a receita inteira.</p>
+        <ul class="post-grid" data-posts></ul>
+      </div>
+    </section>
+
     <section class="wrap order" id="pedido" aria-labelledby="pedido-title">
       <div class="order-card">
         <span class="order-ic" aria-hidden="true"><svg class="ic"><use href="#i-basket"/></svg></span>
         <div class="order-copy">
           <h2 id="pedido-title">Peça delivery pelo WhatsApp</h2>
-          <p>Escolha a loja do Centro ou da Mataruna e mande a sua lista. A loja confirma o pedido e combina a entrega com você.</p>
+          <p>Mande a sua lista pelo WhatsApp da loja do Centro. A loja confirma o pedido e combina a entrega com você.</p>
         </div>
         <div class="order-buttons" data-pedido-botoes></div>
         <img class="order-photo" src="assets/img/delivery-900.webp" width="900" height="450" alt="" loading="lazy">
@@ -240,6 +251,7 @@
         <a href="#categorias">Categorias</a>
         <a href="#vitrine">Produtos</a>
         <a href="#ofertas">Ofertas</a>
+        <a href="#receitas">Receitas</a>
         <a href="#lojas">Lojas</a>
       </nav>
       <div class="footer-col">
@@ -253,6 +265,16 @@
     </div>
     <p class="wrap footer-copy">© <span data-ano>2026</span> Rede Kitanda Hortifruti. Fotos das bancadas da Kitanda.</p>
   </footer>
+
+  <dialog class="post-dialog" data-post-dialog aria-labelledby="post-dialog-titulo">
+    <div class="post-dialog-head">
+      <h2 id="post-dialog-titulo" data-post-titulo></h2>
+      <button type="button" class="post-close" data-post-fechar aria-label="Fechar">
+        <svg class="ic" aria-hidden="true"><use href="#i-close"/></svg>
+      </button>
+    </div>
+    <img src="" alt="" width="1080" height="1080">
+  </dialog>
 
   <a class="wa-float" href="#pedido" aria-label="Fazer pedido pelo WhatsApp">
     <svg class="ic" aria-hidden="true"><use href="#i-wa"/></svg>

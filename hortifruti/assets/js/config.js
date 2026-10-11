@@ -32,6 +32,9 @@ window.KITANDA = {
     {
       cidade: "Casimiro de Abreu",
       unidade: "Mataruna",
+      // Sem WhatsApp por enquanto: o link da lista abria o número de outra pessoa.
+      // Quando tiver o número certo, apague esta linha e preencha "whatsapp" e "telefone".
+      semWhatsApp: true,
       whatsapp: "",
       telefone: "",
       endereco: "Rua Pastor Luis Laurentino da Silva, 1262, loja A – Santa Ely, Casimiro de Abreu – RJ",
@@ -48,6 +51,20 @@ window.KITANDA = {
     { cidade: "Arraial do Cabo", unidade: "Em frente ao Sanduba", whatsapp: "", telefone: "", endereco: "", mapaUrl: "", horario: "" },
     { cidade: "Arraial do Cabo", unidade: "Ao lado do Bradesco", whatsapp: "", telefone: "", endereco: "", mapaUrl: "", horario: "" },
     { cidade: "Rio das Ostras", unidade: "", whatsapp: "", telefone: "", endereco: "", mapaUrl: "", horario: "" }
+  ],
+
+  // Posts do Instagram da loja do Centro (seção "Receitas e dicas").
+  // img: arquivo em assets/img/posts, sem o final "-540"/"-1080". O primeiro aparece maior.
+  posts: [
+    { img: "semana-das-saladas", titulo: "Semana das Saladas", alt: "Post Semana das Saladas: mais cor, mais sabor, mais saúde" },
+    { img: "salada-verde", titulo: "Dia 1: Salada Verde", alt: "Receita Salada Verde: alface, pepino, rúcula, agrião, cebolinha e salsinha" },
+    { img: "salada-colorida", titulo: "Dia 2: Salada Colorida", alt: "Receita Salada Colorida: alface, cenoura ralada, repolho roxo, milho, tomate cereja e cheiro-verde" },
+    { img: "salada-tropical", titulo: "Dia 3: Salada Tropical", alt: "Receita Salada Tropical: alface, manga, kiwi, tomate cereja, abacaxi e milho" },
+    { img: "salada-mediterranea", titulo: "Dia 5: Salada Mediterrânea", alt: "Receita Salada Mediterrânea: folhas verdes, tomate cereja, pepino, cebola roxa, azeitonas, queijo feta e grão-de-bico" },
+    { img: "salada-refrescante", titulo: "Dia 6: Salada Refrescante", alt: "Receita Salada Refrescante: alface, pepino, tomate cereja, cebola roxa, melancia, queijo feta e hortelã" },
+    { img: "salada-completa", titulo: "Dia 7: Salada Completa", alt: "Receita Salada Completa: folhas, legumes, milho, grão-de-bico, ovo cozido e frango grelhado" },
+    { img: "receitas-laranja", titulo: "Receitas com laranja pera", alt: "Cinco receitas com laranja pera: suco, bolo, salada, doce de casca e vitamina com banana" },
+    { img: "conservar-laranja", titulo: "Como conservar a laranja", alt: "Dicas para conservar a laranja por mais tempo", alto: true }
   ],
 
   // img: nome do arquivo em assets/img (sem extensão). pos: enquadramento da foto.

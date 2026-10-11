@@ -27,6 +27,7 @@ Tudo em `assets/js/config.js`:
 | WhatsApp, endereço, mapa, horário e foto de cada loja | `lojas` |
 | Cartões de "Compre por categoria" | `categorias` (nome, desc, img, pos) |
 | Vitrine "Direto das bancadas" | `produtos` (nome, unidade, img, pos) |
+| "Receitas e dicas" (posts do Instagram, abrem grandes ao tocar) | `posts` (img, titulo, alt); imagens em `assets/img/posts/` com `-540` e `-1080` |
 | Instagram / Facebook | `instagram`, `facebook` |
 
 `pos` é o enquadramento da foto (ex.: `"50% 80%"` mostra a parte de baixo).
@@ -39,13 +40,14 @@ Ver `DESIGN.md`. Cores e fontes no topo de `assets/css/styles.css`.
 ## Fotos
 
 As fotos em `assets/img/` foram recortadas dos posts do Instagram da Kitanda
-(bancadas reais). Algumas são pequenas (mamão, aipim, laranja, uva: ~350 px):
+(bancadas reais). Os posts de receitas e dicas vieram do Instagram da loja do Centro. Algumas são pequenas (mamão, aipim, laranja, uva: ~350 px):
 vale trocar por fotos maiores tiradas na loja. Para trocar, salve em WebP
 e use o nome do arquivo (sem extensão) no campo `img`.
 
 ## Pendências antes de publicar
 
-1. WhatsApp das lojas do Centro e da Mataruna (o dono vai enviar). Enquanto o campo `whatsapp` estiver vazio,
+1. WhatsApp da Mataruna: está marcada com `semWhatsApp: true` porque o link da lista abria o número de outra pessoa;
+   o cartão mostra "WhatsApp desta loja em breve". WhatsApp do Centro (o dono vai enviar). Enquanto o campo `whatsapp` estiver vazio,
    o botão abre a lista oficial em instabio.cc/Kitandahortifruti.
 2. Horário de cada loja. (Endereços já preenchidos; o botão "Como chegar" abre a busca do endereço no Google Maps. Se tiver o link exato do local, troque em `mapaUrl`.)
 3. Link do Facebook (hoje abre a busca "Kitanda Hortifruti").

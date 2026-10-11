@@ -15,6 +15,7 @@
     });
   }
   function waLink(loja, msg) {
+    if (loja.semWhatsApp) return "";
     if (!loja.whatsapp) return cfg.listaWhatsApp || cfg.instagram || "#";
     return "https://wa.me/" + loja.whatsapp + "?text=" + encodeURIComponent(msg || cfg.mensagemWhatsApp || "");
   }
@@ -65,13 +66,15 @@
 
   // Botões de pedido por loja
   var botoes = document.querySelector("[data-pedido-botoes]");
-  lojas.forEach(function (l) {
+  lojas.filter(function (l) { return !l.semWhatsApp; }).forEach(function (l, i, arr) {
+    var unica = arr.length === 1;
     var titulo = unica ? "Pedir pelo WhatsApp" : tituloLoja(l);
     var sub = l.telefone || (unica ? "Loja " + nomeLoja(l) : l.cidade);
     var a = el("a", "btn btn-orange order-btn", icon("i-wa") + "<span><strong>" + esc(titulo) + "</strong><small>" + esc(sub) + "</small></span>");
     a.setAttribute("aria-label", "WhatsApp da Kitanda " + nomeLoja(l));
     a.href = waLink(l); a.target = "_blank"; a.rel = "noopener";
     botoes && botoes.appendChild(a);
+    if (unica && botoes) botoes.closest(".order-card").classList.add("um-botao");
   });
 
   // Lojas
@@ -91,17 +94,43 @@
       "<small>" + esc(l.unidade ? l.cidade : "Kitanda Hortifruti") + "</small></span></h3>" +
       end + hora +
       (l.telefone ? "<p>" + icon("i-wa") + "<span>" + esc(l.telefone) + "</span></p>" : "") +
-      '<div class="store-actions"><a class="btn btn-orange btn-sm" href="' + waLink(l) + '" target="_blank" rel="noopener">' + icon("i-wa") + "Chamar no WhatsApp</a>" + mapa + "</div></div>";
+      (l.semWhatsApp ? '<p class="store-pending">' + icon("i-wa") + "<span>WhatsApp desta loja em breve</span></p>" : "") +
+      '<div class="store-actions">' +
+      (l.semWhatsApp ? "" : '<a class="btn btn-orange btn-sm" href="' + waLink(l) + '" target="_blank" rel="noopener">' + icon("i-wa") + "Chamar no WhatsApp</a>") +
+      mapa + "</div></div>";
     lista && lista.appendChild(li);
   });
 
   // Rodapé
   var fl = document.querySelector("[data-footer-lojas]");
-  lojas.forEach(function (l) {
+  lojas.filter(function (l) { return !l.semWhatsApp; }).forEach(function (l) {
     var a = el("a", "", "<span>" + esc(tituloLoja(l)) + "</span><strong>" + esc(foneLoja(l)) + "</strong>");
     a.href = waLink(l); a.target = "_blank"; a.rel = "noopener";
     fl && fl.appendChild(a);
   });
+
+  // Receitas e dicas (posts do Instagram) + foto ampliada
+  var grade = document.querySelector("[data-posts]");
+  var dlg = document.querySelector("[data-post-dialog]");
+  (cfg.posts || []).forEach(function (p, i) {
+    var li = el("li", "post" + (i === 0 ? " post-destaque" : ""));
+    var base = "assets/img/posts/" + p.img;
+    li.innerHTML = '<button type="button" class="post-btn" aria-haspopup="dialog">' +
+      '<img src="' + esc(base) + '-540.webp" srcset="' + esc(base) + "-540.webp 540w, " + esc(base) + '-1080.webp 1080w" sizes="' + (i === 0 ? "(min-width: 860px) 50vw, 92vw" : "(min-width: 860px) 25vw, 46vw") + '" alt="' + esc(p.alt) + '" loading="lazy" decoding="async" width="540" height="' + (p.alto ? 720 : 540) + '">' +
+      '<span class="post-title">' + esc(p.titulo) + "</span></button>";
+    li.querySelector("button").addEventListener("click", function () {
+      if (!dlg || !dlg.showModal) { window.open(base + "-1080.webp", "_blank"); return; }
+      var im = dlg.querySelector("img");
+      im.src = base + "-1080.webp"; im.alt = p.alt;
+      dlg.querySelector("[data-post-titulo]").textContent = p.titulo;
+      dlg.showModal();
+    });
+    grade && grade.appendChild(li);
+  });
+  if (dlg) {
+    dlg.querySelector("[data-post-fechar]").addEventListener("click", function () { dlg.close(); });
+    dlg.addEventListener("click", function (e) { if (e.target === dlg) dlg.close(); });
+  }
 
   // Menu mobile
   var toggle = document.querySelector("[data-menu-toggle]");
