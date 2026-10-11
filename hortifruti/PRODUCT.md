@@ -31,7 +31,7 @@ Rede local de hortifruti com três lojas na Região dos Lagos e pedido direto pe
 ## Brand Commitments
 
 - Nome: Rede Kitanda Hortifruti. Assinatura vista nos posts: "Qualidade que alimenta".
-- Logo: pera em contorno laranja com folha verde, "KITANDA" em verde e "HORTIFRUTI" em laranja.
+- Logo (confirmado pelo dono): pera em contorno laranja com folha verde, "KITANDA" em verde e "HORTIFRUTI" em laranja.
 - Referência visual escolhida pelo dono: layout verde-escuro tipo "GreenBasket" (hero com cesta, faixa de boas-vindas, categorias em cartões claros, faixa de oferta, vitrine de produtos, rodapé verde).
 
 ## Evidence on Hand

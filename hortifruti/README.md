@@ -42,7 +42,12 @@ e use o nome do arquivo (sem extensão) no campo `img`.
 
 ## Pendências antes de publicar
 
-1. Confirmar os 3 WhatsApps (vieram de um post de maio/2023).
+1. Confirmar os 3 WhatsApps (vieram de um post de maio/2023); o dono vai enviar os números.
 2. Endereços, horários e link do mapa de cada loja.
-3. Logo oficial em SVG ou PNG transparente (hoje é um desenho da pera feito para o site).
-4. Link do Facebook (hoje abre a busca "Kitanda Hortifruti").
+3. Link do Facebook (hoje abre a busca "Kitanda Hortifruti").
+
+## Logo
+
+A pera laranja com a folha verde é o logo da Kitanda (confirmado pelo dono).
+No site ela está desenhada em SVG (símbolo `i-pear` no topo do `index.html` e `assets/img/favicon.svg`).
+Se houver o arquivo original, ele pode substituir o desenho.
