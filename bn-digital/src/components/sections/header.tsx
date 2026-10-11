@@ -27,7 +27,7 @@ export function Header() {
   }, [open]);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-white/[0.08] bg-black/70 backdrop-blur-xl backdrop-saturate-150">
+    <header className="sticky top-[env(safe-area-inset-top,0px)] z-40 border-b border-white/[0.08] bg-black/70 backdrop-blur-xl backdrop-saturate-150">
       <div className="container-page flex h-14 items-center justify-between gap-4">
         <a href="#inicio" aria-label="BN Digital, voltar ao início" className="rounded-md">
           <Logo />

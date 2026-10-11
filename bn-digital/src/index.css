@@ -25,6 +25,8 @@
 
 @layer base {
   html {
+    color-scheme: dark;
+    background: var(--color-background);
     scroll-behavior: smooth;
     scroll-padding-top: 64px;
     -webkit-text-size-adjust: 100%;
