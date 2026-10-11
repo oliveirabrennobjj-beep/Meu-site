@@ -18,19 +18,16 @@ export function InstagramIcon(props: SVGProps<SVGSVGElement>) {
   );
 }
 
-/** Marca BN Digital (wordmark). */
-export function Logo({ className = "" }: { className?: string }) {
+/** Logo da BN Digital (a mesma do perfil do Instagram) + nome. */
+export function Logo({ className = "", size = 40, showName = true }: { className?: string; size?: number; showName?: boolean }) {
   return (
-    <span className={`inline-flex items-center gap-2.5 ${className}`}>
-      <span
-        aria-hidden="true"
-        className="grid size-8 place-items-center rounded-[9px] bg-gradient-to-br from-[#2997ff] to-[#0040a8] text-[13px] font-extrabold tracking-tight text-white shadow-[inset_0_1px_0_rgba(255,255,255,.35)]"
-      >
-        BN
-      </span>
-      <span className="text-[15px] font-semibold tracking-[0.14em] text-white">
-        BN <span className="text-link">DIGITAL</span>
-      </span>
+    <span className={`inline-flex items-center gap-3 ${className}`}>
+      <img src="logo-bn-digital.webp" alt="" width={size} height={size} className="shrink-0 rounded-full" style={{ width: size, height: size }} />
+      {showName && (
+        <span className="text-[15px] font-bold tracking-[0.12em] text-fg">
+          BN <span className="text-accent">DIGITAL</span>
+        </span>
+      )}
     </span>
   );
 }

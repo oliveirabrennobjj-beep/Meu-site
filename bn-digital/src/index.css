@@ -1,61 +1,112 @@
 @import "tailwindcss";
 
 /*
-  BN Digital — direção visual inspirada na Apple:
-  vitrine escura, produto em destaque, tipografia grande e um único azul de ação.
+  BN Digital — vitrine no estilo Apple, com seções alternando branco e preto.
+  Títulos em serifa de alto contraste (Playfair Display), texto corrido em Inter,
+  e o azul da logo como único destaque.
+
+  Cada seção escolhe o tema com .theme-light ou .theme-dark; as cores abaixo
+  (text-fg, text-soft, bg-card, border-line, text-accent…) seguem o tema da seção.
 */
 @theme {
-  --font-sans: "Inter Variable", -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+  --font-sans: "Inter Variable", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Playfair Display Variable", "Playfair Display", Georgia, "Times New Roman", serif;
 
-  --color-background: #000000;
-  --color-foreground: #f5f5f7;
-  --color-surface: #0f0f11;
-  --color-surface-2: #1a1a1d;
-  --color-hairline: #2a2a2e;
-  --color-muted: #a1a1a6;
-  --color-primary: #0071e3;
-  --color-primary-hover: #0077ed;
+  --color-ink: #0a0a0f;
+  --color-paper: #ffffff;
+  --color-mist: #f5f5f7;
+  --color-primary: #0a66e8;
+  --color-primary-hover: #0a5ad0;
   --color-primary-foreground: #ffffff;
-  --color-link: #2997ff;
   --color-whatsapp: #25d366;
 
   --radius-tile: 28px;
   --ease-apple: cubic-bezier(0.28, 0.11, 0.32, 1);
 }
 
-@layer base {
-  html {
-    color-scheme: dark;
-    background: var(--color-background);
-    scroll-behavior: smooth;
-    scroll-padding-top: 64px;
-    -webkit-text-size-adjust: 100%;
-  }
-  body {
-    background: var(--color-background);
-    color: var(--color-foreground);
-    font-family: var(--font-sans);
-    font-feature-settings: "cv11", "ss01";
-    -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
-  }
-  h1, h2, h3 {
-    text-wrap: balance;
-    letter-spacing: -0.025em;
-  }
-  p { text-wrap: pretty; }
-  :focus-visible {
-    outline: 2px solid var(--color-link);
-    outline-offset: 3px;
-    border-radius: 6px;
-  }
-  @media (prefers-reduced-motion: reduce) {
-    html { scroll-behavior: auto; }
-    *, *::before, *::after {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
-    }
+@theme inline {
+  --color-bg: var(--t-bg);
+  --color-fg: var(--t-fg);
+  --color-soft: var(--t-soft);
+  --color-line: var(--t-line);
+  --color-card: var(--t-card);
+  --color-card-fg: var(--t-card-fg);
+  --color-accent: var(--t-accent);
+}
+
+/* Temas por seção */
+.theme-light {
+  --t-bg: #ffffff;
+  --t-fg: #0a0a0f;
+  --t-soft: #55555e;
+  --t-line: #e3e3e8;
+  --t-card: #f5f5f7;
+  --t-card-fg: #0a0a0f;
+  --t-accent: #0a66e8;
+  background-color: var(--t-bg);
+  color: var(--t-fg);
+}
+.theme-mist {
+  --t-bg: #f5f5f7;
+  --t-fg: #0a0a0f;
+  --t-soft: #55555e;
+  --t-line: #e3e3e8;
+  --t-card: #ffffff;
+  --t-card-fg: #0a0a0f;
+  --t-accent: #0a66e8;
+  background-color: var(--t-bg);
+  color: var(--t-fg);
+}
+.theme-dark {
+  --t-bg: #000000;
+  --t-fg: #f5f5f7;
+  --t-soft: #a1a1a8;
+  --t-line: #2a2a30;
+  --t-card: #ffffff;
+  --t-card-fg: #0a0a0f;
+  --t-accent: #4da3ff;
+  background-color: var(--t-bg);
+  color: var(--t-fg);
+}
+
+/*
+  Base fora de @layer de propósito: assim nenhum estilo externo (por exemplo, o da
+  página de visualização) passa por cima da fonte, do fundo e da cor do texto.
+*/
+html {
+  color-scheme: light;
+  background: #ffffff;
+  scroll-behavior: smooth;
+  scroll-padding-top: 72px;
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  margin: 0;
+  background: #ffffff;
+  color: #0a0a0f;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+h1, h2, h3 {
+  text-wrap: balance;
+}
+p {
+  text-wrap: pretty;
+}
+:focus-visible {
+  outline: 2px solid #0a66e8;
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
 
@@ -70,24 +121,19 @@
     .container-page { padding-inline: 32px; }
   }
 
+  /* títulos em serifa */
+  .display {
+    font-family: var(--font-display);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    line-height: 1.02;
+  }
+
   .eyebrow {
     font-size: 14px;
     font-weight: 600;
     letter-spacing: 0.01em;
-    color: var(--color-link);
-  }
-
-  .text-gradient {
-    background: linear-gradient(180deg, #ffffff 0%, #9ccaff 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-
-  .tile {
-    border-radius: var(--radius-tile);
-    background: var(--color-surface);
-    border: 1px solid var(--color-hairline);
+    color: var(--t-accent);
   }
 }
 
@@ -130,15 +176,17 @@
   height: 44px;
   margin-top: -50px;
   border-radius: 999px;
-  background: rgba(40, 40, 44, 0.72);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  transition: background 0.2s var(--ease-apple);
+  color: #0a0a0f;
+  background: #ffffff;
+  transition: transform 0.2s var(--ease-apple);
+}
+.portfolio .swiper-button-next svg,
+.portfolio .swiper-button-prev svg {
+  color: #0a0a0f;
 }
 .portfolio .swiper-button-next:hover,
 .portfolio .swiper-button-prev:hover {
-  background: rgba(70, 70, 76, 0.85);
+  transform: scale(1.06);
 }
 .portfolio .swiper-button-next::after,
 .portfolio .swiper-button-prev::after {
@@ -159,14 +207,4 @@
 @media (min-width: 768px) {
   .portfolio .Carousal_003 { height: 610px; }
   .portfolio .Carousal_003 .swiper-slide { width: 300px; }
-}
-
-/* ---------- Ondas NFC ---------- */
-@keyframes nfc-wave {
-  0% { transform: scale(0.6); opacity: 0; }
-  30% { opacity: 0.9; }
-  100% { transform: scale(1.6); opacity: 0; }
-}
-.nfc-wave {
-  animation: nfc-wave 2.4s var(--ease-apple) infinite;
 }

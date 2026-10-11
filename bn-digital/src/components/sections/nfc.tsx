@@ -1,5 +1,4 @@
 import { Check, ChevronRight } from "lucide-react";
-import { NfcPlaque } from "@/components/nfc-plaque";
 import { Reveal } from "@/components/reveal";
 import { Button } from "@/components/ui/button";
 import { linkWhatsApp, mensagens } from "@/data/site";
@@ -19,59 +18,80 @@ const vantagens = [
 
 export function Nfc() {
   return (
-    <section id="nfc" aria-labelledby="nfc-titulo" className="relative overflow-hidden py-24 md:py-32">
+    <section id="nfc" aria-labelledby="nfc-titulo" className="theme-dark relative overflow-hidden py-24 md:py-32">
       <div className="container-page">
         <Reveal className="text-center">
           <p className="eyebrow">Placas NFC para avaliações no Google</p>
-          <h2 id="nfc-titulo" className="mx-auto mt-3 max-w-3xl text-[40px] font-semibold leading-[1.04] md:text-[72px]">
-            Aproxime.
-            <br />
-            Avalie. <span className="text-gradient">Pronto.</span>
+          <h2 id="nfc-titulo" className="display mx-auto mt-4 max-w-3xl text-[48px] md:text-[84px]">
+            Aproxime. Avalie. <span className="italic text-accent">Pronto.</span>
           </h2>
-          <p className="mx-auto mt-5 max-w-xl text-[17px] leading-relaxed text-muted md:text-[19px]">
+          <p className="mx-auto mt-5 max-w-xl text-[17px] leading-relaxed text-soft md:text-[19px]">
             Quem gostou do atendimento quer ajudar, mas não acha onde avaliar. A placa resolve isso com um toque.
           </p>
         </Reveal>
 
-        <Reveal delay={0.1} className="relative mx-auto mt-14 flex max-w-[620px] items-end justify-center gap-5 md:mt-20 md:gap-10">
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-x-0 top-1/2 h-[70%] -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(0,113,227,0.35),transparent)] blur-xl"
-          />
-          <NfcPlaque variant="classic" animated={false} className="relative w-[44%] max-w-[240px] -rotate-[4deg]" />
-          <NfcPlaque variant="blue" className="relative w-[44%] max-w-[240px] translate-y-[-6%] rotate-[4deg]" />
+        {/* foto principal: as duas versões da placa */}
+        <Reveal delay={0.08} className="mx-auto mt-14 max-w-4xl md:mt-16">
+          <figure className="overflow-hidden rounded-[var(--radius-tile)] bg-[#e9eaee]">
+            <img
+              src="nfc/placas-nfc-preta-e-azul.webp"
+              alt="As duas versões da placa NFC, preta e azul, com o texto: nós gostaríamos da sua opinião no Google, aproxime seu celular"
+              width={900}
+              height={897}
+              loading="lazy"
+              className="aspect-[4/3] w-full object-cover object-center md:aspect-[16/10]"
+            />
+          </figure>
+          <p className="mt-3 text-center text-[13px] text-soft">Versão preta e branca e versão azul.</p>
         </Reveal>
 
-        <ol className="mx-auto mt-20 grid max-w-4xl gap-4 md:grid-cols-3">
+        {/* passos em cartões brancos */}
+        <ol className="mx-auto mt-14 grid max-w-4xl gap-4 md:grid-cols-3">
           {passos.map((p, i) => (
-            <Reveal as="li" key={p.n} delay={i * 0.08} className="tile h-full p-7">
-                <span className="grid size-9 place-items-center rounded-full bg-primary text-[15px] font-semibold text-white">{p.n}</span>
-                <h3 className="mt-5 text-[22px] font-semibold">{p.titulo}</h3>
-                <p className="mt-1.5 text-[15px] leading-relaxed text-muted">{p.texto}</p>
+            <Reveal as="li" key={p.n} delay={i * 0.08} className="rounded-[24px] bg-card p-7 text-card-fg">
+              <span className="display text-[44px] leading-none text-primary">{p.n}</span>
+              <h3 className="display mt-4 text-[28px]">{p.titulo}</h3>
+              <p className="mt-2 text-[15px] leading-relaxed text-[#55555e]">{p.texto}</p>
             </Reveal>
           ))}
         </ol>
 
-        <Reveal className="mx-auto mt-14 flex max-w-4xl flex-col gap-8 md:flex-row md:items-center md:justify-between">
-          <ul className="grid gap-3">
-            {vantagens.map((v) => (
-              <li key={v} className="flex items-start gap-3 text-[16px] text-white/90">
-                <Check aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-link" />
-                {v}
-              </li>
-            ))}
-          </ul>
-          <div className="flex flex-col items-start gap-2 md:items-end">
-            <Button asChild size="lg">
-              <a href={linkWhatsApp(mensagens.nfc)} target="_blank" rel="noopener noreferrer">
-                Quero minha placa
+        {/* fotos no balcão + vantagens */}
+        <div className="mx-auto mt-14 grid max-w-4xl gap-4 md:grid-cols-2">
+          <Reveal>
+            <img
+              src="nfc/placa-nfc-preta-no-balcao.webp"
+              alt="Placa NFC preta colada no balcão de uma cafeteria e um cliente aproximando o celular"
+              width={900}
+              height={897}
+              loading="lazy"
+              className="aspect-square w-full rounded-[24px] object-cover"
+            />
+          </Reveal>
+          <Reveal delay={0.08} className="flex flex-col justify-between gap-8 rounded-[24px] border border-line p-7 md:p-9">
+            <div>
+              <h3 className="display text-[30px] leading-tight">Feita para ficar no balcão, na mesa ou no caixa.</h3>
+              <ul className="mt-6 grid gap-3">
+                {vantagens.map((v) => (
+                  <li key={v} className="flex items-start gap-3 text-[16px]">
+                    <Check aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-accent" />
+                    {v}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="flex flex-col items-start gap-2">
+              <Button asChild variant="contrast" size="lg">
+                <a href={linkWhatsApp(mensagens.nfc)} target="_blank" rel="noopener noreferrer">
+                  Quero minha placa
+                </a>
+              </Button>
+              <a href="#duvidas" className="inline-flex items-center gap-1 rounded-md py-2 text-[15px] text-accent hover:underline">
+                Funciona no meu celular? <ChevronRight aria-hidden="true" className="size-4" />
               </a>
-            </Button>
-            <a href="#duvidas" className="inline-flex items-center gap-1 rounded-md py-2 text-[15px] text-link hover:underline">
-              Funciona no meu celular? <ChevronRight aria-hidden="true" className="size-4" />
-            </a>
-          </div>
-        </Reveal>
+            </div>
+          </Reveal>
+        </div>
       </div>
     </section>
   );

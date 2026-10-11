@@ -10,9 +10,10 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: "bg-primary text-primary-foreground hover:bg-primary-hover",
-        secondary: "bg-white/10 text-foreground hover:bg-white/15",
-        outline: "border border-white/25 text-foreground hover:bg-white/10",
-        link: "rounded-md px-0 text-link hover:underline underline-offset-4",
+        /* branco no fundo escuro, preto no fundo claro */
+        contrast: "bg-fg text-bg hover:opacity-90",
+        outline: "border border-line text-fg hover:bg-card hover:text-card-fg",
+        link: "rounded-md px-0 text-accent hover:underline underline-offset-4",
       },
       size: {
         default: "h-11 px-5 text-[15px]",
