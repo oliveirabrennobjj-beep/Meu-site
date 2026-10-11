@@ -300,6 +300,16 @@ html { scrollbar-color: var(--linha) var(--mata-800); }
 .store-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: auto; padding-top: 8px; }
 .store-actions .btn-ghost { color: var(--tinta); border-color: rgb(16 41 28 / .3); }
 
+/* Uma loja só */
+.loja-unica .store-grid { display: block; }
+.loja-unica .store-card { padding: 0; overflow: hidden; gap: 0; }
+.store-info { display: flex; flex-direction: column; gap: 10px; padding: 24px 20px; }
+.store-info h3 { font-size: clamp(1.6rem, 6vw, 2.2rem); }
+.store-photo { margin: 0; aspect-ratio: 16 / 10; }
+.store-photo img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 70%; }
+.loja-unica .order-btn { justify-content: center; padding: .9em 1.4em; }
+.loja-unica .order-btn strong { font-size: 1.08rem; }
+
 /* Rodapé */
 .footer { margin-top: 72px; background: var(--mata-900); border-top: 1px solid var(--linha); padding: 48px 0 0; }
 .footer-grid { display: grid; gap: 32px; }
@@ -388,6 +398,16 @@ html { scrollbar-color: var(--linha) var(--mata-800); }
   .footer-grid { grid-template-columns: 1.3fr .8fr 1.2fr 1fr; }
 }
 
+
+@media (min-width: 860px) {
+  .loja-unica .store-card { display: grid; grid-template-columns: 1fr 1.1fr; grid-column: auto; }
+  .loja-unica .store-info { padding: 40px; justify-content: center; }
+  .loja-unica .store-actions { margin-top: 12px; }
+  .loja-unica .store-photo { aspect-ratio: auto; min-height: 340px; position: relative; }
+  .loja-unica .store-photo img { position: absolute; inset: 0; }
+  .loja-unica .order-card { grid-template-columns: auto 1fr auto; }
+  .loja-unica .order-buttons { grid-column: auto; grid-template-columns: 1fr; min-width: 300px; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

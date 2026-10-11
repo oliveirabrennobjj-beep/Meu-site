@@ -37,7 +37,7 @@ Rede local de hortifruti com três lojas na Região dos Lagos e pedido direto pe
 ## Evidence on Hand
 
 - Instagram @redekitandahortifruti; Facebook "Kitanda Hortifruti"; instabio.cc/Kitandahortifruti.
-- 5 lojas (instabio.cc/Kitandahortifruti): Arraial do Cabo (em frente ao Sanduba), Arraial (ao lado do Bradesco), Casimiro (Centro), Casimiro (Mataruna), Rio das Ostras. Números por loja: o dono vai enviar.
+- 5 lojas (instabio.cc/Kitandahortifruti): Arraial do Cabo (em frente ao Sanduba), Arraial (ao lado do Bradesco), Casimiro (Centro), Casimiro (Mataruna), Rio das Ostras. Números por loja: o dono vai enviar. Decisão atual: o site mostra só a loja do Centro (Casimiro de Abreu); as demais ficam guardadas para depois.
 - Fotos de produto: geradas por IA para esta versão (ilustrativas). Trocar por fotos reais das lojas quando houver.
 - Não inventar: depoimentos, números de clientes, prêmios, preços.
 

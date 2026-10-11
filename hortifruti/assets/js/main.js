@@ -19,7 +19,7 @@
     return "https://wa.me/" + loja.whatsapp + "?text=" + encodeURIComponent(msg || cfg.mensagemWhatsApp || "");
   }
   function nomeLoja(l) { return l.cidade + (l.unidade ? " – " + l.unidade : ""); }
-  function foneLoja(l) { return l.telefone || "Ver número"; }
+  function foneLoja(l) { return l.telefone || "Abrir WhatsApp"; }
   function icon(id) {
     return '<svg class="ic" aria-hidden="true"><use href="#' + id + '"/></svg>';
   }
@@ -57,10 +57,16 @@
     prod && prod.appendChild(li);
   });
 
+  // Uma loja só ou várias: muda o layout de pedido e de lojas
+  var unica = lojas.length === 1;
+  document.documentElement.classList.toggle("loja-unica", unica);
+
   // Botões de pedido por loja
   var botoes = document.querySelector("[data-pedido-botoes]");
   lojas.forEach(function (l) {
-    var a = el("a", "btn btn-orange order-btn", icon("i-wa") + "<span><strong>" + esc(l.cidade) + "</strong><small>" + esc(l.unidade || l.telefone || "Loja e delivery") + "</small></span>");
+    var titulo = unica ? "Pedir pelo WhatsApp" : l.cidade;
+    var sub = unica ? (l.telefone || "Loja " + nomeLoja(l)) : (l.unidade || l.telefone || "Loja e delivery");
+    var a = el("a", "btn btn-orange order-btn", icon("i-wa") + "<span><strong>" + esc(titulo) + "</strong><small>" + esc(sub) + "</small></span>");
     a.setAttribute("aria-label", "WhatsApp da Kitanda " + nomeLoja(l));
     a.href = waLink(l); a.target = "_blank"; a.rel = "noopener";
     botoes && botoes.appendChild(a);
@@ -80,6 +86,12 @@
       end + hora +
       (l.telefone ? "<p>" + icon("i-wa") + "<span>" + esc(l.telefone) + "</span></p>" : "") +
       '<div class="store-actions"><a class="btn btn-orange btn-sm" href="' + waLink(l) + '" target="_blank" rel="noopener">' + icon("i-wa") + "Chamar no WhatsApp</a>" + mapa + "</div>";
+    if (unica) {
+      li.innerHTML = li.innerHTML.replace(/<span>[^<]*<small>[^<]*<\/small><\/span><\/h3>/,
+        "<span>Loja " + esc(l.unidade || l.cidade) + "<small>" + esc(l.unidade ? l.cidade : "Kitanda Hortifruti") + "</small></span></h3>");
+      li.innerHTML = '<div class="store-info">' + li.innerHTML + "</div>" +
+        '<figure class="store-photo"><img src="assets/img/batata-doce-960.webp" srcset="assets/img/batata-doce-540.webp 540w, assets/img/batata-doce-960.webp 960w" sizes="(min-width: 860px) 45vw, 92vw" width="960" height="1196" alt="Bancada da Kitanda com batata-doce roxa, chuchu e repolho" loading="lazy"></figure>';
+    }
     lista && lista.appendChild(li);
   });
 

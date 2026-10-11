@@ -15,52 +15,26 @@ window.KITANDA = {
   // "whatsapp" só com números e o 55 na frente (ex.: "5522988583752") e "telefone".
   listaWhatsApp: "https://instabio.cc/Kitandahortifruti",
 
+  // Loja que aparece no site (por enquanto, só a do Centro).
   lojas: [
-    {
-      cidade: "Arraial do Cabo",
-      unidade: "Em frente ao Sanduba",
-      whatsapp: "",
-      telefone: "",
-      endereco: "",   // ex.: "Rua X, 123 – Centro"
-      mapaUrl: "",
-      horario: ""
-    },
-    {
-      cidade: "Arraial do Cabo",
-      unidade: "Ao lado do Bradesco",
-      whatsapp: "",
-      telefone: "",
-      endereco: "",
-      mapaUrl: "",
-      horario: ""
-    },
     {
       cidade: "Casimiro de Abreu",
       unidade: "Centro",
-      whatsapp: "",
-      telefone: "",
-      endereco: "",
-      mapaUrl: "",
-      horario: ""
-    },
-    {
-      cidade: "Casimiro de Abreu",
-      unidade: "Mataruna",
-      whatsapp: "",
-      telefone: "",
-      endereco: "",
-      mapaUrl: "",
-      horario: ""
-    },
-    {
-      cidade: "Rio das Ostras",
-      unidade: "",
-      whatsapp: "",
-      telefone: "",
-      endereco: "",
-      mapaUrl: "",
-      horario: ""
+      whatsapp: "",   // só números, com 55 + DDD: ex. "5522988583752"
+      telefone: "",   // como aparece no site: ex. "(22) 98858-3752"
+      endereco: "",   // ex.: "Rua X, 123 – Centro"
+      mapaUrl: "",    // link do Google Maps
+      horario: ""     // ex.: "Seg. a sáb., 7h às 20h"
     }
+  ],
+
+  // Outras unidades da rede, guardadas para depois (não aparecem no site).
+  // Para mostrar uma delas, mova o bloco para "lojas" acima.
+  outrasLojas: [
+    { cidade: "Casimiro de Abreu", unidade: "Mataruna", whatsapp: "", telefone: "", endereco: "", mapaUrl: "", horario: "" },
+    { cidade: "Arraial do Cabo", unidade: "Em frente ao Sanduba", whatsapp: "", telefone: "", endereco: "", mapaUrl: "", horario: "" },
+    { cidade: "Arraial do Cabo", unidade: "Ao lado do Bradesco", whatsapp: "", telefone: "", endereco: "", mapaUrl: "", horario: "" },
+    { cidade: "Rio das Ostras", unidade: "", whatsapp: "", telefone: "", endereco: "", mapaUrl: "", horario: "" }
   ],
 
   // img: nome do arquivo em assets/img (sem extensão). pos: enquadramento da foto.

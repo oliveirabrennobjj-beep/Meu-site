@@ -1,8 +1,10 @@
 # Kitanda Hortifruti — site
 
 Site estático (HTML, CSS e JS, sem build) da Rede Kitanda Hortifruti:
-5 lojas: Arraial do Cabo (em frente ao Sanduba e ao lado do Bradesco),
-Casimiro de Abreu (Centro e Mataruna) e Rio das Ostras.
+Por enquanto o site é só da **loja do Centro, em Casimiro de Abreu**.
+As outras unidades (Mataruna, Arraial do Cabo x2, Rio das Ostras) ficam guardadas
+em `outrasLojas` no `config.js`; para mostrar uma, mova o bloco para `lojas`.
+Com mais de uma loja, o site volta sozinho ao layout de várias lojas.
 
 **Fase atual: só o design da loja.** Carrinho, preços, pagamento e delivery pelo site
 ficam para a próxima fase. Por enquanto os botões levam ao WhatsApp de cada loja.
@@ -43,10 +45,11 @@ e use o nome do arquivo (sem extensão) no campo `img`.
 
 ## Pendências antes de publicar
 
-1. WhatsApp de cada uma das 5 lojas (o dono vai enviar). Enquanto o campo `whatsapp` estiver vazio,
+1. WhatsApp da loja do Centro (o dono vai enviar). Enquanto o campo `whatsapp` estiver vazio,
    o botão abre a lista oficial em instabio.cc/Kitandahortifruti.
-2. Endereços, horários e link do mapa de cada loja.
-3. Link do Facebook (hoje abre a busca "Kitanda Hortifruti").
+2. Decidir se o site fica só com o Centro ou mostra as outras unidades.
+3. Endereço, horário e link do mapa da loja.
+4. Link do Facebook (hoje abre a busca "Kitanda Hortifruti").
 
 ## Logo
 
