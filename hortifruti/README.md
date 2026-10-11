@@ -47,7 +47,7 @@ e use o nome do arquivo (sem extensão) no campo `img`.
 
 1. WhatsApp das lojas do Centro e da Mataruna (o dono vai enviar). Enquanto o campo `whatsapp` estiver vazio,
    o botão abre a lista oficial em instabio.cc/Kitandahortifruti.
-2. Endereço, horário e link do mapa de cada loja.
+2. Horário de cada loja. (Endereços já preenchidos; o botão "Como chegar" abre a busca do endereço no Google Maps. Se tiver o link exato do local, troque em `mapaUrl`.)
 3. Link do Facebook (hoje abre a busca "Kitanda Hortifruti").
 
 ## Logo

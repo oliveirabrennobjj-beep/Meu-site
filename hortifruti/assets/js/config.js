@@ -23,8 +23,8 @@ window.KITANDA = {
       unidade: "Centro",
       whatsapp: "",   // só números, com 55 + DDD: ex. "5522988583752"
       telefone: "",   // como aparece no site: ex. "(22) 98858-3752"
-      endereco: "",   // ex.: "Rua X, 123 – Centro"
-      mapaUrl: "",    // link do Google Maps
+      endereco: "Rua Pastor Luis Laurentino da Silva, 196, lojas 03 e 04 – Pessoinha, Casimiro de Abreu – RJ",
+      mapaUrl: "https://www.google.com/maps/search/?api=1&query=Rua%20Pastor%20Luis%20Laurentino%20da%20Silva%2C%20196%2C%20Casimiro%20de%20Abreu%20-%20RJ",
       horario: "",    // ex.: "Seg. a sáb., 7h às 20h"
       foto: "batata-doce-960",
       fotoPos: "50% 70%"
@@ -34,8 +34,8 @@ window.KITANDA = {
       unidade: "Mataruna",
       whatsapp: "",
       telefone: "",
-      endereco: "",
-      mapaUrl: "",
+      endereco: "Rua Pastor Luis Laurentino da Silva, 1262, loja A – Santa Ely, Casimiro de Abreu – RJ",
+      mapaUrl: "https://www.google.com/maps/search/?api=1&query=Rua%20Pastor%20Luis%20Laurentino%20da%20Silva%2C%201262%2C%20Casimiro%20de%20Abreu%20-%20RJ",
       horario: "",
       foto: "mangas-960",
       fotoPos: "50% 80%"
