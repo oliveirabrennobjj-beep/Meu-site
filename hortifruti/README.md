@@ -1,13 +1,13 @@
 # Kitanda Hortifruti — site
 
 Site estático (HTML, CSS e JS, sem build) da Rede Kitanda Hortifruti.
-Por enquanto o site é só da **loja do Centro, em Casimiro de Abreu**.
-As outras unidades (Mataruna, Arraial do Cabo x2, Rio das Ostras) ficam guardadas
-em `outrasLojas` no `config.js`; para mostrar uma, mova o bloco para `lojas`.
-Com mais de uma loja, o site volta sozinho ao layout de várias lojas.
+Este site é das lojas de **Casimiro de Abreu: Centro e Mataruna**.
+Arraial do Cabo (2 lojas) e Rio das Ostras ficam guardadas em `outrasLojas`
+no `config.js`, para um site próprio de cada cidade no futuro.
+O layout se ajusta sozinho a 1, 2 ou mais lojas.
 
 **Fase atual: só o design da loja.** Carrinho, preços, pagamento e delivery pelo site
-ficam para a próxima fase. Por enquanto os botões levam ao WhatsApp da loja.
+ficam para a próxima fase. Por enquanto os botões levam ao WhatsApp de cada loja.
 
 ## Ver no computador
 
@@ -24,7 +24,7 @@ Tudo em `assets/js/config.js`:
 
 | O que | Campo |
 |---|---|
-| WhatsApp, endereço, mapa e horário de cada loja | `lojas` |
+| WhatsApp, endereço, mapa, horário e foto de cada loja | `lojas` |
 | Cartões de "Compre por categoria" | `categorias` (nome, desc, img, pos) |
 | Vitrine "Direto das bancadas" | `produtos` (nome, unidade, img, pos) |
 | Instagram / Facebook | `instagram`, `facebook` |
@@ -45,11 +45,10 @@ e use o nome do arquivo (sem extensão) no campo `img`.
 
 ## Pendências antes de publicar
 
-1. WhatsApp da loja do Centro (o dono vai enviar). Enquanto o campo `whatsapp` estiver vazio,
+1. WhatsApp das lojas do Centro e da Mataruna (o dono vai enviar). Enquanto o campo `whatsapp` estiver vazio,
    o botão abre a lista oficial em instabio.cc/Kitandahortifruti.
-2. Decidir se o site fica só com o Centro ou mostra as outras unidades.
-3. Endereço, horário e link do mapa da loja.
-4. Link do Facebook (hoje abre a busca "Kitanda Hortifruti").
+2. Endereço, horário e link do mapa de cada loja.
+3. Link do Facebook (hoje abre a busca "Kitanda Hortifruti").
 
 ## Logo
 

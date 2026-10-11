@@ -15,7 +15,8 @@ window.KITANDA = {
   // "whatsapp" só com números e o 55 na frente (ex.: "5522988583752") e "telefone".
   listaWhatsApp: "https://instabio.cc/Kitandahortifruti",
 
-  // Loja que aparece no site (por enquanto, só a do Centro).
+  // Lojas que aparecem no site: as de Casimiro de Abreu.
+  // foto/fotoPos: foto do cartão da loja (arquivo em assets/img, sem extensão).
   lojas: [
     {
       cidade: "Casimiro de Abreu",
@@ -24,14 +25,26 @@ window.KITANDA = {
       telefone: "",   // como aparece no site: ex. "(22) 98858-3752"
       endereco: "",   // ex.: "Rua X, 123 – Centro"
       mapaUrl: "",    // link do Google Maps
-      horario: ""     // ex.: "Seg. a sáb., 7h às 20h"
+      horario: "",    // ex.: "Seg. a sáb., 7h às 20h"
+      foto: "batata-doce-960",
+      fotoPos: "50% 70%"
+    },
+    {
+      cidade: "Casimiro de Abreu",
+      unidade: "Mataruna",
+      whatsapp: "",
+      telefone: "",
+      endereco: "",
+      mapaUrl: "",
+      horario: "",
+      foto: "mangas-960",
+      fotoPos: "50% 80%"
     }
   ],
 
-  // Outras unidades da rede, guardadas para depois (não aparecem no site).
+  // Outras cidades da rede, guardadas para depois (não aparecem no site).
   // Para mostrar uma delas, mova o bloco para "lojas" acima.
   outrasLojas: [
-    { cidade: "Casimiro de Abreu", unidade: "Mataruna", whatsapp: "", telefone: "", endereco: "", mapaUrl: "", horario: "" },
     { cidade: "Arraial do Cabo", unidade: "Em frente ao Sanduba", whatsapp: "", telefone: "", endereco: "", mapaUrl: "", horario: "" },
     { cidade: "Arraial do Cabo", unidade: "Ao lado do Bradesco", whatsapp: "", telefone: "", endereco: "", mapaUrl: "", horario: "" },
     { cidade: "Rio das Ostras", unidade: "", whatsapp: "", telefone: "", endereco: "", mapaUrl: "", horario: "" }

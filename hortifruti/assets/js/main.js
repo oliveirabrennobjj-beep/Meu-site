@@ -60,12 +60,14 @@
   // Uma loja só ou várias: muda o layout de pedido e de lojas
   var unica = lojas.length === 1;
   document.documentElement.classList.toggle("loja-unica", unica);
+  document.documentElement.setAttribute("data-qtd-lojas", String(lojas.length));
+  function tituloLoja(l) { return l.unidade ? "Loja " + l.unidade : l.cidade; }
 
   // Botões de pedido por loja
   var botoes = document.querySelector("[data-pedido-botoes]");
   lojas.forEach(function (l) {
-    var titulo = unica ? "Pedir pelo WhatsApp" : l.cidade;
-    var sub = unica ? (l.telefone || "Loja " + nomeLoja(l)) : (l.unidade || l.telefone || "Loja e delivery");
+    var titulo = unica ? "Pedir pelo WhatsApp" : tituloLoja(l);
+    var sub = l.telefone || (unica ? "Loja " + nomeLoja(l) : l.cidade);
     var a = el("a", "btn btn-orange order-btn", icon("i-wa") + "<span><strong>" + esc(titulo) + "</strong><small>" + esc(sub) + "</small></span>");
     a.setAttribute("aria-label", "WhatsApp da Kitanda " + nomeLoja(l));
     a.href = waLink(l); a.target = "_blank"; a.rel = "noopener";
@@ -81,24 +83,22 @@
       : '<p class="store-pending">' + icon("i-pin") + "<span>Endereço em breve no site</span></p>";
     var hora = l.horario ? "<p>" + icon("i-clock") + "<span>" + esc(l.horario) + "</span></p>" : "";
     var mapa = l.mapaUrl ? '<a class="btn btn-ghost btn-sm" href="' + esc(l.mapaUrl) + '" target="_blank" rel="noopener">' + icon("i-pin") + "Como chegar</a>" : "";
-    li.innerHTML = '<h3><svg class="store-pear" viewBox="0 0 40 40" aria-hidden="true"><use href="#i-pear"/></svg><span>' + esc(l.cidade) +
-      (l.unidade ? '<small>' + esc(l.unidade) + "</small>" : "") + "</span></h3>" +
+    var foto = l.foto
+      ? '<figure class="store-photo">' + img(l.foto, "", l.fotoPos, 960, 1196) + "</figure>"
+      : "";
+    li.innerHTML = foto + '<div class="store-info">' +
+      '<h3><svg class="store-pear" viewBox="0 0 40 40" aria-hidden="true"><use href="#i-pear"/></svg><span>' + esc(tituloLoja(l)) +
+      "<small>" + esc(l.unidade ? l.cidade : "Kitanda Hortifruti") + "</small></span></h3>" +
       end + hora +
       (l.telefone ? "<p>" + icon("i-wa") + "<span>" + esc(l.telefone) + "</span></p>" : "") +
-      '<div class="store-actions"><a class="btn btn-orange btn-sm" href="' + waLink(l) + '" target="_blank" rel="noopener">' + icon("i-wa") + "Chamar no WhatsApp</a>" + mapa + "</div>";
-    if (unica) {
-      li.innerHTML = li.innerHTML.replace(/<span>[^<]*<small>[^<]*<\/small><\/span><\/h3>/,
-        "<span>Loja " + esc(l.unidade || l.cidade) + "<small>" + esc(l.unidade ? l.cidade : "Kitanda Hortifruti") + "</small></span></h3>");
-      li.innerHTML = '<div class="store-info">' + li.innerHTML + "</div>" +
-        '<figure class="store-photo"><img src="assets/img/batata-doce-960.webp" srcset="assets/img/batata-doce-540.webp 540w, assets/img/batata-doce-960.webp 960w" sizes="(min-width: 860px) 45vw, 92vw" width="960" height="1196" alt="Bancada da Kitanda com batata-doce roxa, chuchu e repolho" loading="lazy"></figure>';
-    }
+      '<div class="store-actions"><a class="btn btn-orange btn-sm" href="' + waLink(l) + '" target="_blank" rel="noopener">' + icon("i-wa") + "Chamar no WhatsApp</a>" + mapa + "</div></div>";
     lista && lista.appendChild(li);
   });
 
   // Rodapé
   var fl = document.querySelector("[data-footer-lojas]");
   lojas.forEach(function (l) {
-    var a = el("a", "", "<span>" + esc(nomeLoja(l)) + "</span><strong>" + esc(foneLoja(l)) + "</strong>");
+    var a = el("a", "", "<span>" + esc(tituloLoja(l)) + "</span><strong>" + esc(foneLoja(l)) + "</strong>");
     a.href = waLink(l); a.target = "_blank"; a.rel = "noopener";
     fl && fl.appendChild(a);
   });
