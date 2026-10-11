@@ -1,7 +1,8 @@
 # Kitanda Hortifruti — site
 
 Site estático (HTML, CSS e JS, sem build) da Rede Kitanda Hortifruti:
-Casimiro de Abreu, Arraial do Cabo e Rio das Ostras (RJ).
+5 lojas: Arraial do Cabo (em frente ao Sanduba e ao lado do Bradesco),
+Casimiro de Abreu (Centro e Mataruna) e Rio das Ostras.
 
 **Fase atual: só o design da loja.** Carrinho, preços, pagamento e delivery pelo site
 ficam para a próxima fase. Por enquanto os botões levam ao WhatsApp de cada loja.
@@ -42,7 +43,8 @@ e use o nome do arquivo (sem extensão) no campo `img`.
 
 ## Pendências antes de publicar
 
-1. Confirmar os 3 WhatsApps (vieram de um post de maio/2023); o dono vai enviar os números.
+1. WhatsApp de cada uma das 5 lojas (o dono vai enviar). Enquanto o campo `whatsapp` estiver vazio,
+   o botão abre a lista oficial em instabio.cc/Kitandahortifruti.
 2. Endereços, horários e link do mapa de cada loja.
 3. Link do Facebook (hoje abre a busca "Kitanda Hortifruti").
 

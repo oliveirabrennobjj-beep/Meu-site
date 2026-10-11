@@ -12,7 +12,7 @@ static HTML/CSS/JS (sem build), na pasta `hortifruti/`, como os sites da padaria
 
 ## Users
 
-Moradores de Casimiro de Abreu, Arraial do Cabo e Rio das Ostras (RJ), quase sempre no celular, que querem saber o que a Kitanda tem de fresco, onde fica a loja mais perto e como pedir pelo WhatsApp.
+Moradores de Casimiro de Abreu, Arraial do Cabo e Rio das Ostras (RJ), atendidos por 5 lojas,, quase sempre no celular, que querem saber o que a Kitanda tem de fresco, onde fica a loja mais perto e como pedir pelo WhatsApp.
 
 ## Product Purpose
 
@@ -37,7 +37,7 @@ Rede local de hortifruti com três lojas na Região dos Lagos e pedido direto pe
 ## Evidence on Hand
 
 - Instagram @redekitandahortifruti; Facebook "Kitanda Hortifruti"; instabio.cc/Kitandahortifruti.
-- WhatsApp (post de delivery, maio/2023): Arraial do Cabo (22) 99737-5913, Casimiro de Abreu (22) 98858-3752, Rio das Ostras (22) 99937-4841.
+- 5 lojas (instabio.cc/Kitandahortifruti): Arraial do Cabo (em frente ao Sanduba), Arraial (ao lado do Bradesco), Casimiro (Centro), Casimiro (Mataruna), Rio das Ostras. Números por loja: o dono vai enviar.
 - Fotos de produto: geradas por IA para esta versão (ilustrativas). Trocar por fotos reais das lojas quando houver.
 - Não inventar: depoimentos, números de clientes, prêmios, preços.
 

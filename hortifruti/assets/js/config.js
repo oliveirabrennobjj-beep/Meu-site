@@ -10,28 +10,53 @@ window.KITANDA = {
 
   mensagemWhatsApp: "Olá, Kitanda! Gostaria de fazer um pedido.",
 
-  // WhatsApp de cada loja (do post "Peça delivery", maio/2023). Confirme antes de publicar.
+  // Lista oficial de WhatsApps (página do Instagram): instabio.cc/Kitandahortifruti
+  // Loja sem número: o botão abre essa lista. Para ligar direto, preencha
+  // "whatsapp" só com números e o 55 na frente (ex.: "5522988583752") e "telefone".
+  listaWhatsApp: "https://instabio.cc/Kitandahortifruti",
+
   lojas: [
     {
-      cidade: "Casimiro de Abreu",
-      whatsapp: "5522988583752",
-      telefone: "(22) 98858-3752",
+      cidade: "Arraial do Cabo",
+      unidade: "Em frente ao Sanduba",
+      whatsapp: "",
+      telefone: "",
       endereco: "",   // ex.: "Rua X, 123 – Centro"
       mapaUrl: "",
       horario: ""
     },
     {
       cidade: "Arraial do Cabo",
-      whatsapp: "5522997375913",
-      telefone: "(22) 99737-5913",
+      unidade: "Ao lado do Bradesco",
+      whatsapp: "",
+      telefone: "",
+      endereco: "",
+      mapaUrl: "",
+      horario: ""
+    },
+    {
+      cidade: "Casimiro de Abreu",
+      unidade: "Centro",
+      whatsapp: "",
+      telefone: "",
+      endereco: "",
+      mapaUrl: "",
+      horario: ""
+    },
+    {
+      cidade: "Casimiro de Abreu",
+      unidade: "Mataruna",
+      whatsapp: "",
+      telefone: "",
       endereco: "",
       mapaUrl: "",
       horario: ""
     },
     {
       cidade: "Rio das Ostras",
-      whatsapp: "5522999374841",
-      telefone: "(22) 99937-4841",
+      unidade: "",
+      whatsapp: "",
+      telefone: "",
       endereco: "",
       mapaUrl: "",
       horario: ""

@@ -15,8 +15,11 @@
     });
   }
   function waLink(loja, msg) {
+    if (!loja.whatsapp) return cfg.listaWhatsApp || cfg.instagram || "#";
     return "https://wa.me/" + loja.whatsapp + "?text=" + encodeURIComponent(msg || cfg.mensagemWhatsApp || "");
   }
+  function nomeLoja(l) { return l.cidade + (l.unidade ? " – " + l.unidade : ""); }
+  function foneLoja(l) { return l.telefone || "Ver número"; }
   function icon(id) {
     return '<svg class="ic" aria-hidden="true"><use href="#' + id + '"/></svg>';
   }
@@ -57,8 +60,8 @@
   // Botões de pedido por loja
   var botoes = document.querySelector("[data-pedido-botoes]");
   lojas.forEach(function (l) {
-    if (!l.whatsapp) return;
-    var a = el("a", "btn btn-orange order-btn", icon("i-wa") + "<span><strong>" + esc(l.cidade) + "</strong><small>" + esc(l.telefone) + "</small></span>");
+    var a = el("a", "btn btn-orange order-btn", icon("i-wa") + "<span><strong>" + esc(l.cidade) + "</strong><small>" + esc(l.unidade || l.telefone || "Loja e delivery") + "</small></span>");
+    a.setAttribute("aria-label", "WhatsApp da Kitanda " + nomeLoja(l));
     a.href = waLink(l); a.target = "_blank"; a.rel = "noopener";
     botoes && botoes.appendChild(a);
   });
@@ -72,9 +75,10 @@
       : '<p class="store-pending">' + icon("i-pin") + "<span>Endereço em breve no site</span></p>";
     var hora = l.horario ? "<p>" + icon("i-clock") + "<span>" + esc(l.horario) + "</span></p>" : "";
     var mapa = l.mapaUrl ? '<a class="btn btn-ghost btn-sm" href="' + esc(l.mapaUrl) + '" target="_blank" rel="noopener">' + icon("i-pin") + "Como chegar</a>" : "";
-    li.innerHTML = '<h3><svg class="store-pear" viewBox="0 0 40 40" aria-hidden="true"><use href="#i-pear"/></svg>' + esc(l.cidade) + "</h3>" +
+    li.innerHTML = '<h3><svg class="store-pear" viewBox="0 0 40 40" aria-hidden="true"><use href="#i-pear"/></svg><span>' + esc(l.cidade) +
+      (l.unidade ? '<small>' + esc(l.unidade) + "</small>" : "") + "</span></h3>" +
       end + hora +
-      "<p>" + icon("i-wa") + "<span>" + esc(l.telefone) + "</span></p>" +
+      (l.telefone ? "<p>" + icon("i-wa") + "<span>" + esc(l.telefone) + "</span></p>" : "") +
       '<div class="store-actions"><a class="btn btn-orange btn-sm" href="' + waLink(l) + '" target="_blank" rel="noopener">' + icon("i-wa") + "Chamar no WhatsApp</a>" + mapa + "</div>";
     lista && lista.appendChild(li);
   });
@@ -82,7 +86,7 @@
   // Rodapé
   var fl = document.querySelector("[data-footer-lojas]");
   lojas.forEach(function (l) {
-    var a = el("a", "", "<span>" + esc(l.cidade) + "</span><strong>" + esc(l.telefone) + "</strong>");
+    var a = el("a", "", "<span>" + esc(nomeLoja(l)) + "</span><strong>" + esc(foneLoja(l)) + "</strong>");
     a.href = waLink(l); a.target = "_blank"; a.rel = "noopener";
     fl && fl.appendChild(a);
   });
