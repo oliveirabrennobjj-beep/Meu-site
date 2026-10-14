@@ -106,10 +106,10 @@ window.BARBER_CLUB = {
     logo: "",
     // Fundo da seção principal.
     hero: {
-      src: "assets/img/barba-navalha-1122.webp",
-      srcset: "assets/img/barba-navalha-640.webp 640w, assets/img/barba-navalha-1122.webp 1122w",
+      src: "assets/img/corte-reflexo-1122.webp",
+      srcset: "assets/img/corte-reflexo-640.webp 640w, assets/img/corte-reflexo-1122.webp 1122w",
       alt: "",
-      posicao: "50% 38%",
+      posicao: "45% 32%",
     },
     // Foto da seção "Nosso espaço".
     sobre: {
