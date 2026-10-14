@@ -1,5 +1,29 @@
 # Brag plan — BN Digital
 
+> Versão 2 (atual, `brag.mp4`) logo abaixo. A versão 1 (`brag-v1.mp4`) está no fim do arquivo.
+
+## Versão 2 — 29,5 s
+
+Mudanças pedidas: abrir com uma pergunta para o dono do comércio; mostrar um pedido acontecendo (escolher → ajustar → total → mensagem pronta no WhatsApp, deixando claro que o cliente ainda toca em enviar); aproximar detalhes de 2–3 trabalhos (com a Kitanda); explicar a placa sem depender de "NFC", mostrando a avaliação abrindo; encerrar convidando para conversar, com o contato maior e 3 s parado.
+
+Passa dos 25 s da /brag de propósito: o pedido completo precisa de ~8 s para ser lido.
+
+| # | Tempo | Cena | Texto |
+|---|---|---|---|
+| 1 | 0.0–3.6 | Branco. Pergunta entra palavra por palavra | Seu cliente consegue ver o seu *cardápio* pelo celular? / E fazer o pedido sem precisar te ligar? |
+| 2 | 3.6–6.0 | Preto. Logo | A gente faz isso *pra você.* / Sites · Cardápios digitais · Placas de avaliação |
+| 3 | 6.0–14.0 | Cinza-claro. Celular com o cardápio do X Cocó (print real) e o pedido de exemplo | EXEMPLO DE PEDIDO: 1. Escolhe o lanche → 2. Ajusta o pedido (2×, "sem cebola") → 3. Confere o total (R$ 16,00, a partir do preço real de R$ 8,00) → 4. Abre no WhatsApp / "Mensagem pronta. O cliente só toca em enviar." |
+| 4 | 14.0–20.6 | Preto. Zoom em detalhes | Kitanda Hortifruti (WhatsApp e lojas), X Cocó (horário e endereço), Ótica Lumera (vitrine), depois Pastelaria · Cafeteria · Barbearia "e muito mais" |
+| 5 | 20.6–25.0 | Preto. Foto real da placa, cartão de avaliação sobe, 5 estrelas, "Publicar" | Aproxime. Avalie. *Pronto.* / Encostou o celular, a avaliação abre. Sem baixar nada. |
+| 6 | 25.0–29.5 | Azul. Logo e contato grande, parado ~3 s | Quer ver um exemplo para o *seu comércio?* / Chama no WhatsApp (22) 99705-2912 / @bn_digital__sites_e_nfc |
+
+O pedido, a tela do WhatsApp e o cartão de avaliação são telas ilustrativas do fluxo (marcado "Exemplo de pedido"); quantidade e observação são de exemplo.
+
+---
+
+## Versão 1 — 22 s
+
+
 **What it is:** BN Digital, de Casimiro de Abreu (RJ), faz sites, cardápios digitais e placas NFC que levam o cliente direto para a avaliação no Google.
 **For whom:** donos de lanchonete, barbearia, ótica, cafeteria e outros negócios locais.
 **What sets it apart:** cada site é feito com a identidade do negócio (não é modelo pronto), pedido direto no WhatsApp, e a placa NFC resolve as avaliações com um toque.

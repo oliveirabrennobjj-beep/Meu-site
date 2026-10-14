@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>BN Digital — brag v2</title>
+<style>
+  @font-face { font-family: "PF"; src: url("../../../node_modules/@fontsource-variable/playfair-display/files/playfair-display-latin-wght-normal.woff2") format("woff2"); font-weight: 400 900; }
+  @font-face { font-family: "PF"; src: url("../../../node_modules/@fontsource-variable/playfair-display/files/playfair-display-latin-wght-italic.woff2") format("woff2"); font-weight: 400 900; font-style: italic; }
+  @font-face { font-family: "IN"; src: url("../../../node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2") format("woff2"); font-weight: 100 900; }
+  @font-face { font-family: "BB"; src: url("../../../node_modules/@fontsource/bebas-neue/files/bebas-neue-latin-400-normal.woff2") format("woff2"); }
+  :root { --blue: #0a66e8; --blue-d: #4da3ff; --ink: #0a0a0f; --soft: #55555e; --soft-d: #a1a1a8; --gold: #e2a83c; --wa: #25d366; }
+  html, body { margin: 0; background: #000; }
+  #stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #000; font-family: "IN", sans-serif; -webkit-font-smoothing: antialiased; }
+  .scene { position: absolute; inset: 0; opacity: 0; }
+  .abs { position: absolute; }
+  .serif { font-family: "PF", serif; font-weight: 800; letter-spacing: -0.025em; line-height: 1.04; }
+  .cx { left: 0; right: 0; text-align: center; }
+  .word { display: inline-block; }
+  .phone { position: absolute; border-radius: 62px; background: #1c1c1e; padding: 14px; box-sizing: border-box;
+           box-shadow: 0 60px 120px -40px rgba(0,0,0,.75), 0 0 0 2px rgba(255,255,255,.14); }
+  .screen { position: relative; width: 100%; height: 100%; border-radius: 48px; overflow: hidden; background: #000; }
+  .screen > img.shot { position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; transform-origin: 0 0; }
+  .notch { position: absolute; left: 50%; top: 14px; width: 30%; height: 30px; transform: translateX(-50%); border-radius: 20px; background: #000; z-index: 50; }
+  .tap { position: absolute; width: 96px; height: 96px; margin: -48px 0 0 -48px; border-radius: 50%; background: rgba(255,255,255,.5); border: 4px solid #fff; box-shadow: 0 6px 20px rgba(0,0,0,.35); opacity: 0; z-index: 40; }
+  .chip { display: inline-flex; align-items: center; gap: 14px; padding: 18px 30px; border-radius: 999px; font-size: 38px; font-weight: 600; }
+</style>
+</head>
+<body>
+<div id="stage">
+
+  <!-- 1. HOOK: pergunta para o dono do comércio -->
+  <section class="scene" id="s1" style="background:#fff">
+    <div class="abs cx serif" style="top:470px; font-size:128px; color:var(--ink); padding:0 70px">
+      <span class="word" id="h1">Seu</span> <span class="word" id="h2">cliente</span> <span class="word" id="h3">consegue</span>
+      <span class="word" id="h4">ver</span> <span class="word" id="h5">o</span> <span class="word" id="h6">seu</span>
+      <span class="word" id="h7" style="color:var(--blue); font-style:italic">cardápio</span> <span class="word" id="h8">pelo</span> <span class="word" id="h9">celular?</span>
+    </div>
+    <div class="abs cx" id="s1-sub" style="top:1290px; font-size:46px; line-height:1.4; color:var(--soft)">E fazer o pedido sem<br>precisar te ligar?</div>
+  </section>
+
+  <!-- 2. REVEAL -->
+  <section class="scene" id="s2" style="background:#000">
+    <div class="abs" id="s2-glow" style="left:-200px; top:260px; width:1480px; height:1200px; background:radial-gradient(closest-side, rgba(10,102,232,.55), transparent)"></div>
+    <img id="s2-logo" class="abs" src="../../../public/logo-bn-digital.webp" style="left:315px; top:470px; width:450px; height:450px; border-radius:50%; box-shadow:0 40px 120px rgba(10,102,232,.5)">
+    <div class="abs cx serif" id="s2-t" style="top:1000px; font-size:104px; color:#fff">A gente faz<br>isso <span style="font-style:italic; color:var(--blue-d)">pra você.</span></div>
+    <div class="abs cx" id="s2-s" style="top:1270px; font-size:42px; color:var(--soft-d); font-weight:500">Sites · Cardápios digitais · Placas de avaliação</div>
+  </section>
+
+  <!-- 3. PEDIDO ACONTECENDO (exemplo) -->
+  <section class="scene" id="s3" style="background:#f2f2f5">
+    <div class="abs cx" id="s3-eyebrow" style="top:230px; font-size:32px; font-weight:700; letter-spacing:.14em; color:var(--blue)">EXEMPLO DE PEDIDO</div>
+    <div class="abs cx" style="top:290px; height:130px">
+      <div class="abs cx serif step" id="st1" style="font-size:84px; color:var(--ink)">1. Escolhe o lanche</div>
+      <div class="abs cx serif step" id="st2" style="font-size:84px; color:var(--ink)">2. Ajusta o pedido</div>
+      <div class="abs cx serif step" id="st3" style="font-size:84px; color:var(--ink)">3. Confere o total</div>
+      <div class="abs cx serif step" id="st4" style="font-size:84px; color:var(--ink)">4. Abre no <span style="font-style:italic; color:#128c4b">WhatsApp</span></div>
+    </div>
+    <div class="phone" id="s3-phone" style="left:260px; top:470px; width:560px; height:1036px">
+      <div class="screen" id="s3-screen">
+        <img class="shot" src="../../../public/trabalhos/x-coco-lanches.webp">
+        <!-- botão "Adicionado" por cima do botão real -->
+        <div id="s3-added" class="abs" style="left:398px; top:958px; width:134px; height:56px; border-radius:14px; background:var(--gold); color:#1a1209; font-weight:800; font-size:24px; display:grid; place-items:center; opacity:0">✓ Adicionado</div>
+        <!-- barra do carrinho -->
+        <div id="s3-cart" class="abs" style="left:18px; right:18px; bottom:18px; height:92px; border-radius:22px; background:var(--gold); color:#1a1209; display:flex; align-items:center; justify-content:space-between; padding:0 28px; box-sizing:border-box; font-weight:800; font-size:28px; opacity:0">
+          <span id="s3-cart-l">1 item · R$ 8,00</span><span>Ver carrinho →</span>
+        </div>
+        <!-- folha do carrinho -->
+        <div id="s3-dim" class="abs" style="inset:0; background:rgba(0,0,0,.55); opacity:0"></div>
+        <div id="s3-sheet" class="abs" style="left:0; right:0; bottom:0; height:700px; border-radius:36px 36px 0 0; background:#17110c; color:#f4eee6; padding:34px 32px; box-sizing:border-box">
+          <div style="width:80px; height:8px; border-radius:8px; background:#4a3d31; margin:0 auto 26px"></div>
+          <div style="font-family:'BB'; font-size:56px; color:var(--gold); letter-spacing:.02em">Seu pedido</div>
+          <div style="display:flex; gap:22px; margin-top:20px; align-items:center">
+            <img src="burger.webp" style="width:120px; height:120px; border-radius:20px; object-fit:cover">
+            <div style="flex:1">
+              <div style="font-size:32px; font-weight:700">Hambúrguer</div>
+              <div style="font-size:22px; color:#b7a999; margin-top:4px">Pão, carne, ovo, salada e batata palha.</div>
+            </div>
+          </div>
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-top:28px">
+            <div style="font-size:26px; color:#b7a999">Quantidade</div>
+            <div style="display:flex; align-items:center; gap:26px; font-size:36px; font-weight:800">
+              <span style="width:60px; height:60px; border-radius:50%; border:2px solid #4a3d31; display:grid; place-items:center">–</span>
+              <span id="s3-qty" style="min-width:30px; text-align:center">1</span>
+              <span id="s3-plus" style="width:60px; height:60px; border-radius:50%; background:var(--gold); color:#1a1209; display:grid; place-items:center">+</span>
+            </div>
+          </div>
+          <div style="margin-top:26px; font-size:24px; color:#b7a999">Observação</div>
+          <div style="margin-top:10px; height:66px; border-radius:16px; background:#251c14; border:2px solid #3a2e24; display:flex; align-items:center; padding:0 20px; font-size:28px"><span id="s3-obs"></span><span id="s3-caret" style="width:3px; height:34px; background:var(--gold); margin-left:3px"></span></div>
+          <div id="s3-total-row" style="display:flex; justify-content:space-between; align-items:center; margin-top:28px; padding:16px 18px; border-radius:16px">
+            <span style="font-size:30px; font-weight:700">Total</span><span id="s3-total" style="font-size:40px; font-weight:800; color:var(--gold)">R$ 8,00</span>
+          </div>
+          <div id="s3-send" style="margin-top:18px; height:84px; border-radius:20px; background:var(--wa); color:#fff; display:flex; align-items:center; justify-content:center; gap:14px; font-size:30px; font-weight:800">
+            <svg viewBox="0 0 24 24" width="38" height="38" fill="#fff"><use href="#wa"/></svg>Enviar pelo WhatsApp
+          </div>
+        </div>
+        <!-- conversa no WhatsApp -->
+        <div id="s3-chat" class="abs" style="inset:0; background:#efeae2; opacity:0">
+          <div style="height:150px; background:#075e54; display:flex; align-items:flex-end; gap:18px; padding:0 26px 22px; box-sizing:border-box; color:#fff">
+            <img src="xcoco-logo.webp" style="width:76px; height:76px; border-radius:50%; background:#111">
+            <div><div style="font-size:32px; font-weight:700">X Cocó Lanches</div><div style="font-size:22px; opacity:.8">online</div></div>
+          </div>
+          <div class="abs" style="left:0; right:0; bottom:0; padding:22px; display:flex; gap:16px; align-items:flex-end">
+            <div style="flex:1; background:#fff; border-radius:30px; padding:22px 26px; font-size:27px; line-height:1.38; color:#111; box-shadow:0 2px 4px rgba(0,0,0,.08)">
+              Olá! Quero fazer um pedido:<br><b>2x Hambúrguer</b> – R$ 16,00<br>Obs.: sem cebola<br><b>Total: R$ 16,00</b>
+            </div>
+            <div id="s3-wa-send" style="width:92px; height:92px; border-radius:50%; background:#00a884; display:grid; place-items:center; flex:none">
+              <svg viewBox="0 0 24 24" width="44" height="44" fill="#fff"><path d="M3.4 20.4 21 12 3.4 3.6l-.01 6.53L15 12 3.39 13.87z"/></svg>
+            </div>
+          </div>
+        </div>
+        <div class="tap" id="s3-tap"></div>
+        <div class="notch"></div>
+      </div>
+    </div>
+    <div class="abs cx" id="s3-note" style="top:1560px">
+      <span class="chip" style="background:#fff; color:var(--ink); box-shadow:0 10px 30px -10px rgba(0,0,0,.25)">Mensagem pronta. O cliente só toca em enviar.</span>
+    </div>
+  </section>
+
+  <!-- 4. DETALHES DOS TRABALHOS -->
+  <section class="scene" id="s4" style="background:#000">
+    <div class="abs cx serif" id="s4-title" style="top:240px; font-size:96px; color:#fff">Cada negócio com<br>a sua <span style="font-style:italic; color:var(--blue-d)">identidade.</span></div>
+    <div id="s4-phones"></div>
+    <div class="abs cx" style="top:1470px; height:200px">
+      <div id="s4-cap"></div>
+    </div>
+    <div id="s4-montage" class="abs" style="left:0; right:0; top:560px; height:980px; opacity:0"></div>
+  </section>
+
+  <!-- 5. PLACA DE AVALIAÇÃO -->
+  <section class="scene" id="s5" style="background:#000">
+    <div class="abs cx serif" style="top:240px; font-size:124px; color:#fff">
+      <span class="word" id="p1">Aproxime.</span><br><span class="word" id="p2">Avalie.</span> <span class="word" id="p3" style="font-style:italic; color:var(--blue-d)">Pronto.</span>
+    </div>
+    <div class="abs" id="s5-photo-wrap" style="left:90px; top:600px; width:900px; height:500px; border-radius:40px; overflow:hidden">
+      <img id="s5-photo" src="../../../public/nfc/placa-nfc-azul-no-balcao.webp" style="width:100%; height:160%; object-fit:cover; margin-top:-16%; transform-origin:37% 55%">
+      <div id="s5-rings"></div>
+    </div>
+    <div class="abs" id="s5-card" style="left:150px; width:780px; top:1200px; border-radius:36px; background:#fff; color:var(--ink); padding:34px 40px; box-sizing:border-box; box-shadow:0 30px 80px -20px rgba(77,163,255,.45)">
+      <div style="font-size:26px; color:var(--soft); font-weight:600">Avaliação no Google · abriu sozinha</div>
+      <div style="font-size:40px; font-weight:800; margin-top:8px">Como foi sua experiência?</div>
+      <div style="display:flex; gap:18px; margin-top:22px" id="s5-stars"></div>
+      <div style="display:flex; justify-content:flex-end; margin-top:22px"><span id="s5-pub" style="background:var(--blue); color:#fff; border-radius:999px; padding:16px 40px; font-size:30px; font-weight:700">Publicar</span></div>
+      <div class="tap" id="s5-tap" style="left:0; top:0"></div>
+    </div>
+    <div class="abs cx" id="s5-sub" style="top:1125px; font-size:36px; color:var(--soft-d)">Encostou o celular, a avaliação abre. Sem baixar nada.</div>
+  </section>
+
+  <!-- 6. OUTRO -->
+  <section class="scene" id="s6" style="background:linear-gradient(180deg,#0b3aa8 0%,#06215f 55%,#020a1f 100%)">
+    <div class="abs" style="left:180px; top:-260px; width:720px; height:720px; border-radius:50%; background:radial-gradient(closest-side, rgba(77,163,255,.6), transparent)"></div>
+    <img id="s6-logo" class="abs" src="../../../public/logo-bn-digital.webp" style="left:420px; top:300px; width:240px; height:240px; border-radius:50%; box-shadow:0 0 0 8px rgba(255,255,255,.12)">
+    <div class="abs cx serif" id="s6-title" style="top:620px; font-size:108px; color:#fff; padding:0 60px">Quer ver um exemplo para o <span style="font-style:italic">seu comércio?</span></div>
+    <div class="abs cx" id="s6-call" style="top:1040px; font-size:46px; color:rgba(255,255,255,.85); font-weight:600">Chama no WhatsApp</div>
+    <div class="abs cx" id="s6-pill" style="top:1130px">
+      <div style="display:inline-flex; align-items:center; gap:26px; background:#fff; color:var(--ink); border-radius:999px; padding:32px 60px; font-size:66px; font-weight:800">
+        <svg viewBox="0 0 24 24" width="72" height="72" fill="#25d366"><use href="#wa"/></svg>(22) 99705-2912
+      </div>
+    </div>
+    <div class="abs cx" id="s6-ig" style="top:1340px; font-size:44px; color:#fff; font-weight:600">@bn_digital__sites_e_nfc</div>
+    <div class="abs cx" id="s6-city" style="top:1420px; font-size:34px; color:rgba(255,255,255,.7)">Casimiro de Abreu · RJ</div>
+  </section>
+</div>
+
+<svg width="0" height="0" style="position:absolute"><defs><path id="wa" d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.69.25-1.29.17-1.41-.07-.12-.27-.2-.57-.35M12.05 21.5h-.01a9.43 9.43 0 0 1-4.8-1.32l-.35-.2-3.57.93.95-3.48-.22-.36a9.4 9.4 0 0 1-1.44-5.02c0-5.2 4.24-9.44 9.45-9.44 2.52 0 4.89.99 6.67 2.77a9.37 9.37 0 0 1 2.76 6.68c0 5.21-4.24 9.44-9.44 9.44m8.04-17.48A11.3 11.3 0 0 0 12.05.7C5.78.7.68 5.8.68 12.06c0 2 .52 3.96 1.52 5.68L.6 23.3l5.7-1.5a11.33 11.33 0 0 0 5.74 1.47h.01c6.26 0 11.36-5.1 11.37-11.37 0-3.03-1.18-5.89-3.33-8.03"/></defs></svg>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const prog = (t, a, b) => clamp((t - a) / (b - a));
+const outCubic = (x) => 1 - Math.pow(1 - x, 3);
+const outBack = (x) => { const c = 1.4; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+const inOut = (x) => x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const lerp = (a, b, x) => a + (b - a) * x;
+const brl = (v) => "R$ " + v.toFixed(2).replace(".", ",");
+
+function sceneOpacity(t, a, b, fi = 0.16, fo = 0.14) {
+  if (t < a || t > b) return 0;
+  return Math.min(fi ? prog(t, a, a + fi) : 1, fo ? 1 - prog(t, b - fo, b) : 1);
+}
+function enter(el, t, at, dur = 0.5, dy = 50, ease = outCubic) {
+  const p = ease(prog(t, at, at + dur));
+  el.style.opacity = clamp(prog(t, at, at + dur * 0.7));
+  el.style.transform = `translateY(${(1 - p) * dy}px)`;
+}
+// janela: aparece em a, some em b (crossfade curto, com saída antes da entrada seguinte)
+function win(el, t, a, b, dy = 30) {
+  const pin = outCubic(prog(t, a, a + 0.35)), pout = prog(t, b - 0.22, b);
+  el.style.opacity = Math.min(prog(t, a, a + 0.25), 1 - pout);
+  el.style.transform = `translateY(${(1 - pin) * dy - pout * 20}px)`;
+}
+// centro de um elemento em relação a um contêiner (coordenadas sem escala)
+function center(el, box) {
+  const a = el.getBoundingClientRect(), b = box.getBoundingClientRect();
+  return [a.left - b.left + a.width / 2, a.top - b.top + a.height / 2];
+}
+function tapAt(el, t, x, y, at, dur = 0.55) {
+  el.style.left = x + "px"; el.style.top = y + "px";
+  const a = prog(t, at - 0.25, at - 0.05), press = prog(t, at, at + 0.15), gone = prog(t, at + 0.25, at + 0.45);
+  el.style.opacity = clamp(a) * (1 - gone);
+  el.style.transform = `scale(${lerp(1.25, 1, a) - 0.18 * Math.sin(Math.PI * press)})`;
+}
+
+// --- cena 4: trabalhos com zoom em detalhes
+const details = [
+  { img: "kitanda-hortifruti", name: "Kitanda Hortifruti", tag: "Hortifruti", what: "WhatsApp e lojas em destaque", cx: 0.36, cy: 0.5, z: 1.9, a: 14.45, b: 16.4 },
+  { img: "x-coco-lanches", name: "X Cocó Lanches", tag: "Lanchonete", what: "Horário e endereço à mão", cx: 0.33, cy: 0.5, z: 2.1, a: 16.4, b: 18.3 },
+  { img: "otica-lumera", name: "Ótica Lumera", tag: "Ótica", what: "Vitrine por categoria", cx: 0.5, cy: 0.17, z: 1.8, a: 18.3, b: 20.0 },
+];
+const phonesEl = $("s4-phones"), capEl = $("s4-cap");
+details.forEach((d, i) => {
+  const ph = document.createElement("div");
+  ph.className = "phone"; ph.style.cssText = "left:260px; top:520px; width:560px; height:920px; opacity:0";
+  ph.innerHTML = `<div class="screen"><img class="shot" src="../../../public/trabalhos/${d.img}.webp"><div class="notch"></div></div>`;
+  phonesEl.appendChild(ph); d.el = ph; d.shot = ph.querySelector(".shot");
+  const c = document.createElement("div"); c.className = "abs cx"; c.style.opacity = 0;
+  c.innerHTML = `<div style="font-family:'PF',serif; font-weight:800; font-size:58px; color:#fff">${d.name}</div>
+    <div style="margin-top:14px"><span class="chip" style="background:rgba(77,163,255,.16); color:#cfe5ff; font-size:32px">${d.tag} · ${d.what}</span></div>`;
+  capEl.appendChild(c); d.cap = c;
+});
+const montageImgs = [["parada-do-pastel", "Pastelaria"], ["grao-e-prosa", "Cafeteria"], ["vertice-barbearia-entrada", "Barbearia"]];
+const mont = $("s4-montage");
+mont.innerHTML = `<div class="abs cx" style="top:0; display:flex; justify-content:center; gap:30px">` +
+  montageImgs.map(([f, n], i) => `<div id="mo${i}" style="width:310px"><div class="phone" style="position:relative; width:310px; height:570px; border-radius:40px; padding:9px"><div class="screen" style="border-radius:32px"><img class="shot" src="../../../public/trabalhos/${f}.webp"></div></div><div style="margin-top:22px; font-size:34px; font-weight:600; color:#fff">${n}</div></div>`).join("") +
+  `</div><div class="abs cx serif" id="mo-t" style="top:700px; font-size:64px; color:#fff">e muito <span style="font-style:italic; color:var(--blue-d)">mais.</span></div>`;
+
+// --- cena 5
+const ringsEl = $("s5-rings");
+for (let i = 0; i < 3; i++) { const r = document.createElement("div"); r.className = "abs";
+  r.style.cssText = "left:calc(37% - 110px); top:calc(52% - 110px); width:220px; height:220px; border-radius:50%; border:6px solid #4da3ff; opacity:0"; ringsEl.appendChild(r); }
+const starsEl = $("s5-stars");
+for (let i = 0; i < 5; i++) { const s = document.createElement("div");
+  s.innerHTML = `<svg viewBox="0 0 24 24" width="92" height="92"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6L2.5 9.4l6.6-.8z" fill="#e3e3e8"/><path class="f" d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6L2.5 9.4l6.6-.8z" fill="#fbbc05" style="transform-origin:12px 12px"/></svg>`;
+  starsEl.appendChild(s); }
+
+const T = { s1: [0, 3.6], s2: [3.6, 6.0], s3: [6.0, 14.0], s4: [14.0, 20.6], s5: [20.6, 25.0], s6: [25.0, 29.5] };
+window.DURATION = 29.5;
+
+window.render = function (t) {
+  // 1. Hook
+  $("s1").style.opacity = sceneOpacity(t, ...T.s1, 0, 0.12);
+  ["h1","h2","h3","h4","h5","h6","h7","h8","h9"].forEach((id, i) => enter($(id), t, 0.06 + i * 0.1, 0.42, 60));
+  enter($("s1-sub"), t, 1.25, 0.5, 30);
+
+  // 2. Reveal
+  $("s2").style.opacity = sceneOpacity(t, ...T.s2);
+  { const p = prog(t, 3.65, 4.3); $("s2-logo").style.opacity = clamp(p * 2); $("s2-logo").style.transform = `scale(${lerp(0.6, 1, outBack(p))})`; }
+  enter($("s2-t"), t, 4.05, 0.5, 40); enter($("s2-s"), t, 4.5, 0.45, 24);
+
+  // 3. Pedido
+  $("s3").style.opacity = sceneOpacity(t, ...T.s3);
+  enter($("s3-eyebrow"), t, 6.05, 0.4, 16);
+  enter($("s3-phone"), t, 6.1, 0.6, 100);
+  win($("st1"), t, 6.2, 7.9); win($("st2"), t, 7.9, 9.5); win($("st3"), t, 9.5, 11.1); win($("st4"), t, 11.1, 14.2);
+  // passo 1: toca "Adicionar" no Hambúrguer
+  $("s3-added").style.opacity = prog(t, 7.1, 7.2);
+  { const p = outCubic(prog(t, 7.3, 7.6)); $("s3-cart").style.opacity = clamp(p * 2) * (1 - prog(t, 7.95, 8.1)); $("s3-cart").style.transform = `translateY(${(1 - p) * 120}px)`; }
+  // passo 2: folha sobe, quantidade 1 → 2, digita observação
+  { const p = outCubic(prog(t, 7.95, 8.35)); $("s3-sheet").style.transform = `translateY(${(1 - p) * 760}px)`; $("s3-dim").style.opacity = p * (1 - prog(t, 11.15, 11.35)); }
+  $("s3-qty").textContent = t >= 8.6 ? "2" : "1";
+  $("s3-plus").style.transform = `scale(${1 - 0.15 * Math.sin(Math.PI * prog(t, 8.55, 8.7))})`;
+  { const txt = "sem cebola", n = Math.floor(clamp(prog(t, 8.85, 9.4)) * txt.length); $("s3-obs").textContent = txt.slice(0, n);
+    $("s3-caret").style.opacity = t > 8.75 && t < 9.6 ? (Math.floor(t * 4) % 2 ? 1 : 0.2) : 0; }
+  // passo 3: total destaca, toca em enviar
+  $("s3-total").textContent = brl(t >= 8.6 ? 16 : 8);
+  $("s3-total").style.transform = `scale(${1 + 0.18 * Math.sin(Math.PI * prog(t, 8.6, 8.9))})`;
+  $("s3-total-row").style.background = `rgba(226,168,60,${0.22 * prog(t, 9.6, 9.9)})`;
+  { const scr = $("s3-screen");
+    if (t >= 10.0) { const [x, y] = center($("s3-send"), scr); tapAt($("s3-tap"), t, x, y, 10.55); }
+    else if (t >= 8.2) { const [x, y] = center($("s3-plus"), scr); tapAt($("s3-tap"), t, x, y, 8.55); }
+    else tapAt($("s3-tap"), t, 465, 986, 7.05); }
+  $("s3-send").style.transform = `scale(${1 - 0.05 * Math.sin(Math.PI * prog(t, 10.55, 10.7))})`;
+  // passo 4: abre a conversa com a mensagem pronta
+  { const p = prog(t, 11.15, 11.45); $("s3-chat").style.opacity = p; $("s3-chat").style.transform = `translateX(${(1 - outCubic(p)) * 80}px)`; }
+  { const pul = t > 11.8 ? 1 + 0.08 * Math.sin((t - 11.8) * 7) : 1; $("s3-wa-send").style.transform = `scale(${pul})`;
+    $("s3-wa-send").style.boxShadow = t > 11.8 ? `0 0 0 ${10 + 8 * Math.sin((t - 11.8) * 7)}px rgba(0,168,132,.25)` : "none"; }
+  enter($("s3-note"), t, 11.9, 0.45, 30);
+
+  // 4. Trabalhos
+  $("s4").style.opacity = sceneOpacity(t, ...T.s4);
+  enter($("s4-title"), t, 14.05, 0.5, 40);
+  details.forEach((d) => {
+    const vis = Math.min(prog(t, d.a, d.a + 0.3), 1 - prog(t, d.b - 0.25, d.b));
+    const slide = outCubic(prog(t, d.a, d.a + 0.4));
+    d.el.style.opacity = vis; d.el.style.transform = `translateX(${(1 - slide) * 140}px)`;
+    // zoom no detalhe: mantém (cx, cy) no centro da tela
+    const zp = inOut(prog(t, d.a + 0.55, d.a + 1.05)), z = lerp(1, d.z, zp);
+    const W = 532, H = 892, ox = lerp(0, W / 2 - d.cx * W * z, zp), oy = lerp(0, H / 2 - d.cy * H * z, zp);
+    d.shot.style.transform = `translate(${Math.min(0, Math.max(W - W * z, ox))}px, ${Math.min(0, Math.max(H - H * z, oy))}px) scale(${z})`;
+    d.cap.style.opacity = Math.min(prog(t, d.a + 0.2, d.a + 0.45), 1 - prog(t, d.b - 0.25, d.b));
+  });
+  { const p = prog(t, 20.0, 20.25); mont.style.opacity = Math.min(p, 1 - prog(t, 20.45, 20.6));
+    [0, 1, 2].forEach((i) => enter($("mo" + i), t, 20.0 + i * 0.05, 0.3, 60)); enter($("mo-t"), t, 20.1, 0.3, 30);
+    $("s4-title").style.opacity = parseFloat($("s4-title").style.opacity) * (1 - 0 * p); }
+
+  // 5. Placa
+  $("s5").style.opacity = sceneOpacity(t, ...T.s5);
+  enter($("p1"), t, 20.7, 0.42, 60); enter($("p2"), t, 21.05, 0.42, 60);
+  { const p = prog(t, 21.4, 21.85); $("p3").style.opacity = clamp(p * 2); $("p3").style.transform = `translateY(${(1 - outBack(p)) * 60}px)`; }
+  enter($("s5-photo-wrap"), t, 20.75, 0.6, 80);
+  $("s5-photo").style.transform = `scale(${lerp(1.0, 1.08, prog(t, 20.6, 25))})`;
+  [...ringsEl.children].forEach((r, i) => { const st = 21.2 + i * 0.5, cyc = (((t - st) % 1.5) + 1.5) % 1.5 / 1.5;
+    r.style.opacity = t > st ? (1 - cyc) * 0.9 : 0; r.style.transform = `scale(${0.5 + cyc * 1.8})`; });
+  { const p = prog(t, 22.2, 22.65); $("s5-card").style.opacity = clamp(p * 1.6); $("s5-card").style.transform = `translateY(${(1 - outBack(p)) * 200}px)`; }
+  [...starsEl.querySelectorAll(".f")].forEach((f, i) => { const p = outBack(prog(t, 22.85 + i * 0.13, 23.1 + i * 0.13)); f.style.transform = `scale(${p})`; });
+  { const [x, y] = center($("s5-pub"), $("s5-card")); tapAt($("s5-tap"), t, x, y, 23.95); }
+  $("s5-pub").style.background = t > 24.0 ? "#128c4b" : "var(--blue)"; $("s5-pub").textContent = t > 24.0 ? "Publicada ✓" : "Publicar";
+  enter($("s5-sub"), t, 22.4, 0.45, 24);
+
+  // 6. Outro
+  $("s6").style.opacity = sceneOpacity(t, T.s6[0], T.s6[1] + 0.01, 0.18, 0);
+  { const p = prog(t, 25.05, 25.6); $("s6-logo").style.opacity = clamp(p * 2); $("s6-logo").style.transform = `scale(${lerp(0.7, 1, outBack(p))})`; }
+  enter($("s6-title"), t, 25.3, 0.55, 50);
+  enter($("s6-call"), t, 25.75, 0.45, 30);
+  { const p = prog(t, 25.9, 26.4); $("s6-pill").style.opacity = clamp(p * 1.6); $("s6-pill").style.transform = `scale(${lerp(0.85, 1, outBack(p))})`; }
+  enter($("s6-ig"), t, 26.15, 0.45, 24); enter($("s6-city"), t, 26.3, 0.45, 24);
+};
+
+window.ready = (async () => {
+  for (const f of ['800 100px "PF"', 'italic 800 100px "PF"', '600 40px "IN"', '40px "BB"']) await document.fonts.load(f);
+  await document.fonts.ready;
+  await Promise.all([...document.images].map((im) => im.decode().catch(() => {})));
+  window.render(0);
+  return true;
+})();
+</script>
+</body>
+</html>
