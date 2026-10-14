@@ -218,7 +218,7 @@ details.forEach((d, i) => {
     <div style="margin-top:14px"><span class="chip" style="background:rgba(77,163,255,.16); color:#cfe5ff; font-size:32px">${d.tag} · ${d.what}</span></div>`;
   capEl.appendChild(c); d.cap = c;
 });
-const montageImgs = [["parada-do-pastel", "Pastelaria"], ["grao-e-prosa", "Cafeteria"], ["vertice-barbearia-entrada", "Barbearia"]];
+const montageImgs = [["parada-do-pastel", "Pastelaria"], ["grao-e-prosa", "Cafeteria"], ["vertice-barbearia", "Barbearia"]];
 const mont = $("s4-montage");
 mont.innerHTML = `<div class="abs cx" style="top:0; display:flex; justify-content:center; gap:30px">` +
   montageImgs.map(([f, n], i) => `<div id="mo${i}" style="width:310px"><div class="phone" style="position:relative; width:310px; height:570px; border-radius:40px; padding:9px"><div class="screen" style="border-radius:32px"><img class="shot" src="../../../public/trabalhos/${f}.webp"></div></div><div style="margin-top:22px; font-size:34px; font-weight:600; color:#fff">${n}</div></div>`).join("") +
