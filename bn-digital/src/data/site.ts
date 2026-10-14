@@ -37,8 +37,8 @@ export const trabalhos: CarouselImage[] = [
   },
   {
     src: "trabalhos/vertice-barbearia-entrada.webp",
-    alt: "Tela de entrada do site da Vértice Barbearia com um poste de barbeiro dourado",
-    title: "Vértice Barbearia",
+    alt: "Tela de entrada do site da Barbearia Vértice com um poste de barbeiro dourado",
+    title: "Barbearia Vértice",
     subtitle: "Barbearia · Tela de entrada animada",
   },
   {
@@ -61,7 +61,7 @@ export const trabalhos: CarouselImage[] = [
   },
   {
     src: "trabalhos/vertice-barbearia.webp",
-    alt: "Página inicial da Barbearia Vértice com botão de agendar horário",
+    alt: "Página inicial da Barbearia Vértice com a foto de um corte com reflexo e o botão de agendar horário",
     title: "Barbearia Vértice",
     subtitle: "Barbearia · Agendamento pelo WhatsApp",
   },
