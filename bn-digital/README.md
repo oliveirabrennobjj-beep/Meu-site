@@ -15,6 +15,8 @@ npm run build     # gera a versão publicável em dist/
 npm run preview   # confere o build: http://localhost:4173
 ```
 
+**Publicação:** o workflow `.github/workflows/publicar-bn-digital.yml` publica `dist/` no GitHub Pages a cada mudança na `main` (endereço: https://oliveirabrennobjj-beep.github.io/Meu-site/). Na primeira vez, ative em Settings → Pages → Source: "GitHub Actions".
+
 A pasta `dist/` vai versionada: é o site pronto (HTML, CSS, JS e imagens) e funciona em qualquer hospedagem estática, inclusive em subpasta.
 Depois de mudar algo, rode `npm run build` de novo antes de publicar.
 

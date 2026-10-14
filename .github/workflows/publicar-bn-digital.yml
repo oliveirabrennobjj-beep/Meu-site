@@ -1,0 +1,36 @@
+# Publica o site da BN Digital (bn-digital/dist) no GitHub Pages.
+# Endereço: https://oliveirabrennobjj-beep.github.io/Meu-site/
+# Requer, uma vez: Settings → Pages → Build and deployment → Source: "GitHub Actions".
+name: Publicar site da BN Digital
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "bn-digital/dist/**"
+      - ".github/workflows/publicar-bn-digital.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: bn-digital/dist
+      - id: deploy
+        uses: actions/deploy-pages@v4
