@@ -298,6 +298,7 @@
   (function renderRating() {
     var google = cfg.google || {};
     var block = $("[data-rating]");
+    if (!block) return; // página sem a seção de avaliações
     if (!google.nota) {
       $(".rating-score", block).hidden = true;
       return;
@@ -421,7 +422,8 @@
     }
     var target = $("#contato");
     target.scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth", block: "start" });
-    if (history.replaceState) history.replaceState(null, "", "#contato");
+    // alguns ambientes (páginas embutidas) recusam mudar o endereço; não é essencial
+    try { history.replaceState(null, "", "#contato"); } catch (e) {}
     select.focus({ preventScroll: true });
   }
 
