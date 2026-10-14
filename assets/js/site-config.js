@@ -1,5 +1,5 @@
 /*
- * Dados editáveis da Barber Club.
+ * Dados editáveis da Barbearia Vértice.
  *
  * Este é o único arquivo que precisa mudar para atualizar contatos, serviços,
  * fotos, horários, endereço e avaliações. O restante do site lê tudo daqui.
@@ -9,17 +9,15 @@
  * - Nada marcado como "pendente" é exibido como se estivesse confirmado.
  */
 window.BARBER_CLUB = {
-  nome: "Barber Club",
+  nome: "Barbearia Vértice",
   cidade: "Casimiro de Abreu",
   uf: "RJ",
   desde: 2019,
 
   contato: {
     // Telefone exibido no Instagram/Google. Não é tratado como WhatsApp.
-    telefone: {
-      exibicao: "(31) 99780-3143",
-      link: "+5531997803143",
-    },
+    // PENDENTE: telefone da barbearia. Ex.: { exibicao: "(22) 99999-9999", link: "+5522999999999" }
+    telefone: null,
 
     // PENDENTE: número de WhatsApp para agendamento, só dígitos com DDI e DDD
     // (ex.: "5522999999999"). Enquanto estiver vazio, os botões de agendamento
@@ -27,14 +25,12 @@ window.BARBER_CLUB = {
     whatsappAgendamento: "",
 
     // {servico} é trocado pelo serviço escolhido pelo visitante.
-    mensagemAgendamento: "Olá, Barber Club! Gostaria de consultar um horário para {servico}.",
+    mensagemAgendamento: "Olá, Barbearia Vértice! Gostaria de consultar um horário para {servico}.",
     servicoGenerico: "um atendimento",
 
-    instagram: {
-      usuario: "barber_club.oficial_",
-      url: "https://www.instagram.com/barber_club.oficial_/",
-    },
-    linkBio: "https://linktr.ee/barber_club_123",
+    // PENDENTE: Instagram da barbearia. Ex.: { usuario: "perfil", url: "https://www.instagram.com/perfil/" }
+    instagram: null,
+    linkBio: "",
   },
 
   endereco: {
@@ -42,10 +38,6 @@ window.BARBER_CLUB = {
     confirmado: false,
     // Endereço definitivo, exibido quando confirmado = true.
     texto: "",
-    // Texto que aparece na captura do Google. Fica guardado apenas como referência
-    // e NÃO é exibido no site.
-    referenciaDaCaptura:
-      "Rua pastor Luiz Laurentino da Silva, R. Rodolfo Motta, Casimiro de Abreu - RJ, 28860-000",
     // URL de incorporação do Google Maps (Compartilhar > Incorporar um mapa > src).
     mapaEmbedUrl: "",
     // Destino do botão "Como chegar": link do Google Maps do local confirmado.
@@ -57,11 +49,13 @@ window.BARBER_CLUB = {
   horarios: [],
 
   google: {
-    nota: 4.9,
-    totalAvaliacoes: 33,
+    // PENDENTE: preencha com os números reais do perfil no Google (ex.: nota: 4.9, totalAvaliacoes: 33).
+    // Enquanto nota estiver vazia, a seção de avaliações não aparece.
+    nota: null,
+    totalAvaliacoes: null,
     // Quando os números foram vistos no perfil. O site não atualiza sozinho.
-    registradoEm: "outubro de 2026",
-    // PENDENTE: link do perfil da Barber Club no Google.
+    registradoEm: "",
+    // PENDENTE: link do perfil da barbearia no Google.
     perfilUrl: "",
   },
 
@@ -106,10 +100,10 @@ window.BARBER_CLUB = {
     logo: "",
     // Fundo da seção principal.
     hero: {
-      src: "assets/img/barba-navalha-1122.webp",
-      srcset: "assets/img/barba-navalha-640.webp 640w, assets/img/barba-navalha-1122.webp 1122w",
+      src: "assets/img/corte-reflexo-1122.webp",
+      srcset: "assets/img/corte-reflexo-640.webp 640w, assets/img/corte-reflexo-1122.webp 1122w",
       alt: "",
-      posicao: "50% 38%",
+      posicao: "45% 32%",
     },
     // Foto da seção "Nosso espaço".
     sobre: {

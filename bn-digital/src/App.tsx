@@ -5,6 +5,7 @@ import { Faq } from "@/components/sections/faq";
 import { Header } from "@/components/sections/header";
 import { Hero } from "@/components/sections/hero";
 import { Nfc } from "@/components/sections/nfc";
+import { Pricing } from "@/components/sections/pricing";
 import { Process } from "@/components/sections/process";
 import { Sites } from "@/components/sections/sites";
 import { Works } from "@/components/sections/works";
@@ -34,6 +35,7 @@ export default function App() {
         <Sites />
         <Nfc />
         <Process />
+        <Pricing />
         <Faq />
         <FinalCta />
       </main>

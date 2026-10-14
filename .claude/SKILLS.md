@@ -15,6 +15,8 @@ Instaladas em 2026-10-03 a partir das fontes abaixo.
 | web-design-guidelines | vercel-labs/agent-skills (`063bee9`, v1.0.0) | `npx skills add vercel-labs/agent-skills --skill web-design-guidelines -a claude-code --copy -y` (o README oficial usa `npx skills add vercel-labs/agent-skills`; `--skill` limita à skill escolhida) |
 | webapp-testing | anthropics/skills (`8a1541c`) | `npx skills add anthropics/skills --skill webapp-testing -a claude-code --copy -y`. O README oficial indica o marketplace (`/plugin install example-skills@anthropic-agent-skills`), mas isso instala o pacote `example-skills` inteiro no escopo do usuário; o CLI instala só esta skill, no projeto |
 | impeccable + `.claude/agents/impeccable-*.md` | pbakaus/impeccable (`e103efe`, skill v4.5.0) | Cópia da build para Claude Code commitada no repositório da fonte (`.claude/skills/impeccable` e `.claude/agents/`). Ver observações |
+| brag, brag-slim | latent-spaces/brag (`069432c`, v0.4.0) | `npx skills add latent-spaces/brag -a claude-code --copy -y` (2026-10-14). Revisada antes: só instruções em Markdown, músicas/efeitos e um script Python de análise de batidas (`librosa`), sem acesso à rede nem hooks. No Opus 5.5 o `/brag` passa para o `/brag-slim`. As músicas incluídas não têm licença confirmada (o README da fonte avisa); o vídeo da BN Digital usa trilha original |
+| brainstorming, verification-before-completion | obra/superpowers (`bb92a77`, v7.0.0) | `npx skills add obra/superpowers --skill brainstorming --skill verification-before-completion -a claude-code --copy -y` (2026-10-14). Revisadas antes: o `brainstorming` traz um servidor local (só `localhost`, com token) para mostrar rascunhos no navegador |
 
 Pré-existentes e preservadas sem alteração: ui-ux-pro-max, banner-design, brand, design, design-system, slides, ui-styling.
 
@@ -91,3 +93,18 @@ python3 -m venv .venv && .venv/bin/pip install playwright
 
 Ver `.gitignore`: caches Python (`__pycache__/`, `*.pyc`), ambientes virtuais (`.venv/`, `venv/`), `node_modules/`, navegadores do Playwright, relatórios e resultados de teste, além de `.claude/settings.local.json`.
 Os 24 arquivos `__pycache__/*.pyc` que tinham sido versionados por engano (em docx, xlsx, pptx e skill-creator) saíram do Git; o Python os recria quando precisa.
+
+## Servidores MCP do projeto (`.mcp.json`)
+
+Adicionados em 2026-10-14, com versão fixa:
+
+| Servidor | Pacote | Para que serve | Precisa de |
+|---|---|---|---|
+| `chrome-devtools` | `chrome-devtools-mcp@1.10.1` (Google) | Abrir o site num Chrome de verdade, ver console, rede e desempenho | Chrome instalado (roda `--headless --isolated`) |
+| `shadcn-ui` | `@jpisnice/shadcn-ui-mcp-server@3.0.0` | Consultar componentes, blocos e exemplos do shadcn/ui | Opcional: `GITHUB_PERSONAL_ACCESS_TOKEN` (sem ele, a API do GitHub limita a 60 consultas/hora) |
+| `magic-21st` | `@21st-dev/magic@0.2.3` | Gerar componentes de interface da 21st.dev | **Obrigatório:** `TWENTY_FIRST_API_KEY` (chave criada em 21st.dev/magic) |
+
+As chaves não vão para o repositório: o `.mcp.json` lê as variáveis de ambiente. Na nuvem, cadastre-as nas variáveis do ambiente; no computador, exporte-as antes de abrir o Claude Code.
+Ao abrir o projeto, o Claude Code pergunta se você aprova os servidores do `.mcp.json`.
+
+`frontend-design` e `web-design-guidelines`, citadas nos mesmos vídeos, já estavam instaladas.

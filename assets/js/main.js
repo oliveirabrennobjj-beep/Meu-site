@@ -1,4 +1,4 @@
-/* Barber Club: monta o conteúdo a partir de site-config.js e cuida das interações. */
+/* Barbearia Vértice: monta o conteúdo a partir de site-config.js e cuida das interações. */
 (function () {
   "use strict";
 
@@ -213,7 +213,7 @@
       icon("camera", 28),
       el("p", {}, [
         el("strong", { text: "As fotos dos cortes chegam em breve." }),
-        "Enquanto isso, os trabalhos mais recentes estão no Instagram da Barber Club.",
+        "Enquanto isso, os trabalhos mais recentes estão no Instagram da " + cfg.nome + ".",
       ]),
       instagramUrl ? el("a", { className: "btn btn-outline", href: instagramUrl, target: "_blank", rel: "noopener" }, [icon("instagram"), "Veja mais no Instagram"]) : null,
     ]);
@@ -396,8 +396,10 @@
       copyTimer = setTimeout(function () { label.textContent = "Copiar mensagem"; }, 3000);
     });
     actions.appendChild(copyBtn);
-    help.textContent = "Por enquanto, os horários são combinados pelo direct do Instagram" +
-      (instagramUser ? " (@" + instagramUser + ")" : "") + ". Copie a mensagem e cole na conversa.";
+    help.textContent = instagramUrl
+      ? "Por enquanto, os horários são combinados pelo direct do Instagram" +
+        (instagramUser ? " (@" + instagramUser + ")" : "") + ". Copie a mensagem e cole na conversa."
+      : "Copie a mensagem e envie para a barbearia pelo contato que você já tem. Os canais de agendamento serão divulgados em breve.";
   }
 
   select.addEventListener("change", updateMessage);

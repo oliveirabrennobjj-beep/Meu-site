@@ -1,6 +1,6 @@
-# Barber Club — site
+# Barbearia Vértice — site
 
-Primeira versão do site da Barber Club, barbearia em Casimiro de Abreu (RJ).
+Primeira versão do site da Barbearia Vértice, barbearia em Casimiro de Abreu (RJ).
 É um site estático (HTML, CSS e JavaScript, sem etapa de build), pensado primeiro para o celular.
 
 ## Como visualizar
@@ -46,7 +46,7 @@ Quase tudo muda em um único arquivo: `assets/js/site-config.js`. Campos vazios 
 
 ## Tela de entrada
 
-Na primeira abertura da página, aparece uma tela com o nome Barber Club sobre um poste de barbeiro e o botão **Entrar**.
+Na primeira abertura da página, aparece uma tela com o nome Barbearia Vértice sobre um poste de barbeiro e o botão **Entrar**.
 Ela some com o botão, com Esc ou ao rolar a página, e não volta durante a mesma visita.
 Quem chega por um link direto para uma seção (por exemplo, `…/#contato`) vai direto ao conteúdo.
 Com movimento reduzido ativado no aparelho, o poste fica parado e a saída é imediata.
@@ -57,20 +57,20 @@ O agendamento é uma solicitação de contato: não há calendário de vagas nem
 O site deixa claro que o horário só fica marcado quando a barbearia responder.
 
 - **Sem WhatsApp cadastrado (situação atual):** os botões levam à seção de contato, onde o visitante escolhe o serviço, copia a mensagem pronta e abre o Instagram.
-- **Com WhatsApp cadastrado:** os botões abrem `wa.me` com a mensagem “Olá, Barber Club! Gostaria de consultar um horário para [serviço].”
+- **Com WhatsApp cadastrado:** os botões abrem `wa.me` com a mensagem “Olá, Barbearia Vértice! Gostaria de consultar um horário para [serviço].”
 
 ## Informações pendentes
 
 Antes de publicar, confirme com a barbearia:
 
-1. **WhatsApp de agendamento.** O telefone exibido, (31) 99780-3143, tem DDD de Minas Gerais, e Casimiro de Abreu usa o 22. Vale confirmar se é o número certo e se atende pelo WhatsApp.
-2. **Endereço.** O texto da captura cita duas ruas (“Rua pastor Luiz Laurentino da Silva, R. Rodolfo Motta”). Ele está guardado em `endereco.referenciaDaCaptura` e não aparece no site.
+1. **Contatos.** O site mudou de nome (era Barber Club) e os contatos da barbearia anterior foram retirados. Preencha `contato.whatsappAgendamento`, `contato.telefone` e `contato.instagram` com os dados da Barbearia Vértice.
+2. **Endereço.** Preencha `endereco.texto` e marque `confirmado: true`.
 3. **Ponto no mapa e link de rota**, depois de confirmar o endereço.
 4. **Horários de funcionamento completos.**
-5. **Link do perfil no Google** e a data em que a nota 4,9 / 33 avaliações foi vista (hoje está como “outubro de 2026”, a data desta versão).
+5. **Nota e link do perfil no Google.** A seção de avaliações só aparece quando `google.nota` for preenchida com os números reais.
 6. **Depoimentos.** Só entram textos reais, copiados como aparecem, com o nome exibido.
 7. **Preços e duração dos serviços**, se a barbearia quiser mostrar.
-8. **Origem das fotos.** As três fotos atuais (barbeiro de avental, degradê e barba com navalha) foram enviadas para esta versão. Antes de publicar, confirme que são da Barber Club e que as pessoas que aparecem autorizam o uso. Se forem ilustrativas ou geradas por IA, troque por fotos reais, porque o site as apresenta como o ambiente e o trabalho da barbearia.
+8. **Origem das fotos.** A foto de fundo da abertura é o corte com reflexo enviado pelo dono do site, de uma barbearia parceira. As outras fotos (barbeiro de avental, degradê e barba com navalha) foram enviadas para esta versão. Antes de publicar, confirme que são da Barbearia Vértice e que as pessoas que aparecem autorizam o uso. Se forem ilustrativas ou geradas por IA, troque por fotos reais, porque o site as apresenta como o ambiente e o trabalho da barbearia.
 
 ### Arquivos para enviar
 

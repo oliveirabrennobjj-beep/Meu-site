@@ -1,16 +1,16 @@
 import {
   Clock,
+  Coffee,
   Dumbbell,
   Glasses,
   Hammer,
   IceCreamBowl,
   MapPin,
   Pizza,
+  Sandwich,
   Scissors,
   ShoppingBag,
   Smartphone,
-  Coffee,
-  Sandwich,
   Swords,
   type LucideIcon,
 } from "lucide-react";
@@ -41,54 +41,49 @@ const segmentos: { icon: LucideIcon; nome: string }[] = [
 
 export function Sites() {
   return (
-    <section id="sites" aria-labelledby="sites-titulo" className="py-8 md:py-12">
+    <section id="sites" aria-labelledby="sites-titulo" className="theme-mist py-24 md:py-32">
       <div className="container-page">
-        <Reveal className="tile relative overflow-hidden px-6 py-14 md:px-14 md:py-20">
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute -right-40 -top-40 size-[520px] rounded-full bg-[radial-gradient(closest-side,rgba(41,151,255,0.22),transparent)]"
-          />
+        <Reveal className="max-w-3xl">
           <p className="eyebrow">Sites personalizados e cardápios digitais</p>
-          <h2 id="sites-titulo" className="mt-3 max-w-2xl text-[34px] font-semibold leading-[1.08] md:text-[52px]">
-            Um site que vende enquanto você trabalha.
+          <h2 id="sites-titulo" className="display mt-4 text-[42px] md:text-[64px]">
+            Um site que vende enquanto você <span className="italic text-primary">trabalha.</span>
           </h2>
-          <p className="mt-5 max-w-xl text-[17px] leading-relaxed text-muted md:text-[19px]">
+          <p className="mt-5 max-w-xl text-[17px] leading-relaxed text-soft md:text-[19px]">
             Nada de modelo pronto. Cada projeto nasce das cores, das fotos e do jeito de falar do seu negócio.
           </p>
+        </Reveal>
 
-          <ul className="mt-12 grid gap-px overflow-hidden rounded-[20px] border border-hairline bg-hairline sm:grid-cols-2 lg:grid-cols-3">
-            {recursos.map(({ icon: Icon, titulo, texto }) => (
-              <li key={titulo} className="bg-surface p-6 md:p-7">
-                <Icon aria-hidden="true" className="size-7 text-link" />
-                <h3 className="mt-4 text-[19px] font-semibold">{titulo}</h3>
-                <p className="mt-1.5 text-[15px] leading-relaxed text-muted">{texto}</p>
+        <ul className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {recursos.map(({ icon: Icon, titulo, texto }, i) => (
+            <Reveal as="li" key={titulo} delay={i * 0.05} className="rounded-[24px] bg-card p-7 text-card-fg shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
+              <span className="grid size-11 place-items-center rounded-full bg-primary/10">
+                <Icon aria-hidden="true" className="size-[22px] text-primary" />
+              </span>
+              <h3 className="display mt-5 text-[24px]">{titulo}</h3>
+              <p className="mt-2 text-[15px] leading-relaxed text-soft">{texto}</p>
+            </Reveal>
+          ))}
+          <Reveal as="li" delay={0.25} className="flex flex-col justify-between gap-6 rounded-[24px] bg-ink p-7 text-white">
+            <p className="display text-[26px]">Quer ver como ficaria o seu?</p>
+            <Button asChild className="self-start bg-white text-ink hover:bg-white/90">
+              <a href={linkWhatsApp(mensagens.site)} target="_blank" rel="noopener noreferrer">
+                Pedir orçamento do site
+              </a>
+            </Button>
+          </Reveal>
+        </ul>
+
+        <Reveal className="mt-14">
+          <h3 className="text-[15px] font-semibold text-fg">Para todo tipo de negócio</h3>
+          <ul className="mt-4 flex flex-wrap gap-2.5">
+            {segmentos.map(({ icon: Icon, nome }) => (
+              <li key={nome} className="inline-flex items-center gap-2 rounded-full bg-card px-4 py-2 text-[14px] text-card-fg ring-1 ring-line">
+                <Icon aria-hidden="true" className="size-4 text-primary" />
+                {nome}
               </li>
             ))}
-            <li className="flex flex-col justify-between gap-6 bg-surface p-6 md:p-7">
-              <p className="text-[19px] font-semibold leading-snug">Quer ver como ficaria o seu?</p>
-              <Button asChild className="self-start">
-                <a href={linkWhatsApp(mensagens.site)} target="_blank" rel="noopener noreferrer">
-                  Pedir orçamento do site
-                </a>
-              </Button>
-            </li>
+            <li className="inline-flex items-center px-2 py-2 text-[14px] text-soft">e muitos outros.</li>
           </ul>
-
-          <div className="mt-14">
-            <h3 className="text-[15px] font-semibold text-white/90">Para todo tipo de negócio</h3>
-            <ul className="mt-4 flex flex-wrap gap-2.5">
-              {segmentos.map(({ icon: Icon, nome }) => (
-                <li
-                  key={nome}
-                  className="inline-flex items-center gap-2 rounded-full border border-hairline bg-surface-2 px-4 py-2 text-[14px] text-white/85"
-                >
-                  <Icon aria-hidden="true" className="size-4 text-link" />
-                  {nome}
-                </li>
-              ))}
-              <li className="inline-flex items-center rounded-full px-2 py-2 text-[14px] text-muted">e muitos outros.</li>
-            </ul>
-          </div>
         </Reveal>
       </div>
     </section>

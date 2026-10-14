@@ -1,43 +1,35 @@
 import { motion } from "framer-motion";
 import { ChevronRight } from "lucide-react";
 import { WhatsAppIcon } from "@/components/brand-icons";
-import { NfcPlaque } from "@/components/nfc-plaque";
 import { PhoneFrame } from "@/components/phone-frame";
 import { Button } from "@/components/ui/button";
-import { empresa, linkWhatsApp, mensagens } from "@/data/site";
+import { linkWhatsApp, mensagens } from "@/data/site";
 
 const ease = [0.28, 0.11, 0.32, 1] as const;
 
 export function Hero() {
   return (
-    <section id="inicio" className="relative overflow-hidden pt-16 md:pt-24">
-      {/* brilho azul de fundo */}
+    <section id="inicio" className="theme-light relative overflow-hidden pt-14 md:pt-20">
+      {/* brilho azul suave no fundo branco */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute left-1/2 top-[38%] h-[620px] w-[900px] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(0,113,227,0.38),transparent)] blur-2xl"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-[70%] bg-[radial-gradient(60%_60%_at_50%_70%,rgba(10,102,232,0.16),transparent)]"
       />
 
       <div className="container-page relative text-center">
-        <motion.p
-          className="eyebrow"
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease }}
-        >
+        <motion.p className="eyebrow" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease }}>
           Sites · Cardápios digitais · Placas NFC
         </motion.p>
         <motion.h1
-          className="mx-auto mt-4 max-w-4xl text-[44px] font-semibold leading-[1.04] md:text-[80px]"
+          className="display mx-auto mt-5 max-w-4xl text-[54px] text-fg sm:text-[72px] md:text-[96px]"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.08, ease }}
         >
-          Seu negócio merece
-          <br />
-          <span className="text-gradient">ser encontrado.</span>
+          Seu negócio merece ser <span className="text-primary">encontrado.</span>
         </motion.h1>
         <motion.p
-          className="mx-auto mt-6 max-w-[34rem] text-[18px] leading-relaxed text-muted md:text-[21px]"
+          className="mx-auto mt-6 max-w-[34rem] text-[18px] leading-relaxed text-soft md:text-[21px]"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.16, ease }}
@@ -65,19 +57,19 @@ export function Hero() {
         </motion.div>
       </div>
 
-      {/* vitrine: celular com site + placa NFC */}
+      {/* vitrine: celular com um site + foto real da placa NFC */}
       <motion.div
-        className="container-page relative mt-16 md:mt-20"
+        className="container-page relative mt-14 md:mt-20"
         initial={{ opacity: 0, y: 60 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.1, delay: 0.3, ease }}
       >
-        <div className="relative mx-auto flex h-[440px] max-w-[760px] items-end justify-center md:h-[620px]">
+        <div className="relative mx-auto flex h-[430px] max-w-[760px] items-end justify-center md:h-[600px]">
           <PhoneFrame
             eager
             src="trabalhos/parada-do-pastel.webp"
             alt="Site da Parada do Pastel aberto no celular"
-            className="absolute bottom-0 left-[4%] hidden w-[230px] -rotate-[8deg] opacity-80 sm:block md:left-[6%] md:w-[270px]"
+            className="absolute bottom-0 left-[4%] hidden w-[230px] -rotate-[8deg] sm:block md:left-[6%] md:w-[270px]"
           />
           <PhoneFrame
             eager
@@ -85,15 +77,17 @@ export function Hero() {
             alt="Cardápio digital do X Cocó Lanches aberto no celular"
             className="relative z-10 w-[220px] md:w-[300px]"
           />
-          <div className="absolute bottom-6 right-[2%] z-20 w-[150px] rotate-[7deg] sm:right-[6%] md:bottom-10 md:w-[210px]">
-            <NfcPlaque variant="blue" />
-          </div>
+          <figure className="absolute bottom-6 right-0 z-20 w-[150px] rotate-[5deg] overflow-hidden rounded-[22px] bg-white p-1.5 shadow-[0_30px_60px_-20px_rgba(10,40,100,0.45)] ring-1 ring-black/5 sm:right-[4%] md:bottom-12 md:w-[220px]">
+            <img
+              src="nfc/placa-nfc-azul-no-balcao.webp"
+              alt="Placa NFC azul no balcão e um cliente aproximando o celular para avaliar no Google"
+              width={900}
+              height={897}
+              className="aspect-square w-full rounded-[17px] object-cover"
+            />
+          </figure>
         </div>
-        {/* fade inferior */}
-        <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black to-transparent" />
       </motion.div>
-
-      <p className="sr-only">BN Digital fica em {empresa.cidade}.</p>
     </section>
   );
 }

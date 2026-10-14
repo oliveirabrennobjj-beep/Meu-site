@@ -1,4 +1,4 @@
-"""Testes do site da Barber Club (Playwright, Python).
+"""Testes do site da Barbearia Vértice (Playwright, Python).
 
 Uso:  .venv/bin/python tests/test_site.py [--shots pasta]
 
@@ -55,6 +55,9 @@ SAMPLE_OVERRIDES = """
   c.endereco.rotaUrl = "https://maps.google.com/?q=teste";
   c.horarios = [{ dias: "Dia de teste", horas: "9h às 18h" }];
   c.google.perfilUrl = "https://example.com/google";
+  c.google.nota = 4.5;
+  c.google.totalAvaliacoes = 10;
+  c.google.registradoEm = "mês de teste";
   c.avaliacoes = [{ nome: "Cliente de teste", texto: "Depoimento de teste." }];
   c.servicos[0].preco = "R$ 0,00";
   c.imagens.resultados = [
@@ -112,15 +115,14 @@ def test_default(browser, base, shots):
     check(page.get_by_role("button", name="Como chegar").is_disabled(), "botão de rota desabilitado")
     check(page.locator("[data-google-link]").is_hidden(), "link do Google oculto sem URL cadastrada")
     check(page.locator("[data-testimonials]").is_hidden(), "nenhum depoimento inventado")
-    check("4,9" in body and "33 avaliações no Google" in body, "nota 4,9 e 33 avaliações exibidas")
-    check("registrados em" in body, "nota identificada como registro, sem atualização ao vivo")
-    check(page.locator('a[href="tel:+5531997803143"]').count() >= 1, "telefone com link tel:")
-    check(page.locator('a[href="https://www.instagram.com/barber_club.oficial_/"]').count() >= 2, "links do Instagram")
-    check(page.locator('a[href="https://linktr.ee/barber_club_123"]').count() >= 1, "link da bio")
+    check(page.locator(".rating-score").is_hidden() and "avaliações no Google" not in body,
+          "sem nota do Google enquanto não houver números reais")
+    check(page.locator('a[href^="tel:"]').count() == 0, "nenhum telefone enquanto não for cadastrado")
+    check(page.locator('a[href*="instagram.com"]').count() == 0, "nenhum Instagram enquanto não for cadastrado")
+    check("Barber Club" not in body and "barber_club" not in page.content(), "nenhum dado da Barber Club")
     check(page.locator("h1").count() == 1, "um único h1")
     check(page.locator(".gallery-btn").count() == 2, "galeria com as 2 fotos de cortes")
-    check(page.locator(".gallery-more a").get_attribute("href") == "https://www.instagram.com/barber_club.oficial_/",
-          "galeria termina com link para o Instagram")
+    check(page.locator(".gallery-more").count() == 0, "galeria sem link de Instagram enquanto não houver perfil")
     alts = page.evaluate("[...document.querySelectorAll('.space-frame img')].map(i => i.alt)")
     check(len(alts) == 1 and alts[0], "foto do espaço com texto alternativo")
 
@@ -153,7 +155,7 @@ def test_default(browser, base, shots):
     check(page.locator("#servico").input_value() == "barba", "'Consultar serviço' seleciona Barba")
     check(page.evaluate("document.activeElement.id") == "servico", "foco vai para o campo de serviço")
     msg = page.inner_text("[data-message-preview]")
-    check(msg == "Olá, Barber Club! Gostaria de consultar um horário para fazer a barba.", f"mensagem pronta: {msg}")
+    check(msg == "Olá, Barbearia Vértice! Gostaria de consultar um horário para fazer a barba.", f"mensagem pronta: {msg}")
     page.select_option("#servico", "infantil")
     check("um corte infantil" in page.inner_text("[data-message-preview]"), "mensagem acompanha o serviço escolhido")
 
@@ -257,7 +259,7 @@ def test_intro(browser, base, shots):
     intro = page.locator("[data-intro]")
     check(intro.is_visible(), "aparece na primeira abertura")
     txt = intro.inner_text().lower()
-    check("barber club" in txt and "entrar" in txt, "mostra o nome e o botão Entrar")
+    check("vértice" in txt and "entrar" in txt, "mostra o nome e o botão Entrar")
     check(page.evaluate("document.activeElement.hasAttribute('data-intro-enter')"), "foco no botão Entrar")
     check(page.evaluate("document.querySelector('main').inert"), "conteúdo por trás fica inativo")
     page.keyboard.press("Tab")

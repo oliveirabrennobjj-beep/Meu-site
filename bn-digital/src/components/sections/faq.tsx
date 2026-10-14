@@ -4,7 +4,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 const perguntas = [
   {
     p: "Quanto custa um site ou uma placa NFC?",
-    r: "Depende do que o seu negócio precisa: quantidade de páginas, cardápio, carrinho de pedidos, quantidade de placas. Chame no WhatsApp e mandamos um orçamento sem compromisso.",
+    r: "Os preços são passados pelo WhatsApp, porque dependem do que o seu negócio precisa: quantidade de páginas, cardápio, carrinho de pedidos, quantidade de placas. Chame e mandamos um orçamento sem compromisso.",
   },
   {
     p: "A placa NFC funciona em qualquer celular?",
@@ -26,16 +26,16 @@ const perguntas = [
 
 export function Faq() {
   return (
-    <section id="duvidas" aria-labelledby="duvidas-titulo" className="py-24 md:py-32">
+    <section id="duvidas" aria-labelledby="duvidas-titulo" className="theme-light py-24 md:py-32">
       <div className="container-page grid gap-10 md:grid-cols-[1fr_1.6fr] md:gap-16">
         <Reveal>
           <p className="eyebrow">Dúvidas</p>
-          <h2 id="duvidas-titulo" className="mt-3 text-[34px] font-semibold leading-[1.08] md:text-[48px]">
+          <h2 id="duvidas-titulo" className="display mt-4 text-[42px] md:text-[56px]">
             Perguntas frequentes.
           </h2>
         </Reveal>
         <Reveal delay={0.08}>
-          <Accordion type="single" collapsible className="border-t border-hairline">
+          <Accordion type="single" collapsible className="border-t border-line">
             {perguntas.map((item, i) => (
               <AccordionItem key={i} value={`q${i}`}>
                 <AccordionTrigger>{item.p}</AccordionTrigger>
