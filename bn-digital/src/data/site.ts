@@ -36,10 +36,10 @@ export const trabalhos: CarouselImage[] = [
     subtitle: "Hortifruti · Delivery pelo WhatsApp",
   },
   {
-    src: "trabalhos/vertice-barbearia-entrada.webp",
-    alt: "Tela de entrada do site da Barbearia Vértice com um poste de barbeiro dourado",
-    title: "Barbearia Vértice",
-    subtitle: "Barbearia · Tela de entrada animada",
+    src: "trabalhos/barbearia-modelo-entrada.webp",
+    alt: "Tela de entrada do site da Barbearia Modelo com um poste de barbeiro dourado em 3D e o botão Entrar",
+    title: "Barbearia Modelo",
+    subtitle: "Barbearia · Site de demonstração",
   },
   {
     src: "trabalhos/otica-lumera.webp",
