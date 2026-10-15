@@ -1,8 +1,11 @@
+import { useReducedMotion } from "framer-motion";
 import { Reveal } from "@/components/reveal";
 import { Carousel_003 } from "@/components/ui/skiper49";
 import { trabalhos } from "@/data/site";
 
 export function Works() {
+  // passa sozinho a cada 2,8 s; para no hover e fica parado com "reduzir movimento"
+  const reduce = useReducedMotion();
   return (
     <section id="trabalhos" aria-labelledby="trabalhos-titulo" className="theme-dark relative py-24 md:py-32">
       <Reveal className="container-page text-center">
@@ -16,7 +19,7 @@ export function Works() {
       </Reveal>
 
       <div className="portfolio mt-12 flex justify-center overflow-hidden">
-        <Carousel_003 images={trabalhos} showPagination showNavigation loop className="max-w-6xl px-0" />
+        <Carousel_003 images={trabalhos} showPagination showNavigation loop autoplay={reduce ? false : 2800} className="max-w-6xl px-0" />
       </div>
     </section>
   );

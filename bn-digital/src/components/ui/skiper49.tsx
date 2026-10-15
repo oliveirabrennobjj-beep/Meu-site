@@ -24,6 +24,8 @@ export type CarouselImage = {
   alt: string;
   title?: string;
   subtitle?: string;
+  /** Conteúdo próprio (ex.: slide animado) no lugar da imagem. */
+  content?: React.ReactNode;
 };
 
 const Skiper49 = () => {
@@ -97,7 +99,8 @@ const Carousel_003 = ({
   showPagination?: boolean;
   showNavigation?: boolean;
   loop?: boolean;
-  autoplay?: boolean;
+  /** true = troca a cada 1,5 s; um número define o intervalo em ms. */
+  autoplay?: boolean | number;
   spaceBetween?: number;
 }) => {
   const css = `
@@ -141,8 +144,9 @@ const Carousel_003 = ({
           autoplay={
             autoplay
               ? {
-                  delay: 1500,
-                  disableOnInteraction: true,
+                  delay: typeof autoplay === "number" ? autoplay : 1500,
+                  disableOnInteraction: typeof autoplay !== "number",
+                  pauseOnMouseEnter: true,
                 }
               : false
           }
@@ -178,11 +182,13 @@ const Carousel_003 = ({
         >
           {images.map((image, index) => (
             <SwiperSlide key={index} className="">
-              <img
-                className="h-full w-full object-cover"
-                src={image.src}
-                alt={image.alt}
-              />
+              {image.content ?? (
+                <img
+                  className="h-full w-full object-cover"
+                  src={image.src}
+                  alt={image.alt}
+                />
+              )}
               {image.title && (
                 <div className="carousel-caption pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent px-4 pb-4 pt-12 text-left">
                   <p className="text-[15px] font-semibold text-white">

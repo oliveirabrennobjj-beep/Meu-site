@@ -1,4 +1,6 @@
 // DADOS DA EMPRESA — altere aqui contatos, textos de WhatsApp e trabalhos do carrossel.
+import { createElement } from "react";
+import { BarberPoleSlide } from "@/components/barber-pole-slide";
 import type { CarouselImage } from "@/components/ui/skiper49";
 
 export const empresa = {
@@ -40,6 +42,7 @@ export const trabalhos: CarouselImage[] = [
     alt: "Tela de entrada do site da Barbearia Modelo com um poste de barbeiro dourado em 3D e o botão Entrar",
     title: "Barbearia Modelo",
     subtitle: "Barbearia · Site de demonstração",
+    content: createElement(BarberPoleSlide),
   },
   {
     src: "trabalhos/otica-lumera.webp",
