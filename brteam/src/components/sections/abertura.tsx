@@ -1,7 +1,7 @@
 import { Check } from "lucide-react";
 import { Faixa } from "@/components/faixa";
 import { InstagramIcon, WhatsAppIcon } from "@/components/brand-icons";
-import { academia, contato, fotos, instagram, linkWhatsApp } from "@/data/site";
+import { academia, contato, fotos, instagram, professor } from "@/data/site";
 
 export function Hero() {
   return (
@@ -12,15 +12,19 @@ export function Hero() {
         width={fotos.hero.w}
         height={fotos.hero.h}
         fetchPriority="high"
+        data-parallax="0.3"
         className="absolute inset-0 -z-10 size-full object-cover object-[50%_30%]"
       />
       <div className="absolute inset-0 -z-10 bg-gradient-to-t from-black via-black/55 to-black/20" />
       <div className="absolute inset-0 -z-10 bg-gradient-to-r from-black/60 via-transparent to-transparent" />
 
-      <div className="pagina hero-entrada pt-28">
+      <div className="pagina pt-28">
         <h1 className="font-display font-extrabold uppercase leading-[0.8] tracking-[-0.02em]">
-          <span className="block text-[clamp(5.5rem,22vw,16rem)]">BR Team</span>
-          <span className="mt-3 block text-[clamp(1.1rem,3.4vw,2rem)] font-semibold tracking-[0.02em] text-white/90 md:mt-4">
+          <span className="block text-[clamp(5.5rem,22vw,16rem)]">
+            <span className="hero-palavra">BR</span>{" "}
+            <span className="hero-palavra" style={{ animationDelay: "140ms" }}>Team</span>
+          </span>
+          <span style={{ animationDelay: "380ms" }} className="hero-entrada mt-3 block text-[clamp(1.1rem,3.4vw,2rem)] font-semibold tracking-[0.02em] text-white/90 md:mt-4">
             Brazilian Jiu-Jitsu em Casimiro de Abreu
           </span>
         </h1>
@@ -29,7 +33,7 @@ export function Hero() {
       {/* faixa preta de 1º grau, a do professor, atravessando a tela */}
       <Faixa amarrar graus={1} altura={26} className="mt-7 w-full md:mt-9" />
 
-      <div className="pagina hero-entrada grid gap-8 pb-12 pt-8 md:grid-cols-[1.2fr_1fr] md:items-end md:pb-16">
+      <div style={{ animationDelay: "600ms" }} className="pagina hero-entrada grid gap-8 pb-12 pt-8 md:grid-cols-[1.2fr_1fr] md:items-end md:pb-16">
         <p className="max-w-[34ch] text-lg leading-relaxed text-white/85 md:text-xl">
           {academia.lema} Desde {academia.desde}, crianças, jovens e adultos treinam com a gente
           corpo, mente e alma.
@@ -61,8 +65,9 @@ export function Academia() {
         <div>
           <h2 className="titulo">Muito mais que uma academia de Jiu-Jitsu</h2>
           <p className="mt-7 max-w-[46ch] text-lg text-cinza">
-            A BR Team é um lugar de encorajamento e mudança de hábitos. Desde {academia.desde} a gente transforma vidas
-            pelo Jiu-Jitsu em Casimiro de Abreu, com turmas para crianças, adolescentes e adultos.
+            Uma equipe especializada em Jiu-Jitsu, com uma proposta de Jiu-Jitsu para todos. Desde {academia.desde} a
+            gente transforma vidas em Casimiro de Abreu, com turmas para crianças a partir de {academia.idadeMinima} anos,
+            adolescentes e adultos.
           </p>
           <p className="mt-10 flex flex-wrap items-center gap-x-5 gap-y-2 font-display text-[clamp(2rem,5vw,3.2rem)] font-bold uppercase leading-none">
             {academia.pilares.map((p, i) => (
@@ -84,6 +89,30 @@ export function Academia() {
           ))}
         </ul>
       </div>
+
+      <figure className="pagina mt-20 md:mt-24">
+        <div className="overflow-hidden">
+          <img
+            src={fotos.espaco.src}
+            alt={fotos.espaco.alt}
+            width={fotos.espaco.w}
+            height={fotos.espaco.h}
+            loading="lazy"
+            data-parallax="0.08"
+            className="aspect-[904/236] w-full min-h-[180px] object-cover"
+          />
+        </div>
+        <figcaption className="mt-4 flex flex-wrap items-center justify-between gap-4">
+          <span className="text-cinza">O nosso tatame, na Rua Pastor Luiz Laurentino, em Casimiro de Abreu.</span>
+          <span className="flex flex-wrap gap-2">
+            {academia.comodidades.map((c) => (
+              <span key={c} className="inline-flex items-center gap-1.5 rounded-full border border-grafite px-3 py-1.5 text-sm">
+                <Check className="size-3.5 text-ponteira" aria-hidden="true" /> {c}
+              </span>
+            ))}
+          </span>
+        </figcaption>
+      </figure>
     </section>
   );
 }
@@ -123,7 +152,11 @@ export function Professor() {
             </li>
             <li className="flex items-center gap-4">
               <Check className="size-5 shrink-0 text-ponteira" aria-hidden="true" />
-              Profissional de Educação Física
+              Professor há {professor.anosComoProfessor} anos, com mais de {professor.anosNoJiuJitsu} anos dedicados ao Jiu-Jitsu
+            </li>
+            <li className="flex items-center gap-4">
+              <Check className="size-5 shrink-0 text-ponteira" aria-hidden="true" />
+              Formado em Educação Física
             </li>
             <li className="flex items-center gap-4">
               <Check className="size-5 shrink-0 text-ponteira" aria-hidden="true" />
@@ -177,7 +210,7 @@ export function Kids() {
           <h2 className="titulo">Jiu-Jitsu para crianças</h2>
           <p className="mt-6 max-w-[44ch] text-xl text-chumbo">
             Que tal cuidar da saúde do seu filho enquanto ele se diverte? O Jiu-Jitsu trabalha técnica e estratégia,
-            não força bruta, e por isso é ideal para crianças e adolescentes.
+            não força bruta, e por isso é ideal para crianças e adolescentes. Aceitamos alunos a partir de {academia.idadeMinima} anos.
           </p>
           <div className="mt-12 grid gap-x-10 gap-y-9 sm:grid-cols-2">
             {beneficios.map((b) => (

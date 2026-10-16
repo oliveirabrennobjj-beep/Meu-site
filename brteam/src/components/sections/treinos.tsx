@@ -47,7 +47,7 @@ export function Horarios() {
                       <a
                         href="#agendar"
                         onClick={() => window.dispatchEvent(new CustomEvent("agendar:aula", { detail: a }))}
-                        className="mt-2 inline-flex min-h-11 items-center text-[15px] text-white/80 underline underline-offset-4 hover:text-white"
+                        className="mt-2 inline-flex min-h-11 items-center gap-1 text-[15px] text-white/80 underline underline-offset-4 decoration-white/40 transition-colors hover:text-white hover:decoration-ponteira"
                       >
                         Agendar aula neste horário
                       </a>
@@ -117,7 +117,7 @@ export function TrocaDeFaixa() {
             <ul className="mt-8 space-y-4">
               {infantil.faixas.map((f) => (
                 <li key={f.nome} className="grid grid-cols-[1fr_90px] items-center gap-4">
-                  <Faixa cor={f.cor} ponteira={f.ponteira} clara altura={26} />
+                  <Faixa cor={f.cor} ponteira={f.ponteira} clara altura={26} className="faixa-crescer" />
                   <span className="font-medium">{f.nome}</span>
                 </li>
               ))}
@@ -145,7 +145,7 @@ export function TrocaDeFaixa() {
                       {f.preco ?? <span className="text-xl font-semibold italic text-cinza">{A_CONFIRMAR}</span>}
                     </span>
                   </div>
-                  <Faixa cor={f.cor} ponteira={f.ponteira} altura={18} className="mt-3" />
+                  <Faixa cor={f.cor} ponteira={f.ponteira} altura={18} className="faixa-crescer mt-3" />
                 </li>
               ))}
             </ul>

@@ -1,4 +1,6 @@
 import { useEffect } from "react";
+import { useMovimento } from "@/lib/movimento";
+import { BarraProgresso, VoltarAoTopo } from "@/components/movimento";
 import { Header } from "@/components/sections/header";
 import { Academia, Hero, Kids, Professor } from "@/components/sections/abertura";
 import { Horarios, Mensalidade, TrocaDeFaixa } from "@/components/sections/treinos";
@@ -7,6 +9,7 @@ import { Loja } from "@/components/sections/loja";
 import { Contato, Galeria, Parceiros, Rodape, WhatsAppFlutuante } from "@/components/sections/final";
 
 export default function App() {
+  useMovimento();
   // links diretos (ex.: …/#planos): a página é montada pelo React depois do carregamento,
   // então o navegador não acha a seção sozinho; rolamos até ela aqui.
   useEffect(() => {
@@ -21,6 +24,7 @@ export default function App() {
 
   return (
     <>
+      <BarraProgresso />
       <Header />
       <main id="conteudo">
         <Hero />
@@ -39,6 +43,7 @@ export default function App() {
       </main>
       <Rodape />
       <WhatsAppFlutuante />
+      <VoltarAoTopo />
     </>
   );
 }

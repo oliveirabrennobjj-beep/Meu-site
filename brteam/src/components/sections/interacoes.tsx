@@ -2,7 +2,7 @@ import { useEffect, useId, useRef, useState, type FormEvent, type ReactNode } fr
 import { CheckCircle2, Pencil, Plus } from "lucide-react";
 import { WhatsAppIcon } from "@/components/brand-icons";
 import {
-  aulasDaTurma, contato, endereco, linkWhatsApp, mapaRota, mensalidade, rotuloAula, trocaDeFaixa, turmaPorIdade,
+  academia, aulasDaTurma, contato, endereco, linkWhatsApp, mapaRota, mensalidade, rotuloAula, trocaDeFaixa, turmaPorIdade,
   type Aula, type TurmaChave,
 } from "@/data/site";
 import { cn } from "@/lib/utils";
@@ -25,8 +25,8 @@ function validar(c: Campos): Erros {
   if (c.nome.trim().length < 2) e.nome = "Escreva seu nome para a gente saber com quem fala.";
   if (c.paraQuem === "filho" && c.nomeAluno.trim().length < 2) e.nomeAluno = "Escreva o nome da criança.";
   const idade = Number(c.idade);
-  if (!c.idade || !Number.isInteger(idade) || idade < 3 || idade > 99)
-    e.idade = "Informe a idade em anos, de 3 a 99.";
+  if (!c.idade || !Number.isInteger(idade) || idade < academia.idadeMinima || idade > 99)
+    e.idade = `Informe a idade em anos. Aceitamos alunos a partir de ${academia.idadeMinima} anos.`;
   else if (!aulasDaTurma(turmaPorIdade(idade).turma).some((a) => rotuloAula(a) === c.horario))
     e.horario = c.horario ? "Esse horário é de outra turma. Escolha um dos horários abaixo." : "Escolha o horário da aula.";
   return e;
@@ -201,8 +201,8 @@ export function AgendarAula() {
 
         <div className="claro bg-white p-6 text-black sm:p-10">
           {enviado ? (
-            <div ref={sucessoRef} tabIndex={-1} className="outline-none" role="status">
-              <CheckCircle2 className="size-10 text-[#1f8a4c]" aria-hidden="true" />
+            <div ref={sucessoRef} tabIndex={-1} className="surge-rapido outline-none" role="status">
+              <CheckCircle2 className="estala size-10 text-[#1f8a4c]" aria-hidden="true" />
               <h3 className="mt-4 font-display text-3xl font-bold uppercase leading-none">Mensagem pronta no WhatsApp</h3>
               <p className="mt-3 text-chumbo">
                 Confira e toque em enviar. O professor confirma o dia da sua primeira aula.
@@ -257,7 +257,7 @@ export function AgendarAula() {
                   ajuda="Usamos para indicar a turma."
                 >
                   <input
-                    id={id("idade")} name="idade" type="number" inputMode="numeric" min={3} max={99} value={c.idade}
+                    id={id("idade")} name="idade" type="number" inputMode="numeric" min={academia.idadeMinima} max={99} value={c.idade}
                     onChange={(e) => set("idade", e.target.value)}
                     onBlur={() => setTocado((t) => ({ ...t, idade: true }))}
                     aria-invalid={!!mostrarErro("idade")}
@@ -270,7 +270,7 @@ export function AgendarAula() {
               <p aria-live="polite" className={cn("border-l-2 pl-4 transition-colors", turma ? "border-ponteira" : "border-black/15")}>
                 {turma ? (
                   <>
-                    <span className="block font-display text-2xl font-bold uppercase leading-tight">Turma indicada: {turma.turma}</span>
+                    <span key={turma.turma} className="surge-rapido block font-display text-2xl font-bold uppercase leading-tight">Turma indicada: {turma.turma}</span>
                     <span className="text-chumbo">{turma.detalhe}</span>
                   </>
                 ) : (
@@ -328,6 +328,18 @@ const perguntas: { p: string; r: ReactNode }[] = [
   {
     p: "Jiu-Jitsu é seguro para criança?",
     r: "Sim. O Jiu-Jitsu trabalha técnica e estratégia, não força bruta, e o treino acontece em ambiente controlado, com o professor por perto. A criança aprende a se defender e, principalmente, a evitar o conflito.",
+  },
+  {
+    p: "Com que idade a criança pode começar?",
+    r: `A partir de ${academia.idadeMinima} anos. As turmas Kids treinam às 18h e às 19h, e o professor indica a turma pela idade e pela experiência.`,
+  },
+  {
+    p: "Quais as formas de pagamento?",
+    r: "Aceitamos Pix. Para outras formas de pagamento, fale com a gente no WhatsApp.",
+  },
+  {
+    p: "Tem estacionamento?",
+    r: "Tem. A academia tem estacionamento e também dá para parar na rua.",
   },
   {
     p: "Como funciona a troca de faixa?",

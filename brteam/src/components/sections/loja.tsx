@@ -2,7 +2,7 @@ import { useId, useState, type FormEvent } from "react";
 import { CheckCircle2, Minus, Pencil, Plus } from "lucide-react";
 import { WhatsAppIcon } from "@/components/brand-icons";
 import { EscolhaHorario, Opcoes, estiloCampo } from "@/components/sections/interacoes";
-import { aulasDaTurma, fotos, linkWhatsApp, loja, rotuloAula, turmaPorIdade } from "@/data/site";
+import { academia, aulasDaTurma, fotos, linkWhatsApp, loja, rotuloAula, turmaPorIdade } from "@/data/site";
 import { cn } from "@/lib/utils";
 
 /*
@@ -23,14 +23,14 @@ export function Loja() {
   const [enviado, setEnviado] = useState<string | null>(null);
 
   const idadeNum = Number(idade);
-  const idadeOk = !!idade && Number.isInteger(idadeNum) && idadeNum >= 3 && idadeNum <= 99;
+  const idadeOk = !!idade && Number.isInteger(idadeNum) && idadeNum >= academia.idadeMinima && idadeNum <= 99;
   const turma = idadeOk ? turmaPorIdade(idadeNum).turma : null;
   const produto = turma === "Kids" ? loja.produtos.infantil : loja.produtos.adulto;
   const horarioOk = !!turma && aulasDaTurma(turma).some((a) => rotuloAula(a) === horario);
 
   const erros = {
     nome: nome.trim().length < 2 ? "Escreva o nome do aluno." : undefined,
-    idade: !idadeOk ? "Informe a idade em anos, de 3 a 99." : undefined,
+    idade: !idadeOk ? `Informe a idade em anos (a partir de ${academia.idadeMinima}).` : undefined,
     horario: idadeOk && !horarioOk ? "Escolha o horário em que o aluno treina." : undefined,
   };
 
@@ -82,8 +82,8 @@ export function Loja() {
 
         <div className="claro bg-white p-6 text-black sm:p-10">
           {enviado ? (
-            <div role="status">
-              <CheckCircle2 className="size-10 text-[#1f8a4c]" aria-hidden="true" />
+            <div role="status" className="surge-rapido">
+              <CheckCircle2 className="estala size-10 text-[#1f8a4c]" aria-hidden="true" />
               <h3 className="mt-4 font-display text-3xl font-bold uppercase leading-none">Pedido pronto no WhatsApp</h3>
               <p className="mt-3 text-chumbo">Confira e toque em enviar. O professor responde com o valor e o prazo.</p>
               <pre className="mt-6 whitespace-pre-wrap rounded-sm bg-algodao p-4 font-sans text-[15px] leading-relaxed">{mensagem}</pre>
@@ -118,7 +118,7 @@ export function Loja() {
                 <div>
                   <label htmlFor={`${uid}-idade`} className="text-sm font-semibold">Idade</label>
                   <input
-                    id={`${uid}-idade`} name={`${uid}-idade`} type="number" inputMode="numeric" min={3} max={99} value={idade}
+                    id={`${uid}-idade`} name={`${uid}-idade`} type="number" inputMode="numeric" min={academia.idadeMinima} max={99} value={idade}
                     onChange={(e) => setIdade(e.target.value)}
                     aria-invalid={!!erro("idade")} aria-describedby={erro("idade") ? `${uid}-idade-erro` : undefined}
                     className={cn(estiloCampo, "tabular-nums")}
@@ -152,7 +152,7 @@ export function Loja() {
                     <Minus className="size-4" aria-hidden="true" />
                     <span className="sr-only">Diminuir</span>
                   </button>
-                  <output aria-live="polite" className="w-12 text-center font-display text-2xl font-bold tabular-nums">{qtd}</output>
+                  <output key={qtd} aria-live="polite" className="estala w-12 text-center font-display text-2xl font-bold tabular-nums">{qtd}</output>
                   <button type="button" onClick={() => setQtd((q) => Math.min(10, q + 1))} disabled={qtd >= 10} className="inline-flex size-11 items-center justify-center rounded-sm border border-black/25 hover:border-black disabled:opacity-40">
                     <Plus className="size-4" aria-hidden="true" />
                     <span className="sr-only">Aumentar</span>

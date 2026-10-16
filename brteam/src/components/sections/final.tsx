@@ -1,9 +1,59 @@
-import { MapPin, Navigation } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { ChevronLeft, ChevronRight, Expand, MapPin, Navigation, X } from "lucide-react";
 import { InstagramIcon, WhatsAppIcon } from "@/components/brand-icons";
 import { Faixa } from "@/components/faixa";
 import { academia, contato, endereco, fotos, instagram, linkWhatsApp, mapaEmbed, mapaRota, parceiros } from "@/data/site";
 
+function GaleriaAmpliada({ indice, onFechar, onTrocar }: { indice: number | null; onFechar: () => void; onTrocar: (i: number) => void }) {
+  const ref = useRef<HTMLDialogElement>(null);
+  const total = fotos.galeria.length;
+  useEffect(() => {
+    const d = ref.current;
+    if (!d) return;
+    if (indice !== null && !d.open) d.showModal();
+    if (indice === null && d.open) d.close();
+  }, [indice]);
+  const f = indice !== null ? fotos.galeria[indice] : null;
+  const ir = (passo: number) => indice !== null && onTrocar((indice + passo + total) % total);
+  return (
+    <dialog
+      ref={ref}
+      aria-label="Foto ampliada"
+      onClose={onFechar}
+      onClick={(e) => e.target === ref.current && onFechar()}
+      onKeyDown={(e) => {
+        if (e.key === "ArrowRight") ir(1);
+        if (e.key === "ArrowLeft") ir(-1);
+      }}
+      className="galeria-ampliada m-auto max-h-[92vh] max-w-[min(92vw,720px)] bg-transparent p-0 text-white"
+    >
+      {f && (
+        <figure className="flex flex-col items-center">
+          <img key={f.src} src={f.src} alt={f.alt} className="surge-rapido max-h-[74vh] w-auto object-contain" />
+          <figcaption className="mt-4 flex w-full items-center justify-between gap-4">
+            <span>
+              {f.legenda} <span className="text-cinza">· {indice! + 1} de {total}</span>
+            </span>
+            <span className="flex gap-2">
+              <button type="button" onClick={() => ir(-1)} className="inline-flex size-11 items-center justify-center rounded-full border border-grafite transition hover:border-white active:scale-90">
+                <ChevronLeft className="size-5" aria-hidden="true" /><span className="sr-only">Foto anterior</span>
+              </button>
+              <button type="button" onClick={() => ir(1)} className="inline-flex size-11 items-center justify-center rounded-full border border-grafite transition hover:border-white active:scale-90">
+                <ChevronRight className="size-5" aria-hidden="true" /><span className="sr-only">Próxima foto</span>
+              </button>
+              <button type="button" onClick={onFechar} autoFocus className="inline-flex size-11 items-center justify-center rounded-full bg-white text-black transition active:scale-90">
+                <X className="size-5" aria-hidden="true" /><span className="sr-only">Fechar</span>
+              </button>
+            </span>
+          </figcaption>
+        </figure>
+      )}
+    </dialog>
+  );
+}
+
 export function Galeria() {
+  const [aberta, setAberta] = useState<number | null>(null);
   return (
     <section id="galeria" className="bg-black py-24 md:py-32">
       <div className="pagina">
@@ -12,9 +62,22 @@ export function Galeria() {
           Colações de grau, campeonatos e o dia a dia das turmas. Tem mais no nosso Instagram.
         </p>
         <div className="mt-12 columns-2 gap-3 md:columns-3 lg:columns-4 [&>figure]:mb-3">
-          {fotos.galeria.map((f) => (
+          {fotos.galeria.map((f, i) => (
             <figure key={f.src} className="break-inside-avoid">
-              <img src={f.src} alt={f.alt} width={f.w} height={f.h} loading="lazy" className="w-full" />
+              <button
+                type="button"
+                onClick={() => setAberta(i)}
+                className="group relative block w-full overflow-hidden"
+              >
+                <img
+                  src={f.src} alt={f.alt} width={f.w} height={f.h} loading="lazy"
+                  className="w-full transition duration-700 ease-[var(--ease-saida)] group-hover:scale-[1.06] group-hover:brightness-75"
+                />
+                <span className="absolute right-3 top-3 inline-flex size-10 items-center justify-center rounded-full bg-black/70 opacity-0 transition duration-300 group-hover:opacity-100 group-focus-visible:opacity-100">
+                  <Expand className="size-4" aria-hidden="true" />
+                </span>
+                <span className="sr-only">Ampliar foto: {f.legenda}</span>
+              </button>
               <figcaption className="mt-2 text-sm text-cinza">{f.legenda}</figcaption>
             </figure>
           ))}
@@ -28,6 +91,7 @@ export function Galeria() {
           <InstagramIcon className="size-5" /> Ver mais no @{contato.instagramAcademia}
         </a>
       </div>
+      <GaleriaAmpliada indice={aberta} onFechar={() => setAberta(null)} onTrocar={setAberta} />
     </section>
   );
 }
@@ -75,6 +139,16 @@ export function Contato() {
                   {endereco.cidade}, {endereco.cep}
                 </span>
               </dd>
+            </div>
+            <div>
+              <dt className="text-sm text-cinza">E-mail</dt>
+              <dd className="mt-1 text-lg">
+                <a href={`mailto:${contato.email}`} className="link-corre break-all">{contato.email}</a>
+              </dd>
+            </div>
+            <div>
+              <dt className="text-sm text-cinza">Pagamento e estacionamento</dt>
+              <dd className="mt-1 text-lg">Aceitamos Pix. Tem estacionamento e vaga na rua.</dd>
             </div>
           </dl>
 
@@ -131,15 +205,35 @@ export function Rodape() {
 }
 
 export function WhatsAppFlutuante() {
+  // balão "Dúvidas?" aparece uma vez, depois de um tempo na página
+  const [balao, setBalao] = useState(false);
+  useEffect(() => {
+    const abre = setTimeout(() => setBalao(true), 9000);
+    const fecha = setTimeout(() => setBalao(false), 17000);
+    return () => {
+      clearTimeout(abre);
+      clearTimeout(fecha);
+    };
+  }, []);
   return (
-    <a
-      href={linkWhatsApp()}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="fixed bottom-5 right-5 z-30 inline-flex size-14 items-center justify-center rounded-full bg-whatsapp text-black shadow-[0_10px_30px_rgb(0_0_0/0.5)] transition-transform hover:scale-105 sm:hidden"
-    >
-      <WhatsAppIcon className="size-7" />
-      <span className="sr-only">Falar com a BR Team no WhatsApp</span>
-    </a>
+    <div className="fixed bottom-5 right-5 z-30 flex items-center gap-3 sm:hidden">
+      {balao && (
+        <span className="surge-rapido relative rounded-full bg-white px-4 py-2 text-[15px] font-medium text-black shadow-xl">
+          Dúvidas? Fale com a gente
+          <button type="button" onClick={() => setBalao(false)} className="-mr-2 ml-1 inline-flex size-7 items-center justify-center align-middle text-chumbo">
+            <X className="size-4" aria-hidden="true" /><span className="sr-only">Fechar aviso</span>
+          </button>
+        </span>
+      )}
+      <a
+        href={linkWhatsApp()}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="pulso relative inline-flex size-14 items-center justify-center rounded-full bg-whatsapp text-black shadow-[0_10px_30px_rgb(0_0_0/0.5)] transition-transform hover:scale-110 active:scale-95"
+      >
+        <WhatsAppIcon className="size-7" />
+        <span className="sr-only">Falar com a BR Team no WhatsApp</span>
+      </a>
+    </div>
   );
 }

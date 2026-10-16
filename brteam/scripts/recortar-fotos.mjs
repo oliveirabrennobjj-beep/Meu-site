@@ -26,6 +26,10 @@ const fotos = [
   ["2fd22bb3-image.jpg", box(0, 1517, 304, 1873), "turma-geral", 360],
   ["2fd22bb3-image.jpg", box(619, 1517, 923, 1873), "graduacao-adultos", 360],
 ];
+// Foto do espaço (capa do perfil do WhatsApp Business), levemente clareada
+await sharp(`${U}/bffbf009-image.jpg`).extract(box(75, 68, 848, 270)).modulate({ brightness: 1.12 })
+  .webp({ quality: 84 }).toFile("public/fotos/espaco-tatame.webp");
+
 for (const [src, b, out, w] of fotos) {
   await sharp(`${U}/${src}`).extract(b).resize({ width: w, withoutEnlargement: true })
     .webp({ quality: 84 }).toFile(`public/fotos/${out}.webp`);

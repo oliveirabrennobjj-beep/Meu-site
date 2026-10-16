@@ -80,13 +80,23 @@ function Marca({ compacta = false }: { compacta?: boolean }) {
 
 export function Header() {
   const [rolou, setRolou] = useState(false);
+  const [oculto, setOculto] = useState(false);
   const [aberto, setAberto] = useState(false);
   const [ativo, setAtivo] = useState("inicio");
   const botaoMenu = useRef<HTMLButtonElement>(null);
   const painel = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const onScroll = () => setRolou(window.scrollY > 24);
+    // some ao descer a página e volta ao subir, para dar espaço ao conteúdo
+    let ultimo = window.scrollY;
+    const onScroll = () => {
+      const y = window.scrollY;
+      setRolou(y > 24);
+      if (Math.abs(y - ultimo) > 8) {
+        setOculto(y > ultimo && y > 520);
+        ultimo = y;
+      }
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -142,8 +152,10 @@ export function Header() {
         Pular para o conteúdo
       </a>
       <header
+        onFocus={() => setOculto(false)}
         className={cn(
-          "fixed inset-x-0 top-0 z-40 transition-colors duration-300",
+          "fixed inset-x-0 top-0 z-40 transition-[background-color,transform] duration-300 ease-[var(--ease-saida)]",
+          oculto && !aberto && "-translate-y-full",
           rolou ? "border-b border-grafite bg-black/90 backdrop-blur-md" : "bg-gradient-to-b from-black/70 to-transparent",
         )}
       >

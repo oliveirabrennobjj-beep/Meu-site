@@ -29,7 +29,7 @@ Depois de mudar algo, rode `npm run build` e envie a pasta `dist/` junto.
 | **Mensalidade** (R$ 125, igual para todos) | `src/data/site.ts` → `mensalidade.valor` |
 | **Loja de kimonos** (cores, preço) | `src/data/site.ts` → `loja` (`preco: null` mostra "valor combinado com o professor") |
 | **Horários das turmas** | `src/data/site.ts` → `aulas` e `diasDeAula` |
-| WhatsApp, Instagram, endereço | `src/data/site.ts` → `contato` e `endereco` |
+| WhatsApp, Instagram, e-mail, endereço, idade mínima, Pix e estacionamento | `src/data/site.ts` → `contato`, `endereco` e `academia` |
 | Parceiros | `src/data/site.ts` → `parceiros` |
 | Fotos | `public/fotos/*.webp` e a lista `fotos` em `src/data/site.ts` |
 | Menu lateral (celular) | `src/components/sections/header.tsx` → `grupos` |
@@ -76,9 +76,23 @@ que não existem e apagariam as cores do tema, por isso ficaram de fora. Entrara
 - Os botões "Agendar aula" do topo, do menu e da abertura levam ao formulário; o botão verde flutuante (celular)
   continua abrindo o WhatsApp direto.
 
+## Movimento e interações
+
+Tudo em `src/lib/movimento.ts` (comportamento), `src/components/movimento.tsx` e no fim de `src/index.css`:
+
+- blocos das seções aparecem subindo, em sequência, ao rolar; as faixas da troca de faixa "crescem" ao aparecer;
+- título da abertura entra palavra por palavra, faixa preta "amarra" e a foto tem parallax leve;
+- botões: brilho que atravessa, leve subida com sombra vermelha, ícone que gira e onda no toque;
+- barra vermelha de progresso no topo, cabeçalho que some ao descer e volta ao subir, botão de voltar ao topo;
+- galeria abre a foto ampliada (setas do teclado, Esc ou toque fora para fechar);
+- botão do WhatsApp pulsa e mostra "Dúvidas? Fale com a gente" uma vez;
+- confirmações (pedido, agendamento, turma indicada, quantidade) aparecem com animação curta.
+
+Com "reduzir movimento" ativado no aparelho, nada fica escondido nem se mexe.
+
 ## Fotos
 
-As fotos foram recortadas dos prints do Instagram (@brteambjj e @bjjbrunoramos) com `scripts/recortar-fotos.mjs`.
+As fotos foram recortadas dos prints do Instagram (@brteambjj e @bjjbrunoramos) e do perfil do WhatsApp Business (foto do tatame) com `scripts/recortar-fotos.mjs`.
 Algumas vêm de miniaturas e têm resolução baixa (cerca de 360 px). Para melhorar, envie as fotos originais e troque os arquivos em `public/fotos/`.
 
 ## Pendências

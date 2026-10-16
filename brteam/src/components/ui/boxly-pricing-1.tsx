@@ -125,7 +125,7 @@ export default function PricingSection({
           {tiers.map((tier) => {
             const period = tier.period !== undefined ? tier.period : tier.price !== "Contact us" ? "/month" : null;
             return (
-              <div className="relative flex h-full flex-col" key={tier.name}>
+              <div className="relative flex h-full flex-col transition-transform duration-300 ease-out md:hover:z-20 md:hover:-translate-y-1.5" key={tier.name}>
                 <div
                   className={`relative flex h-full flex-col ${
                     tier.featured

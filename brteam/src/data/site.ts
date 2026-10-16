@@ -11,7 +11,11 @@ export const academia = {
   lema: "Jiu-Jitsu como filosofia de vida.",
   pilares: ["Corpo", "Mente", "Alma"],
   cidade: "Casimiro de Abreu (RJ)",
+  idadeMinima: 4,
+  comodidades: ["Aceitamos Pix", "Estacionamento", "Estacionamento na rua"],
 };
+
+export const professor = { anosComoProfessor: 6, anosNoJiuJitsu: 15 };
 
 export const contato = {
   whatsapp: "5522999968108",
@@ -20,6 +24,7 @@ export const contato = {
   instagramAcademia: "brteambjj",
   instagramProfessor: "bjjbrunoramos",
   linktree: "https://linktr.ee/brteamjiu",
+  email: "brunoramosjiujitsu13@gmail.com",
 };
 
 export const endereco = {
@@ -143,6 +148,7 @@ export const fotos = {
   hero: { src: "./fotos/turma-kids.webp", alt: "Turma infantil da BR Team, de kimono, sorrindo no tatame da academia", w: 1080, h: 702 },
   professor: { src: "./fotos/professor-bruno.webp", alt: "Professor Bruno Ramos, de kimono branco e faixa preta, de braços cruzados", w: 550, h: 981 },
   professorFilha: { src: "./fotos/bruno-e-marina.webp", alt: "Bruno Ramos ajoelhado no tatame ao lado da filha Marina, os dois de kimono", w: 356, h: 418 },
+  espaco: { src: "./fotos/espaco-tatame.webp", alt: "O tatame da BR Team: salão branco com a bandeira do Brasil, diplomas na parede e o quadro com a marca da academia", w: 904, h: 236 },
   cumprimento: { src: "./fotos/professor-cumprimento.webp", alt: "Professor Bruno cumprimentando o tatame com uma reverência", w: 300, h: 457 },
   kids: [
     { src: "./fotos/aluno-faixa-branca.webp", alt: "Aluno faixa branca em posição de guarda, sorrindo", w: 440, h: 955 },
@@ -165,7 +171,7 @@ export const fotos = {
   Ajuste `ate` se a idade de corte das turmas Kids for outra.
 */
 export const faixasEtarias: { ate: number; turma: TurmaChave; detalhe: string }[] = [
-  { ate: 12, turma: "Kids", detalhe: "Turmas às 18h e às 19h. O professor indica Kids I ou Kids II pela idade." },
+  { ate: 12, turma: "Kids", detalhe: "Crianças a partir de 4 anos, turmas às 18h e às 19h. O professor indica Kids I ou Kids II pela idade." },
   { ate: 120, turma: "Adulto", detalhe: "Turmas às 6h, às 13h e às 20h. Escolha o horário que encaixa na sua rotina." },
 ];
 export function turmaPorIdade(idade: number) {
