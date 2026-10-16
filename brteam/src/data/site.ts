@@ -94,32 +94,35 @@ export const planos: Plano[] = [
 ];
 
 /*
-  Troca de faixa. Cada faixa tem as cores do desenho (cor da faixa e da ponteira).
-  Faixas infantis: um preço único para todas. Faixas adultas: um preço por faixa.
+  Troca de faixa: tabela de preços da branca até a preta, separada para crianças e adultos.
+  Preço `null` aparece como "A confirmar". Para preencher, troque por texto, ex.: "R$ 80".
+  Idades mínimas conforme a tabela de graduação da IBJJF.
+  Nas faixas infantis (menos a branca) existem 3 versões: com branco, pura e com preto;
+  as três têm o mesmo valor da cor.
 */
-export type Faixa = { nome: string; cor: string; ponteira: string; texto?: "claro" | "escuro" };
+export type Faixa = { nome: string; cor: string; ponteira: string; idade: string; preco: string | null; variacoes?: boolean };
 export const trocaDeFaixa = {
   infantil: {
     titulo: "Faixas infantis",
-    descricao: "Da branca à verde, incluindo as variações com branco e preto. O valor é o mesmo para todas.",
-    preco: null as string | null,
+    descricao: "De 4 a 15 anos. Cinza, amarela, laranja e verde têm três versões: com branco, pura e com preto.",
     faixas: [
-      { nome: "Branca", cor: "#f2f2f0", ponteira: "#111111", texto: "escuro" },
-      { nome: "Cinza", cor: "#8d8f93", ponteira: "#111111" },
-      { nome: "Amarela", cor: "#f2c21b", ponteira: "#111111", texto: "escuro" },
-      { nome: "Laranja", cor: "#ec7a1c", ponteira: "#111111" },
-      { nome: "Verde", cor: "#1f8a4c", ponteira: "#111111" },
+      { nome: "Branca", cor: "#f2f2f0", ponteira: "#111111", idade: "a partir de 4 anos", preco: null },
+      { nome: "Cinza", cor: "#8d8f93", ponteira: "#111111", idade: "4 a 15 anos", preco: null, variacoes: true },
+      { nome: "Amarela", cor: "#f2c21b", ponteira: "#111111", idade: "7 a 15 anos", preco: null, variacoes: true },
+      { nome: "Laranja", cor: "#ec7a1c", ponteira: "#111111", idade: "10 a 15 anos", preco: null, variacoes: true },
+      { nome: "Verde", cor: "#1f8a4c", ponteira: "#111111", idade: "13 a 15 anos", preco: null, variacoes: true },
     ] as Faixa[],
   },
   adulto: {
     titulo: "Faixas adultas",
-    descricao: "A partir dos 16 anos. Cada faixa tem o seu valor.",
+    descricao: "A partir de 16 anos: branca, azul, roxa, marrom e preta. Cada faixa tem o seu valor.",
     faixas: [
-      { nome: "Azul", cor: "#1d4fb8", ponteira: "#111111", preco: null },
-      { nome: "Roxa", cor: "#5b2a86", ponteira: "#111111", preco: null },
-      { nome: "Marrom", cor: "#5a3a22", ponteira: "#111111", preco: null },
-      { nome: "Preta", cor: "#0a0a0a", ponteira: "#d6202b", preco: null },
-    ] as (Faixa & { preco: string | null })[],
+      { nome: "Branca", cor: "#f2f2f0", ponteira: "#111111", idade: "a partir de 16 anos", preco: null },
+      { nome: "Azul", cor: "#1d4fb8", ponteira: "#111111", idade: "a partir de 16 anos", preco: null },
+      { nome: "Roxa", cor: "#5b2a86", ponteira: "#111111", idade: "a partir de 16 anos", preco: null },
+      { nome: "Marrom", cor: "#5a3a22", ponteira: "#111111", idade: "a partir de 18 anos", preco: null },
+      { nome: "Preta", cor: "#0a0a0a", ponteira: "#d6202b", idade: "a partir de 19 anos", preco: null },
+    ] as Faixa[],
   },
 };
 

@@ -209,6 +209,12 @@ a, button { touch-action: manipulation; }
   justify-content: flex-end;
   padding-inline: calc(var(--altura) * 0.6);
 }
+.faixa__listra {
+  position: absolute;
+  inset-inline: 0;
+  top: 36%;
+  height: 28%;
+}
 .faixa__grau {
   flex: none;
   width: max(3px, calc(var(--altura) * 0.24));

@@ -9,6 +9,7 @@ export function Faixa({
   altura = 22,
   clara = false,
   amarrar = false,
+  listra,
   className,
 }: {
   cor?: string;
@@ -17,11 +18,14 @@ export function Faixa({
   altura?: number;
   clara?: boolean;
   amarrar?: boolean;
+  /** listra no meio da faixa (faixas infantis "com branco" e "com preto") */
+  listra?: string;
   className?: string;
 }) {
   const estilo = { "--cor": cor, "--ponta": ponteira, "--altura": `${altura}px` } as CSSProperties;
   return (
     <div aria-hidden="true" className={cn("faixa", clara && "faixa-clara", amarrar && "faixa-amarra", className)} style={estilo}>
+      {listra && <div className="faixa__listra" style={{ background: listra }} />}
       <div className="faixa__ponteira">
         {Array.from({ length: graus }).map((_, i) => (
           <span key={i} className="faixa__grau" />

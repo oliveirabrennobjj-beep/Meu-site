@@ -18,7 +18,7 @@ type Campos = {
 };
 type Erros = Partial<Record<keyof Campos, string>>;
 
-const faixasTodas = [...trocaDeFaixa.infantil.faixas, ...trocaDeFaixa.adulto.faixas].map((f) => f.nome);
+const faixasTodas = [...new Set([...trocaDeFaixa.infantil.faixas, ...trocaDeFaixa.adulto.faixas].map((f) => f.nome))];
 
 function validar(c: Campos): Erros {
   const e: Erros = {};
