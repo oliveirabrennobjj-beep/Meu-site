@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from "react";
-import { ArrowRight, Check } from "lucide-react";
+import { ArrowRight, Check, FastForward, Hourglass } from "lucide-react";
 import PricingSection from "@/components/ui/boxly-pricing-1";
 import { Faixa } from "@/components/faixa";
 import type { Faixa as FaixaDados } from "@/data/site";
@@ -193,6 +193,49 @@ function TempoDeTreino() {
   );
 }
 
+/** Vale para crianças e adultos: o professor pode adiantar ou pedir mais tempo. */
+function DecisaoDoProfessor() {
+  const lados = [
+    {
+      titulo: "Pode vir antes",
+      icone: FastForward,
+      texto:
+        "Se o aluno treina com frequência, evolui rápido e tem boa atitude no tatame, o professor pode adiantar os graus e a troca de faixa. Para quem compete pela IBJJF ou pela CBJJ, os tempos mínimos da federação continuam valendo.",
+    },
+    {
+      titulo: "Pode levar mais tempo",
+      icone: Hourglass,
+      texto:
+        "Cumprir o tempo não garante a faixa. Se faltam treinos, se a técnica ainda não está no nível ou se o comportamento não está bom, o professor pode segurar o grau ou a faixa até o aluno estar pronto.",
+    },
+  ];
+  return (
+    <div className="mt-10 bg-black p-6 text-white md:p-8">
+      <h4 className="font-display text-3xl font-bold uppercase leading-none">Quem decide é o professor</h4>
+      <p className="mt-3 max-w-[70ch] text-cinza">
+        As federações (IBJJF e CBJJ) definem idades e tempos mínimos. Dentro disso, o professor avalia cada aluno: a
+        faixa pode vir antes ou levar mais tempo. O professor Bruno é exigente com os detalhes, e na BR Team a faixa é
+        conquistada no treino, não dada pelo calendário.
+      </p>
+      <div className="mt-6 grid gap-px bg-grafite md:grid-cols-2">
+        {lados.map((l) => (
+          <div key={l.titulo} className="bg-black p-5 md:p-6">
+            <h5 className="flex items-center gap-3 font-display text-2xl font-bold uppercase">
+              <l.icone className="size-6 text-ponteira" aria-hidden="true" />
+              {l.titulo}
+            </h5>
+            <p className="mt-2 text-cinza">{l.texto}</p>
+          </div>
+        ))}
+      </div>
+      <p className="mt-6 text-white/85">
+        O que ele observa: frequência, técnica, comportamento dentro e fora do tatame, respeito aos colegas e cuidado com
+        o parceiro de treino.
+      </p>
+    </div>
+  );
+}
+
 /** Explicação da graduação, com abas Crianças / Adultos. */
 function ComoGradua() {
   const [aba, setAba] = useState<"criancas" | "adultos">("criancas");
@@ -302,18 +345,16 @@ function ComoGradua() {
             Cada faixa tem até 4 graus, as listras brancas na ponteira. O professor dá cada grau conforme a evolução do
             aluno, e eles mostram o caminho até a próxima faixa.
           </Ponto>
-          <Ponto titulo="Pode vir antes?">
-            Pode. O tempo é o mínimo, não um prazo fixo, e quem define o momento é o professor. Se ele achar que o aluno
-            merece pela técnica, pela dedicação e pelo comportamento, pode adiantar os graus e a troca de faixa. Para quem
-            compete em campeonatos da IBJJF, valem os tempos mínimos da federação.
-          </Ponto>
           <div className="md:col-span-2">
             <TempoDeTreino />
           </div>
         </div>
       )}
+      <DecisaoDoProfessor />
+
       <p className="mt-10 border-t border-black/10 pt-5 text-sm text-chumbo">
-        Referência: Sistema Geral de Graduação da IBJJF. Na BR Team, a palavra final sobre graus e faixas é sempre do
+        Referência: Sistema Geral de Graduação da IBJJF, o mesmo seguido pela CBJJ (Confederação Brasileira de
+        Jiu-Jitsu). As regras das federações são o mínimo; na BR Team, a palavra final sobre graus e faixas é sempre do
         professor.
       </p>
     </div>
