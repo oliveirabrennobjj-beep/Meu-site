@@ -1,0 +1,204 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/*
+  BR Team — direção visual
+  Inspirada na Ferrari (fundo escuro cinematográfico, foto em tela cheia, um único
+  vermelho de destaque) e traduzida para o tatame: preto e branco como a marca,
+  e o vermelho vem da ponteira da faixa preta. A faixa é o elemento de assinatura.
+  Tipografia: Barlow Condensed nos títulos (ecoa o letreiro da marca) e Barlow no texto.
+*/
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Barlow", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Barlow Condensed", "Arial Narrow", system-ui, sans-serif;
+
+  --color-tatame: #000000;      /* preto da marca */
+  --color-carbono: #161616;     /* superfícies escuras */
+  --color-grafite: #2b2b2b;     /* linhas no escuro */
+  --color-cinza: #a6a6a6;       /* texto secundário no escuro (8.6:1 no preto) */
+  --color-kimono: #ffffff;      /* branco */
+  --color-algodao: #f3f3f1;     /* superfície clara */
+  --color-chumbo: #4a4a4a;      /* texto secundário no claro (8.9:1 no branco) */
+  --color-ponteira: #d6202b;    /* vermelho da ponteira da faixa preta */
+  --color-ponteira-escura: #b0161f;
+  --color-whatsapp: #25d366;
+
+  --ease-saida: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Tokens do shadcn/ui, usados pelo componente dashboard-sidebar (tema escuro) */
+:root {
+  --background: #000000;
+  --foreground: #ffffff;
+  --card: #161616;
+  --card-foreground: #ffffff;
+  --primary: #d6202b;
+  --primary-foreground: #ffffff;
+  --muted: #2b2b2b;
+  --muted-foreground: #a6a6a6;
+  --border: #2b2b2b;
+  --ring: #d6202b;
+}
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+}
+
+html {
+  color-scheme: dark;
+  background: #000;
+  scroll-behavior: smooth;
+  scroll-padding-top: 76px;
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  margin: 0;
+  background: #000;
+  color: #fff;
+  font-family: var(--font-sans);
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3 { text-wrap: balance; }
+p { text-wrap: pretty; }
+img { max-width: 100%; }
+a, button { touch-action: manipulation; }
+:focus-visible {
+  outline: 2px solid var(--color-ponteira);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+.claro :focus-visible { outline-color: #000; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@layer components {
+  .pagina {
+    width: 100%;
+    max-width: 1200px;
+    margin-inline: auto;
+    padding-inline: 20px;
+  }
+  @media (min-width: 768px) { .pagina { padding-inline: 40px; } }
+
+  /* Títulos de seção: condensado, caixa alta, como os posts da academia */
+  .titulo {
+    font-family: var(--font-display);
+    font-weight: 700;
+    text-transform: uppercase;
+    line-height: 0.92;
+    letter-spacing: -0.01em;
+    font-size: clamp(2.6rem, 7vw, 5.2rem);
+  }
+  .titulo-md {
+    font-family: var(--font-display);
+    font-weight: 700;
+    text-transform: uppercase;
+    line-height: 1;
+    font-size: clamp(1.6rem, 3.2vw, 2.1rem);
+  }
+
+  .botao {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 52px;
+    padding: 0 26px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.15rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    border-radius: 2px;
+    white-space: nowrap;
+    transition: background-color 200ms, color 200ms, border-color 200ms, transform 120ms;
+    cursor: pointer;
+  }
+  .botao:active { transform: scale(0.98); }
+  .botao-primario { background: var(--color-ponteira); color: #fff; }
+  .botao-primario:hover { background: var(--color-ponteira-escura); }
+  .botao-contorno { border: 1.5px solid currentColor; }
+  .botao-contorno:hover { background: #fff; color: #000; border-color: #fff; }
+  .claro .botao-contorno:hover { background: #000; color: #fff; border-color: #000; }
+}
+
+/*
+  A FAIXA — elemento de assinatura.
+  Faixa preta com ponteira vermelha e graus brancos (a do professor: 1º grau).
+*/
+.faixa {
+  --cor: #141414;
+  --ponta: #d6202b;
+  position: relative;
+  display: flex;
+  height: var(--altura, 22px);
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.07), transparent 40%, rgb(0 0 0 / 0.18)),
+    repeating-linear-gradient(0deg, transparent 0 3px, rgb(0 0 0 / 0.06) 3px 4px),
+    var(--cor);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.06);
+}
+.faixa-clara { box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.12); }
+.faixa__ponteira {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: var(--recuo, 8%);
+  width: var(--largura-ponta, 15%);
+  background: var(--ponta);
+  display: flex;
+  gap: max(3px, calc(var(--altura) * 0.22));
+  justify-content: flex-end;
+  padding-inline: calc(var(--altura) * 0.6);
+}
+.faixa__grau {
+  flex: none;
+  width: max(3px, calc(var(--altura) * 0.24));
+  background: #fff;
+}
+.faixa-amarra {
+  transform-origin: left center;
+  animation: amarra 1100ms var(--ease-saida) 250ms both;
+}
+@keyframes amarra {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+.hero-entrada {
+  animation: surge 900ms var(--ease-saida) both;
+}
+@keyframes surge {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* textura sutil de grão sobre a foto do hero */
+.grao::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.18;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
