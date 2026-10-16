@@ -1,4 +1,5 @@
 import { Check } from "lucide-react";
+import PricingSection from "@/components/ui/boxly-pricing-1";
 import { Faixa } from "@/components/faixa";
 import { WhatsAppIcon } from "@/components/brand-icons";
 import { fotos, horarios, linkWhatsApp, planos, trocaDeFaixa } from "@/data/site";
@@ -49,40 +50,40 @@ export function Horarios() {
         </div>
       </div>
 
-      <div id="planos" className="pagina mt-24 md:mt-32">
-        <h2 className="titulo">Mensalidade</h2>
-        <p className="mt-5 max-w-[50ch] text-lg text-cinza">
-          A primeira aula é para conhecer o tatame, o professor e a turma. Depois é só escolher o plano.
-        </p>
-        <div className="mt-12 grid gap-px bg-grafite md:grid-cols-3">
-          {planos.map((p) => (
-            <article key={p.nome} className={cn("flex flex-col p-8", p.destaque ? "bg-white text-black" : "bg-carbono")}>
-              <h3 className="font-display text-4xl font-bold uppercase leading-none">{p.nome}</h3>
-              <p className={cn("mt-2", p.destaque ? "text-chumbo" : "text-cinza")}>{p.para}</p>
-              <p className="mt-8 font-display text-5xl font-bold tabular-nums leading-none">
-                {p.preco ?? <span className="text-3xl">{A_CONFIRMAR}</span>}
-              </p>
-              <p className={cn("mt-1 text-sm", p.destaque ? "text-chumbo" : "text-cinza")}>{p.periodo}</p>
-              <ul className="mt-8 flex-1 space-y-3">
-                {p.inclui.map((i) => (
-                  <li key={i} className="flex gap-3">
-                    <Check className="mt-1 size-4 shrink-0 text-ponteira" aria-hidden="true" />
-                    <span>{i}</span>
-                  </li>
-                ))}
-              </ul>
-              <a
-                href={linkWhatsApp(`Olá, BR Team! Quero saber mais sobre o plano ${p.nome}.`)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={cn("botao mt-8", p.destaque ? "botao-primario" : "botao-contorno")}
-              >
-                Quero o plano {p.nome}
-              </a>
-            </article>
-          ))}
-        </div>
-      </div>
+    </section>
+  );
+}
+
+/* Mensalidade: o componente boxly-pricing-1 (components/ui) com os planos de src/data/site.ts */
+export function Mensalidade() {
+  return (
+    <section aria-labelledby="planos-titulo">
+      <PricingSection
+        id="planos"
+        className="min-h-0 pb-8"
+        eyebrow="Primeira aula para conhecer o tatame"
+        title={<span id="planos-titulo">Mensalidade</span>}
+        titleClassName="titulo"
+        aside={
+          <>
+            <span className="text-white">Escolha o plano depois da aula experimental.</span> Cada aluno treina na
+            turma da sua idade, com acompanhamento de graus e faixas.
+          </>
+        }
+        includedLabel="O que está incluso"
+        featuredIcon={Check}
+        tiers={planos.map((p) => ({
+          name: p.nome,
+          description: p.para,
+          featured: !!p.destaque,
+          features: p.inclui,
+          price: p.preco ?? A_CONFIRMAR,
+          period: p.preco ? `/${p.periodo.replace("por ", "")}` : null,
+          note: p.preco ? undefined : "Valor em atualização. Confirme pelo WhatsApp.",
+          cta: `Quero o plano ${p.nome}`,
+          href: linkWhatsApp(`Olá, BR Team! Quero saber mais sobre o plano ${p.nome}.`),
+        }))}
+      />
     </section>
   );
 }

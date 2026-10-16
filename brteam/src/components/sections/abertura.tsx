@@ -35,8 +35,8 @@ export function Hero() {
           corpo, mente e alma.
         </p>
         <div className="flex flex-col gap-3 sm:flex-row md:justify-end">
-          <a href={linkWhatsApp()} target="_blank" rel="noopener noreferrer" className="botao botao-primario">
-            <WhatsAppIcon className="size-5" /> Agendar aula experimental
+          <a href="#agendar" className="botao botao-primario">
+            Agendar aula experimental
           </a>
           <a href="#horarios" className="botao botao-contorno text-white">
             Horários e valores
@@ -188,12 +188,11 @@ export function Kids() {
             ))}
           </div>
           <a
-            href={linkWhatsApp("Olá, BR Team! Quero agendar uma aula experimental de Jiu-Jitsu para o meu filho.")}
-            target="_blank"
-            rel="noopener noreferrer"
+            href="#agendar"
+            onClick={() => window.dispatchEvent(new CustomEvent("agendar:para", { detail: "filho" }))}
             className="botao botao-primario mt-12"
           >
-            <WhatsAppIcon className="size-5" /> Agendar aula para meu filho
+            Agendar aula para meu filho
           </a>
         </div>
 

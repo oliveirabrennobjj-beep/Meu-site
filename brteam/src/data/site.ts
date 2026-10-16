@@ -132,3 +132,16 @@ export const fotos = {
     { src: "./fotos/turma-geral.webp", alt: "Todas as turmas reunidas no tatame", legenda: "A família BR Team", w: 356, h: 417 },
   ],
 };
+
+/*
+  Turma indicada no formulário de aula experimental, pela idade do aluno.
+  As idades de corte são uma sugestão: ajuste quando a academia confirmar.
+*/
+export const faixasEtarias = [
+  { ate: 12, turma: "Kids", detalhe: "O professor indica Kids I ou Kids II pela idade e pela experiência." },
+  { ate: 15, turma: "Juvenil", detalhe: "Turma para adolescentes, com treino na medida da idade." },
+  { ate: 120, turma: "Adulto", detalhe: "Treino completo, do básico à preparação para campeonatos." },
+];
+export function turmaPorIdade(idade: number) {
+  return faixasEtarias.find((f) => idade <= f.ate) ?? faixasEtarias[faixasEtarias.length - 1];
+}

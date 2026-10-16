@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import {
-  Award, Baby, CalendarClock, Home, MapPin, Menu, MessageCircle, Shield, Sparkles, User, Wallet, X, Images,
+  Award, Baby, CalendarCheck, CalendarClock, HelpCircle, Home, MapPin, Menu, MessageCircle, Shield, Sparkles, User, Wallet, X, Images,
 } from "lucide-react";
 import { SidebarNav, type NavGroupData, type NavItemData } from "@/components/ui/dashboard-sidebar";
 import { contato, instagram, linkWhatsApp, mapaRota } from "@/data/site";
-import { InstagramIcon, WhatsAppIcon } from "@/components/brand-icons";
+import { InstagramIcon } from "@/components/brand-icons";
 import { cn } from "@/lib/utils";
 
 const links = [
@@ -14,6 +14,7 @@ const links = [
   { id: "horarios", label: "Horários" },
   { id: "planos", label: "Planos" },
   { id: "faixas", label: "Troca de faixa" },
+  { id: "duvidas", label: "Dúvidas" },
   { id: "contato", label: "Contato" },
 ];
 
@@ -29,6 +30,7 @@ const grupos: NavGroupData[] = [
   {
     heading: "Treinar",
     items: [
+      { id: "agendar", title: "Agendar aula experimental", icon: CalendarCheck },
       { id: "horarios", title: "Horários", icon: CalendarClock },
       { id: "planos", title: "Mensalidade", icon: Wallet },
       {
@@ -56,6 +58,7 @@ const grupos: NavGroupData[] = [
           { id: "ig-professor", title: `@${contato.instagramProfessor}`, icon: InstagramIcon, href: instagram(contato.instagramProfessor) },
         ],
       },
+      { id: "duvidas", title: "Dúvidas frequentes", icon: HelpCircle },
       { id: "rota", title: "Como chegar", icon: MapPin, href: mapaRota },
     ],
   },
@@ -89,7 +92,7 @@ export function Header() {
 
   // seção visível marca o item ativo do menu
   useEffect(() => {
-    const ids = ["inicio", ...links.map((l) => l.id), "galeria"];
+    const ids = ["inicio", ...links.map((l) => l.id), "galeria", "agendar"];
     const obs = new IntersectionObserver(
       (entradas) => entradas.forEach((e) => e.isIntersecting && setAtivo(e.target.id)),
       { rootMargin: "-45% 0px -50% 0px" },
@@ -165,7 +168,7 @@ export function Header() {
             </ul>
           </nav>
           <div className="flex items-center gap-2">
-            <a href={linkWhatsApp()} target="_blank" rel="noopener noreferrer" className="botao botao-primario hidden !min-h-11 !px-5 !text-base sm:inline-flex">
+            <a href="#agendar" className="botao botao-primario hidden !min-h-11 !px-5 !text-base sm:inline-flex">
               Agendar aula
             </a>
             <button
@@ -223,8 +226,8 @@ export function Header() {
             }
           />
           <div className="border-t border-border/50 p-3">
-            <a href={linkWhatsApp()} target="_blank" rel="noopener noreferrer" className="botao botao-primario w-full">
-              <WhatsAppIcon className="size-5" /> Agendar aula
+            <a href="#agendar" onClick={() => setAberto(false)} className="botao botao-primario w-full">
+              <CalendarCheck className="size-5" aria-hidden="true" /> Agendar aula
             </a>
           </div>
         </div>
