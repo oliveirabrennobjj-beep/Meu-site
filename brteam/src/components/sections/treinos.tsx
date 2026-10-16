@@ -1,9 +1,10 @@
-import { Check } from "lucide-react";
+import { useState, type ReactNode } from "react";
+import { ArrowRight, Check } from "lucide-react";
 import PricingSection from "@/components/ui/boxly-pricing-1";
 import { Faixa } from "@/components/faixa";
 import type { Faixa as FaixaDados } from "@/data/site";
 import { WhatsAppIcon } from "@/components/brand-icons";
-import { aulas, diasDeAula, fotos, linkWhatsApp, mensalidade, planos, trocaDeFaixa } from "@/data/site";
+import { aulas, diasDeAula, fotos, graduacao, linkWhatsApp, mensalidade, planos, trocaDeFaixa } from "@/data/site";
 import { cn } from "@/lib/utils";
 
 const A_CONFIRMAR = "A confirmar";
@@ -139,6 +140,139 @@ function LinhaFaixa({ f, escuro = false }: { f: FaixaDados; escuro?: boolean }) 
   );
 }
 
+function Ponto({ titulo, children }: { titulo: string; children: ReactNode }) {
+  return (
+    <div>
+      <h4 className="font-display text-2xl font-bold uppercase leading-tight">{titulo}</h4>
+      <div className="mt-2 text-chumbo">{children}</div>
+    </div>
+  );
+}
+
+/** Explicação da graduação, com abas Crianças / Adultos. */
+function ComoGradua() {
+  const [aba, setAba] = useState<"criancas" | "adultos">("criancas");
+  const abas = [
+    { id: "criancas", rotulo: "Crianças, de 4 a 15 anos" },
+    { id: "adultos", rotulo: "Adultos, a partir de 16" },
+  ] as const;
+  return (
+    <div className="mt-6 bg-white p-6 md:p-10" data-revelar>
+      <h3 className="titulo-md">Como funciona a graduação</h3>
+      <div
+        role="tablist"
+        aria-label="Graduação"
+        className="mt-6 inline-flex flex-wrap gap-1 rounded-sm bg-algodao p-1"
+        onKeyDown={(e) => {
+          if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+            const nova = aba === "criancas" ? "adultos" : "criancas";
+            setAba(nova);
+            document.getElementById(`aba-${nova}`)?.focus();
+          }
+        }}
+      >
+        {abas.map((a) => (
+          <button
+            key={a.id}
+            id={`aba-${a.id}`}
+            type="button"
+            role="tab"
+            aria-selected={aba === a.id}
+            aria-controls={`painel-${a.id}`}
+            tabIndex={aba === a.id ? 0 : -1}
+            onClick={() => setAba(a.id)}
+            className={cn(
+              "min-h-11 rounded-sm px-4 text-[15px] font-medium transition-colors active:scale-[0.97]",
+              aba === a.id ? "bg-black text-white" : "text-chumbo hover:text-black",
+            )}
+          >
+            {a.rotulo}
+          </button>
+        ))}
+      </div>
+
+      {aba === "criancas" ? (
+        <div id="painel-criancas" role="tabpanel" aria-labelledby="aba-criancas" className="surge-rapido mt-8 grid gap-x-12 gap-y-9 md:grid-cols-2">
+          <Ponto titulo="Cerca de 1 ano em cada faixa">
+            Na BR Team, a criança costuma ficar mais ou menos um ano em cada faixa colorida, da branca até a verde. Não é
+            regra fixa: cada criança tem o seu ritmo, e a federação (IBJJF) não exige tempo mínimo para as faixas
+            infantis, só a idade mínima de cada cor.
+          </Ponto>
+          <Ponto titulo="Às vezes, pula uma etapa">
+            <p>
+              Se a criança evoluiu rápido ou já tem idade para uma cor mais alta, o professor pode pular uma versão da
+              faixa. Por exemplo, sair da laranja direto para a verde e branca:
+            </p>
+            <div className="mt-4 grid grid-cols-[1fr_auto_1fr_auto_1fr] items-center gap-2 text-sm" aria-hidden="true">
+              <div>
+                <Faixa cor="#ec7a1c" ponteira="#111111" clara altura={16} />
+                <span className="mt-1 block">Laranja</span>
+              </div>
+              <ArrowRight className="size-4" />
+              <div className="opacity-35">
+                <div className="relative">
+                  <Faixa cor="#ec7a1c" ponteira="#111111" listra="#111111" clara altura={16} />
+                  <span className="absolute inset-x-0 top-1/2 h-0.5 -rotate-6 bg-ponteira" />
+                </div>
+                <span className="mt-1 block line-through">Laranja e preta</span>
+              </div>
+              <ArrowRight className="size-4" />
+              <div>
+                <Faixa cor="#1f8a4c" ponteira="#111111" listra="#ffffff" clara altura={16} />
+                <span className="mt-1 block font-semibold text-black">Verde e branca</span>
+              </div>
+            </div>
+          </Ponto>
+          <Ponto titulo="O que o professor observa">
+            Técnica, comportamento dentro e fora do tatame, respeito aos colegas e frequência nos treinos. Também conta a
+            idade mínima de cada cor: amarela a partir de 7 anos, laranja a partir de 10 e verde a partir de 13.
+          </Ponto>
+          <Ponto titulo="Aos 16 anos, faixas adultas">
+            O sistema infantil vai até os 15 anos. A partir dos 16, o aluno passa para as faixas adultas (branca, azul,
+            roxa, marrom e preta), e o professor indica a faixa certa pelo nível dele.
+          </Ponto>
+        </div>
+      ) : (
+        <div id="painel-adultos" role="tabpanel" aria-labelledby="aba-adultos" className="surge-rapido mt-8 grid gap-x-12 gap-y-9 md:grid-cols-2">
+          <Ponto titulo="Frequência nos treinos">
+            <p className="font-display text-5xl font-bold leading-none text-black">{graduacao.frequenciaMinima}</p>
+            <p className="mt-2">
+              das aulas do ano. Para trocar de faixa, principalmente para a azul, o aluno precisa treinar com constância:
+              pelo menos {graduacao.frequenciaMinima} das aulas ao longo do ano.
+            </p>
+          </Ponto>
+          <Ponto titulo="Tempo mínimo em cada faixa">
+            <ul className="mt-1">
+              {graduacao.tempoMinimoAdulto.map((t) => (
+                <li key={t.faixa} className="grid grid-cols-[56px_1fr] items-center gap-3 border-b border-black/10 py-2.5">
+                  <Faixa cor={t.cor} ponteira="#111111" clara altura={12} />
+                  <span>
+                    <span className="font-semibold text-black">{t.faixa}: {t.tempo}</span> <span className="text-sm">{t.obs}</span>
+                  </span>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-2 text-sm">Tempos mínimos da IBJJF para quem tem 16 anos ou mais.</p>
+          </Ponto>
+          <Ponto titulo="Os graus">
+            Cada faixa tem até 4 graus, as listras brancas na ponteira. O professor dá cada grau conforme a evolução do
+            aluno, e eles mostram o caminho até a próxima faixa.
+          </Ponto>
+          <Ponto titulo="Pode vir antes?">
+            Pode. O tempo é o mínimo, não um prazo fixo, e quem define o momento é o professor. Se ele achar que o aluno
+            merece pela técnica, pela dedicação e pelo comportamento, pode adiantar os graus e a troca de faixa. Para quem
+            compete em campeonatos da IBJJF, valem os tempos mínimos da federação.
+          </Ponto>
+        </div>
+      )}
+      <p className="mt-10 border-t border-black/10 pt-5 text-sm text-chumbo">
+        Referência: Sistema Geral de Graduação da IBJJF. Na BR Team, a palavra final sobre graus e faixas é sempre do
+        professor.
+      </p>
+    </div>
+  );
+}
+
 export function TrocaDeFaixa() {
   const { infantil, adulto } = trocaDeFaixa;
   return (
@@ -189,6 +323,8 @@ export function TrocaDeFaixa() {
             <WhatsAppIcon className="size-5" /> Tirar dúvidas sobre a troca
           </a>
         </article>
+
+        <ComoGradua />
 
         <figure className="mt-6 grid grid-cols-2 gap-6">
           {[fotos.galeria[1], fotos.galeria[4]].map((f) => (

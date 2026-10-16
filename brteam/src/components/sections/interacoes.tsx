@@ -345,8 +345,10 @@ const perguntas: { p: string; r: ReactNode }[] = [
     p: "Como funciona a troca de faixa?",
     r: (
       <>
-        O aluno recebe graus ao longo do tempo e, quando está pronto, a faixa nova é entregue na colação de grau, com a
-        turma e a família. Os valores estão na seção <a href="#faixas" className="underline underline-offset-4 hover:text-white">Troca de faixa</a>.
+        Nas crianças, costuma ser cerca de um ano em cada faixa, e o professor pode pular uma etapa quando a criança está
+        pronta. Nos adultos, é preciso treinar pelo menos 70% a 80% das aulas do ano, respeitando os tempos mínimos de
+        cada faixa. A faixa nova é entregue na colação de grau. Veja tudo na seção{" "}
+        <a href="#faixas" className="underline underline-offset-4 hover:text-white">Troca de faixa</a>.
       </>
     ),
   },

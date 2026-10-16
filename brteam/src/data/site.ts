@@ -180,3 +180,18 @@ export const faixasEtarias: { ate: number; turma: TurmaChave; detalhe: string }[
 export function turmaPorIdade(idade: number) {
   return faixasEtarias.find((f) => idade <= f.ate) ?? faixasEtarias[faixasEtarias.length - 1];
 }
+
+/*
+  Como funciona a graduação (texto da seção Troca de faixa).
+  Base: Sistema Geral de Graduação da IBJJF (versão 2.3, 2022) e a prática da BR Team
+  (cerca de 1 ano por faixa nas crianças; frequência de 70% a 80% das aulas do ano).
+*/
+export const graduacao = {
+  frequenciaMinima: "70% a 80%",
+  tempoMinimoAdulto: [
+    { faixa: "Branca", cor: "#f2f2f0", tempo: "sem tempo mínimo", obs: "costuma levar de 1 a 2 anos até a azul" },
+    { faixa: "Azul", cor: "#1d4fb8", tempo: "2 anos", obs: "antes da roxa" },
+    { faixa: "Roxa", cor: "#5b2a86", tempo: "1 ano e meio", obs: "antes da marrom" },
+    { faixa: "Marrom", cor: "#5a3a22", tempo: "1 ano", obs: "antes da preta, que exige 19 anos" },
+  ],
+};
