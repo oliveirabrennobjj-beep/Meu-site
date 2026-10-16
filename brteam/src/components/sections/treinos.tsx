@@ -2,7 +2,7 @@ import { Check } from "lucide-react";
 import PricingSection from "@/components/ui/boxly-pricing-1";
 import { Faixa } from "@/components/faixa";
 import { WhatsAppIcon } from "@/components/brand-icons";
-import { fotos, horarios, linkWhatsApp, planos, trocaDeFaixa } from "@/data/site";
+import { fotos, horarios, linkWhatsApp, mensalidade, planos, trocaDeFaixa } from "@/data/site";
 import { cn } from "@/lib/utils";
 
 const A_CONFIRMAR = "A confirmar";
@@ -12,7 +12,7 @@ function Pendente({ claro = false }: { claro?: boolean }) {
 }
 
 export function Horarios() {
-  const algumPendente = horarios.some((h) => !h.dias || !h.horario) || planos.some((p) => !p.preco);
+  const algumPendente = horarios.some((h) => !h.dias || !h.horario);
   return (
     <section id="horarios" className="bg-black py-24 md:py-32">
       <div className="pagina">
@@ -20,7 +20,7 @@ export function Horarios() {
           <h2 className="titulo">Horários das turmas</h2>
           {algumPendente && (
             <p className="max-w-[38ch] text-cinza md:text-right">
-              Estamos atualizando a grade e os valores. Enquanto isso, confirme pelo WhatsApp.
+              Estamos atualizando a grade de horários. Enquanto isso, confirme pelo WhatsApp.
             </p>
           )}
         </div>
@@ -61,13 +61,13 @@ export function Mensalidade() {
       <PricingSection
         id="planos"
         className="min-h-0 pb-8"
-        eyebrow="Primeira aula para conhecer o tatame"
+        eyebrow="Mesmo valor para todos"
         title={<span id="planos-titulo">Mensalidade</span>}
         titleClassName="titulo"
         aside={
           <>
-            <span className="text-white">Escolha o plano depois da aula experimental.</span> Cada aluno treina na
-            turma da sua idade, com acompanhamento de graus e faixas.
+            <span className="text-white">{mensalidade.valor} {mensalidade.periodo}, para todo mundo.</span> Crianças,
+            adultos, mulheres e melhor idade pagam o mesmo valor. Cada aluno treina na turma da sua idade.
           </>
         }
         includedLabel="O que está incluso"
@@ -80,8 +80,8 @@ export function Mensalidade() {
           price: p.preco ?? A_CONFIRMAR,
           period: p.preco ? `/${p.periodo.replace("por ", "")}` : null,
           note: p.preco ? undefined : "Valor em atualização. Confirme pelo WhatsApp.",
-          cta: `Quero o plano ${p.nome}`,
-          href: linkWhatsApp(`Olá, BR Team! Quero saber mais sobre o plano ${p.nome}.`),
+          cta: "Quero me matricular",
+          href: linkWhatsApp(`Olá, BR Team! Quero me matricular (${p.nome.toLowerCase()}), mensalidade de ${mensalidade.valor}.`),
         }))}
       />
     </section>

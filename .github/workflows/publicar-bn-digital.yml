@@ -1,13 +1,15 @@
-# Publica o site da BN Digital (bn-digital/dist) no GitHub Pages.
-# Endereço: https://oliveirabrennobjj-beep.github.io/Meu-site/
+# Publica no GitHub Pages:
+#   BN Digital (bn-digital/dist) → https://oliveirabrennobjj-beep.github.io/Meu-site/
+#   BR Team    (brteam/dist)     → https://oliveirabrennobjj-beep.github.io/Meu-site/brteam/
 # Requer, uma vez: Settings → Pages → Build and deployment → Source: "GitHub Actions".
-name: Publicar site da BN Digital
+name: Publicar sites (BN Digital e BR Team)
 
 on:
   push:
     branches: [main]
     paths:
       - "bn-digital/dist/**"
+      - "brteam/dist/**"
       - ".github/workflows/publicar-bn-digital.yml"
   workflow_dispatch:
 
@@ -29,8 +31,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
+      - name: Junta os sites
+        run: |
+          mkdir -p _site
+          cp -r bn-digital/dist/. _site/
+          mkdir -p _site/brteam
+          cp -r brteam/dist/. _site/brteam/
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: bn-digital/dist
+          path: _site
       - id: deploy
         uses: actions/deploy-pages@v4

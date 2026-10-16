@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import {
-  Award, Baby, CalendarCheck, CalendarClock, HelpCircle, Home, MapPin, Menu, MessageCircle, Shield, Sparkles, User, Wallet, X, Images,
+  Award, Baby, ShoppingBag, CalendarCheck, CalendarClock, HelpCircle, Home, MapPin, Menu, MessageCircle, Shield, Sparkles, User, Wallet, X, Images,
 } from "lucide-react";
 import { SidebarNav, type NavGroupData, type NavItemData } from "@/components/ui/dashboard-sidebar";
 import { contato, instagram, linkWhatsApp, mapaRota } from "@/data/site";
@@ -14,6 +14,7 @@ const links = [
   { id: "horarios", label: "Horários" },
   { id: "planos", label: "Planos" },
   { id: "faixas", label: "Troca de faixa" },
+  { id: "loja", label: "Loja" },
   { id: "duvidas", label: "Dúvidas" },
   { id: "contato", label: "Contato" },
 ];
@@ -42,6 +43,7 @@ const grupos: NavGroupData[] = [
           { id: "faixas-adultas", title: "Faixas adultas", icon: Sparkles },
         ],
       },
+      { id: "loja", title: "Loja de kimonos", icon: ShoppingBag },
       { id: "galeria", title: "Conquistas e fotos", icon: Images },
     ],
   },

@@ -47,30 +47,35 @@ export const horarios: Turma[] = [
   { turma: "Adulto", publico: "A partir de 16 anos", dias: null, horario: null },
 ];
 
-/* Mensalidades. `preco: null` aparece como "A confirmar". */
+/*
+  Mensalidade: um valor só para todo mundo (crianças, adultos, mulheres e melhor idade).
+  Para mudar o preço, troque `mensalidade.valor`.
+*/
+export const mensalidade = { valor: "R$ 125", periodo: "por mês" };
+
 export type Plano = { nome: string; para: string; preco: string | null; periodo: string; inclui: string[]; destaque?: boolean };
 export const planos: Plano[] = [
   {
-    nome: "Kids",
-    para: "Turmas infantis",
-    preco: null,
-    periodo: "por mês",
-    inclui: ["Aulas da turma da idade", "Acompanhamento de graus e faixas", "Participação nas colações de grau"],
+    nome: "Crianças",
+    para: "Turmas Kids I e Kids II",
+    preco: mensalidade.valor,
+    periodo: mensalidade.periodo,
+    inclui: ["Aulas na turma da idade", "Acompanhamento de graus e faixas", "Participação nas colações de grau"],
   },
   {
-    nome: "Adulto",
-    para: "Treino completo",
-    preco: null,
-    periodo: "por mês",
+    nome: "Adultos",
+    para: "Juvenil e adulto, iniciante ou graduado",
+    preco: mensalidade.valor,
+    periodo: mensalidade.periodo,
     inclui: ["Aulas de Jiu-Jitsu com kimono", "Preparação para campeonatos", "Acompanhamento de graus e faixas"],
     destaque: true,
   },
   {
-    nome: "Família",
-    para: "Irmãos ou pais e filhos",
-    preco: null,
-    periodo: "por mês",
-    inclui: ["Condição para mais de um aluno da mesma família", "Cada um treina na sua turma"],
+    nome: "Mulheres e melhor idade",
+    para: "Treino no seu ritmo",
+    preco: mensalidade.valor,
+    periodo: mensalidade.periodo,
+    inclui: ["Mesmo valor de todos os alunos", "Treino adaptado ao seu ritmo pelo professor", "Acompanhamento de graus e faixas"],
   },
 ];
 
@@ -101,6 +106,41 @@ export const trocaDeFaixa = {
       { nome: "Marrom", cor: "#5a3a22", ponteira: "#111111", preco: null },
       { nome: "Preta", cor: "#0a0a0a", ponteira: "#d6202b", preco: null },
     ] as (Faixa & { preco: string | null })[],
+  },
+};
+
+/*
+  Loja: kimonos vendidos pela academia. O pedido vai pelo WhatsApp.
+  `preco: null` aparece como "Consulte". As medidas são aproximadas (tabela usual de kimonos).
+*/
+export type Tamanho = { tamanho: string; altura: [number, number]; peso: string };
+export const loja = {
+  cores: ["Branco", "Preto", "Azul"],
+  produtos: {
+    infantil: {
+      nome: "Kimono infantil",
+      preco: null as string | null,
+      tamanhos: [
+        { tamanho: "M000", altura: [95, 105], peso: "até 18 kg" },
+        { tamanho: "M00", altura: [105, 115], peso: "18 a 22 kg" },
+        { tamanho: "M0", altura: [115, 125], peso: "22 a 27 kg" },
+        { tamanho: "M1", altura: [125, 135], peso: "27 a 32 kg" },
+        { tamanho: "M2", altura: [135, 145], peso: "32 a 38 kg" },
+        { tamanho: "M3", altura: [145, 155], peso: "38 a 45 kg" },
+        { tamanho: "M4", altura: [155, 165], peso: "45 a 52 kg" },
+      ] as Tamanho[],
+    },
+    adulto: {
+      nome: "Kimono adulto",
+      preco: null as string | null,
+      tamanhos: [
+        { tamanho: "A0", altura: [150, 162], peso: "45 a 60 kg" },
+        { tamanho: "A1", altura: [162, 172], peso: "60 a 72 kg" },
+        { tamanho: "A2", altura: [172, 181], peso: "72 a 87 kg" },
+        { tamanho: "A3", altura: [181, 189], peso: "87 a 100 kg" },
+        { tamanho: "A4", altura: [189, 197], peso: "100 a 115 kg" },
+      ] as Tamanho[],
+    },
   },
 };
 

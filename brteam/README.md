@@ -17,12 +17,17 @@ npm run build     # gera dist/ (site pronto, funciona em qualquer hospedagem est
 npm run preview   # confere o build: http://localhost:4173
 ```
 
+**Publicação:** o workflow `.github/workflows/publicar-bn-digital.yml` publica `brteam/dist/` no GitHub Pages,
+em https://oliveirabrennobjj-beep.github.io/Meu-site/brteam/, sempre que a `main` recebe mudanças em `brteam/dist/`.
+Depois de mudar algo, rode `npm run build` e envie a pasta `dist/` junto.
+
 ## Onde mudar cada coisa
 
 | O que | Onde |
 |---|---|
 | **Preços da troca de faixa** (infantil: um valor; azul, roxa, marrom, preta: um valor cada) | `src/data/site.ts` → `trocaDeFaixa` (troque `null` por `"R$ 80"`, por exemplo) |
-| **Mensalidades** | `src/data/site.ts` → `planos[].preco` |
+| **Mensalidade** (R$ 125, igual para todos) | `src/data/site.ts` → `mensalidade.valor` |
+| **Loja de kimonos** (cores, tamanhos, preço) | `src/data/site.ts` → `loja` (`preco: null` aparece como "Consulte") |
 | **Horários das turmas** | `src/data/site.ts` → `horarios[].dias` e `horarios[].horario` |
 | WhatsApp, Instagram, endereço | `src/data/site.ts` → `contato` e `endereco` |
 | Parceiros | `src/data/site.ts` → `parceiros` |
@@ -62,6 +67,9 @@ que não existem e apagariam as cores do tema, por isso ficaram de fora. Entrara
   **turma indicada pela idade** enquanto a pessoa digita e, ao enviar, abre o WhatsApp com a mensagem pronta.
   As idades de corte das turmas ficam em `src/data/site.ts` → `faixasEtarias`.
 - O botão "Agendar aula para meu filho" (seção Kids) leva ao formulário já com "Para meu filho(a)" marcado.
+- **Loja BR Team** (`#loja`, `src/components/sections/loja.tsx`): o visitante escolhe kimono adulto ou infantil, cor,
+  tamanho e quantidade. Se não souber o tamanho, informa a altura e o site indica pela tabela de medidas.
+  O botão "Pedir pelo WhatsApp" abre a conversa com o pedido pronto.
 - **Dúvidas frequentes** (`#duvidas`): perguntas que abrem e fecham, com links para planos, troca de faixa e rota.
 - Os botões "Agendar aula" do topo, do menu e da abertura levam ao formulário; o botão verde flutuante (celular)
   continua abrindo o WhatsApp direto.
@@ -73,7 +81,8 @@ Algumas vêm de miniaturas e têm resolução baixa (cerca de 360 px). Para melh
 
 ## Pendências
 
-1. Preços da troca de faixa, mensalidades e grade de horários (o site já está pronto para recebê-los).
+1. Preços da troca de faixa, preço dos kimonos e grade de horários (o site já está pronto para recebê-los).
+   Confirmar também as cores de kimono vendidas (o site oferece branco, preto e azul).
 2. Confirmar o número do endereço: o Instagram diz **886** e a apresentação em PDF diz **1049**. O site usa 886.
 3. Confirmar se as turmas são Kids I, Kids II, Juvenil e Adulto, e se existe plano família.
 4. Confirmar as idades de cada turma (`faixasEtarias`) e as respostas das dúvidas frequentes.

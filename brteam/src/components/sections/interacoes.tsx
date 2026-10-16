@@ -1,7 +1,7 @@
 import { useEffect, useId, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { CheckCircle2, Pencil, Plus } from "lucide-react";
 import { WhatsAppIcon } from "@/components/brand-icons";
-import { contato, endereco, linkWhatsApp, mapaRota, trocaDeFaixa, turmaPorIdade } from "@/data/site";
+import { contato, endereco, linkWhatsApp, mapaRota, mensalidade, trocaDeFaixa, turmaPorIdade } from "@/data/site";
 import { cn } from "@/lib/utils";
 
 type Campos = {
@@ -43,12 +43,12 @@ function montarMensagem(c: Campos) {
   return linhas.join("\n");
 }
 
-const estiloCampo =
+export const estiloCampo =
   "mt-2 block h-12 w-full rounded-sm border border-black/25 bg-white px-4 text-base text-black outline-none transition-colors placeholder:text-black/40 focus:border-black focus:ring-2 focus:ring-black/15 aria-[invalid=true]:border-ponteira";
 
-function Opcoes<T extends string>({
+export function Opcoes<T extends string>({
   legenda, nome, valor, opcoes, onChange,
-}: { legenda: string; nome: string; valor: T; opcoes: { v: T; rotulo: string }[]; onChange: (v: T) => void }) {
+}: { legenda: string; nome: string; valor: T; opcoes: { v: T; rotulo: ReactNode }[]; onChange: (v: T) => void }) {
   return (
     <fieldset>
       <legend className="text-sm font-semibold">{legenda}</legend>
@@ -303,12 +303,8 @@ const perguntas: { p: string; r: ReactNode }[] = [
     p: "Quanto custa a mensalidade?",
     r: (
       <>
-        Os planos estão na seção <a href="#planos" className="underline underline-offset-4 hover:text-white">Mensalidade</a>. Se
-        algum valor aparecer como "A confirmar", chame no{" "}
-        <a href={linkWhatsApp("Olá, BR Team! Quero saber o valor da mensalidade.")} target="_blank" rel="noopener noreferrer" className="underline underline-offset-4 hover:text-white">
-          WhatsApp
-        </a>{" "}
-        que a gente passa na hora.
+        {mensalidade.valor} {mensalidade.periodo}, o mesmo valor para crianças, adultos, mulheres e melhor idade. Veja o
+        que está incluso na seção <a href="#planos" className="underline underline-offset-4 hover:text-white">Mensalidade</a>.
       </>
     ),
   },
