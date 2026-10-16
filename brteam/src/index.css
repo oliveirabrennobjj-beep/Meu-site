@@ -354,3 +354,7 @@ details[open]::details-content { block-size: auto; }
 /* galeria ampliada */
 dialog.galeria-ampliada::backdrop { background: rgb(0 0 0 / 0.9); backdrop-filter: blur(4px); }
 dialog.galeria-ampliada[open] { animation: surge 350ms var(--ease-saida) both; }
+
+/* barras de comparação crescem ao aparecer */
+.barra-cresce { transform-origin: left center; animation: cresce-x 1000ms var(--ease-saida) 250ms both; }
+@keyframes cresce-x { from { transform: scaleX(0); } to { transform: scaleX(1); } }

@@ -149,6 +149,50 @@ function Ponto({ titulo, children }: { titulo: string; children: ReactNode }) {
   );
 }
 
+/** Comparação: o que conta é a quantidade de treino, não os anos de matrícula. */
+function TempoDeTreino() {
+  const alunos = [
+    { nome: "Aluno que vem sempre", detalhe: "1 ano de academia, treina 3 vezes por semana", aulas: 120 },
+    { nome: "Aluno que falta muito", detalhe: "4 anos de academia, mas só aparece a cada 2 meses", aulas: 24 },
+  ];
+  const max = Math.max(...alunos.map((a) => a.aulas));
+  return (
+    <div className="border-l-4 border-ponteira bg-algodao p-5 md:p-7">
+      <h4 className="font-display text-2xl font-bold uppercase leading-tight text-black">
+        Tempo de matrícula não é tempo de treino
+      </h4>
+      <p className="mt-2 max-w-[70ch] text-chumbo">
+        Não adianta ter 3 ou 4 anos de academia e aparecer de vez em quando. O que conta para a faixa é o treino de
+        verdade: quantas aulas o aluno fez, a evolução e a constância. Veja a diferença no total de aulas:
+      </p>
+      <ul className="mt-5 space-y-4">
+        {alunos.map((a) => (
+          <li key={a.nome}>
+            <div className="flex flex-wrap items-baseline justify-between gap-x-4">
+              <span>
+                <span className="font-semibold text-black">{a.nome}</span>{" "}
+                <span className="text-sm text-chumbo">{a.detalhe}</span>
+              </span>
+              <span className="font-display text-2xl font-bold tabular-nums text-black">
+                cerca de {a.aulas} aulas no total
+              </span>
+            </div>
+            <div className="mt-1.5 h-3 bg-black/10">
+              <div
+                className="barra-cresce h-full bg-black"
+                style={{ width: `${(a.aulas / max) * 100}%` }}
+              />
+            </div>
+          </li>
+        ))}
+      </ul>
+      <p className="mt-4 text-sm text-chumbo">
+        Com 4 anos de matrícula, o aluno que falta fez cinco vezes menos aulas que o colega de 1 ano. Para a faixa, quem treinou mais está na frente.
+      </p>
+    </div>
+  );
+}
+
 /** Explicação da graduação, com abas Crianças / Adultos. */
 function ComoGradua() {
   const [aba, setAba] = useState<"criancas" | "adultos">("criancas");
@@ -263,6 +307,9 @@ function ComoGradua() {
             merece pela técnica, pela dedicação e pelo comportamento, pode adiantar os graus e a troca de faixa. Para quem
             compete em campeonatos da IBJJF, valem os tempos mínimos da federação.
           </Ponto>
+          <div className="md:col-span-2">
+            <TempoDeTreino />
+          </div>
         </div>
       )}
       <p className="mt-10 border-t border-black/10 pt-5 text-sm text-chumbo">

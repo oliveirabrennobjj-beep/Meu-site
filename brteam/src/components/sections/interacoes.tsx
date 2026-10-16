@@ -347,7 +347,7 @@ const perguntas: { p: string; r: ReactNode }[] = [
       <>
         Nas crianças, costuma ser cerca de um ano em cada faixa, e o professor pode pular uma etapa quando a criança está
         pronta. Nos adultos, é preciso treinar pelo menos 70% a 80% das aulas do ano, respeitando os tempos mínimos de
-        cada faixa. A faixa nova é entregue na colação de grau. Veja tudo na seção{" "}
+        cada faixa. Conta o treino de verdade, não só os anos de matrícula. A faixa nova é entregue na colação de grau. Veja tudo na seção{" "}
         <a href="#faixas" className="underline underline-offset-4 hover:text-white">Troca de faixa</a>.
       </>
     ),
