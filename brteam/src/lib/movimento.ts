@@ -20,8 +20,16 @@ export function useMovimento() {
 
     // progresso da rolagem (vale mesmo com movimento reduzido: é informação, não enfeite)
     let quadro = 0;
+    const pendentes = new Set<HTMLElement>();
     const atualizar = () => {
       quadro = 0;
+      // garantia: rolando muito rápido, o que já passou pela tela aparece mesmo assim
+      pendentes.forEach((el) => {
+        if (el.getBoundingClientRect().top < innerHeight) {
+          el.classList.add("visivel");
+          pendentes.delete(el);
+        }
+      });
       const max = raiz.scrollHeight - innerHeight;
       raiz.style.setProperty("--progresso", String(max > 0 ? scrollY / max : 0));
       if (!reduzMovimento()) {
@@ -63,6 +71,7 @@ export function useMovimento() {
           entradas.forEach((en) => {
             if (en.isIntersecting) {
               en.target.classList.add("visivel");
+              pendentes.delete(en.target as HTMLElement);
               obs!.unobserve(en.target);
             }
           }),
@@ -75,6 +84,7 @@ export function useMovimento() {
         const irmaos = Array.from(el.parentElement?.children ?? []);
         const i = Math.min(irmaos.indexOf(el), 6);
         el.style.setProperty("--atraso", `${i * 70}ms`);
+        pendentes.add(el);
         obs!.observe(el);
       });
     }

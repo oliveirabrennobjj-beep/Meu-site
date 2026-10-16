@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
-    "fotos": "node scripts/recortar-fotos.mjs"
+    "fotos": "node scripts/recortar-fotos.mjs",
+    "arquivo-unico": "vite build --config vite.arquivo-unico.config.ts && node scripts/embutir-imagens.mjs"
   },
   "dependencies": {
     "@fontsource/barlow": "^5.1.0",
@@ -30,6 +31,7 @@
     "sharp": "^0.33.5",
     "tailwindcss": "^4.1.11",
     "typescript": "^5.7.3",
-    "vite": "^6.0.7"
+    "vite": "^6.0.7",
+    "vite-plugin-singlefile": "^2.3.3"
   }
 }

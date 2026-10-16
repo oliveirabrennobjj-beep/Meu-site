@@ -17,6 +17,9 @@ npm run build     # gera dist/ (site pronto, funciona em qualquer hospedagem est
 npm run preview   # confere o build: http://localhost:4173
 ```
 
+**Arquivo único:** `npm run arquivo-unico` gera `dist-arquivo-unico/index.html`, o site inteiro (com fotos e fontes)
+em um só arquivo de cerca de 2 MB. Abre direto no celular ou no computador, sem servidor, e dá para mandar por WhatsApp.
+
 **Publicação:** o workflow `.github/workflows/publicar-bn-digital.yml` publica `brteam/dist/` no GitHub Pages,
 em https://oliveirabrennobjj-beep.github.io/Meu-site/brteam/, sempre que a `main` recebe mudanças em `brteam/dist/`.
 Depois de mudar algo, rode `npm run build` e envie a pasta `dist/` junto.
