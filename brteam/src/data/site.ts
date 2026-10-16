@@ -38,14 +38,23 @@ export function linkWhatsApp(mensagem: string = contato.mensagemPadrao) {
 }
 export const instagram = (usuario: string) => `https://instagram.com/${usuario}`;
 
-/* Grade de horários. `horario: null` aparece como "A confirmar". */
-export type Turma = { turma: string; publico: string; dias: string | null; horario: string | null };
-export const horarios: Turma[] = [
-  { turma: "Kids I", publico: "Crianças menores", dias: null, horario: null },
-  { turma: "Kids II", publico: "Crianças maiores", dias: null, horario: null },
-  { turma: "Juvenil", publico: "Adolescentes", dias: null, horario: null },
-  { turma: "Adulto", publico: "A partir de 16 anos", dias: null, horario: null },
+/*
+  Grade de horários (informada pela academia).
+  Adulto: 6h, 13h e 20h. Kids: 18h e 19h.
+  `diasDeAula: null` aparece como "A confirmar"; troque pelo texto (ex.: "Segunda a sexta").
+*/
+export type TurmaChave = "Kids" | "Adulto";
+export type Aula = { turma: TurmaChave; nome: string; horario: string; periodo: "Manhã" | "Tarde" | "Noite" };
+export const diasDeAula: string | null = null;
+export const aulas: Aula[] = [
+  { turma: "Adulto", nome: "Adulto", horario: "6h às 7h", periodo: "Manhã" },
+  { turma: "Adulto", nome: "Adulto", horario: "13h às 14h", periodo: "Tarde" },
+  { turma: "Kids", nome: "Kids I", horario: "18h às 19h", periodo: "Noite" },
+  { turma: "Kids", nome: "Kids II", horario: "19h às 20h", periodo: "Noite" },
+  { turma: "Adulto", nome: "Adulto", horario: "20h às 21h", periodo: "Noite" },
 ];
+export const aulasDaTurma = (t: TurmaChave) => aulas.filter((a) => a.turma === t);
+export const rotuloAula = (a: Aula) => `${a.nome}, ${a.horario}`;
 
 /*
   Mensalidade: um valor só para todo mundo (crianças, adultos, mulheres e melhor idade).
@@ -64,7 +73,7 @@ export const planos: Plano[] = [
   },
   {
     nome: "Adultos",
-    para: "Juvenil e adulto, iniciante ou graduado",
+    para: "Adolescentes e adultos, do iniciante ao graduado",
     preco: mensalidade.valor,
     periodo: mensalidade.periodo,
     inclui: ["Aulas de Jiu-Jitsu com kimono", "Preparação para campeonatos", "Acompanhamento de graus e faixas"],
@@ -110,37 +119,15 @@ export const trocaDeFaixa = {
 };
 
 /*
-  Loja: kimonos vendidos pela academia. O pedido vai pelo WhatsApp.
-  `preco: null` aparece como "Consulte". As medidas são aproximadas (tabela usual de kimonos).
+  Loja: encomenda de kimono com o professor. O pedido chega no WhatsApp da academia
+  com nome, idade e horário do aluno; o professor cuida do tamanho.
+  `preco: null` aparece como "Consulte".
 */
-export type Tamanho = { tamanho: string; altura: [number, number]; peso: string };
 export const loja = {
   cores: ["Branco", "Preto", "Azul"],
   produtos: {
-    infantil: {
-      nome: "Kimono infantil",
-      preco: null as string | null,
-      tamanhos: [
-        { tamanho: "M000", altura: [95, 105], peso: "até 18 kg" },
-        { tamanho: "M00", altura: [105, 115], peso: "18 a 22 kg" },
-        { tamanho: "M0", altura: [115, 125], peso: "22 a 27 kg" },
-        { tamanho: "M1", altura: [125, 135], peso: "27 a 32 kg" },
-        { tamanho: "M2", altura: [135, 145], peso: "32 a 38 kg" },
-        { tamanho: "M3", altura: [145, 155], peso: "38 a 45 kg" },
-        { tamanho: "M4", altura: [155, 165], peso: "45 a 52 kg" },
-      ] as Tamanho[],
-    },
-    adulto: {
-      nome: "Kimono adulto",
-      preco: null as string | null,
-      tamanhos: [
-        { tamanho: "A0", altura: [150, 162], peso: "45 a 60 kg" },
-        { tamanho: "A1", altura: [162, 172], peso: "60 a 72 kg" },
-        { tamanho: "A2", altura: [172, 181], peso: "72 a 87 kg" },
-        { tamanho: "A3", altura: [181, 189], peso: "87 a 100 kg" },
-        { tamanho: "A4", altura: [189, 197], peso: "100 a 115 kg" },
-      ] as Tamanho[],
-    },
+    infantil: { nome: "Kimono infantil", preco: null as string | null },
+    adulto: { nome: "Kimono adulto", preco: null as string | null },
   },
 };
 
@@ -174,13 +161,12 @@ export const fotos = {
 };
 
 /*
-  Turma indicada no formulário de aula experimental, pela idade do aluno.
-  As idades de corte são uma sugestão: ajuste quando a academia confirmar.
+  Turma indicada pela idade (formulário de aula experimental e loja).
+  Ajuste `ate` se a idade de corte das turmas Kids for outra.
 */
-export const faixasEtarias = [
-  { ate: 12, turma: "Kids", detalhe: "O professor indica Kids I ou Kids II pela idade e pela experiência." },
-  { ate: 15, turma: "Juvenil", detalhe: "Turma para adolescentes, com treino na medida da idade." },
-  { ate: 120, turma: "Adulto", detalhe: "Treino completo, do básico à preparação para campeonatos." },
+export const faixasEtarias: { ate: number; turma: TurmaChave; detalhe: string }[] = [
+  { ate: 12, turma: "Kids", detalhe: "Turmas às 18h e às 19h. O professor indica Kids I ou Kids II pela idade." },
+  { ate: 120, turma: "Adulto", detalhe: "Turmas às 6h, às 13h e às 20h. Escolha o horário que encaixa na sua rotina." },
 ];
 export function turmaPorIdade(idade: number) {
   return faixasEtarias.find((f) => idade <= f.ate) ?? faixasEtarias[faixasEtarias.length - 1];

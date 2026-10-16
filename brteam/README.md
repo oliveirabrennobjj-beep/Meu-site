@@ -27,8 +27,8 @@ Depois de mudar algo, rode `npm run build` e envie a pasta `dist/` junto.
 |---|---|
 | **Preços da troca de faixa** (infantil: um valor; azul, roxa, marrom, preta: um valor cada) | `src/data/site.ts` → `trocaDeFaixa` (troque `null` por `"R$ 80"`, por exemplo) |
 | **Mensalidade** (R$ 125, igual para todos) | `src/data/site.ts` → `mensalidade.valor` |
-| **Loja de kimonos** (cores, tamanhos, preço) | `src/data/site.ts` → `loja` (`preco: null` aparece como "Consulte") |
-| **Horários das turmas** | `src/data/site.ts` → `horarios[].dias` e `horarios[].horario` |
+| **Loja de kimonos** (cores, preço) | `src/data/site.ts` → `loja` (`preco: null` mostra "valor combinado com o professor") |
+| **Horários das turmas** | `src/data/site.ts` → `aulas` e `diasDeAula` |
 | WhatsApp, Instagram, endereço | `src/data/site.ts` → `contato` e `endereco` |
 | Parceiros | `src/data/site.ts` → `parceiros` |
 | Fotos | `public/fotos/*.webp` e a lista `fotos` em `src/data/site.ts` |
@@ -63,13 +63,15 @@ que não existem e apagariam as cores do tema, por isso ficaram de fora. Entrara
 ## Interações com o visitante
 
 - **Agendar aula experimental** (`#agendar`, `src/components/sections/interacoes.tsx`): formulário curto (para quem é a aula,
-  nome, idade, experiência e faixa, melhor período). Valida os campos com mensagens ao lado de cada um, mostra a
+  nome, idade, experiência e faixa, horário da turma). Valida os campos com mensagens ao lado de cada um, mostra a
   **turma indicada pela idade** enquanto a pessoa digita e, ao enviar, abre o WhatsApp com a mensagem pronta.
   As idades de corte das turmas ficam em `src/data/site.ts` → `faixasEtarias`.
 - O botão "Agendar aula para meu filho" (seção Kids) leva ao formulário já com "Para meu filho(a)" marcado.
-- **Loja BR Team** (`#loja`, `src/components/sections/loja.tsx`): o visitante escolhe kimono adulto ou infantil, cor,
-  tamanho e quantidade. Se não souber o tamanho, informa a altura e o site indica pela tabela de medidas.
-  O botão "Pedir pelo WhatsApp" abre a conversa com o pedido pronto.
+- **Loja BR Team** (`#loja`, `src/components/sections/loja.tsx`): encomenda de kimono com o professor. O visitante
+  informa nome e idade do aluno, escolhe o horário da turma, a cor e a quantidade; o pedido abre pronto no WhatsApp
+  da academia. O tipo (infantil ou adulto) sai da idade, e o tamanho o professor vê com o aluno.
+- **Horários** (`#horarios`): a grade por período, com "Agendar aula neste horário", que leva ao formulário já
+  com o horário marcado. Os horários ficam em `src/data/site.ts` → `aulas` (dias da semana em `diasDeAula`).
 - **Dúvidas frequentes** (`#duvidas`): perguntas que abrem e fecham, com links para planos, troca de faixa e rota.
 - Os botões "Agendar aula" do topo, do menu e da abertura levam ao formulário; o botão verde flutuante (celular)
   continua abrindo o WhatsApp direto.
@@ -81,9 +83,9 @@ Algumas vêm de miniaturas e têm resolução baixa (cerca de 360 px). Para melh
 
 ## Pendências
 
-1. Preços da troca de faixa, preço dos kimonos e grade de horários (o site já está pronto para recebê-los).
+1. Preços da troca de faixa e dias da semana das aulas (o site já está pronto para recebê-los).
    Confirmar também as cores de kimono vendidas (o site oferece branco, preto e azul).
 2. Confirmar o número do endereço: o Instagram diz **886** e a apresentação em PDF diz **1049**. O site usa 886.
-3. Confirmar se as turmas são Kids I, Kids II, Juvenil e Adulto, e se existe plano família.
+3. Confirmar os horários: Adulto 6h–7h, 13h–14h e 20h–21h; Kids I 18h–19h e Kids II 19h–20h; e até que idade a criança fica no Kids (o site usa 12 anos).
 4. Confirmar as idades de cada turma (`faixasEtarias`) e as respostas das dúvidas frequentes.
 5. Autorização dos responsáveis para usar fotos das crianças no site.

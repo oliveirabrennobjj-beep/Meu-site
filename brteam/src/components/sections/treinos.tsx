@@ -2,7 +2,7 @@ import { Check } from "lucide-react";
 import PricingSection from "@/components/ui/boxly-pricing-1";
 import { Faixa } from "@/components/faixa";
 import { WhatsAppIcon } from "@/components/brand-icons";
-import { fotos, horarios, linkWhatsApp, mensalidade, planos, trocaDeFaixa } from "@/data/site";
+import { aulas, diasDeAula, fotos, linkWhatsApp, mensalidade, planos, trocaDeFaixa } from "@/data/site";
 import { cn } from "@/lib/utils";
 
 const A_CONFIRMAR = "A confirmar";
@@ -11,45 +11,53 @@ function Pendente({ claro = false }: { claro?: boolean }) {
   return <span className={cn("italic", claro ? "text-chumbo" : "text-cinza")}>{A_CONFIRMAR}</span>;
 }
 
+const periodos = ["Manhã", "Tarde", "Noite"] as const;
+
 export function Horarios() {
-  const algumPendente = horarios.some((h) => !h.dias || !h.horario);
   return (
     <section id="horarios" className="bg-black py-24 md:py-32">
       <div className="pagina">
         <div className="grid gap-6 md:grid-cols-[1fr_auto] md:items-end">
           <h2 className="titulo">Horários das turmas</h2>
-          {algumPendente && (
-            <p className="max-w-[38ch] text-cinza md:text-right">
-              Estamos atualizando a grade de horários. Enquanto isso, confirme pelo WhatsApp.
-            </p>
-          )}
+          <p className="max-w-[40ch] text-cinza md:text-right">
+            Crianças às 18h e às 19h. Adultos às 6h, às 13h e às 20h.
+            <br />
+            Dias da semana: {diasDeAula ?? <Pendente />}
+          </p>
         </div>
 
-        <div className="mt-12 overflow-x-auto">
-          <table className="w-full min-w-[520px] border-collapse text-left">
-            <caption className="sr-only">Turmas, público, dias e horários</caption>
-            <thead>
-              <tr className="border-b border-white/40 text-sm text-cinza">
-                <th scope="col" className="py-3 pr-4 font-medium">Turma</th>
-                <th scope="col" className="py-3 pr-4 font-medium">Para quem</th>
-                <th scope="col" className="py-3 pr-4 font-medium">Dias</th>
-                <th scope="col" className="py-3 font-medium">Horário</th>
-              </tr>
-            </thead>
-            <tbody>
-              {horarios.map((h) => (
-                <tr key={h.turma} className="border-b border-grafite">
-                  <th scope="row" className="py-5 pr-4 font-display text-2xl font-bold uppercase">{h.turma}</th>
-                  <td className="py-5 pr-4 text-white/85">{h.publico}</td>
-                  <td className="py-5 pr-4">{h.dias ?? <Pendente />}</td>
-                  <td className="py-5 tabular-nums">{h.horario ?? <Pendente />}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="mt-12 grid gap-px bg-grafite md:grid-cols-3">
+          {periodos.map((periodo) => (
+            <div key={periodo} className="bg-black p-6 md:p-8 md:first:pl-0">
+              <h3 className="text-cinza">{periodo}</h3>
+              <ul className="mt-4 space-y-6">
+                {aulas
+                  .filter((a) => a.periodo === periodo)
+                  .map((a) => (
+                    <li key={a.horario}>
+                      <p className="font-display text-4xl font-bold tabular-nums leading-none">{a.horario}</p>
+                      <p className="mt-2 flex items-center gap-2 text-lg">
+                        <span
+                          aria-hidden="true"
+                          className={cn("size-2.5 rounded-full", a.turma === "Kids" ? "bg-[#f2c21b]" : "bg-ponteira")}
+                        />
+                        {a.nome}
+                        <span className="text-cinza">· {a.turma === "Kids" ? "crianças" : "adolescentes e adultos"}</span>
+                      </p>
+                      <a
+                        href="#agendar"
+                        onClick={() => window.dispatchEvent(new CustomEvent("agendar:aula", { detail: a }))}
+                        className="mt-2 inline-flex min-h-11 items-center text-[15px] text-white/80 underline underline-offset-4 hover:text-white"
+                      >
+                        Agendar aula neste horário
+                      </a>
+                    </li>
+                  ))}
+              </ul>
+            </div>
+          ))}
         </div>
       </div>
-
     </section>
   );
 }

@@ -1,7 +1,10 @@
 import { useEffect, useId, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { CheckCircle2, Pencil, Plus } from "lucide-react";
 import { WhatsAppIcon } from "@/components/brand-icons";
-import { contato, endereco, linkWhatsApp, mapaRota, mensalidade, trocaDeFaixa, turmaPorIdade } from "@/data/site";
+import {
+  aulasDaTurma, contato, endereco, linkWhatsApp, mapaRota, mensalidade, rotuloAula, trocaDeFaixa, turmaPorIdade,
+  type Aula, type TurmaChave,
+} from "@/data/site";
 import { cn } from "@/lib/utils";
 
 type Campos = {
@@ -11,7 +14,7 @@ type Campos = {
   idade: string;
   experiencia: "nunca" | "ja";
   faixa: string;
-  periodo: "Manhã" | "Tarde" | "Noite" | "Tanto faz";
+  horario: string;
 };
 type Erros = Partial<Record<keyof Campos, string>>;
 
@@ -24,27 +27,54 @@ function validar(c: Campos): Erros {
   const idade = Number(c.idade);
   if (!c.idade || !Number.isInteger(idade) || idade < 3 || idade > 99)
     e.idade = "Informe a idade em anos, de 3 a 99.";
+  else if (!aulasDaTurma(turmaPorIdade(idade).turma).some((a) => rotuloAula(a) === c.horario))
+    e.horario = c.horario ? "Esse horário é de outra turma. Escolha um dos horários abaixo." : "Escolha o horário da aula.";
   return e;
 }
 
 function montarMensagem(c: Campos) {
   const idade = Number(c.idade);
-  const turma = turmaPorIdade(idade).turma;
   const linhas = [
     "Olá, BR Team! Quero agendar uma aula experimental.",
     "",
     `Nome: ${c.nome.trim()}`,
     c.paraQuem === "filho"
-      ? `Aula para: meu filho(a) ${c.nomeAluno.trim()}, ${idade} anos (turma ${turma})`
-      : `Aula para: mim, ${idade} anos (turma ${turma})`,
+      ? `Aula para: meu filho(a) ${c.nomeAluno.trim()}, ${idade} anos`
+      : `Aula para: mim, ${idade} anos`,
+    `Horário: ${c.horario}`,
     c.experiencia === "nunca" ? "Experiência: nunca treinou" : `Experiência: já treinou, faixa ${c.faixa.toLowerCase()}`,
-    `Melhor período: ${c.periodo}`,
   ];
   return linhas.join("\n");
 }
 
 export const estiloCampo =
   "mt-2 block h-12 w-full rounded-sm border border-black/25 bg-white px-4 text-base text-black outline-none transition-colors placeholder:text-black/40 focus:border-black focus:ring-2 focus:ring-black/15 aria-[invalid=true]:border-ponteira";
+
+/** Horários da turma indicada pela idade (usado no agendamento e na loja). */
+export function EscolhaHorario({
+  turma, valor, onChange, erro, nome = "horario",
+}: { turma: TurmaChave | null; valor: string; onChange: (v: string) => void; erro?: string; nome?: string }) {
+  if (!turma) {
+    return (
+      <div>
+        <p className="text-sm font-semibold">Horário da aula</p>
+        <p className="mt-2 text-chumbo">Informe a idade para ver os horários da turma.</p>
+      </div>
+    );
+  }
+  return (
+    <div>
+      <Opcoes
+        legenda={`Horário da aula (turma ${turma})`}
+        nome={nome}
+        valor={valor}
+        onChange={onChange}
+        opcoes={aulasDaTurma(turma).map((a) => ({ v: rotuloAula(a), rotulo: a.turma === "Kids" ? rotuloAula(a) : a.horario }))}
+      />
+      {erro && <p className="mt-1.5 text-sm font-medium text-ponteira-escura">{erro}</p>}
+    </div>
+  );
+}
 
 export function Opcoes<T extends string>({
   legenda, nome, valor, opcoes, onChange,
@@ -94,7 +124,7 @@ export function AgendarAula() {
   const form = useRef<HTMLFormElement>(null);
   const sucessoRef = useRef<HTMLDivElement>(null);
   const [c, setC] = useState<Campos>({
-    nome: "", paraQuem: "mim", nomeAluno: "", idade: "", experiencia: "nunca", faixa: "Branca", periodo: "Noite",
+    nome: "", paraQuem: "mim", nomeAluno: "", idade: "", experiencia: "nunca", faixa: "Branca", horario: "",
   });
   const [tocado, setTocado] = useState<Partial<Record<keyof Campos, boolean>>>({});
   const [enviado, setEnviado] = useState(false);
@@ -107,8 +137,18 @@ export function AgendarAula() {
       setC((o) => ({ ...o, paraQuem: para }));
       setEnviado(false);
     };
+    // "Agendar aula neste horário" (seção Horários) chega com o horário marcado
+    const ouvirAula = (e: Event) => {
+      const aula = (e as CustomEvent<Aula>).detail;
+      setC((o) => ({ ...o, horario: rotuloAula(aula), paraQuem: aula.turma === "Kids" ? "filho" : o.paraQuem }));
+      setEnviado(false);
+    };
     window.addEventListener("agendar:para", ouvir);
-    return () => window.removeEventListener("agendar:para", ouvir);
+    window.addEventListener("agendar:aula", ouvirAula);
+    return () => {
+      window.removeEventListener("agendar:para", ouvir);
+      window.removeEventListener("agendar:aula", ouvirAula);
+    };
   }, []);
 
   const erros = validar(c);
@@ -119,7 +159,7 @@ export function AgendarAula() {
 
   function enviar(e: FormEvent) {
     e.preventDefault();
-    setTocado({ nome: true, nomeAluno: true, idade: true });
+    setTocado({ nome: true, nomeAluno: true, idade: true, horario: true });
     const chaves = Object.keys(erros) as (keyof Campos)[];
     if (chaves.length) {
       form.current?.querySelector<HTMLElement>(`[name="${chaves[0]}"]`)?.focus();
@@ -141,13 +181,13 @@ export function AgendarAula() {
         <div>
           <h2 className="titulo">Agende sua aula experimental</h2>
           <p className="mt-6 max-w-[42ch] text-lg text-cinza">
-            Responda algumas perguntas rápidas. A gente monta a mensagem e abre o WhatsApp da academia para você enviar.
+            Responda algumas perguntas rápidas e escolha o horário. A gente monta a mensagem e abre o WhatsApp da academia para você enviar.
           </p>
           <ol className="mt-10 space-y-5">
             {[
               "Você responde o formulário.",
               "O WhatsApp abre com a mensagem pronta. É só enviar.",
-              "O professor responde com o dia e o horário da sua aula.",
+              "O professor confirma o dia da sua primeira aula.",
             ].map((passo, i) => (
               <li key={passo} className="flex items-start gap-4">
                 <span className="flex size-9 shrink-0 items-center justify-center rounded-full border border-grafite font-display text-lg font-bold">
@@ -165,7 +205,7 @@ export function AgendarAula() {
               <CheckCircle2 className="size-10 text-[#1f8a4c]" aria-hidden="true" />
               <h3 className="mt-4 font-display text-3xl font-bold uppercase leading-none">Mensagem pronta no WhatsApp</h3>
               <p className="mt-3 text-chumbo">
-                Confira e toque em enviar. O professor responde com o dia e o horário da aula.
+                Confira e toque em enviar. O professor confirma o dia da sua primeira aula.
               </p>
               <pre className="mt-6 whitespace-pre-wrap rounded-sm bg-algodao p-4 font-sans text-[15px] leading-relaxed">
                 {montarMensagem(c)}
@@ -255,12 +295,11 @@ export function AgendarAula() {
                 </Campo>
               )}
 
-              <Opcoes
-                legenda="Melhor período para treinar"
-                nome="periodo"
-                valor={c.periodo}
-                onChange={(v) => set("periodo", v)}
-                opcoes={(["Manhã", "Tarde", "Noite", "Tanto faz"] as const).map((v) => ({ v, rotulo: v }))}
+              <EscolhaHorario
+                turma={turma?.turma ?? null}
+                valor={c.horario}
+                onChange={(v) => set("horario", v)}
+                erro={mostrarErro("horario")}
               />
 
               <button type="submit" className="botao botao-primario w-full">
