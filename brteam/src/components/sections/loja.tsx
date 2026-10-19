@@ -2,7 +2,7 @@ import { useId, useState, type FormEvent } from "react";
 import { CheckCircle2, Minus, Pencil, Plus } from "lucide-react";
 import { WhatsAppIcon } from "@/components/brand-icons";
 import { EscolhaHorario, Opcoes, estiloCampo } from "@/components/sections/interacoes";
-import { academia, aulasDaTurma, fotos, linkWhatsApp, loja, rotuloAula, turmaPorIdade } from "@/data/site";
+import { academia, aulasParaIdade, fotos, linkWhatsApp, loja, rotuloAula, turmaPorIdade } from "@/data/site";
 import { cn } from "@/lib/utils";
 
 /*
@@ -26,7 +26,7 @@ export function Loja() {
   const idadeOk = !!idade && Number.isInteger(idadeNum) && idadeNum >= academia.idadeMinima && idadeNum <= 99;
   const turma = idadeOk ? turmaPorIdade(idadeNum).turma : null;
   const produto = turma === "Kids" ? loja.produtos.infantil : loja.produtos.adulto;
-  const horarioOk = !!turma && aulasDaTurma(turma).some((a) => rotuloAula(a) === horario);
+  const horarioOk = idadeOk && aulasParaIdade(idadeNum).some((a) => rotuloAula(a) === horario);
 
   const erros = {
     nome: nome.trim().length < 2 ? "Escreva o nome do aluno." : undefined,
@@ -127,7 +127,7 @@ export function Loja() {
                 </div>
               </div>
 
-              <EscolhaHorario turma={turma} valor={horario} onChange={setHorario} erro={erro("horario")} nome={`${uid}-horario`} />
+              <EscolhaHorario idade={idadeOk ? idadeNum : null} valor={horario} onChange={setHorario} erro={erro("horario")} nome={`${uid}-horario`} />
 
               <Opcoes
                 legenda="Cor do kimono"

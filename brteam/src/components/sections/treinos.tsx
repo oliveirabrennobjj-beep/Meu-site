@@ -22,9 +22,9 @@ export function Horarios() {
         <div className="grid gap-6 md:grid-cols-[1fr_auto] md:items-end">
           <h2 className="titulo">Horários das turmas</h2>
           <p className="max-w-[40ch] text-cinza md:text-right">
-            Crianças às 18h e às 19h. Adultos às 6h, às 13h e às 20h.
+            <span className="font-display text-2xl font-bold uppercase text-white">{diasDeAula ?? <Pendente />}</span>
             <br />
-            Dias da semana: {diasDeAula ?? <Pendente />}
+            Crianças às 18h e às 19h. Adultos às 6h, às 13h e às 20h. Terça, sexta e fim de semana não tem aula.
           </p>
         </div>
 
@@ -44,7 +44,7 @@ export function Horarios() {
                           className={cn("size-2.5 rounded-full", a.turma === "Kids" ? "bg-[#f2c21b]" : "bg-ponteira")}
                         />
                         {a.nome}
-                        <span className="text-cinza">· {a.turma === "Kids" ? "crianças" : "adolescentes e adultos"}</span>
+                        <span className="text-cinza">· {a.publico}</span>
                       </p>
                       <a
                         href="#agendar"
@@ -104,6 +104,23 @@ const versoes = [
   { rotulo: "com preto", listra: "#111111" },
 ];
 
+/** Sem preço publicado: o valor é combinado direto com o professor Bruno pelo WhatsApp. */
+function PrecoComProfessor({ faixa, escuro }: { faixa: string; escuro: boolean }) {
+  return (
+    <a
+      href={linkWhatsApp(`Olá, professor Bruno! Quero saber o valor da troca para a faixa ${faixa.toLowerCase()}.`)}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={cn(
+        "inline-flex min-h-11 items-center gap-1.5 font-sans text-[15px] font-semibold normal-case underline underline-offset-4 transition-colors",
+        escuro ? "text-white decoration-white/40 hover:decoration-ponteira" : "text-black decoration-black/30 hover:decoration-ponteira",
+      )}
+    >
+      <WhatsAppIcon className="size-4" /> Falar com o Bruno
+    </a>
+  );
+}
+
 function LinhaFaixa({ f, escuro = false }: { f: FaixaDados; escuro?: boolean }) {
   const legenda = escuro ? "text-cinza" : "text-chumbo";
   return (
@@ -114,7 +131,7 @@ function LinhaFaixa({ f, escuro = false }: { f: FaixaDados; escuro?: boolean }) 
           <p className={cn("mt-1 text-sm", legenda)}>{f.idade}</p>
         </div>
         <p className="font-display text-2xl font-bold tabular-nums md:hidden">
-          {f.preco ?? <span className={cn("text-lg font-semibold italic", legenda)}>{A_CONFIRMAR}</span>}
+          {f.preco ?? <PrecoComProfessor faixa={f.nome} escuro={escuro} />}
         </p>
       </div>
 
@@ -134,7 +151,7 @@ function LinhaFaixa({ f, escuro = false }: { f: FaixaDados; escuro?: boolean }) 
       )}
 
       <p className="hidden text-right font-display text-3xl font-bold tabular-nums md:block">
-        {f.preco ?? <span className={cn("text-xl font-semibold italic", legenda)}>{A_CONFIRMAR}</span>}
+        {f.preco ?? <PrecoComProfessor faixa={f.nome} escuro={escuro} />}
       </p>
     </li>
   );
@@ -369,7 +386,8 @@ export function TrocaDeFaixa() {
         <div className="grid gap-8 lg:grid-cols-[1fr_1fr] lg:items-end">
           <h2 className="titulo">Troca de faixa</h2>
           <p className="max-w-[48ch] text-lg text-chumbo">
-            Tabela de preços da troca de faixa, da branca até a preta. Cada faixa nova é entregue na colação de grau,
+            Tabela da troca de faixa, da branca até a preta. O valor de cada troca é combinado direto com o professor
+            Bruno: toque em "Falar com o Bruno" na faixa que você quer. A faixa nova é entregue na colação de grau,
             com a turma e a família no tatame.
           </p>
         </div>

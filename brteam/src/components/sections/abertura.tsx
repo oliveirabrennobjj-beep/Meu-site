@@ -232,10 +232,10 @@ export function Kids() {
         <div className="grid grid-cols-2 gap-3 self-start">
           <img
             src={principal.src} alt={principal.alt} width={principal.w} height={principal.h} loading="lazy"
-            className="row-span-2 h-full w-full bg-algodao object-cover object-top"
+            className="row-span-2 h-full w-full bg-algodao object-contain object-bottom"
           />
-          <img src={segunda.src} alt={segunda.alt} width={segunda.w} height={segunda.h} loading="lazy" className="aspect-square w-full bg-algodao object-cover" />
-          <img src={terceira.src} alt={terceira.alt} width={terceira.w} height={terceira.h} loading="lazy" className="aspect-square w-full bg-algodao object-cover object-top" />
+          <img src={segunda.src} alt={segunda.alt} width={segunda.w} height={segunda.h} loading="lazy" className="aspect-square w-full bg-algodao object-contain object-bottom p-2" />
+          <img src={terceira.src} alt={terceira.alt} width={terceira.w} height={terceira.h} loading="lazy" className="aspect-square w-full bg-algodao object-contain object-bottom pt-3" />
         </div>
       </div>
     </section>
