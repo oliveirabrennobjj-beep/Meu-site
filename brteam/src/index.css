@@ -3,9 +3,9 @@
 
 /*
   BR Team — direção visual
-  Inspirada na Ferrari (fundo escuro cinematográfico, foto em tela cheia, um único
-  vermelho de destaque) e traduzida para o tatame: preto e branco como a marca,
-  e o vermelho vem da ponteira da faixa preta. A faixa é o elemento de assinatura.
+  Foto em tela cheia na abertura e seções alternando claro (branco e "gelo", levemente azulado)
+  com azul-marinho. Botões em azul, detalhes em dourado. A faixa preta desenhada, com a ponteira
+  vermelha de verdade, continua sendo o elemento de assinatura.
   Tipografia: Barlow Condensed nos títulos (ecoa o letreiro da marca) e Barlow no texto.
 */
 
@@ -15,15 +15,22 @@
   --font-sans: "Barlow", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-display: "Barlow Condensed", "Arial Narrow", system-ui, sans-serif;
 
-  --color-tatame: #000000;      /* preto da marca */
-  --color-carbono: #161616;     /* superfícies escuras */
-  --color-grafite: #2b2b2b;     /* linhas no escuro */
-  --color-cinza: #a6a6a6;       /* texto secundário no escuro (8.6:1 no preto) */
+  --color-tatame: #08172f;      /* azul-marinho bem escuro (fundo base) */
+  --color-marinho: #0d2348;     /* azul-marinho das seções escuras */
+  --color-carbono: #0d2348;     /* superfícies escuras (agora azul-marinho) */
+  --color-grafite: #26406b;     /* linhas no escuro */
+  --color-cinza: #aebfde;       /* texto secundário no escuro (8:1 no marinho) */
+  --color-gelo: #f3f6fb;        /* fundo claro levemente azulado */
+  --color-azul: #1f5fd6;        /* azul de destaque (botões; 5.3:1 com branco) */
+  --color-azul-escuro: #184bb0;
+  --color-ouro: #c9a24a;        /* dourado dos detalhes */
+  --color-ouro-escuro: #8a6a1c; /* dourado para texto em fundo claro (5:1) */
+  --color-erro: #b42318;        /* mensagens de erro */
   --color-kimono: #ffffff;      /* branco */
   --color-algodao: #f3f3f1;     /* superfície clara */
   --color-chumbo: #4a4a4a;      /* texto secundário no claro (8.9:1 no branco) */
-  --color-ponteira: #d6202b;    /* vermelho da ponteira da faixa preta */
-  --color-ponteira-escura: #b0161f;
+  --color-ponteira: #1f5fd6;    /* cor de ação (antes vermelho; agora azul) */
+  --color-ponteira-escura: #184bb0;
   --color-whatsapp: #25d366;
 
   --ease-saida: cubic-bezier(0.16, 1, 0.3, 1);
@@ -31,18 +38,18 @@
 
 /* Tokens do shadcn/ui, usados pelo componente dashboard-sidebar (tema escuro) */
 :root {
-  --background: #000000;
+  --background: #08172f;
   --foreground: #ffffff;
-  --card: #161616;
+  --card: #0d2348;
   --card-foreground: #ffffff;
-  --primary: #d6202b;
+  --primary: #1f5fd6;
   --primary-foreground: #ffffff;
-  --muted: #2b2b2b;
-  --muted-foreground: #a6a6a6;
-  --border: #2b2b2b;
-  --ring: #d6202b;
-  --destructive: #d6202b;
-  --input: #2b2b2b;
+  --muted: #26406b;
+  --muted-foreground: #aebfde;
+  --border: #26406b;
+  --ring: #c9a24a;
+  --destructive: #b42318;
+  --input: #26406b;
 }
 
 /*
@@ -95,14 +102,14 @@
 
 html {
   color-scheme: dark;
-  background: #000;
+  background: #08172f;
   scroll-behavior: smooth;
   scroll-padding-top: 76px;
   -webkit-text-size-adjust: 100%;
 }
 body {
   margin: 0;
-  background: #000;
+  background: #08172f;
   color: #fff;
   font-family: var(--font-sans);
   font-size: 17px;
@@ -114,11 +121,11 @@ p { text-wrap: pretty; }
 img { max-width: 100%; }
 a, button { touch-action: manipulation; }
 :focus-visible {
-  outline: 2px solid var(--color-ponteira);
+  outline: 2px solid var(--color-ouro);
   outline-offset: 3px;
   border-radius: 4px;
 }
-.claro :focus-visible { outline-color: #000; }
+.claro :focus-visible { outline-color: var(--color-azul); }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
@@ -176,8 +183,10 @@ a, button { touch-action: manipulation; }
   .botao-primario { background: var(--color-ponteira); color: #fff; }
   .botao-primario:hover { background: var(--color-ponteira-escura); }
   .botao-contorno { border: 1.5px solid currentColor; }
+  .botao-ouro { background: var(--color-ouro); color: #0d2348; }
+  .botao-ouro:hover { background: #d8b45e; }
   .botao-contorno:hover { background: #fff; color: #000; border-color: #fff; }
-  .claro .botao-contorno:hover { background: #000; color: #fff; border-color: #000; }
+  .claro .botao-contorno:hover { background: var(--color-marinho); color: #fff; border-color: var(--color-marinho); }
 }
 
 /*
@@ -294,7 +303,7 @@ a, button { touch-action: manipulation; }
 @media (hover: hover) {
   .botao:hover { transform: translateY(-2px); }
   .botao:hover::before { transform: translateX(120%); }
-  .botao-primario:hover { box-shadow: 0 10px 28px -8px rgb(214 32 43 / 0.7); }
+  .botao-primario:hover { box-shadow: 0 10px 28px -8px rgb(31 95 214 / 0.6), inset 0 -2px 0 var(--color-ouro); }
   .botao:hover svg { transform: scale(1.15) rotate(-8deg); }
 }
 .botao:active { transform: translateY(0) scale(0.97); }

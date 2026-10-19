@@ -3,8 +3,9 @@
 Site da BR Team, academia de Jiu-Jitsu do professor Bruno Ramos em Casimiro de Abreu (RJ).
 
 React + TypeScript + Tailwind CSS v4 na estrutura do shadcn/ui (`components.json`, `src/components/ui`, `src/lib/utils.ts`).
-Direção visual inspirada na Ferrari (fundo escuro, foto em tela cheia, um único vermelho), traduzida para o tatame:
-preto e branco como a marca e o vermelho da ponteira da faixa preta. A faixa desenhada (com graus) é o elemento de assinatura.
+Direção visual: foto em tela cheia na abertura e seções alternando claro (branco e "gelo") com azul-marinho,
+botões em azul e detalhes em dourado. A faixa preta desenhada (ponteira vermelha e graus) é o elemento de assinatura.
+Cores em `src/index.css` (bloco `@theme`: `marinho`, `azul`, `ouro`, `gelo`…).
 Fontes: Barlow Condensed nos títulos e Barlow no texto.
 
 ## Como rodar

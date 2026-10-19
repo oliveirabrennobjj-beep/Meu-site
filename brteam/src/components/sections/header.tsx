@@ -156,7 +156,7 @@ export function Header() {
         className={cn(
           "fixed inset-x-0 top-0 z-40 transition-[background-color,transform] duration-300 ease-[var(--ease-saida)]",
           oculto && !aberto && "-translate-y-full",
-          rolou ? "border-b border-grafite bg-black/90 backdrop-blur-md" : "bg-gradient-to-b from-black/70 to-transparent",
+          rolou ? "border-b border-grafite bg-marinho/95 backdrop-blur-md" : "bg-gradient-to-b from-tatame/70 to-transparent",
         )}
       >
         <div className="pagina flex h-[68px] items-center justify-between gap-4">
@@ -172,7 +172,7 @@ export function Header() {
                     aria-current={ativo === l.id ? "location" : undefined}
                     className={cn(
                       "relative px-3 py-2 text-[15px] font-medium text-white/75 transition-colors hover:text-white",
-                      ativo === l.id && "text-white after:absolute after:inset-x-3 after:-bottom-0.5 after:h-0.5 after:bg-ponteira",
+                      ativo === l.id && "text-white after:absolute after:inset-x-3 after:-bottom-0.5 after:h-0.5 after:bg-ouro",
                     )}
                   >
                     {l.label}
@@ -203,7 +203,7 @@ export function Header() {
       {/* Menu lateral: o componente SidebarNav (components/ui/dashboard-sidebar) com o menu da academia */}
       <div className={cn("fixed inset-0 z-50 xl:hidden", aberto ? "visible" : "invisible")} aria-hidden={!aberto}>
         <div
-          className={cn("absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity duration-300", aberto ? "opacity-100" : "opacity-0")}
+          className={cn("absolute inset-0 bg-tatame/70 backdrop-blur-sm transition-opacity duration-300", aberto ? "opacity-100" : "opacity-0")}
           onClick={fechar}
         />
         <div

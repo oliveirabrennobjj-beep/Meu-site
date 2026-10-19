@@ -6,7 +6,7 @@ import { reduzMovimento } from "@/lib/movimento";
 export function BarraProgresso() {
   return (
     <div aria-hidden="true" className="pointer-events-none fixed inset-x-0 top-0 z-[45] h-[3px]">
-      <div className="h-full origin-left bg-ponteira" style={{ transform: "scaleX(var(--progresso, 0))" }} />
+      <div className="h-full origin-left bg-ouro" style={{ transform: "scaleX(var(--progresso, 0))" }} />
     </div>
   );
 }
@@ -29,7 +29,7 @@ export function VoltarAoTopo() {
       }}
       tabIndex={mostrar ? 0 : -1}
       aria-hidden={!mostrar}
-      className={`fixed bottom-24 right-5 z-30 inline-flex size-12 items-center justify-center rounded-full border border-grafite bg-black/80 text-white backdrop-blur transition-all duration-300 hover:-translate-y-1 hover:border-white sm:bottom-6 ${
+      className={`fixed bottom-24 right-5 z-30 inline-flex size-12 items-center justify-center rounded-full border border-grafite bg-marinho/90 text-white backdrop-blur transition-all duration-300 hover:-translate-y-1 hover:border-white sm:bottom-6 ${
         mostrar ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-4 opacity-0"
       }`}
     >

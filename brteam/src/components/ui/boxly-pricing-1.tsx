@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
   - `tiers`: planos próprios; `href` em um plano faz o botão virar link (WhatsApp);
     `period` troca o "/month" (null esconde);
   - `eyebrow`, `title`, `aside`, `includedLabel`: textos do topo e da lista;
+  - `tema`: classes de cor (linhas, cartões, destaque e botão), para seguir a paleta do site;
   - `featuredIcon`: ícone da lista do plano em destaque (o original usa AlertCircle);
   - `className`: classes do contêiner externo (o original ocupa a tela toda).
 */
@@ -75,6 +76,28 @@ const pricingTiers: PricingTier[] = [
   },
 ];
 
+export type PricingTema = {
+  linha: string;
+  chip: string;
+  cartao: string;
+  destaque: string;
+  destaqueTitulo: string;
+  destaqueIcone: string;
+  destaqueBotao: string;
+  cantos: string;
+};
+
+const temaOriginal: PricingTema = {
+  linha: "border-neutral-700",
+  chip: "text-red-400",
+  cartao: "bg-black",
+  destaque: "border-2 border-red-500 bg-neutral-900",
+  destaqueTitulo: "text-red-500",
+  destaqueIcone: "text-red-500",
+  destaqueBotao: "bg-red-600 text-white hover:bg-red-700",
+  cantos: "border-neutral-400",
+};
+
 export default function PricingSection({
   tiers = pricingTiers,
   eyebrow = "SIMPLE, SCALABLE PRICING",
@@ -91,6 +114,7 @@ export default function PricingSection({
   includedLabel = "WHAT'S INCLUDED:",
   titleClassName = "font-normal text-3xl tracking-tight md:text-5xl",
   featuredIcon: FeaturedIcon = AlertCircle,
+  tema: temaParcial,
   className,
   id,
 }: {
@@ -101,16 +125,18 @@ export default function PricingSection({
   includedLabel?: string;
   titleClassName?: string;
   featuredIcon?: ElementType;
+  tema?: Partial<PricingTema>;
   className?: string;
   id?: string;
 }) {
+  const t = { ...temaOriginal, ...temaParcial };
   return (
     <div id={id} className={cn("min-h-screen bg-black px-4 text-white", className)}>
-      <div className="mx-auto max-w-5xl border-neutral-700 border-x py-20">
+      <div className={`mx-auto max-w-5xl ${t.linha} border-x py-20`}>
         <div className="mb-10 grid grid-cols-1 items-center gap-6 px-4 md:grid-cols-12 md:px-10">
           <div className="md:col-span-8">
             {eyebrow && (
-              <p className="mb-4 w-fit rounded-full border border-neutral-700 px-2 py-0.5 text-red-400 text-xs tracking-wide">
+              <p className={`mb-4 w-fit rounded-full border ${t.linha} px-2 py-0.5 ${t.chip} text-xs tracking-wide`}>
                 {eyebrow}
               </p>
             )}
@@ -129,14 +155,14 @@ export default function PricingSection({
                 <div
                   className={`relative flex h-full flex-col ${
                     tier.featured
-                      ? "border-2 border-red-500 bg-neutral-900"
-                      : "border border-neutral-700 bg-black md:border-x-0 md:border-y"
+                      ? t.destaque
+                      : `border ${t.linha} ${t.cartao} md:border-x-0 md:border-y`
                   }`}
                 >
-                  <div className="relative mb-6 border-neutral-700 border-b p-6">
+                  <div className={`relative mb-6 ${t.linha} border-b p-6`}>
                     <h3
                       className={`mb-2 font-medium text-xl ${
-                        tier.featured ? "text-red-500" : "text-white"
+                        tier.featured ? t.destaqueTitulo : "text-white"
                       }`}
                     >
                       {tier.name}
@@ -145,16 +171,16 @@ export default function PricingSection({
                     {!tier.featured && (
                       <div aria-hidden="true" className="absolute inset-0 z-10 flex flex-col justify-between">
                         <div className="absolute -top-0.5 -left-0.5">
-                          <div className="size-1.5 border-neutral-400 border-t-2 border-l-2" />
+                          <div className={`size-1.5 ${t.cantos} border-t-2 border-l-2`} />
                         </div>
                         <div className="absolute -top-0.5 -right-0.5">
-                          <div className="size-1.5 border-neutral-400 border-t-2 border-r-2" />
+                          <div className={`size-1.5 ${t.cantos} border-t-2 border-r-2`} />
                         </div>
                         <div className="absolute -right-0.5 -bottom-0.5">
-                          <div className="size-1.5 border-neutral-400 border-r-2 border-b-2" />
+                          <div className={`size-1.5 ${t.cantos} border-r-2 border-b-2`} />
                         </div>
                         <div className="absolute -bottom-0.5 -left-0.5">
-                          <div className="size-1.5 border-neutral-400 border-b-2 border-l-2" />
+                          <div className={`size-1.5 ${t.cantos} border-b-2 border-l-2`} />
                         </div>
                       </div>
                     )}
@@ -174,7 +200,7 @@ export default function PricingSection({
                       {tier.features.map((feature, idx) => (
                         <li className="flex items-start gap-3" key={idx}>
                           {tier.featured ? (
-                            <FeaturedIcon aria-hidden="true" className="mt-0.5 h-5 w-5 shrink-0 text-red-500" />
+                            <FeaturedIcon aria-hidden="true" className={`mt-0.5 h-5 w-5 shrink-0 ${t.destaqueIcone}`} />
                           ) : (
                             <Check aria-hidden="true" className="mt-0.5 h-5 w-5 shrink-0 text-gray-500" />
                           )}
@@ -187,7 +213,7 @@ export default function PricingSection({
                         asChild
                         className={`relative z-20 w-full gap-2 rounded-sm py-2 ${
                           tier.featured
-                            ? "bg-red-600 text-white hover:bg-red-700"
+                            ? t.destaqueBotao
                             : "bg-white text-black hover:bg-gray-100"
                         }`}
                       >
@@ -200,7 +226,7 @@ export default function PricingSection({
                       <Button
                         className={`w-full gap-2 rounded-sm py-2 ${
                           tier.featured
-                            ? "bg-red-600 text-white hover:bg-red-700"
+                            ? t.destaqueBotao
                             : "bg-white text-black hover:bg-gray-100"
                         }`}
                       >
@@ -212,10 +238,10 @@ export default function PricingSection({
                   {!tier.featured && (
                     <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-10 flex flex-col justify-between">
                       <div className="absolute -right-0.5 -bottom-0.5">
-                        <div className="size-1.5 border-neutral-400 border-r-2 border-b-2" />
+                        <div className={`size-1.5 ${t.cantos} border-r-2 border-b-2`} />
                       </div>
                       <div className="absolute -bottom-0.5 -left-0.5">
-                        <div className="size-1.5 border-neutral-400 border-b-2 border-l-2" />
+                        <div className={`size-1.5 ${t.cantos} border-b-2 border-l-2`} />
                       </div>
                     </div>
                   )}

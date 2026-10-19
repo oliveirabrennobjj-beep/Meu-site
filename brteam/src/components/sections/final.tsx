@@ -55,7 +55,7 @@ function GaleriaAmpliada({ indice, onFechar, onTrocar }: { indice: number | null
 export function Galeria() {
   const [aberta, setAberta] = useState<number | null>(null);
   return (
-    <section id="galeria" className="bg-black py-24 md:py-32">
+    <section id="galeria" className="bg-marinho py-24 md:py-32">
       <div className="pagina">
         <h2 className="titulo">No tatame e no pódio</h2>
         <p className="mt-5 max-w-[48ch] text-lg text-cinza">
@@ -73,7 +73,7 @@ export function Galeria() {
                   src={f.src} alt={f.alt} width={f.w} height={f.h} loading="lazy"
                   className="w-full transition duration-700 ease-[var(--ease-saida)] group-hover:scale-[1.06] group-hover:brightness-75"
                 />
-                <span className="absolute right-3 top-3 inline-flex size-10 items-center justify-center rounded-full bg-black/70 opacity-0 transition duration-300 group-hover:opacity-100 group-focus-visible:opacity-100">
+                <span className="absolute right-3 top-3 inline-flex size-10 items-center justify-center rounded-full bg-marinho/85 opacity-0 transition duration-300 group-hover:opacity-100 group-focus-visible:opacity-100">
                   <Expand className="size-4" aria-hidden="true" />
                 </span>
                 <span className="sr-only">Ampliar foto: {f.legenda}</span>
@@ -98,14 +98,14 @@ export function Galeria() {
 
 export function Parceiros() {
   return (
-    <section aria-labelledby="parceiros-titulo" className="border-y border-grafite bg-carbono py-14">
+    <section aria-labelledby="parceiros-titulo" className="claro border-y border-marinho/10 bg-gelo py-14 text-marinho">
       <div className="pagina grid gap-8 md:grid-cols-[220px_1fr] md:items-center">
-        <h2 id="parceiros-titulo" className="titulo-md text-cinza">Nossos parceiros</h2>
+        <h2 id="parceiros-titulo" className="titulo-md text-ouro-escuro">Nossos parceiros</h2>
         <ul className="grid grid-cols-2 gap-x-8 gap-y-5 sm:grid-cols-3 lg:grid-cols-5">
           {parceiros.map((p) => (
             <li key={p.nome}>
               <p className="font-display text-xl font-bold uppercase leading-tight">{p.nome}</p>
-              <p className="text-sm text-cinza">{p.ramo}</p>
+              <p className="text-sm text-chumbo">{p.ramo}</p>
             </li>
           ))}
         </ul>
@@ -116,7 +116,7 @@ export function Parceiros() {
 
 export function Contato() {
   return (
-    <section id="contato" className="bg-black py-24 md:py-32">
+    <section id="contato" className="bg-marinho py-24 md:py-32">
       <div className="pagina grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
         <div>
           <h2 className="titulo">Comece sua jornada</h2>
@@ -132,7 +132,7 @@ export function Contato() {
             <div>
               <dt className="text-sm text-cinza">Endereço</dt>
               <dd className="mt-1 flex gap-2 text-lg">
-                <MapPin className="mt-1 size-5 shrink-0 text-ponteira" aria-hidden="true" />
+                <MapPin className="mt-1 size-5 shrink-0 text-ouro" aria-hidden="true" />
                 <span>
                   {endereco.rua}, {endereco.bairro}
                   <br />
@@ -186,7 +186,7 @@ export function Contato() {
 
 export function Rodape() {
   return (
-    <footer className="bg-black pb-24 pt-4 sm:pb-12">
+    <footer className="bg-tatame pb-24 pt-4 sm:pb-12">
       <Faixa graus={1} altura={14} />
       <div className="pagina mt-12 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
         <div>

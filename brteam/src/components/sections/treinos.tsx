@@ -17,21 +17,21 @@ const periodos = ["Manhã", "Tarde", "Noite"] as const;
 
 export function Horarios() {
   return (
-    <section id="horarios" className="bg-black py-24 md:py-32">
+    <section id="horarios" className="claro bg-gelo py-24 text-marinho md:py-32">
       <div className="pagina">
         <div className="grid gap-6 md:grid-cols-[1fr_auto] md:items-end">
           <h2 className="titulo">Horários das turmas</h2>
-          <p className="max-w-[40ch] text-cinza md:text-right">
-            <span className="font-display text-2xl font-bold uppercase text-white">{diasDeAula ?? <Pendente />}</span>
+          <p className="max-w-[40ch] text-chumbo md:text-right">
+            <span className="font-display text-2xl font-bold uppercase text-azul">{diasDeAula ?? <Pendente />}</span>
             <br />
             Crianças às 18h e às 19h. Adultos às 6h, às 13h e às 20h. Terça, sexta e fim de semana não tem aula.
           </p>
         </div>
 
-        <div className="mt-12 grid gap-px bg-grafite md:grid-cols-3">
+        <div className="mt-12 grid gap-px bg-marinho/10 md:grid-cols-3">
           {periodos.map((periodo) => (
-            <div key={periodo} className="bg-black p-6 md:p-8 md:first:pl-0">
-              <h3 className="text-cinza">{periodo}</h3>
+            <div key={periodo} className="bg-white p-6 md:p-8 md:first:pl-0">
+              <h3 className="font-semibold text-ouro-escuro">{periodo}</h3>
               <ul className="mt-4 space-y-6">
                 {aulas
                   .filter((a) => a.periodo === periodo)
@@ -41,15 +41,15 @@ export function Horarios() {
                       <p className="mt-2 flex items-center gap-2 text-lg">
                         <span
                           aria-hidden="true"
-                          className={cn("size-2.5 rounded-full", a.turma === "Kids" ? "bg-[#f2c21b]" : "bg-ponteira")}
+                          className={cn("size-2.5 rounded-full", a.turma === "Kids" ? "bg-ouro" : "bg-azul")}
                         />
                         {a.nome}
-                        <span className="text-cinza">· {a.publico}</span>
+                        <span className="text-chumbo">· {a.publico}</span>
                       </p>
                       <a
                         href="#agendar"
                         onClick={() => window.dispatchEvent(new CustomEvent("agendar:aula", { detail: a }))}
-                        className="mt-2 inline-flex min-h-11 items-center gap-1 text-[15px] text-white/80 underline underline-offset-4 decoration-white/40 transition-colors hover:text-white hover:decoration-ponteira"
+                        className="mt-2 inline-flex min-h-11 items-center gap-1 text-[15px] text-azul underline underline-offset-4 decoration-azul/40 transition-colors hover:text-azul-escuro hover:decoration-ouro"
                       >
                         Agendar aula neste horário
                       </a>
@@ -70,7 +70,17 @@ export function Mensalidade() {
     <section aria-labelledby="planos-titulo">
       <PricingSection
         id="planos"
-        className="min-h-0 pb-8"
+        className="min-h-0 bg-marinho pb-8"
+        tema={{
+          linha: "border-grafite",
+          chip: "text-ouro",
+          cartao: "bg-marinho",
+          destaque: "border-2 border-ouro bg-tatame",
+          destaqueTitulo: "text-ouro",
+          destaqueIcone: "text-ouro",
+          destaqueBotao: "bg-azul text-white hover:bg-azul-escuro",
+          cantos: "border-ouro/70",
+        }}
         eyebrow="Mesmo valor para todos"
         title={<span id="planos-titulo">Mensalidade</span>}
         titleClassName="titulo"
@@ -113,7 +123,7 @@ function PrecoComProfessor({ faixa, escuro }: { faixa: string; escuro: boolean }
       rel="noopener noreferrer"
       className={cn(
         "inline-flex min-h-11 items-center gap-1.5 font-sans text-[15px] font-semibold normal-case underline underline-offset-4 transition-colors",
-        escuro ? "text-white decoration-white/40 hover:decoration-ponteira" : "text-black decoration-black/30 hover:decoration-ponteira",
+        escuro ? "text-white decoration-white/40 hover:decoration-ouro" : "text-azul decoration-azul/40 hover:decoration-ouro",
       )}
     >
       <WhatsAppIcon className="size-4" /> Falar com o Bruno
@@ -174,7 +184,7 @@ function TempoDeTreino() {
   ];
   const max = Math.max(...alunos.map((a) => a.aulas));
   return (
-    <div className="border-l-4 border-ponteira bg-algodao p-5 md:p-7">
+    <div className="border-l-4 border-ouro bg-gelo p-5 md:p-7">
       <h4 className="font-display text-2xl font-bold uppercase leading-tight text-black">
         Tempo de matrícula não é tempo de treino
       </h4>
@@ -194,9 +204,9 @@ function TempoDeTreino() {
                 cerca de {a.aulas} aulas no total
               </span>
             </div>
-            <div className="mt-1.5 h-3 bg-black/10">
+            <div className="mt-1.5 h-3 bg-marinho/10">
               <div
-                className="barra-cresce h-full bg-black"
+                className="barra-cresce h-full bg-azul"
                 style={{ width: `${(a.aulas / max) * 100}%` }}
               />
             </div>
@@ -227,7 +237,7 @@ function DecisaoDoProfessor() {
     },
   ];
   return (
-    <div className="mt-10 bg-black p-6 text-white md:p-8">
+    <div className="mt-10 bg-marinho p-6 text-white md:p-8">
       <h4 className="font-display text-3xl font-bold uppercase leading-none">Quem decide é o professor</h4>
       <p className="mt-3 max-w-[70ch] text-cinza">
         As federações (IBJJF e CBJJ) definem idades e tempos mínimos. Dentro disso, o professor avalia cada aluno: a
@@ -236,9 +246,9 @@ function DecisaoDoProfessor() {
       </p>
       <div className="mt-6 grid gap-px bg-grafite md:grid-cols-2">
         {lados.map((l) => (
-          <div key={l.titulo} className="bg-black p-5 md:p-6">
+          <div key={l.titulo} className="bg-marinho p-5 md:p-6">
             <h5 className="flex items-center gap-3 font-display text-2xl font-bold uppercase">
-              <l.icone className="size-6 text-ponteira" aria-hidden="true" />
+              <l.icone className="size-6 text-ouro" aria-hidden="true" />
               {l.titulo}
             </h5>
             <p className="mt-2 text-cinza">{l.texto}</p>
@@ -287,7 +297,7 @@ function ComoGradua() {
             onClick={() => setAba(a.id)}
             className={cn(
               "min-h-11 rounded-sm px-4 text-[15px] font-medium transition-colors active:scale-[0.97]",
-              aba === a.id ? "bg-black text-white" : "text-chumbo hover:text-black",
+              aba === a.id ? "bg-marinho text-white" : "text-chumbo hover:text-marinho",
             )}
           >
             {a.rotulo}
@@ -316,7 +326,7 @@ function ComoGradua() {
               <div className="opacity-35">
                 <div className="relative">
                   <Faixa cor="#ec7a1c" ponteira="#111111" listra="#111111" clara altura={16} />
-                  <span className="absolute inset-x-0 top-1/2 h-0.5 -rotate-6 bg-ponteira" />
+                  <span className="absolute inset-x-0 top-1/2 h-0.5 -rotate-6 bg-erro" />
                 </div>
                 <span className="mt-1 block line-through">Laranja e preta</span>
               </div>
@@ -381,7 +391,7 @@ function ComoGradua() {
 export function TrocaDeFaixa() {
   const { infantil, adulto } = trocaDeFaixa;
   return (
-    <section id="faixas" className="claro bg-algodao py-24 text-black md:py-32">
+    <section id="faixas" className="claro bg-gelo py-24 text-black md:py-32">
       <div className="pagina">
         <div className="grid gap-8 lg:grid-cols-[1fr_1fr] lg:items-end">
           <h2 className="titulo">Troca de faixa</h2>
@@ -407,7 +417,7 @@ export function TrocaDeFaixa() {
           </ul>
         </article>
 
-        <article id="faixas-adultas" className="mt-6 bg-black p-6 text-white md:p-10" aria-labelledby="faixas-adultas-titulo">
+        <article id="faixas-adultas" className="mt-6 bg-marinho p-6 text-white md:p-10" aria-labelledby="faixas-adultas-titulo">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
               <h3 id="faixas-adultas-titulo" className="titulo-md">{adulto.titulo}</h3>
