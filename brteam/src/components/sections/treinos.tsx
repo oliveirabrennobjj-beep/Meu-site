@@ -17,7 +17,7 @@ const periodos = ["Manhã", "Tarde", "Noite"] as const;
 
 export function Horarios() {
   return (
-    <section id="horarios" className="claro bg-gelo py-24 text-marinho md:py-32">
+    <section id="horarios" className="claro bg-gelo py-24 text-black md:py-32">
       <div className="pagina">
         <div className="grid gap-6 md:grid-cols-[1fr_auto] md:items-end">
           <h2 className="titulo">Horários das turmas</h2>
@@ -206,7 +206,7 @@ function TempoDeTreino() {
             </div>
             <div className="mt-1.5 h-3 bg-marinho/10">
               <div
-                className="barra-cresce h-full bg-azul"
+                className="barra-cresce h-full bg-black"
                 style={{ width: `${(a.aulas / max) * 100}%` }}
               />
             </div>
@@ -237,7 +237,7 @@ function DecisaoDoProfessor() {
     },
   ];
   return (
-    <div className="mt-10 bg-marinho p-6 text-white md:p-8">
+    <div className="mt-10 bg-black p-6 text-white md:p-8">
       <h4 className="font-display text-3xl font-bold uppercase leading-none">Quem decide é o professor</h4>
       <p className="mt-3 max-w-[70ch] text-cinza">
         As federações (IBJJF e CBJJ) definem idades e tempos mínimos. Dentro disso, o professor avalia cada aluno: a
@@ -246,7 +246,7 @@ function DecisaoDoProfessor() {
       </p>
       <div className="mt-6 grid gap-px bg-grafite md:grid-cols-2">
         {lados.map((l) => (
-          <div key={l.titulo} className="bg-marinho p-5 md:p-6">
+          <div key={l.titulo} className="bg-black p-5 md:p-6">
             <h5 className="flex items-center gap-3 font-display text-2xl font-bold uppercase">
               <l.icone className="size-6 text-ouro" aria-hidden="true" />
               {l.titulo}
@@ -297,7 +297,7 @@ function ComoGradua() {
             onClick={() => setAba(a.id)}
             className={cn(
               "min-h-11 rounded-sm px-4 text-[15px] font-medium transition-colors active:scale-[0.97]",
-              aba === a.id ? "bg-marinho text-white" : "text-chumbo hover:text-marinho",
+              aba === a.id ? "bg-black text-white" : "text-chumbo hover:text-black",
             )}
           >
             {a.rotulo}
@@ -417,7 +417,7 @@ export function TrocaDeFaixa() {
           </ul>
         </article>
 
-        <article id="faixas-adultas" className="mt-6 bg-marinho p-6 text-white md:p-10" aria-labelledby="faixas-adultas-titulo">
+        <article id="faixas-adultas" className="mt-6 bg-black p-6 text-white md:p-10" aria-labelledby="faixas-adultas-titulo">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
               <h3 id="faixas-adultas-titulo" className="titulo-md">{adulto.titulo}</h3>

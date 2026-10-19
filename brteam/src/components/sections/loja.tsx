@@ -60,7 +60,7 @@ export function Loja() {
   const erro = (k: keyof typeof erros) => (tentou ? erros[k] : undefined);
 
   return (
-    <section id="loja" className="claro bg-white py-24 text-marinho md:py-32">
+    <section id="loja" className="claro bg-white py-24 text-black md:py-32">
       <div className="pagina grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
         <div>
           <h2 className="titulo">Loja BR Team</h2>

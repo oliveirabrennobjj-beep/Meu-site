@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { ChevronLeft, ChevronRight, Expand, MapPin, Navigation, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Expand, Map as IconeMapa, MapPin, Navigation, X } from "lucide-react";
 import { InstagramIcon, WhatsAppIcon } from "@/components/brand-icons";
 import { Faixa } from "@/components/faixa";
-import { academia, contato, endereco, fotos, instagram, linkWhatsApp, mapaEmbed, mapaRota, parceiros } from "@/data/site";
+import { academia, contato, endereco, fotos, instagram, linkWhatsApp, mapaBusca, mapaEmbed, mapaRota, parceiros } from "@/data/site";
 
 function GaleriaAmpliada({ indice, onFechar, onTrocar }: { indice: number | null; onFechar: () => void; onTrocar: (i: number) => void }) {
   const ref = useRef<HTMLDialogElement>(null);
@@ -55,7 +55,7 @@ function GaleriaAmpliada({ indice, onFechar, onTrocar }: { indice: number | null
 export function Galeria() {
   const [aberta, setAberta] = useState<number | null>(null);
   return (
-    <section id="galeria" className="bg-marinho py-24 md:py-32">
+    <section id="galeria" className="bg-black py-24 md:py-32">
       <div className="pagina">
         <h2 className="titulo">No tatame e no pódio</h2>
         <p className="mt-5 max-w-[48ch] text-lg text-cinza">
@@ -73,7 +73,7 @@ export function Galeria() {
                   src={f.src} alt={f.alt} width={f.w} height={f.h} loading="lazy"
                   className="w-full transition duration-700 ease-[var(--ease-saida)] group-hover:scale-[1.06] group-hover:brightness-75"
                 />
-                <span className="absolute right-3 top-3 inline-flex size-10 items-center justify-center rounded-full bg-marinho/85 opacity-0 transition duration-300 group-hover:opacity-100 group-focus-visible:opacity-100">
+                <span className="absolute right-3 top-3 inline-flex size-10 items-center justify-center rounded-full bg-black/75 opacity-0 transition duration-300 group-hover:opacity-100 group-focus-visible:opacity-100">
                   <Expand className="size-4" aria-hidden="true" />
                 </span>
                 <span className="sr-only">Ampliar foto: {f.legenda}</span>
@@ -98,7 +98,7 @@ export function Galeria() {
 
 export function Parceiros() {
   return (
-    <section aria-labelledby="parceiros-titulo" className="claro border-y border-marinho/10 bg-gelo py-14 text-marinho">
+    <section aria-labelledby="parceiros-titulo" className="claro border-y border-black/10 bg-gelo py-14 text-black">
       <div className="pagina grid gap-8 md:grid-cols-[220px_1fr] md:items-center">
         <h2 id="parceiros-titulo" className="titulo-md text-ouro-escuro">Nossos parceiros</h2>
         <ul className="grid grid-cols-2 gap-x-8 gap-y-5 sm:grid-cols-3 lg:grid-cols-5">
@@ -114,9 +114,69 @@ export function Parceiros() {
   );
 }
 
+/*
+  Mapa: começa como um cartão desenhado (sem depender do Google), com o endereço e o botão para abrir
+  no Google Maps. O mapa interativo só carrega se a pessoa pedir. Assim a página abre mais rápido e
+  não mostra erro onde o mapa do Google é bloqueado (prévias de arquivo, navegadores com bloqueio).
+*/
+function CartaoMapa() {
+  const [mostrar, setMostrar] = useState(false);
+  if (mostrar) {
+    return (
+      <div className="surge-rapido min-h-[360px] overflow-hidden border border-white/15 bg-carbono">
+        <iframe
+          title={`Mapa: ${endereco.rua}, ${endereco.cidade}`}
+          src={mapaEmbed}
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+          className="size-full min-h-[360px] border-0"
+        />
+      </div>
+    );
+  }
+  return (
+    <div className="relative flex min-h-[400px] flex-col justify-end overflow-hidden border border-white/15 bg-[#0f1830] p-6 md:p-8">
+      {/* ruas desenhadas */}
+      <svg aria-hidden="true" className="absolute inset-0 size-full" preserveAspectRatio="xMidYMid slice" viewBox="0 0 400 300">
+        <rect width="400" height="300" fill="#0f1830" />
+        <g stroke="#1e2d52" strokeWidth="14" fill="none" strokeLinecap="round">
+          <path d="M-20 70 L420 40" />
+          <path d="M-20 190 C120 170 260 230 420 200" />
+          <path d="M90 -20 L130 320" />
+          <path d="M290 -20 C270 120 320 200 300 320" />
+        </g>
+        <g stroke="#17244a" strokeWidth="6" fill="none">
+          <path d="M-20 130 L420 120" />
+          <path d="M200 -20 L210 320" />
+          <path d="M-20 250 L420 270" />
+          <path d="M40 -20 L20 320" />
+        </g>
+        <circle cx="208" cy="128" r="34" fill="#c9a24a" opacity="0.14" />
+      </svg>
+      <div aria-hidden="true" className="absolute left-1/2 top-[30%] -translate-x-1/2 -translate-y-full">
+        <MapPin className="size-12 fill-ouro text-tatame drop-shadow-[0_8px_16px_rgb(0_0_0/0.6)]" strokeWidth={1.5} />
+      </div>
+      <div className="relative">
+        <p className="font-display text-2xl font-bold uppercase leading-tight">BR Team Jiu-Jitsu</p>
+        <p className="mt-1 text-white/85">
+          {endereco.rua}, {endereco.bairro}, {endereco.cidade}
+        </p>
+        <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+          <a href={mapaBusca} target="_blank" rel="noopener noreferrer" className="botao botao-ouro">
+            <MapPin className="size-5" aria-hidden="true" /> Abrir no Google Maps
+          </a>
+          <button type="button" onClick={() => setMostrar(true)} className="botao botao-contorno text-white">
+            <IconeMapa className="size-5" aria-hidden="true" /> Mostrar o mapa aqui
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function Contato() {
   return (
-    <section id="contato" className="bg-marinho py-24 md:py-32">
+    <section id="contato" className="bg-black py-24 md:py-32">
       <div className="pagina grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
         <div>
           <h2 className="titulo">Comece sua jornada</h2>
@@ -170,15 +230,7 @@ export function Contato() {
           </a>
         </div>
 
-        <div className="min-h-[360px] overflow-hidden border border-grafite bg-carbono">
-          <iframe
-            title={`Mapa: ${endereco.rua}, ${endereco.cidade}`}
-            src={mapaEmbed}
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-            className="size-full min-h-[360px] border-0 grayscale invert-[0.9] hue-rotate-180"
-          />
-        </div>
+        <CartaoMapa />
       </div>
     </section>
   );
@@ -186,7 +238,7 @@ export function Contato() {
 
 export function Rodape() {
   return (
-    <footer className="bg-tatame pb-24 pt-4 sm:pb-12">
+    <footer className="border-t border-white/10 bg-black pb-24 pt-4 sm:pb-12">
       <Faixa graus={1} altura={14} />
       <div className="pagina mt-12 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
         <div>

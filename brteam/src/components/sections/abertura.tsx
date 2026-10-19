@@ -5,7 +5,7 @@ import { academia, contato, fotos, instagram, professor } from "@/data/site";
 
 export function Hero() {
   return (
-    <section id="inicio" className="grao relative isolate flex min-h-[100svh] flex-col justify-end overflow-hidden bg-tatame">
+    <section id="inicio" className="grao relative isolate flex min-h-[100svh] flex-col justify-end overflow-hidden bg-black">
       <img
         src={fotos.hero.src}
         alt={fotos.hero.alt}
@@ -15,8 +15,8 @@ export function Hero() {
         data-parallax="0.3"
         className="absolute inset-0 -z-10 size-full object-cover object-[50%_30%]"
       />
-      <div className="absolute inset-0 -z-10 bg-gradient-to-t from-tatame via-marinho/60 to-marinho/10" />
-      <div className="absolute inset-0 -z-10 bg-gradient-to-r from-tatame/60 via-transparent to-transparent" />
+      <div className="absolute inset-0 -z-10 bg-gradient-to-t from-black via-black/55 to-marinho/20" />
+      <div className="absolute inset-0 -z-10 bg-gradient-to-r from-black/60 via-transparent to-transparent" />
 
       <div className="pagina pt-28">
         <h1 className="font-display font-extrabold uppercase leading-[0.8] tracking-[-0.02em]">
@@ -60,7 +60,7 @@ const valores = [
 
 export function Academia() {
   return (
-    <section id="academia" className="claro bg-gelo py-24 text-marinho md:py-32">
+    <section id="academia" className="claro bg-gelo py-24 text-black md:py-32">
       <div className="pagina grid gap-14 lg:grid-cols-[1fr_1.1fr] lg:gap-20">
         <div>
           <h2 className="titulo">Muito mais que uma academia de Jiu-Jitsu</h2>

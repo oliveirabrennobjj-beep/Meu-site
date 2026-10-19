@@ -91,7 +91,7 @@ export function Opcoes<T extends string>({
         {opcoes.map((o) => (
           <label
             key={o.v}
-            className="inline-flex min-h-11 cursor-pointer items-center rounded-sm border border-black/25 px-4 text-[15px] transition-colors hover:border-black has-[:checked]:border-marinho has-[:checked]:bg-marinho has-[:checked]:text-white has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-azul"
+            className="inline-flex min-h-11 cursor-pointer items-center rounded-sm border border-black/25 px-4 text-[15px] transition-colors hover:border-black has-[:checked]:border-black has-[:checked]:bg-black has-[:checked]:text-white has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-azul"
           >
             <input type="radio" name={nome} value={o.v} checked={valor === o.v} onChange={() => onChange(o.v)} className="sr-only" />
             {o.rotulo}
@@ -181,7 +181,7 @@ export function AgendarAula() {
   const descr = (k: keyof Campos) => (mostrarErro(k) ? `${id(k)}-erro` : undefined);
 
   return (
-    <section id="agendar" className="claro bg-gelo py-24 text-marinho md:py-32">
+    <section id="agendar" className="claro bg-gelo py-24 text-black md:py-32">
       <div className="pagina grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
         <div>
           <h2 className="titulo">Agende sua aula experimental</h2>
@@ -198,7 +198,7 @@ export function AgendarAula() {
                 <span className="flex size-9 shrink-0 items-center justify-center rounded-full border-2 border-ouro font-display text-ouro-escuro text-lg font-bold">
                   {i + 1}
                 </span>
-                <span className="pt-1.5 text-marinho/85">{passo}</span>
+                <span className="pt-1.5 text-black/80">{passo}</span>
               </li>
             ))}
           </ol>
@@ -392,7 +392,7 @@ const perguntas: { p: string; r: ReactNode }[] = [
 
 export function Duvidas() {
   return (
-    <section id="duvidas" className="claro bg-white py-24 text-marinho md:py-32">
+    <section id="duvidas" className="claro bg-white py-24 text-black md:py-32">
       <div className="pagina grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
         <div>
           <h2 className="titulo">Dúvidas frequentes</h2>
@@ -401,14 +401,14 @@ export function Duvidas() {
             href={linkWhatsApp("Olá, BR Team! Tenho uma dúvida.")}
             target="_blank"
             rel="noopener noreferrer"
-            className="botao botao-contorno mt-8 text-marinho"
+            className="botao botao-contorno mt-8 text-black"
           >
             <WhatsAppIcon className="size-5" /> Perguntar no WhatsApp
           </a>
         </div>
-        <div className="border-t border-marinho/15">
+        <div className="border-t border-black/15">
           {perguntas.map((q) => (
-            <details key={q.p} className="group border-b border-marinho/15">
+            <details key={q.p} className="group border-b border-black/15">
               <summary className="flex min-h-16 cursor-pointer list-none items-center justify-between gap-6 py-5 font-display text-2xl font-bold uppercase leading-tight [&::-webkit-details-marker]:hidden">
                 {q.p}
                 <Plus aria-hidden="true" className="size-6 shrink-0 text-ouro-escuro transition-transform duration-200 group-open:rotate-45" />

@@ -3,8 +3,9 @@
 
 /*
   BR Team — direção visual
-  Foto em tela cheia na abertura e seções alternando claro (branco e "gelo", levemente azulado)
-  com azul-marinho. Botões em azul, detalhes em dourado. A faixa preta desenhada, com a ponteira
+  Foto em tela cheia na abertura e seções alternando claro (branco e "gelo", levemente azulado),
+  preto (topo, galeria, contato, rodapé) e azul-marinho (professor, mensalidade).
+  Títulos das seções claras em preto, botões em azul, detalhes em dourado. A faixa preta desenhada, com a ponteira
   vermelha de verdade, continua sendo o elemento de assinatura.
   Tipografia: Barlow Condensed nos títulos (ecoa o letreiro da marca) e Barlow no texto.
 */
@@ -186,7 +187,7 @@ a, button { touch-action: manipulation; }
   .botao-ouro { background: var(--color-ouro); color: #0d2348; }
   .botao-ouro:hover { background: #d8b45e; }
   .botao-contorno:hover { background: #fff; color: #000; border-color: #fff; }
-  .claro .botao-contorno:hover { background: var(--color-marinho); color: #fff; border-color: var(--color-marinho); }
+  .claro .botao-contorno:hover { background: #000; color: #fff; border-color: #000; }
 }
 
 /*
