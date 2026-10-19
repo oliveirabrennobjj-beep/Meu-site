@@ -11,7 +11,7 @@ export function Works() {
           Cada negócio com a sua <span className="italic text-accent">identidade.</span>
         </h2>
         <p className="mx-auto mt-5 max-w-xl text-[17px] leading-relaxed text-soft md:text-[19px]">
-          Lanchonete, hortifruti, barbearia, ótica, cafeteria. Arraste para o lado e veja alguns sites que já saíram daqui.
+          Academia de jiu-jitsu, lanchonete, hortifruti, barbearia, ótica, cafeteria. Arraste para o lado e veja alguns sites que já saíram daqui.
         </p>
       </Reveal>
 
