@@ -19,7 +19,7 @@
 - Lojas de materiais de construção
 - Academias de musculação e de jiu-jitsu
 - "E muitos outros segmentos"
-**Região:** DDD 22 (interior do RJ) — cidades exatas A PREENCHER
+**Região:** Casimiro de Abreu - RJ e região (DDD 22)
 **Decisor:** o próprio dono, geralmente sem tempo e sem conhecimento técnico
 
 ## Problems & Pain Points
@@ -48,7 +48,9 @@
 **CTA padrão:** "Peça seu orçamento pelo WhatsApp"
 
 ## Proof Points
-- A PREENCHER: clientes atendidos, prints de avaliações, antes/depois
+- Sites já entregues (portfólio no site da BN Digital, seção "Últimos trabalhos"): X Cocó Lanches, Parada do Pastel, Ótica Lumera, Grão & Prosa Cafeteria, todos em Casimiro de Abreu
+- Segmentos já atendidos: lanchonete, pastelaria, hortifruti, barbearia, ótica, cafeteria
+- A PREENCHER: prints de avaliações, depoimentos de clientes
 
 ## Goals
 - Gerar conversas no WhatsApp a partir dos posts
