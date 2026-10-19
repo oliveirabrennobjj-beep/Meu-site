@@ -147,8 +147,8 @@ export function Contato() {
               </dd>
             </div>
             <div>
-              <dt className="text-sm text-cinza">Pagamento e estacionamento</dt>
-              <dd className="mt-1 text-lg">Aceitamos Pix. Tem estacionamento e vaga na rua.</dd>
+              <dt className="text-sm text-cinza">Pagamento e bicicleta</dt>
+              <dd className="mt-1 text-lg">Aceitamos Pix. Tem lugar para deixar a bicicleta.</dd>
             </div>
           </dl>
 

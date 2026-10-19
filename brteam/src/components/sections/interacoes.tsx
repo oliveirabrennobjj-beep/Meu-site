@@ -2,8 +2,8 @@ import { useEffect, useId, useRef, useState, type FormEvent, type ReactNode } fr
 import { CheckCircle2, Pencil, Plus } from "lucide-react";
 import { WhatsAppIcon } from "@/components/brand-icons";
 import {
-  academia, aulasDaTurma, contato, endereco, linkWhatsApp, mapaRota, mensalidade, rotuloAula, trocaDeFaixa, turmaPorIdade,
-  type Aula, type TurmaChave,
+  academia, aulasParaIdade, contato, endereco, linkWhatsApp, mapaRota, mensalidade, rotuloAula, trocaDeFaixa, turmaPorIdade,
+  type Aula,
 } from "@/data/site";
 import { cn } from "@/lib/utils";
 
@@ -27,8 +27,8 @@ function validar(c: Campos): Erros {
   const idade = Number(c.idade);
   if (!c.idade || !Number.isInteger(idade) || idade < academia.idadeMinima || idade > 99)
     e.idade = `Informe a idade em anos. Aceitamos alunos a partir de ${academia.idadeMinima} anos.`;
-  else if (!aulasDaTurma(turmaPorIdade(idade).turma).some((a) => rotuloAula(a) === c.horario))
-    e.horario = c.horario ? "Esse horário é de outra turma. Escolha um dos horários abaixo." : "Escolha o horário da aula.";
+  else if (!aulasParaIdade(idade).some((a) => rotuloAula(a) === c.horario))
+    e.horario = c.horario ? "Esse horário não é da turma dessa idade. Escolha um dos horários abaixo." : "Escolha o horário da aula.";
   return e;
 }
 
@@ -42,6 +42,7 @@ function montarMensagem(c: Campos) {
       ? `Aula para: meu filho(a) ${c.nomeAluno.trim()}, ${idade} anos`
       : `Aula para: mim, ${idade} anos`,
     `Horário: ${c.horario}`,
+    ...(c.paraQuem === "filho" ? ["Vou acompanhar a criança na aula experimental."] : []),
     c.experiencia === "nunca" ? "Experiência: nunca treinou" : `Experiência: já treinou, faixa ${c.faixa.toLowerCase()}`,
   ];
   return linhas.join("\n");
@@ -52,9 +53,9 @@ export const estiloCampo =
 
 /** Horários da turma indicada pela idade (usado no agendamento e na loja). */
 export function EscolhaHorario({
-  turma, valor, onChange, erro, nome = "horario",
-}: { turma: TurmaChave | null; valor: string; onChange: (v: string) => void; erro?: string; nome?: string }) {
-  if (!turma) {
+  idade, valor, onChange, erro, nome = "horario",
+}: { idade: number | null; valor: string; onChange: (v: string) => void; erro?: string; nome?: string }) {
+  if (idade === null) {
     return (
       <div>
         <p className="text-sm font-semibold">Horário da aula</p>
@@ -62,6 +63,7 @@ export function EscolhaHorario({
       </div>
     );
   }
+  const turma = turmaPorIdade(idade).turma;
   return (
     <div>
       <Opcoes
@@ -69,9 +71,12 @@ export function EscolhaHorario({
         nome={nome}
         valor={valor}
         onChange={onChange}
-        opcoes={aulasDaTurma(turma).map((a) => ({ v: rotuloAula(a), rotulo: a.turma === "Kids" ? rotuloAula(a) : a.horario }))}
+        opcoes={aulasParaIdade(idade).map((a) => ({ v: rotuloAula(a), rotulo: a.nome === "Adulto" ? a.horario : rotuloAula(a) }))}
       />
       {erro && <p className="mt-1.5 text-sm font-medium text-ponteira-escura">{erro}</p>}
+      {turma === "Kids" && idade >= 10 && (
+        <p className="mt-2 text-sm text-chumbo">Se a criança for grande, o professor pode indicar a turma dos adultos.</p>
+      )}
     </div>
   );
 }
@@ -296,11 +301,17 @@ export function AgendarAula() {
               )}
 
               <EscolhaHorario
-                turma={turma?.turma ?? null}
+                idade={turma ? idadeNum : null}
                 valor={c.horario}
                 onChange={(v) => set("horario", v)}
                 erro={mostrarErro("horario")}
               />
+
+              {c.paraQuem === "filho" && (
+                <p className="surge-rapido rounded-sm bg-algodao p-4 text-[15px]">
+                  <strong>Importante:</strong> na aula experimental, a criança precisa ir acompanhada do responsável.
+                </p>
+              )}
 
               <button type="submit" className="botao botao-primario w-full">
                 <WhatsAppIcon className="size-5" /> Enviar pelo WhatsApp
@@ -338,8 +349,12 @@ const perguntas: { p: string; r: ReactNode }[] = [
     r: "Aceitamos Pix. Para outras formas de pagamento, fale com a gente no WhatsApp.",
   },
   {
-    p: "Tem estacionamento?",
-    r: "Tem. A academia tem estacionamento e também dá para parar na rua.",
+    p: "Tem lugar para deixar a bicicleta?",
+    r: "Tem. A academia tem um lugar para guardar a bicicleta durante o treino. Não temos estacionamento próprio para carros.",
+  },
+  {
+    p: "Criança precisa ir com o responsável na aula experimental?",
+    r: "Precisa. Na aula experimental, a criança vai acompanhada do pai, da mãe ou do responsável, que conhece o professor e o espaço."
   },
   {
     p: "Como funciona a troca de faixa?",

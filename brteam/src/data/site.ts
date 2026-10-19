@@ -12,7 +12,7 @@ export const academia = {
   pilares: ["Corpo", "Mente", "Alma"],
   cidade: "Casimiro de Abreu (RJ)",
   idadeMinima: 4,
-  comodidades: ["Aceitamos Pix", "Estacionamento", "Estacionamento na rua"],
+  comodidades: ["Aceitamos Pix", "Lugar para bicicletas"],
 };
 
 export const professor = { anosComoProfessor: 6, anosNoJiuJitsu: 15 };
@@ -44,21 +44,31 @@ export function linkWhatsApp(mensagem: string = contato.mensagemPadrao) {
 export const instagram = (usuario: string) => `https://instagram.com/${usuario}`;
 
 /*
-  Grade de horários (informada pela academia).
-  Adulto: 6h, 13h e 20h. Kids: 18h e 19h.
-  `diasDeAula: null` aparece como "A confirmar"; troque pelo texto (ex.: "Segunda a sexta").
+  Grade de horários (informada pela academia). Treinos às segundas, quartas e quintas.
+  Kids 1 às 18h (a partir de 4 anos), Kids 2 às 19h (a partir de 10 anos).
+  Adulto às 6h, 13h (turma mista, a partir de 13 anos) e 20h.
 */
 export type TurmaChave = "Kids" | "Adulto";
-export type Aula = { turma: TurmaChave; nome: string; horario: string; periodo: "Manhã" | "Tarde" | "Noite" };
-export const diasDeAula: string | null = null;
+export type Aula = {
+  turma: TurmaChave;
+  nome: string;
+  horario: string;
+  periodo: "Manhã" | "Tarde" | "Noite";
+  publico: string;
+  idadeMin: number;
+};
+export const diasDeAula: string | null = "Segunda, quarta e quinta";
 export const aulas: Aula[] = [
-  { turma: "Adulto", nome: "Adulto", horario: "6h às 7h", periodo: "Manhã" },
-  { turma: "Adulto", nome: "Adulto", horario: "13h às 14h", periodo: "Tarde" },
-  { turma: "Kids", nome: "Kids I", horario: "18h às 19h", periodo: "Noite" },
-  { turma: "Kids", nome: "Kids II", horario: "19h às 20h", periodo: "Noite" },
-  { turma: "Adulto", nome: "Adulto", horario: "20h às 21h", periodo: "Noite" },
+  { turma: "Adulto", nome: "Adulto", horario: "6h às 7h", periodo: "Manhã", publico: "a partir de 13 anos", idadeMin: 13 },
+  { turma: "Adulto", nome: "Turma mista", horario: "13h às 14h", periodo: "Tarde", publico: "a partir de 13 anos", idadeMin: 13 },
+  { turma: "Kids", nome: "Kids 1", horario: "18h às 19h", periodo: "Noite", publico: "crianças a partir de 4 anos", idadeMin: 4 },
+  { turma: "Kids", nome: "Kids 2", horario: "19h às 20h", periodo: "Noite", publico: "crianças a partir de 10 anos", idadeMin: 10 },
+  { turma: "Adulto", nome: "Adulto", horario: "20h às 21h", periodo: "Noite", publico: "a partir de 13 anos", idadeMin: 13 },
 ];
 export const aulasDaTurma = (t: TurmaChave) => aulas.filter((a) => a.turma === t);
+/** Horários que a pessoa pode escolher pela idade (criança de 10 a 12 vê as duas turmas Kids). */
+export const aulasParaIdade = (idade: number) =>
+  aulasDaTurma(turmaPorIdade(idade).turma).filter((a) => idade >= a.idadeMin);
 export const rotuloAula = (a: Aula) => `${a.nome}, ${a.horario}`;
 
 /*
@@ -71,7 +81,7 @@ export type Plano = { nome: string; para: string; preco: string | null; periodo:
 export const planos: Plano[] = [
   {
     nome: "Crianças",
-    para: "Turmas Kids I e Kids II",
+    para: "Turmas Kids 1 e Kids 2",
     preco: mensalidade.valor,
     periodo: mensalidade.periodo,
     inclui: ["Aulas na turma da idade", "Acompanhamento de graus e faixas", "Participação nas colações de grau"],
@@ -132,7 +142,7 @@ export const trocaDeFaixa = {
   `preco: null` aparece como "Consulte".
 */
 export const loja = {
-  cores: ["Branco", "Preto", "Azul"],
+  cores: ["Branco", "Preto"],
   produtos: {
     infantil: { nome: "Kimono infantil", preco: null as string | null },
     adulto: { nome: "Kimono adulto", preco: null as string | null },
@@ -149,14 +159,14 @@ export const parceiros = [
 
 export const fotos = {
   hero: { src: "./fotos/turma-kids.webp", alt: "Turma infantil da BR Team, de kimono, sorrindo no tatame da academia", w: 1080, h: 702 },
-  professor: { src: "./fotos/professor-bruno.webp", alt: "Professor Bruno Ramos, de kimono branco e faixa preta, de braços cruzados", w: 550, h: 981 },
+  professor: { src: "./fotos/professor-bruno.webp", alt: "Professor Bruno Ramos, de kimono branco e faixa preta, de braços cruzados", w: 601, h: 1170 },
   professorFilha: { src: "./fotos/bruno-e-marina.webp", alt: "Bruno Ramos ajoelhado no tatame ao lado da filha Marina, os dois de kimono", w: 356, h: 418 },
   espaco: { src: "./fotos/espaco-tatame.webp", alt: "O tatame da BR Team: salão branco com a bandeira do Brasil, diplomas na parede e o quadro com a marca da academia", w: 904, h: 236 },
-  cumprimento: { src: "./fotos/professor-cumprimento.webp", alt: "Professor Bruno cumprimentando o tatame com uma reverência", w: 300, h: 457 },
+  cumprimento: { src: "./fotos/professor-cumprimento.webp", alt: "Professor Bruno cumprimentando o tatame com uma reverência", w: 520, h: 833 },
   kids: [
-    { src: "./fotos/aluno-faixa-branca.webp", alt: "Aluno faixa branca em posição de guarda, sorrindo", w: 440, h: 955 },
-    { src: "./fotos/treino-meninas.webp", alt: "Duas alunas treinando uma posição de guarda", w: 429, h: 450 },
-    { src: "./fotos/amigos-kids.webp", alt: "Dois alunos abraçados, de kimono preto e faixa cinza", w: 300, h: 368 },
+    { src: "./fotos/aluno-faixa-branca.webp", alt: "Aluno faixa branca em posição de guarda, sorrindo", w: 596, h: 1103 },
+    { src: "./fotos/treino-meninas.webp", alt: "Duas alunas treinando uma posição de guarda", w: 640, h: 653 },
+    { src: "./fotos/amigos-kids.webp", alt: "Dois alunos abraçados, de kimono preto e faixa cinza", w: 560, h: 692 },
   ],
   galeria: [
     { src: "./fotos/podio-rio-winter-open.webp", alt: "Alunos no pódio do Rio Winter International Open 2026 da IBJJF", legenda: "Rio Winter International Open 2026 (IBJJF)", w: 356, h: 474 },
@@ -165,6 +175,12 @@ export const fotos = {
     { src: "./fotos/competicao.webp", alt: "Professor Bruno na arquibancada de um campeonato", legenda: "Dia de campeonato", w: 356, h: 473 },
     { src: "./fotos/troca-de-faixa-turma.webp", alt: "Colação de grau e troca de faixa de uma turma infantil", legenda: "Colação de grau", w: 355, h: 474 },
     { src: "./fotos/turma-tatame.webp", alt: "Turma infantil reunida no tatame com o professor", legenda: "Turma no tatame", w: 356, h: 418 },
+    { src: "./fotos/professores-e-alunos.webp", alt: "Professores e alunos de kimono reunidos no tatame da BR Team", legenda: "Professores e alunos", w: 355, h: 474 },
+    { src: "./fotos/aula-no-tatame.webp", alt: "Alunos enfileirados no tatame, com o professor sentado à frente", legenda: "Aula no tatame", w: 355, h: 472 },
+    { src: "./fotos/kids-kimono-azul.webp", alt: "Turma infantil com kimonos azuis e brancos sentada no tatame", legenda: "Turma kids", w: 356, h: 472 },
+    { src: "./fotos/turma-feminina-kids.webp", alt: "Meninas e meninos da turma kids reunidos na academia", legenda: "Turma kids no tatame", w: 356, h: 474 },
+    { src: "./fotos/adultos-kimono-azul.webp", alt: "Alunos adultos de kimono azul e branco no tatame", legenda: "Turma adulta", w: 356, h: 474 },
+    { src: "./fotos/kids-kimono-branco.webp", alt: "Crianças de kimono branco em pé no tatame com o professor", legenda: "Pequenos no tatame", w: 356, h: 474 },
     { src: "./fotos/turma-geral.webp", alt: "Todas as turmas reunidas no tatame", legenda: "A família BR Team", w: 356, h: 417 },
   ],
 };
@@ -174,8 +190,8 @@ export const fotos = {
   Ajuste `ate` se a idade de corte das turmas Kids for outra.
 */
 export const faixasEtarias: { ate: number; turma: TurmaChave; detalhe: string }[] = [
-  { ate: 12, turma: "Kids", detalhe: "Crianças a partir de 4 anos, turmas às 18h e às 19h. O professor indica Kids I ou Kids II pela idade." },
-  { ate: 120, turma: "Adulto", detalhe: "Turmas às 6h, às 13h e às 20h. Escolha o horário que encaixa na sua rotina." },
+  { ate: 12, turma: "Kids", detalhe: "Kids 1 às 18h (a partir de 4 anos) e Kids 2 às 19h (a partir de 10 anos). Se a criança for grande, o professor pode indicar a turma dos adultos." },
+  { ate: 120, turma: "Adulto", detalhe: "Turmas às 6h, às 13h (mista) e às 20h. Escolha o horário que encaixa na sua rotina." },
 ];
 export function turmaPorIdade(idade: number) {
   return faixasEtarias.find((f) => idade <= f.ate) ?? faixasEtarias[faixasEtarias.length - 1];
