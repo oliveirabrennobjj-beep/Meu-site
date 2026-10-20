@@ -1,0 +1,13 @@
+{
+  "id": "P008",
+  "buys": true,
+  "purchases_first_month": 1,
+  "reason_code": "need",
+  "reason": "Quero mais gente entrando na loja e hoje minha tabela de preço é só uma foto no Instagram. R$ 79 sem fidelidade, sem pagar a criação e com devolução se não vierem as avaliações é barato o bastante pra eu testar por dois meses.",
+  "objection": "Diz que o site e o domínio ficam no meu nome, mas se eu parar de pagar os R$ 79, o site continua no ar ou some? Quem vai manter ele funcionando?",
+  "would_change_my_mind": "Se ficasse claro que, parando de pagar, o site sai do ar mesmo estando no meu nome, eu ficaria só com a placa de R$ 129.",
+  "price_too_cheap": 20,
+  "price_cheap": 50,
+  "price_expensive": 120,
+  "price_too_expensive": 180
+}

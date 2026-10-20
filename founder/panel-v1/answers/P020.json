@@ -1,0 +1,13 @@
+{
+  "id": "P020",
+  "buys": false,
+  "purchases_first_month": 0,
+  "reason_code": "need",
+  "reason": "Meus clientes são da cidade, me conhecem e pedem tudo pelo WhatsApp e pelo Instagram, que já funcionam e não custam nada. Pagar R$ 200 todo mês por um site que ninguém aqui vai abrir não faz sentido pra mim.",
+  "objection": "Já tenho Instagram e WhatsApp, pra que site? R$ 200 por mês pra sempre é mais de R$ 2 mil por ano sem eu ver um pedido a mais por causa disso.",
+  "would_change_my_mind": "Ver uma pizzaria ou lanchonete daqui da região que começou a receber mais pedidos de gente de fora, tipo turista em Barra de São João, por causa do site e das avaliações no Google.",
+  "price_too_cheap": 30,
+  "price_cheap": 60,
+  "price_expensive": 120,
+  "price_too_expensive": 200
+}

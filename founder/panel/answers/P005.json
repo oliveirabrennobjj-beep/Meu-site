@@ -1,0 +1,13 @@
+{
+  "id": "P005",
+  "buys": false,
+  "purchases_first_month": 0,
+  "reason_code": "need",
+  "reason": "Meus clientes são quase todos da cidade e já me conhecem, pedem pelo WhatsApp e veem as coisas no Instagram. Pagar R$ 79 todo mês por um site que ninguém aqui vai abrir não faz sentido pra mim.",
+  "objection": "Já tenho Instagram e WhatsApp, pra que site? E avaliação no Google pra pet shop de bairro, quem é que olha isso aqui em Casimiro?",
+  "would_change_my_mind": "Ver um comércio parecido com o meu aqui na região mostrando que começou a chegar cliente novo de fora por causa do Google. Aí talvez eu pegasse só a placa.",
+  "price_too_cheap": 15,
+  "price_cheap": 30,
+  "price_expensive": 50,
+  "price_too_expensive": 79
+}

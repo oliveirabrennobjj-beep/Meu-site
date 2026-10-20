@@ -1,0 +1,222 @@
+[
+ {
+  "id": "P001",
+  "name": "Omar",
+  "age": 35,
+  "segment": "Pet shop e lojas (roupa, material, variedades)",
+  "income": 82000,
+  "behaviour": "Liga para avaliação",
+  "behaviour_how": "Acompanha a nota no Google e fica chateado com avaliação ruim.",
+  "objection": "Mês fraco fora da temporada de verão, não posso ter mais um boleto",
+  "habit": "o movimento cai muito fora da temporada de verão"
+ },
+ {
+  "id": "P002",
+  "name": "Lena",
+  "age": 26,
+  "segment": "Beleza (barbearia, salão, estética)",
+  "income": 77000,
+  "behaviour": "Desconfiado de vendedor",
+  "behaviour_how": "Já foi enganado por agência ou promessa de internet e ignora DM de desconhecido.",
+  "objection": "Mês fraco fora da temporada de verão, não posso ter mais um boleto",
+  "habit": "seu cardápio ou tabela de preços é uma foto no Instagram"
+ },
+ {
+  "id": "P003",
+  "name": "Sara",
+  "age": 26,
+  "segment": "Comida (pizzaria, lanchonete, açaí, hamburgueria)",
+  "income": 41000,
+  "behaviour": "Caça preço",
+  "behaviour_how": "Compara tudo com o grátis ou com o mais barato do Mercado Livre.",
+  "objection": "Se eu parar de pagar, perco o site?",
+  "habit": "seu cardápio ou tabela de preços é uma foto no Instagram"
+ },
+ {
+  "id": "P004",
+  "name": "Marcus",
+  "age": 26,
+  "segment": "Beleza (barbearia, salão, estética)",
+  "income": 65000,
+  "behaviour": "Tudo pelo Instagram",
+  "behaviour_how": "Vende pelo Instagram e WhatsApp e acha que isso basta.",
+  "objection": "Não conheço essa empresa, tem só 7 seguidores",
+  "habit": "seu cardápio ou tabela de preços é uma foto no Instagram"
+ },
+ {
+  "id": "P005",
+  "name": "Tomas",
+  "age": 52,
+  "segment": "Pet shop e lojas (roupa, material, variedades)",
+  "income": 40000,
+  "behaviour": "Tudo pelo Instagram",
+  "behaviour_how": "Vende pelo Instagram e WhatsApp e acha que isso basta.",
+  "objection": "Já tenho Instagram e WhatsApp, pra que site?",
+  "habit": "seus clientes são quase todos da cidade e conhecidos"
+ },
+ {
+  "id": "P006",
+  "name": "Daniel",
+  "age": 44,
+  "segment": "Comida (pizzaria, lanchonete, açaí, hamburgueria)",
+  "income": 101000,
+  "behaviour": "Caça preço",
+  "behaviour_how": "Compara tudo com o grátis ou com o mais barato do Mercado Livre.",
+  "objection": "Não conheço essa empresa, tem só 7 seguidores",
+  "habit": "seu cardápio ou tabela de preços é uma foto no Instagram"
+ },
+ {
+  "id": "P007",
+  "name": "Nadia",
+  "age": 32,
+  "segment": "Beleza (barbearia, salão, estética)",
+  "income": 82000,
+  "behaviour": "Desconfiado de vendedor",
+  "behaviour_how": "Já foi enganado por agência ou promessa de internet e ignora DM de desconhecido.",
+  "objection": "Já tenho Instagram e WhatsApp, pra que site?",
+  "habit": "você responde o WhatsApp do comércio no próprio celular"
+ },
+ {
+  "id": "P008",
+  "name": "Idris",
+  "age": 34,
+  "segment": "Pet shop e lojas (roupa, material, variedades)",
+  "income": 58000,
+  "behaviour": "Quer crescer",
+  "behaviour_how": "Está tentando aumentar o movimento e testa coisas novas se forem baratas.",
+  "objection": "Se eu parar de pagar, perco o site?",
+  "habit": "seu cardápio ou tabela de preços é uma foto no Instagram"
+ },
+ {
+  "id": "P009",
+  "name": "Rohan",
+  "age": 53,
+  "segment": "Pet shop e lojas (roupa, material, variedades)",
+  "income": 114000,
+  "behaviour": "Desconfiado de vendedor",
+  "behaviour_how": "Já foi enganado por agência ou promessa de internet e ignora DM de desconhecido.",
+  "objection": "Já tenho Instagram e WhatsApp, pra que site?",
+  "habit": "o movimento cai muito fora da temporada de verão"
+ },
+ {
+  "id": "P010",
+  "name": "Jonah",
+  "age": 39,
+  "segment": "Comida (pizzaria, lanchonete, açaí, hamburgueria)",
+  "income": 101000,
+  "behaviour": "Desconfiado de vendedor",
+  "behaviour_how": "Já foi enganado por agência ou promessa de internet e ignora DM de desconhecido.",
+  "objection": "Ninguém aqui na cidade procura comércio pelo Google",
+  "habit": "seu cardápio ou tabela de preços é uma foto no Instagram"
+ },
+ {
+  "id": "P011",
+  "name": "Levi",
+  "age": 47,
+  "segment": "Pet shop e lojas (roupa, material, variedades)",
+  "income": 42000,
+  "behaviour": "Tudo pelo Instagram",
+  "behaviour_how": "Vende pelo Instagram e WhatsApp e acha que isso basta.",
+  "objection": "Se eu parar de pagar, perco o site?",
+  "habit": "o movimento cai muito fora da temporada de verão"
+ },
+ {
+  "id": "P012",
+  "name": "Aria",
+  "age": 29,
+  "segment": "Beleza (barbearia, salão, estética)",
+  "income": 79000,
+  "behaviour": "Sem tempo",
+  "behaviour_how": "Trabalha no balcão o dia todo, responde mensagem tarde da noite, odeia coisa que dá trabalho.",
+  "objection": "R$ 200 por mês é caro para o meu movimento",
+  "habit": "você responde o WhatsApp do comércio no próprio celular"
+ },
+ {
+  "id": "P013",
+  "name": "Bilal",
+  "age": 30,
+  "segment": "Comida (pizzaria, lanchonete, açaí, hamburgueria)",
+  "income": 41000,
+  "behaviour": "Caça preço",
+  "behaviour_how": "Compara tudo com o grátis ou com o mais barato do Mercado Livre.",
+  "objection": "Mês fraco fora da temporada de verão, não posso ter mais um boleto",
+  "habit": "o movimento cai muito fora da temporada de verão"
+ },
+ {
+  "id": "P014",
+  "name": "Nico",
+  "age": 55,
+  "segment": "Comida (pizzaria, lanchonete, açaí, hamburgueria)",
+  "income": 54000,
+  "behaviour": "Sem tempo",
+  "behaviour_how": "Trabalha no balcão o dia todo, responde mensagem tarde da noite, odeia coisa que dá trabalho.",
+  "objection": "Mês fraco fora da temporada de verão, não posso ter mais um boleto",
+  "habit": "o movimento cai muito fora da temporada de verão"
+ },
+ {
+  "id": "P015",
+  "name": "Hamza",
+  "age": 29,
+  "segment": "Comida (pizzaria, lanchonete, açaí, hamburgueria)",
+  "income": 76000,
+  "behaviour": "Liga para avaliação",
+  "behaviour_how": "Acompanha a nota no Google e fica chateado com avaliação ruim.",
+  "objection": "Já tenho Instagram e WhatsApp, pra que site?",
+  "habit": "seus clientes são quase todos da cidade e conhecidos"
+ },
+ {
+  "id": "P016",
+  "name": "Jade",
+  "age": 58,
+  "segment": "Comida (pizzaria, lanchonete, açaí, hamburgueria)",
+  "income": 91000,
+  "behaviour": "Quer crescer",
+  "behaviour_how": "Está tentando aumentar o movimento e testa coisas novas se forem baratas.",
+  "objection": "Já tenho Instagram e WhatsApp, pra que site?",
+  "habit": "seu cardápio ou tabela de preços é uma foto no Instagram"
+ },
+ {
+  "id": "P017",
+  "name": "Declan",
+  "age": 31,
+  "segment": "Pet shop e lojas (roupa, material, variedades)",
+  "income": 47000,
+  "behaviour": "Sem tempo",
+  "behaviour_how": "Trabalha no balcão o dia todo, responde mensagem tarde da noite, odeia coisa que dá trabalho.",
+  "objection": "Já tenho Instagram e WhatsApp, pra que site?",
+  "habit": "seu cardápio ou tabela de preços é uma foto no Instagram"
+ },
+ {
+  "id": "P018",
+  "name": "Nora",
+  "age": 35,
+  "segment": "Beleza (barbearia, salão, estética)",
+  "income": 50000,
+  "behaviour": "Tudo pelo Instagram",
+  "behaviour_how": "Vende pelo Instagram e WhatsApp e acha que isso basta.",
+  "objection": "Já tenho Instagram e WhatsApp, pra que site?",
+  "habit": "seu cardápio ou tabela de preços é uma foto no Instagram"
+ },
+ {
+  "id": "P019",
+  "name": "Sienna",
+  "age": 48,
+  "segment": "Beleza (barbearia, salão, estética)",
+  "income": 69000,
+  "behaviour": "Quer crescer",
+  "behaviour_how": "Está tentando aumentar o movimento e testa coisas novas se forem baratas.",
+  "objection": "Mês fraco fora da temporada de verão, não posso ter mais um boleto",
+  "habit": "seus clientes são quase todos da cidade e conhecidos"
+ },
+ {
+  "id": "P020",
+  "name": "Hana",
+  "age": 50,
+  "segment": "Comida (pizzaria, lanchonete, açaí, hamburgueria)",
+  "income": 82000,
+  "behaviour": "Tudo pelo Instagram",
+  "behaviour_how": "Vende pelo Instagram e WhatsApp e acha que isso basta.",
+  "objection": "Já tenho Instagram e WhatsApp, pra que site?",
+  "habit": "seus clientes são quase todos da cidade e conhecidos"
+ }
+]

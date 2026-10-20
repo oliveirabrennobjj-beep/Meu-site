@@ -1,0 +1,20 @@
+{
+  "business": "BN Digital",
+  "unit": "cliente ativo no mês",
+  "price": 79,
+  "variable": [
+    {"label": "Domínio .com.br (R$ 40/ano ÷ 12) [estimativa]", "cost": 3.33},
+    {"label": "Placa NFC (custo ~R$ 30 ÷ 12 meses) [estimativa]", "cost": 2.5},
+    {"label": "Hospedagem estática (GitHub Pages/Cloudflare, grátis) [estimativa]", "cost": 0}
+  ],
+  "fixed_monthly": [
+    {"label": "Assinatura Claude (~US$ 20) [estimativa]", "cost": 110}
+  ],
+  "startup": [
+    {"label": "5 placas de demonstração (5 × R$ 30) [estimativa]", "cost": 150},
+    {"label": "Impulsionar posts no Instagram [estimativa]", "cost": 100}
+  ],
+  "days_per_month": 1,
+  "plan_per_day": 15,
+  "ramp_per_day": [1, 2, 4, 6, 8, 10, 11, 12, 13, 14, 15, 15]
+}

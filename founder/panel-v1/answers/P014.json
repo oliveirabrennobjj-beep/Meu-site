@@ -1,0 +1,13 @@
+{
+  "id": "P014",
+  "buys": false,
+  "purchases_first_month": 0,
+  "reason_code": "price",
+  "reason": "R$ 200 todo mês é mais um boleto fixo, e fora do verão tem semana que a pizzaria mal paga a luz. Meu cliente já me acha no Instagram e pede pelo WhatsApp, não vejo esse site trazendo gente nova.",
+  "objection": "Pagar R$ 2.400 por ano pra manter um site no ar quando o movimento cai metade do ano, sem saber se vai entrar um pedido a mais por causa dele.",
+  "would_change_my_mind": "Se a mensalidade fosse bem menor, tipo R$ 50 a R$ 80, ou se desse pra pagar só na temporada e pausar no inverno sem multa.",
+  "price_too_cheap": 20,
+  "price_cheap": 50,
+  "price_expensive": 100,
+  "price_too_expensive": 180
+}

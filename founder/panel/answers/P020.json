@@ -1,0 +1,13 @@
+{
+  "id": "P020",
+  "buys": false,
+  "purchases_first_month": 0,
+  "reason_code": "need",
+  "reason": "Meus clientes são da cidade, me conhecem e pedem direto no WhatsApp ou pelo Instagram. Pagar R$ 79 todo mês por um site que ninguém aqui vai abrir não faz sentido pra mim.",
+  "objection": "Já tenho Instagram e WhatsApp, pra que site? Avaliação no Google é coisa de turista, meu povo já sabe onde eu fico.",
+  "would_change_my_mind": "Ver um vizinho do mesmo ramo aqui de Barra ou Casimiro mostrando que passou a receber pedido novo de gente de fora por causa disso. Aí talvez pegasse só a placa de R$ 129.",
+  "price_too_cheap": 20,
+  "price_cheap": 35,
+  "price_expensive": 60,
+  "price_too_expensive": 90
+}

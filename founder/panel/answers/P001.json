@@ -1,0 +1,13 @@
+{
+  "id": "P001",
+  "buys": true,
+  "purchases_first_month": 1,
+  "reason_code": "need",
+  "reason": "Eu vivo de olho na nota do Google, então uma placa no balcão pra cliente satisfeito avaliar na hora me interessa. Mas mensalidade não: pego só a placa de R$ 129, paga uma vez, e o site fica pra depois do verão se a placa funcionar.",
+  "objection": "Mais um boleto todo mês no meio da baixa temporada, e não conheço esse rapaz nem sei se a placa funciona mesmo ou se o cliente vai usar.",
+  "would_change_my_mind": "Ver a placa funcionando no balcão de outro comércio aqui da região, com o número de avaliações antes e depois, aí eu pensaria no plano mensal com o site.",
+  "price_too_cheap": 20,
+  "price_cheap": 45,
+  "price_expensive": 99,
+  "price_too_expensive": 150
+}

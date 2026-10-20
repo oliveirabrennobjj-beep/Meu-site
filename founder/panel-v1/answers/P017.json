@@ -1,0 +1,13 @@
+{
+  "id": "P017",
+  "buys": false,
+  "purchases_first_month": 0,
+  "reason_code": "need",
+  "reason": "Meu cliente já me acha no Instagram e me chama no WhatsApp, e a tabela de preço já tá lá na foto. R$ 200 todo mês pra um site que quase ninguém da rua vai abrir não fecha a conta pra mim.",
+  "objection": "Pra que site se todo mundo aqui já me acha pelo Instagram? É mais uma mensalidade pra uma coisa que eu nem sei se vai trazer cliente.",
+  "would_change_my_mind": "Se a mensalidade fosse bem mais baixa, tipo uns R$ 50, e eu visse outra loja daqui ganhando cliente novo pelo Google por causa disso.",
+  "price_too_cheap": 20,
+  "price_cheap": 50,
+  "price_expensive": 100,
+  "price_too_expensive": 180
+}

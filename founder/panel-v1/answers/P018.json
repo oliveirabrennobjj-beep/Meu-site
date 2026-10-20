@@ -1,0 +1,13 @@
+{
+  "id": "P018",
+  "buys": false,
+  "purchases_first_month": 0,
+  "reason_code": "need",
+  "reason": "Minhas clientes me acham pelo Instagram e marcam pelo WhatsApp, a agenda já enche assim. Pagar R$ 200 todo mês pra um site que ninguém vai abrir não faz sentido pra mim.",
+  "objection": "Já tenho Instagram e WhatsApp, pra que site? E R$ 200 por mês pra sempre, somando dá R$ 2.400 por ano, é muito pra uma coisa que eu nem sei se traz cliente.",
+  "would_change_my_mind": "Ver outro salão aqui da região que ganhou mais clientes novas por causa disso, e uma mensalidade bem menor, tipo uns R$ 50, ou só a placa de avaliação do Google sem mensalidade.",
+  "price_too_cheap": 20,
+  "price_cheap": 50,
+  "price_expensive": 100,
+  "price_too_expensive": 180
+}

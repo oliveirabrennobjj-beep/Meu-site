@@ -1,0 +1,13 @@
+{
+  "id": "P006",
+  "buys": false,
+  "purchases_first_month": 0,
+  "reason_code": "trust",
+  "reason": "Não conheço essa BN Digital, o perfil tem 7 seguidores e o site de exemplo é um github.io, não parece empresa estabelecida. Meu cardápio no Instagram e o pedido pelo WhatsApp já funcionam de graça, e placa NFC de avaliação eu acho no Mercado Livre por uns 40 reais.",
+  "objection": "Pagar R$ 79 todo mês, quase R$ 950 por ano, pra uma coisa que eu faço de graça no Instagram, e com um cara que eu nunca ouvi falar e que pode sumir daqui a três meses.",
+  "would_change_my_mind": "Ver uma pizzaria ou lanchonete aqui de Casimiro ou Barra que eu conheço usando a placa e me dizendo que os pedidos aumentaram, e talvez pegar só a placa por bem menos que R$ 129.",
+  "price_too_cheap": 15,
+  "price_cheap": 30,
+  "price_expensive": 50,
+  "price_too_expensive": 80
+}

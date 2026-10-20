@@ -1,0 +1,13 @@
+{
+  "id": "P012",
+  "buys": true,
+  "purchases_first_month": 1,
+  "reason_code": "convenience",
+  "reason": "Eu pegaria só a placa de R$ 129, pagando uma vez: ele instala, eu não preciso fazer nada e cliente de salão adora deixar avaliação quando sai satisfeita. Mensalidade de site eu não pego agora, meu Instagram e o WhatsApp já resolvem.",
+  "objection": "Mais uma mensalidade todo mês para um site que talvez ninguém abra, já que minhas clientes marcam tudo pelo WhatsApp. E não conheço esse rapaz, preciso ver alguém daqui que já usa.",
+  "would_change_my_mind": "Para assinar a mensalidade: ver um salão ou barbearia da região mostrando que o site trouxe agendamento novo pelo WhatsApp, não só avaliação.",
+  "price_too_cheap": 20,
+  "price_cheap": 49,
+  "price_expensive": 99,
+  "price_too_expensive": 150
+}

@@ -1,0 +1,13 @@
+{
+  "id": "P006",
+  "buys": false,
+  "purchases_first_month": 0,
+  "reason_code": "price",
+  "reason": "R$ 200 todo mês pra manter um site? Meu cardápio já tá no Instagram de graça e o pessoal pede pelo WhatsApp. Plaquinha NFC eu acho no Mercado Livre por uns 30 reais.",
+  "objection": "Pagar R$ 2.400 por ano pra uma empresa que tem 7 seguidores e eu nunca ouvi falar. E se o cara some, eu fico sem site e sem dinheiro.",
+  "would_change_my_mind": "Mensalidade bem menor, tipo R$ 50, sem fidelidade, e ver outro comércio aqui da Barra ou de Casimiro que eu conheço usando e vendendo mais por causa disso.",
+  "price_too_cheap": 20,
+  "price_cheap": 40,
+  "price_expensive": 80,
+  "price_too_expensive": 150
+}

@@ -1,0 +1,13 @@
+{
+  "id": "P008",
+  "buys": false,
+  "purchases_first_month": 0,
+  "reason_code": "price",
+  "reason": "Gosto da ideia da placa pra pedir avaliação no balcão, mas R$ 200 todo mês pra sempre é muito pra quem já resolve quase tudo pelo Instagram e pelo WhatsApp de graça. Coisa nova eu testo se for barata, e isso aqui dá quase R$ 2.800 no primeiro ano.",
+  "objection": "Se eu parar de pagar os R$ 200, o site sai do ar e eu perco tudo? Fico preso pagando mensalidade pra sempre e a placa vira enfeite.",
+  "would_change_my_mind": "Mensalidade bem menor, tipo R$ 60 a R$ 80, e a garantia por escrito de que o site e o domínio ficam no meu nome se eu cancelar.",
+  "price_too_cheap": 30,
+  "price_cheap": 60,
+  "price_expensive": 120,
+  "price_too_expensive": 200
+}

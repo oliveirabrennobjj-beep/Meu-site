@@ -1,0 +1,13 @@
+{
+  "id": "P003",
+  "buys": false,
+  "purchases_first_month": 0,
+  "reason_code": "price",
+  "reason": "Gostei que o site fica no meu nome e que dá pra cancelar, mas R$ 79 todo mês pra quem já tem cardápio no Instagram e perfil grátis no Google pesa. E a plaquinha NFC de avaliação eu acho no Mercado Livre por uns R$ 30, então nem os R$ 129 da placa sozinha eu pago.",
+  "objection": "Pagar mensalidade por uma coisa que eu já faço de graça com Instagram, WhatsApp e o perfil do Google, sem saber se vai entrar pedido a mais de verdade.",
+  "would_change_my_mind": "Ver uma lanchonete aqui da região mostrando quanto pedido a mais entrou pelo site, ou a mensalidade cair pra uns R$ 30-40.",
+  "price_too_cheap": 15,
+  "price_cheap": 30,
+  "price_expensive": 60,
+  "price_too_expensive": 100
+}

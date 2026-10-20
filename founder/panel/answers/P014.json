@@ -1,0 +1,13 @@
+{
+  "id": "P014",
+  "buys": false,
+  "purchases_first_month": 0,
+  "reason_code": "price",
+  "reason": "Fora do verão o caixa aperta e eu não quero mais uma mensalidade todo mês, mesmo podendo pausar. Meus clientes já me acham no Instagram e no WhatsApp, então não vejo por que pagar R$ 79 todo mês por um site.",
+  "objection": "Mais um boleto fixo num mês fraco, e no fim isso vai me dar trabalho no balcão, ficar pedindo pro cliente encostar o celular na placa.",
+  "would_change_my_mind": "Se um vizinho daqui, tipo outra lanchonete ou pizzaria, me mostrasse que a placa trouxe mais pedido de verdade, aí talvez eu comprasse só a placa de R$ 129 antes da temporada.",
+  "price_too_cheap": 20,
+  "price_cheap": 39,
+  "price_expensive": 79,
+  "price_too_expensive": 120
+}

@@ -1,0 +1,13 @@
+{
+  "id": "P019",
+  "buys": false,
+  "purchases_first_month": 0,
+  "reason_code": "price",
+  "reason": "Meus clientes são da cidade, já me conhecem e marcam pelo WhatsApp. R$ 200 por mês fixo, para sempre, é mais um boleto que pesa justo nos meses fracos fora do verão, e não vejo isso trazendo cliente novo suficiente para se pagar.",
+  "objection": "É uma mensalidade que não acaba. No inverno o salão fica vazio e eu não consigo garantir R$ 200 todo mês por um site que meus clientes nem precisam para me achar.",
+  "would_change_my_mind": "Pagar só a placa NFC e o site uma vez, sem mensalidade, ou uma mensalidade bem menor (uns R$ 50) que eu possa pausar na baixa temporada.",
+  "price_too_cheap": 20,
+  "price_cheap": 50,
+  "price_expensive": 100,
+  "price_too_expensive": 180
+}

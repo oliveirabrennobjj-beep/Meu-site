@@ -1,0 +1,13 @@
+{
+  "id": "P011",
+  "buys": false,
+  "purchases_first_month": 0,
+  "reason_code": "price",
+  "reason": "Meus clientes já me acham pelo Instagram e fecham tudo no WhatsApp, então não vejo pra que pagar R$ 200 todo mês por um site. Fora da temporada o movimento cai muito e essa mensalidade pesa no meu bolso o ano inteiro.",
+  "objection": "Se eu parar de pagar, perco o site? Pagar R$ 200 pra sempre por uma coisa que nem é minha não faz sentido pra mim.",
+  "would_change_my_mind": "Se o site ficasse meu mesmo parando de pagar, com mensalidade bem menor, tipo R$ 50 a 80, ou pagando só na temporada de verão.",
+  "price_too_cheap": 30,
+  "price_cheap": 60,
+  "price_expensive": 120,
+  "price_too_expensive": 200
+}

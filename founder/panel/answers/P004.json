@@ -1,0 +1,13 @@
+{
+  "id": "P004",
+  "buys": false,
+  "purchases_first_month": 0,
+  "reason_code": "trust",
+  "reason": "Minha barbearia já enche pelo Instagram e o cliente marca pelo WhatsApp, não sinto falta de site. E não vou passar mensalidade pra um perfil com 7 seguidores que eu nunca vi, mesmo com garantia.",
+  "objection": "Não conheço essa empresa, tem só 7 seguidores. Quem me garante que daqui a 3 meses o cara ainda existe pra devolver o dinheiro ou manter o site no ar?",
+  "would_change_my_mind": "Ver a placa funcionando numa barbearia ou salão aqui da cidade que eu conheço, com o dono falando que as avaliações subiram. Aí eu talvez pegasse só a placa de R$ 129.",
+  "price_too_cheap": 20,
+  "price_cheap": 40,
+  "price_expensive": 79,
+  "price_too_expensive": 120
+}

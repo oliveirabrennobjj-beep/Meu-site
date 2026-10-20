@@ -1,0 +1,82 @@
+{
+  "business": "BN Digital: site simples + placa NFC de avaliação Google, alugado por mês, para pequenos comércios",
+  "target": "Donos de pequenos comércios de rua em Casimiro de Abreu e Barra de São João (RJ) que hoje só usam Instagram e WhatsApp (renda do dono em reais por ano; ex.: $48,000 = R$ 48 mil por ano, cerca de R$ 4 mil por mês)",
+  "where": "Casimiro de Abreu e Barra de São João, Região dos Lagos, RJ",
+  "age": [
+    24,
+    60
+  ],
+  "segments": [
+    {
+      "name": "Comida (pizzaria, lanchonete, açaí, hamburgueria)",
+      "share": 0.4,
+      "income": [
+        36000,
+        108000
+      ]
+    },
+    {
+      "name": "Beleza (barbearia, salão, estética)",
+      "share": 0.3,
+      "income": [
+        30000,
+        84000
+      ]
+    },
+    {
+      "name": "Pet shop e lojas (roupa, material, variedades)",
+      "share": 0.3,
+      "income": [
+        36000,
+        120000
+      ]
+    }
+  ],
+  "behaviours": [
+    {
+      "name": "Tudo pelo Instagram",
+      "share": 0.25,
+      "how": "Vende pelo Instagram e WhatsApp e acha que isso basta."
+    },
+    {
+      "name": "Desconfiado de vendedor",
+      "share": 0.2,
+      "how": "Já foi enganado por agência ou promessa de internet e ignora DM de desconhecido."
+    },
+    {
+      "name": "Caça preço",
+      "share": 0.15,
+      "how": "Compara tudo com o grátis ou com o mais barato do Mercado Livre."
+    },
+    {
+      "name": "Quer crescer",
+      "share": 0.15,
+      "how": "Está tentando aumentar o movimento e testa coisas novas se forem baratas."
+    },
+    {
+      "name": "Sem tempo",
+      "share": 0.15,
+      "how": "Trabalha no balcão o dia todo, responde mensagem tarde da noite, odeia coisa que dá trabalho."
+    },
+    {
+      "name": "Liga para avaliação",
+      "share": 0.1,
+      "how": "Acompanha a nota no Google e fica chateado com avaliação ruim."
+    }
+  ],
+  "objections": [
+    "Já tenho Instagram e WhatsApp, pra que site?",
+    "R$ 200 por mês é caro para o meu movimento",
+    "Não conheço essa empresa, tem só 7 seguidores",
+    "Se eu parar de pagar, perco o site?",
+    "Ninguém aqui na cidade procura comércio pelo Google",
+    "Mês fraco fora da temporada de verão, não posso ter mais um boleto"
+  ],
+  "habits": [
+    "o movimento cai muito fora da temporada de verão",
+    "você responde o WhatsApp do comércio no próprio celular",
+    "seus clientes são quase todos da cidade e conhecidos",
+    "você já recebeu mensagem de gente oferecendo tráfego pago",
+    "seu cardápio ou tabela de preços é uma foto no Instagram"
+  ]
+}

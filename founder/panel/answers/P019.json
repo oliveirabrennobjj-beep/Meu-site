@@ -1,0 +1,13 @@
+{
+  "id": "P019",
+  "buys": true,
+  "purchases_first_month": 1,
+  "reason_code": "price",
+  "reason": "Mensalidade agora fora do verão não dá, mais um boleto eu não assumo. Mas a placa avulsa de R$ 129, paga uma vez só, eu testo no balcão do salão, é barato e não fica pesando todo mês.",
+  "objection": "Minhas clientes são quase todas daqui e já me conhecem, então não sei se avaliação no Google e site vão trazer gente nova de verdade ou se vou só pagar R$ 79 todo mês pra quem já vem de qualquer jeito.",
+  "would_change_my_mind": "Ver outro salão ou barbearia da região mostrando que ganhou clientes novos pelo Google com isso; aí eu passaria da placa para o plano mensal.",
+  "price_too_cheap": 20,
+  "price_cheap": 40,
+  "price_expensive": 79,
+  "price_too_expensive": 120
+}

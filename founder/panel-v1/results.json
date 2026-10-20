@@ -1,0 +1,137 @@
+{
+ "business": "BN Digital: site simples + placa NFC de avaliação Google, alugado por mês, para pequenos comércios",
+ "seed": 351425,
+ "dealt": 20,
+ "answered": 20,
+ "skipped": [],
+ "buys": 0,
+ "passes": 20,
+ "buy_rate": 0.0,
+ "by_segment": [
+  [
+   "Pet shop e lojas (roupa, material, variedades)",
+   6,
+   0.0
+  ],
+  [
+   "Beleza (barbearia, salão, estética)",
+   6,
+   0.0
+  ],
+  [
+   "Comida (pizzaria, lanchonete, açaí, hamburgueria)",
+   8,
+   0.0
+  ]
+ ],
+ "by_behaviour": [
+  [
+   "Liga para avaliação",
+   2,
+   0.0
+  ],
+  [
+   "Desconfiado de vendedor",
+   4,
+   0.0
+  ],
+  [
+   "Caça preço",
+   3,
+   0.0
+  ],
+  [
+   "Tudo pelo Instagram",
+   5,
+   0.0
+  ],
+  [
+   "Quer crescer",
+   3,
+   0.0
+  ],
+  [
+   "Sem tempo",
+   3,
+   0.0
+  ]
+ ],
+ "by_income": [
+  [
+   "$82,000 and up",
+   7,
+   0.0
+  ],
+  [
+   "$54,000 to $82,000",
+   7,
+   0.0
+  ],
+  [
+   "under $54,000",
+   6,
+   0.0
+  ]
+ ],
+ "why_not": [
+  [
+   "price",
+   11,
+   [
+    "Gosto da ideia da placa pra puxar avaliação no Google, isso me interessa de verdade. Mas R$ 200 todo mês pra sempre, num pet shop que fica parado fora do verão, é mais um boleto que eu não consigo segurar agora.",
+    "Fora do verão o movimento cai e eu não consigo assumir mais um boleto fixo de R$ 200 todo mês só pra ter site, meus clientes já me acham no Instagram e marcam pelo WhatsApp."
+   ],
+   [
+    "P001",
+    "P002"
+   ]
+  ],
+  [
+   "need",
+   8,
+   [
+    "Meus clientes me acham pelo Instagram e marcam pelo WhatsApp, a agenda já enche assim. Pagar R$ 200 todo mês por um site que ninguém vai abrir não faz sentido pra mim agora.",
+    "Meus clientes são da cidade, me conhecem e me chamam no WhatsApp ou veem a loja no Instagram. Pagar R$ 200 todo mês por um site que ninguém aqui vai abrir não faz sentido pra mim."
+   ],
+   [
+    "P004",
+    "P005"
+   ]
+  ],
+  [
+   "trust",
+   1,
+   [
+    "Já paguei agência que prometeu mundos e fundos e sumiu. Meu cliente me acha pelo Instagram e chama no WhatsApp; não vejo um site mudando meu movimento, ainda mais fora do verão, e R$ 200 todo mês pra sempre pesa quando a loja está parada."
+   ],
+   [
+    "P009"
+   ]
+  ]
+ ],
+ "why_yes": [],
+ "flip": [
+  "Pagar só a criação e a placa, sem mensalidade fixa (ou uma mensalidade bem menor, tipo R$ 60 a 80), e começar perto do verão quando o caixa entra.",
+  "Mensalidade bem menor ou sem fidelidade, com a placa NFC funcionando primeiro e ver em outro salão daqui que deu mais avaliação e cliente de verdade.",
+  "Pagar uma vez só pra criar o site e a placa, com o site ficando meu, e mensalidade de no máximo uns R$ 30 a R$ 50 ou só pagar quando eu pedir atualização.",
+  "Ver a placa funcionando em outra barbearia da cidade e provar que trouxe mais avaliação no Google e cliente novo, com mensalidade bem menor, tipo R$ 50 a R$ 80.",
+  "Ver uma loja aqui de Casimiro ou Barra parecida com a minha mostrando que ganhou cliente novo de fora por causa do site e das avaliações no Google, e uma mensalidade bem menor ou só a placa sem mensalidade.",
+  "Mensalidade bem menor, tipo R$ 50, sem fidelidade, e ver outro comércio aqui da Barra ou de Casimiro que eu conheço usando e vendendo mais por causa disso.",
+  "Ver outro salão ou barbearia daqui da região usando há uns meses e me mostrando que ganhou mais avaliação no Google e cliente novo por causa disso, e poder cancelar a mensalidade quando quiser sem multa.",
+  "Mensalidade bem menor, tipo R$ 60 a R$ 80, e a garantia por escrito de que o site e o domínio ficam no meu nome se eu cancelar.",
+  "Ver o site e a placa funcionando numa loja conhecida aqui de Barra de São João ou Casimiro, com o dono me dizendo que trouxe cliente, e poder cancelar quando quiser sem multa.",
+  "Ver com meus olhos uma pizzaria ou lanchonete daqui de Casimiro ou Barra que usa e diga que ganhou pedido por causa disso, e poder testar um mês sem ficar preso na mensalidade.",
+  "Se o site ficasse meu mesmo parando de pagar, com mensalidade bem menor, tipo R$ 50 a 80, ou pagando só na temporada de verão.",
+  "Uma mensalidade bem menor, tipo R$ 80 a R$ 100, ou ver outro salão daqui mostrando que ganhou clientes e avaliações no Google por causa disso.",
+  "Uma mensalidade bem menor, tipo R$ 50, ou poder pausar nos meses fracos de inverno sem multa.",
+  "Se a mensalidade fosse bem menor, tipo R$ 50 a R$ 80, ou se desse pra pagar só na temporada e pausar no inverno sem multa.",
+  "Vender só a placa NFC de avaliação por um valor único, ou uma mensalidade de uns R$ 60 a R$ 80 com o site incluso, de preferência deixando eu testar um mês pra ver se as avaliações sobem.",
+  "Se fosse só a placa NFC para avaliação no Google, pagando uma vez só, ou mensalidade lá pelos R$ 50 a R$ 80, e eu visse outro comércio aqui da cidade com mais movimento por causa disso.",
+  "Se a mensalidade fosse bem mais baixa, tipo uns R$ 50, e eu visse outra loja daqui ganhando cliente novo pelo Google por causa disso.",
+  "Ver outro salão aqui da região que ganhou mais clientes novas por causa disso, e uma mensalidade bem menor, tipo uns R$ 50, ou só a placa de avaliação do Google sem mensalidade.",
+  "Pagar só a placa NFC e o site uma vez, sem mensalidade, ou uma mensalidade bem menor (uns R$ 50) que eu possa pausar na baixa temporada.",
+  "Ver uma pizzaria ou lanchonete daqui da região que começou a receber mais pedidos de gente de fora, tipo turista em Barra de São João, por causa do site e das avaliações no Google."
+ ],
+ "purchases_first_month_per_buyer": null,
+ "price_answers": 20
+}

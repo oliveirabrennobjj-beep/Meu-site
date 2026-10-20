@@ -1,0 +1,13 @@
+{
+  "id": "P015",
+  "buys": false,
+  "purchases_first_month": 0,
+  "reason_code": "price",
+  "reason": "A placa pra pedir avaliação no Google me interessa de verdade, porque vivo de olho na minha nota. Mas pagar R$ 200 todo mês por um site que meus clientes, que já me conhecem e pedem pelo WhatsApp, nem vão abrir não fecha a conta pra mim.",
+  "objection": "Já tenho Instagram e WhatsApp e o povo daqui já sabe onde eu fico. R$ 200 por mês pra sempre é R$ 2.400 por ano num site que eu não sei se traz um cliente novo sequer.",
+  "would_change_my_mind": "Vender só a placa NFC de avaliação por um valor único, ou uma mensalidade de uns R$ 60 a R$ 80 com o site incluso, de preferência deixando eu testar um mês pra ver se as avaliações sobem.",
+  "price_too_cheap": 30,
+  "price_cheap": 60,
+  "price_expensive": 120,
+  "price_too_expensive": 200
+}

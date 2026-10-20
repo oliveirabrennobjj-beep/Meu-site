@@ -1,0 +1,176 @@
+{
+ "business": "BN Digital: site simples + placa NFC de avaliação Google, alugado por mês, para pequenos comércios",
+ "seed": 351425,
+ "dealt": 20,
+ "answered": 20,
+ "skipped": [],
+ "buys": 6,
+ "passes": 14,
+ "buy_rate": 0.3,
+ "by_segment": [
+  [
+   "Pet shop e lojas (roupa, material, variedades)",
+   6,
+   0.3333333333333333
+  ],
+  [
+   "Beleza (barbearia, salão, estética)",
+   6,
+   0.3333333333333333
+  ],
+  [
+   "Comida (pizzaria, lanchonete, açaí, hamburgueria)",
+   8,
+   0.25
+  ]
+ ],
+ "by_behaviour": [
+  [
+   "Liga para avaliação",
+   2,
+   1.0
+  ],
+  [
+   "Quer crescer",
+   3,
+   1.0
+  ],
+  [
+   "Sem tempo",
+   3,
+   0.3333333333333333
+  ],
+  [
+   "Desconfiado de vendedor",
+   4,
+   0.0
+  ],
+  [
+   "Caça preço",
+   3,
+   0.0
+  ],
+  [
+   "Tudo pelo Instagram",
+   5,
+   0.0
+  ]
+ ],
+ "by_income": [
+  [
+   "$54,000 to $82,000",
+   7,
+   0.5714285714285714
+  ],
+  [
+   "$82,000 and up",
+   7,
+   0.2857142857142857
+  ],
+  [
+   "under $54,000",
+   6,
+   0.0
+  ]
+ ],
+ "why_not": [
+  [
+   "trust",
+   6,
+   [
+    "Já caí em promessa de agência antes e não fecho nada com quem eu não conheço só porque mandou um link. Meus clientes já me acham pelo Instagram e WhatsApp, então mais um boleto de R$ 79 agora, fora do verão, não entra.",
+    "Minha barbearia já enche pelo Instagram e o cliente marca pelo WhatsApp, não sinto falta de site. E não vou passar mensalidade pra um perfil com 7 seguidores que eu nunca vi, mesmo com garantia."
+   ],
+   [
+    "P002",
+    "P004"
+   ]
+  ],
+  [
+   "need",
+   4,
+   [
+    "Meus clientes são quase todos da cidade e já me conhecem, pedem pelo WhatsApp e veem as coisas no Instagram. Pagar R$ 79 todo mês por um site que ninguém aqui vai abrir não faz sentido pra mim.",
+    "Meu cliente me acha no Instagram e me chama no WhatsApp, já funciona. R$ 79 todo mês por um site que ninguém vai abrir eu não pago; no máximo pensaria na plaquinha de R$ 129 depois."
+   ],
+   [
+    "P005",
+    "P017"
+   ]
+  ],
+  [
+   "price",
+   3,
+   [
+    "Gostei que o site fica no meu nome e que dá pra cancelar, mas R$ 79 todo mês pra quem já tem cardápio no Instagram e perfil grátis no Google pesa. E a plaquinha NFC de avaliação eu acho no Mercado Livre por uns R$ 30, então nem os R$ 129 da placa sozinha eu pago.",
+    "Fora do verão o caixa fica apertado e não vou pegar mais um boleto de R$ 79 todo mês. Já tenho Instagram e WhatsApp de graça, e uma plaquinha NFC no Mercado Livre sai uns R$ 25, eu mesmo gravo o link do Google."
+   ],
+   [
+    "P003",
+    "P013"
+   ]
+  ],
+  [
+   "habit",
+   1,
+   [
+    "Meus clientes me acham pelo Instagram e fecham tudo no WhatsApp, isso já funciona pra mim. R$ 79 todo mês, com o movimento caindo fora do verão, é dinheiro que eu não vejo voltando."
+   ],
+   [
+    "P011"
+   ]
+  ]
+ ],
+ "why_yes": [
+  [
+   "need",
+   4,
+   [
+    "Eu vivo de olho na nota do Google, então uma placa no balcão pra cliente satisfeito avaliar na hora me interessa. Mas mensalidade não: pego só a placa de R$ 129, paga uma vez, e o site fica pra depois do verão se a placa funcionar.",
+    "Quero mais gente entrando na loja e hoje minha tabela de preço é só uma foto no Instagram. R$ 79 sem fidelidade, sem pagar a criação e com devolução se não vierem as avaliações é barato o bastante pra eu testar por dois meses."
+   ],
+   [
+    "P001",
+    "P008"
+   ]
+  ],
+  [
+   "convenience",
+   1,
+   [
+    "Eu pegaria só a placa de R$ 129, pagando uma vez: ele instala, eu não preciso fazer nada e cliente de salão adora deixar avaliação quando sai satisfeita. Mensalidade de site eu não pego agora, meu Instagram e o WhatsApp já resolvem."
+   ],
+   [
+    "P012"
+   ]
+  ],
+  [
+   "price",
+   1,
+   [
+    "Mensalidade agora fora do verão não dá, mais um boleto eu não assumo. Mas a placa avulsa de R$ 129, paga uma vez só, eu testo no balcão do salão, é barato e não fica pesando todo mês."
+   ],
+   [
+    "P019"
+   ]
+  ]
+ ],
+ "flip": [
+  "Ver a placa funcionando no balcão de um salão ou barbearia daqui que eu conheço, com o dono me dizendo que as avaliações aumentaram de verdade. Aí talvez eu comprasse só a placa de R$ 129.",
+  "Ver uma lanchonete aqui da região mostrando quanto pedido a mais entrou pelo site, ou a mensalidade cair pra uns R$ 30-40.",
+  "Ver a placa funcionando numa barbearia ou salão aqui da cidade que eu conheço, com o dono falando que as avaliações subiram. Aí eu talvez pegasse só a placa de R$ 129.",
+  "Ver um comércio parecido com o meu aqui na região mostrando que começou a chegar cliente novo de fora por causa do Google. Aí talvez eu pegasse só a placa.",
+  "Ver uma pizzaria ou lanchonete aqui de Casimiro ou Barra que eu conheço usando a placa e me dizendo que os pedidos aumentaram, e talvez pegar só a placa por bem menos que R$ 129.",
+  "Ver a placa funcionando no balcão de um salão ou barbearia daqui que eu conheço, com a dona me dizendo que deu certo e que ele atende quando chama.",
+  "Ver a placa funcionando no balcão de um vizinho aqui de Barra ou Casimiro e o dono me falar, olho no olho, que trouxe cliente. Aí talvez eu pegasse só a placa de R$ 129, sem mensalidade.",
+  "Ver um comércio aqui do lado, que eu conheço o dono, com a placa no balcão e ele me dizendo pessoalmente que aumentou pedido no WhatsApp. Aí talvez eu pegasse só a placa de R$ 129 pra testar.",
+  "Ver um comércio parecido com o meu aqui em Barra de São João ou Casimiro que vendeu mais por causa disso. Aí talvez eu pegasse só a placa de R$ 129.",
+  "Se a placa sozinha custasse uns R$ 50 já instalada e configurada, eu comprava sem pensar.",
+  "Se um vizinho daqui, tipo outra lanchonete ou pizzaria, me mostrasse que a placa trouxe mais pedido de verdade, aí talvez eu comprasse só a placa de R$ 129 antes da temporada.",
+  "Ver um comércio aqui da rua, que eu conheço, mostrando que começou a vender mais por causa disso.",
+  "Ver um salão aqui da região que começou a receber cliente nova pelo Google por causa disso. Aí eu talvez pegasse só a placa de R$ 129.",
+  "Ver um vizinho do mesmo ramo aqui de Barra ou Casimiro mostrando que passou a receber pedido novo de gente de fora por causa disso. Aí talvez pegasse só a placa de R$ 129."
+ ],
+ "purchases_first_month_per_buyer": 1.0,
+ "price_answers": 20
+}

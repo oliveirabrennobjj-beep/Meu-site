@@ -1,0 +1,13 @@
+{
+  "id": "P009",
+  "buys": false,
+  "purchases_first_month": 0,
+  "reason_code": "trust",
+  "reason": "Já paguei agência que prometeu mundos e fundos e sumiu. Meu cliente me acha pelo Instagram e chama no WhatsApp; não vejo um site mudando meu movimento, ainda mais fora do verão, e R$ 200 todo mês pra sempre pesa quando a loja está parada.",
+  "objection": "Mensalidade de R$ 200 sem fim, de alguém que eu não conheço, pra uma coisa que eu nem sei se traz cliente. Se o rapaz sumir, fico pagando ou fico sem site.",
+  "would_change_my_mind": "Ver o site e a placa funcionando numa loja conhecida aqui de Barra de São João ou Casimiro, com o dono me dizendo que trouxe cliente, e poder cancelar quando quiser sem multa.",
+  "price_too_cheap": 50,
+  "price_cheap": 80,
+  "price_expensive": 150,
+  "price_too_expensive": 250
+}

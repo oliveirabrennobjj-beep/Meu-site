@@ -1,0 +1,13 @@
+{
+  "id": "P002",
+  "buys": false,
+  "purchases_first_month": 0,
+  "reason_code": "price",
+  "reason": "Fora do verão o movimento cai e eu não consigo assumir mais um boleto fixo de R$ 200 todo mês só pra ter site, meus clientes já me acham no Instagram e marcam pelo WhatsApp.",
+  "objection": "R$ 200 por mês pra sempre é mais caro que o site em si, e já caí em promessa de internet antes; não sei se depois de uns meses esse cara some e eu fico pagando por nada.",
+  "would_change_my_mind": "Mensalidade bem menor ou sem fidelidade, com a placa NFC funcionando primeiro e ver em outro salão daqui que deu mais avaliação e cliente de verdade.",
+  "price_too_cheap": 30,
+  "price_cheap": 60,
+  "price_expensive": 120,
+  "price_too_expensive": 200
+}

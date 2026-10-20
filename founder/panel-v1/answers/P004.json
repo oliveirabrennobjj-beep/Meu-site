@@ -1,0 +1,13 @@
+{
+  "id": "P004",
+  "buys": false,
+  "purchases_first_month": 0,
+  "reason_code": "need",
+  "reason": "Meus clientes me acham pelo Instagram e marcam pelo WhatsApp, a agenda já enche assim. Pagar R$ 200 todo mês por um site que ninguém vai abrir não faz sentido pra mim agora.",
+  "objection": "Não conheço essa empresa, tem só 7 seguidores. E R$ 200 por mês pra sempre é quase uma conta de luz a mais, por algo que o meu Insta já faz de graça.",
+  "would_change_my_mind": "Ver a placa funcionando em outra barbearia da cidade e provar que trouxe mais avaliação no Google e cliente novo, com mensalidade bem menor, tipo R$ 50 a R$ 80.",
+  "price_too_cheap": 30,
+  "price_cheap": 60,
+  "price_expensive": 120,
+  "price_too_expensive": 200
+}

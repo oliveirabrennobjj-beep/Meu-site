@@ -1,0 +1,13 @@
+{
+  "id": "P016",
+  "buys": false,
+  "purchases_first_month": 0,
+  "reason_code": "need",
+  "reason": "Meu cliente me acha no Instagram e pede pelo WhatsApp, o cardápio já tá lá em foto. Pagar R$ 200 todo mês por um site que ninguém vai abrir não faz sentido pra mim agora.",
+  "objection": "Já tenho Instagram e WhatsApp de graça. R$ 200 por mês pra sempre pesa mais que os R$ 350 do começo, dá quase R$ 2.800 no primeiro ano, e não sei se vai trazer um cliente a mais.",
+  "would_change_my_mind": "Se fosse só a placa NFC para avaliação no Google, pagando uma vez só, ou mensalidade lá pelos R$ 50 a R$ 80, e eu visse outro comércio aqui da cidade com mais movimento por causa disso.",
+  "price_too_cheap": 20,
+  "price_cheap": 50,
+  "price_expensive": 100,
+  "price_too_expensive": 180
+}

@@ -1,0 +1,13 @@
+{
+  "id": "P001",
+  "buys": false,
+  "purchases_first_month": 0,
+  "reason_code": "price",
+  "reason": "Gosto da ideia da placa pra puxar avaliação no Google, isso me interessa de verdade. Mas R$ 200 todo mês pra sempre, num pet shop que fica parado fora do verão, é mais um boleto que eu não consigo segurar agora.",
+  "objection": "Mensalidade fixa de R$ 200 o ano inteiro, inclusive nos meses fracos de inverno, por um site que meu cliente acha pelo Instagram e WhatsApp do mesmo jeito.",
+  "would_change_my_mind": "Pagar só a criação e a placa, sem mensalidade fixa (ou uma mensalidade bem menor, tipo R$ 60 a 80), e começar perto do verão quando o caixa entra.",
+  "price_too_cheap": 30,
+  "price_cheap": 60,
+  "price_expensive": 120,
+  "price_too_expensive": 200
+}

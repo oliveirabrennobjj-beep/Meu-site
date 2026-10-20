@@ -1,0 +1,13 @@
+{
+  "id": "P010",
+  "buys": false,
+  "purchases_first_month": 0,
+  "reason_code": "need",
+  "reason": "Aqui na cidade o pessoal pede pizza pelo WhatsApp e vê o cardápio no meu Instagram, ninguém fica procurando no Google. Pagar R$ 200 todo mês pra um site que quase ninguém vai abrir é dinheiro jogado fora, e eu já caí em conversa de agência antes.",
+  "objection": "R$ 200 por mês pra sempre sem eu ver um cliente a mais. Já paguei agência que sumiu depois do primeiro mês, e esse aí eu nem conheço.",
+  "would_change_my_mind": "Ver com meus olhos uma pizzaria ou lanchonete daqui de Casimiro ou Barra que usa e diga que ganhou pedido por causa disso, e poder testar um mês sem ficar preso na mensalidade.",
+  "price_too_cheap": 30,
+  "price_cheap": 60,
+  "price_expensive": 120,
+  "price_too_expensive": 200
+}

@@ -1,0 +1,13 @@
+{
+  "id": "P010",
+  "buys": false,
+  "purchases_first_month": 0,
+  "reason_code": "trust",
+  "reason": "Já caí em conversa de agência que prometia cliente pela internet e não veio nada. Meu pedido aqui chega pelo Instagram e pelo WhatsApp de quem já me conhece, ninguém da cidade procura pizzaria no Google, então R$ 79 todo mês pra isso eu não pago a um cara que eu nunca vi.",
+  "objection": "Avaliação no Google não vira pizza vendida aqui em Casimiro. E garantia de devolver dinheiro todo mundo promete; quero ver se esse rapaz ainda vai estar atendendo daqui a seis meses.",
+  "would_change_my_mind": "Ver um comércio aqui do lado, que eu conheço o dono, com a placa no balcão e ele me dizendo pessoalmente que aumentou pedido no WhatsApp. Aí talvez eu pegasse só a placa de R$ 129 pra testar.",
+  "price_too_cheap": 20,
+  "price_cheap": 40,
+  "price_expensive": 90,
+  "price_too_expensive": 150
+}

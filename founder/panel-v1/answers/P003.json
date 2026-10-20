@@ -1,0 +1,13 @@
+{
+  "id": "P003",
+  "buys": false,
+  "purchases_first_month": 0,
+  "reason_code": "price",
+  "reason": "R$ 200 por mês pra sempre é muito pra mim, é quase o que eu gasto de gás no mês. Meu cardápio já tá no Instagram e o pessoal pede pelo WhatsApp de graça, não vejo por que pagar aluguel de site.",
+  "objection": "Se eu parar de pagar os R$ 200, perco o site e a placa vira enfeite? Aí joguei dinheiro fora, e com Linktree e Google Meu Negócio eu faço quase tudo de graça.",
+  "would_change_my_mind": "Pagar uma vez só pra criar o site e a placa, com o site ficando meu, e mensalidade de no máximo uns R$ 30 a R$ 50 ou só pagar quando eu pedir atualização.",
+  "price_too_cheap": 15,
+  "price_cheap": 30,
+  "price_expensive": 70,
+  "price_too_expensive": 120
+}
