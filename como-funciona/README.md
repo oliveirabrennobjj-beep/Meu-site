@@ -5,8 +5,9 @@ Esta pasta guarda o plano do canal, os roteiros e o projeto de cada vídeo.
 
 ## Decisão atual (out/2026)
 
-- **Começar pelo TikTok.** Depois de uns 10 vídeos, avaliar e repostar no Instagram Reels e no YouTube Shorts
-  (sempre o arquivo original, sem marca d'água de outra rede).
+- **TikTok é a rede principal**, mas o mesmo @ fica reservado no Instagram desde o início e cada vídeo
+  também sai no Reels (sempre o arquivo original, sem marca d'água de outra rede). Depois de uns 10 vídeos,
+  comparar os números das duas redes e decidir onde investir mais. YouTube Shorts entra depois.
 - **Formato:** fundo escuro, diagrama em corte com neon, legenda palavra por palavra, narração animada.
 - **Roteiro "você inventou":** começa com a versão mais simples do objeto e cada "Mas…" traz um problema e
   a peça que resolve ("Então você… Isso é o ___."). Fecha com "Parabéns, você construiu um ___!" e o CTA
