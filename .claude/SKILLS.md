@@ -102,9 +102,10 @@ Adicionados em 2026-10-14, com versão fixa:
 |---|---|---|---|
 | `chrome-devtools` | `chrome-devtools-mcp@1.10.1` (Google) | Abrir o site num Chrome de verdade, ver console, rede e desempenho | Chrome instalado (roda `--headless --isolated`) |
 | `shadcn-ui` | `@jpisnice/shadcn-ui-mcp-server@3.0.0` | Consultar componentes, blocos e exemplos do shadcn/ui | Opcional: `GITHUB_PERSONAL_ACCESS_TOKEN` (sem ele, a API do GitHub limita a 60 consultas/hora) |
-| `magic-21st` | `@21st-dev/magic@0.2.3` | Gerar componentes de interface da 21st.dev | **Obrigatório:** `TWENTY_FIRST_API_KEY` (chave criada em 21st.dev/magic) |
+| `magic-21st` | Conexão HTTP oficial `https://21st.dev/api/mcp` (trocou o pacote `@21st-dev/magic@0.2.3` em 2026-10-24) | Gerar componentes de interface da 21st.dev | **Obrigatório:** `TWENTY_FIRST_API_KEY` (chave criada em 21st.dev/mcp), enviada no cabeçalho `x-api-key` |
 
 As chaves não vão para o repositório: o `.mcp.json` lê as variáveis de ambiente. Na nuvem, cadastre-as nas variáveis do ambiente; no computador, exporte-as antes de abrir o Claude Code.
+Na nuvem, o `magic-21st` também precisa que o domínio `21st.dev` esteja liberado no acesso de rede do ambiente.
 Ao abrir o projeto, o Claude Code pergunta se você aprova os servidores do `.mcp.json`.
 
 `frontend-design` e `web-design-guidelines`, citadas nos mesmos vídeos, já estavam instaladas.
