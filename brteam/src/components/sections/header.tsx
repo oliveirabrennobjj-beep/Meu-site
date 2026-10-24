@@ -119,8 +119,23 @@ export function Header() {
   useEffect(() => {
     if (!aberto) return;
     document.body.style.overflow = "hidden";
-    painel.current?.querySelector<HTMLElement>("button, a")?.focus();
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && fechar();
+    // depois do quadro: com "reduzir movimento" o painel ainda está invisível no mesmo instante
+    requestAnimationFrame(() => painel.current?.querySelector<HTMLElement>("button, a")?.focus());
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") return fechar();
+      if (e.key !== "Tab" || !painel.current) return;
+      // mantém o Tab dentro do menu (aria-modal)
+      const focaveis = painel.current.querySelectorAll<HTMLElement>("button, a[href]");
+      const primeiro = focaveis[0];
+      const ultimo = focaveis[focaveis.length - 1];
+      if (e.shiftKey && (document.activeElement === primeiro || !painel.current.contains(document.activeElement))) {
+        e.preventDefault();
+        ultimo?.focus();
+      } else if (!e.shiftKey && document.activeElement === ultimo) {
+        e.preventDefault();
+        primeiro?.focus();
+      }
+    };
     window.addEventListener("keydown", onKey);
     return () => {
       document.body.style.overflow = "";
@@ -140,6 +155,9 @@ export function Header() {
       setAberto(false);
       setAtivo(id);
       el.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+      // leva o foco para a seção, para o próximo Tab continuar dali
+      if (!el.hasAttribute("tabindex")) el.setAttribute("tabindex", "-1");
+      el.focus({ preventScroll: true });
       history.replaceState(null, "", `#${destino}`);
     } else {
       setAtivo(id);
@@ -156,7 +174,7 @@ export function Header() {
         className={cn(
           "fixed inset-x-0 top-0 z-40 transition-[background-color,transform] duration-300 ease-[var(--ease-saida)]",
           oculto && !aberto && "-translate-y-full",
-          rolou ? "border-b border-grafite bg-black/90 backdrop-blur-md" : "bg-gradient-to-b from-black/70 to-transparent",
+          rolou ? "border-b border-white/10 bg-black/90 backdrop-blur-md" : "bg-gradient-to-b from-black/70 to-transparent",
         )}
       >
         <div className="pagina flex h-[68px] items-center justify-between gap-4">
@@ -172,7 +190,7 @@ export function Header() {
                     aria-current={ativo === l.id ? "location" : undefined}
                     className={cn(
                       "relative px-3 py-2 text-[15px] font-medium text-white/75 transition-colors hover:text-white",
-                      ativo === l.id && "text-white after:absolute after:inset-x-3 after:-bottom-0.5 after:h-0.5 after:bg-ponteira",
+                      ativo === l.id && "text-white after:absolute after:inset-x-3 after:-bottom-0.5 after:h-0.5 after:bg-ouro",
                     )}
                   >
                     {l.label}

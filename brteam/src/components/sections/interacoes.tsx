@@ -49,7 +49,7 @@ function montarMensagem(c: Campos) {
 }
 
 export const estiloCampo =
-  "mt-2 block h-12 w-full rounded-sm border border-black/25 bg-white px-4 text-base text-black outline-none transition-colors placeholder:text-black/40 focus:border-black focus:ring-2 focus:ring-black/15 aria-[invalid=true]:border-ponteira";
+  "mt-2 block h-12 w-full rounded-sm border border-black/25 bg-white px-4 text-base text-black outline-none transition-colors placeholder:text-black/40 focus:border-azul focus:ring-2 focus:ring-azul/20 aria-[invalid=true]:border-erro";
 
 /** Horários da turma indicada pela idade (usado no agendamento e na loja). */
 export function EscolhaHorario({
@@ -71,9 +71,10 @@ export function EscolhaHorario({
         nome={nome}
         valor={valor}
         onChange={onChange}
+        erroId={erro ? `${nome}-erro` : undefined}
         opcoes={aulasParaIdade(idade).map((a) => ({ v: rotuloAula(a), rotulo: a.nome === "Adulto" ? a.horario : rotuloAula(a) }))}
       />
-      {erro && <p className="mt-1.5 text-sm font-medium text-ponteira-escura">{erro}</p>}
+      {erro && <p id={`${nome}-erro`} className="mt-1.5 text-sm font-medium text-erro">{erro}</p>}
       {turma === "Kids" && idade >= 10 && (
         <p className="mt-2 text-sm text-chumbo">Se a criança for grande, o professor pode indicar a turma dos adultos.</p>
       )}
@@ -82,16 +83,16 @@ export function EscolhaHorario({
 }
 
 export function Opcoes<T extends string>({
-  legenda, nome, valor, opcoes, onChange,
-}: { legenda: string; nome: string; valor: T; opcoes: { v: T; rotulo: ReactNode }[]; onChange: (v: T) => void }) {
+  legenda, nome, valor, opcoes, onChange, erroId,
+}: { legenda: string; nome: string; valor: T; opcoes: { v: T; rotulo: ReactNode }[]; onChange: (v: T) => void; erroId?: string }) {
   return (
-    <fieldset>
+    <fieldset aria-describedby={erroId} aria-invalid={erroId ? true : undefined}>
       <legend className="text-sm font-semibold">{legenda}</legend>
       <div className="mt-2 flex flex-wrap gap-2">
         {opcoes.map((o) => (
           <label
             key={o.v}
-            className="inline-flex min-h-11 cursor-pointer items-center rounded-sm border border-black/25 px-4 text-[15px] transition-colors hover:border-black has-[:checked]:border-black has-[:checked]:bg-black has-[:checked]:text-white has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-black"
+            className="inline-flex min-h-11 cursor-pointer items-center rounded-sm border border-black/25 px-4 text-[15px] transition-colors hover:border-black has-[:checked]:border-black has-[:checked]:bg-black has-[:checked]:text-white has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-azul"
           >
             <input type="radio" name={nome} value={o.v} checked={valor === o.v} onChange={() => onChange(o.v)} className="sr-only" />
             {o.rotulo}
@@ -112,7 +113,7 @@ function Campo({
       </label>
       {children}
       {erro ? (
-        <p id={`${id}-erro`} className="mt-1.5 text-sm font-medium text-ponteira-escura">
+        <p id={`${id}-erro`} className="mt-1.5 text-sm font-medium text-erro">
           {erro}
         </p>
       ) : ajuda ? (
@@ -181,11 +182,11 @@ export function AgendarAula() {
   const descr = (k: keyof Campos) => (mostrarErro(k) ? `${id(k)}-erro` : undefined);
 
   return (
-    <section id="agendar" className="bg-carbono py-24 md:py-32">
+    <section id="agendar" className="claro bg-gelo py-16 text-black md:py-32">
       <div className="pagina grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
         <div>
           <h2 className="titulo">Agende sua aula experimental</h2>
-          <p className="mt-6 max-w-[42ch] text-lg text-cinza">
+          <p className="mt-6 max-w-[42ch] text-lg text-chumbo">
             Responda algumas perguntas rápidas e escolha o horário. A gente monta a mensagem e abre o WhatsApp da academia para você enviar.
           </p>
           <ol className="mt-10 space-y-5">
@@ -195,16 +196,16 @@ export function AgendarAula() {
               "O professor confirma o dia da sua primeira aula.",
             ].map((passo, i) => (
               <li key={passo} className="flex items-start gap-4">
-                <span className="flex size-9 shrink-0 items-center justify-center rounded-full border border-grafite font-display text-lg font-bold">
+                <span className="flex size-9 shrink-0 items-center justify-center rounded-full border-2 border-ouro-escuro font-display text-ouro-escuro text-lg font-bold">
                   {i + 1}
                 </span>
-                <span className="pt-1.5 text-white/85">{passo}</span>
+                <span className="pt-1.5 text-black/80">{passo}</span>
               </li>
             ))}
           </ol>
         </div>
 
-        <div className="claro bg-white p-6 text-black sm:p-10">
+        <div className="claro bg-white p-6 text-black shadow-[0_24px_60px_-32px_rgb(13_35_72/0.45)] ring-1 ring-marinho/10 sm:p-10">
           {enviado ? (
             <div ref={sucessoRef} tabIndex={-1} className="surge-rapido outline-none" role="status">
               <CheckCircle2 className="estala size-10 text-[#1f8a4c]" aria-hidden="true" />
@@ -272,7 +273,7 @@ export function AgendarAula() {
                 </Campo>
               </div>
 
-              <p aria-live="polite" className={cn("border-l-2 pl-4 transition-colors", turma ? "border-ponteira" : "border-black/15")}>
+              <p aria-live="polite" className={cn("border-l-2 pl-4 transition-colors", turma ? "border-ouro" : "border-black/15")}>
                 {turma ? (
                   <>
                     <span key={turma.turma} className="surge-rapido block font-display text-2xl font-bold uppercase leading-tight">Turma indicada: {turma.turma}</span>
@@ -363,7 +364,7 @@ const perguntas: { p: string; r: ReactNode }[] = [
         Nas crianças, costuma ser cerca de um ano em cada faixa, e o professor pode pular uma etapa quando a criança está
         pronta. Nos adultos, é preciso treinar pelo menos 70% a 80% das aulas do ano, respeitando os tempos mínimos de
         cada faixa. Conta o treino de verdade, não só os anos de matrícula, e o professor pode adiantar ou pedir mais tempo. A faixa nova é entregue na colação de grau. Veja tudo na seção{" "}
-        <a href="#faixas" className="underline underline-offset-4 hover:text-white">Troca de faixa</a>.
+        <a href="#faixas" className="underline underline-offset-4 hover:text-azul">Troca de faixa</a>.
       </>
     ),
   },
@@ -372,7 +373,7 @@ const perguntas: { p: string; r: ReactNode }[] = [
     r: (
       <>
         {mensalidade.valor} {mensalidade.periodo}, o mesmo valor para crianças, adultos, mulheres e melhor idade. Veja o
-        que está incluso na seção <a href="#planos" className="underline underline-offset-4 hover:text-white">Mensalidade</a>.
+        que está incluso na seção <a href="#planos" className="underline underline-offset-4 hover:text-azul">Mensalidade</a>.
       </>
     ),
   },
@@ -381,7 +382,7 @@ const perguntas: { p: string; r: ReactNode }[] = [
     r: (
       <>
         {endereco.rua}, {endereco.bairro}, {endereco.cidade}.{" "}
-        <a href={mapaRota} target="_blank" rel="noopener noreferrer" className="underline underline-offset-4 hover:text-white">
+        <a href={mapaRota} target="_blank" rel="noopener noreferrer" className="underline underline-offset-4 hover:text-azul">
           Abrir rota no mapa
         </a>
         .
@@ -392,28 +393,28 @@ const perguntas: { p: string; r: ReactNode }[] = [
 
 export function Duvidas() {
   return (
-    <section id="duvidas" className="bg-black py-24 md:py-32">
+    <section id="duvidas" className="claro bg-white py-16 text-black md:py-32">
       <div className="pagina grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
         <div>
           <h2 className="titulo">Dúvidas frequentes</h2>
-          <p className="mt-6 max-w-[36ch] text-lg text-cinza">Não achou sua pergunta? Fale com a gente.</p>
+          <p className="mt-6 max-w-[36ch] text-lg text-chumbo">Não achou sua pergunta? Fale com a gente.</p>
           <a
             href={linkWhatsApp("Olá, BR Team! Tenho uma dúvida.")}
             target="_blank"
             rel="noopener noreferrer"
-            className="botao botao-contorno mt-8 text-white"
+            className="botao botao-contorno mt-8 text-black"
           >
             <WhatsAppIcon className="size-5" /> Perguntar no WhatsApp
           </a>
         </div>
-        <div className="border-t border-grafite">
+        <div className="border-t border-black/15">
           {perguntas.map((q) => (
-            <details key={q.p} className="group border-b border-grafite">
+            <details key={q.p} className="group border-b border-black/15">
               <summary className="flex min-h-16 cursor-pointer list-none items-center justify-between gap-6 py-5 font-display text-2xl font-bold uppercase leading-tight [&::-webkit-details-marker]:hidden">
                 {q.p}
-                <Plus aria-hidden="true" className="size-6 shrink-0 text-ponteira transition-transform duration-200 group-open:rotate-45" />
+                <Plus aria-hidden="true" className="size-6 shrink-0 text-ouro-escuro transition-transform duration-200 group-open:rotate-45" />
               </summary>
-              <div className="max-w-[62ch] pb-6 text-lg text-cinza">{q.r}</div>
+              <div className="max-w-[62ch] pb-6 text-lg text-chumbo">{q.r}</div>
             </details>
           ))}
         </div>

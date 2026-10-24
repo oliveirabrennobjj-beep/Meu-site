@@ -24,6 +24,12 @@ export const linkInstagram = `https://www.instagram.com/${empresa.instagram}/`;
 // Prints dos últimos trabalhos (pasta public/trabalhos). A ordem aqui é a ordem do carrossel.
 export const trabalhos: CarouselImage[] = [
   {
+    src: "trabalhos/br-team-jiu-jitsu.webp",
+    alt: "Site da academia BR Team Jiu-Jitsu no celular: foto da turma kids, título BR Team, faixa preta e botão de agendar aula experimental",
+    title: "BR Team Jiu-Jitsu",
+    subtitle: "Academia · Aula experimental e loja pelo WhatsApp",
+  },
+  {
     src: "trabalhos/x-coco-lanches.webp",
     alt: "Site do X Cocó Lanches no celular: cardápio por categorias com botão de pedido",
     title: "X Cocó Lanches",

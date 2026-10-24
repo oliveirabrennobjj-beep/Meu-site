@@ -1,4 +1,4 @@
-import { useId, useState, type FormEvent } from "react";
+import { useId, useRef, useState, type FormEvent } from "react";
 import { CheckCircle2, Minus, Pencil, Plus } from "lucide-react";
 import { WhatsAppIcon } from "@/components/brand-icons";
 import { EscolhaHorario, Opcoes, estiloCampo } from "@/components/sections/interacoes";
@@ -21,6 +21,7 @@ export function Loja() {
   const [qtd, setQtd] = useState(1);
   const [tentou, setTentou] = useState(false);
   const [enviado, setEnviado] = useState<string | null>(null);
+  const sucessoRef = useRef<HTMLDivElement>(null);
 
   const idadeNum = Number(idade);
   const idadeOk = !!idade && Number.isInteger(idadeNum) && idadeNum >= academia.idadeMinima && idadeNum <= 99;
@@ -54,35 +55,36 @@ export function Loja() {
     }
     const url = linkWhatsApp(mensagem);
     setEnviado(url);
+    requestAnimationFrame(() => sucessoRef.current?.focus());
     window.open(url, "_blank", "noopener");
   }
 
   const erro = (k: keyof typeof erros) => (tentou ? erros[k] : undefined);
 
   return (
-    <section id="loja" className="bg-carbono py-24 md:py-32">
+    <section id="loja" className="claro bg-white py-16 text-black md:py-32">
       <div className="pagina grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
         <div>
           <h2 className="titulo">Loja BR Team</h2>
-          <p className="mt-6 max-w-[42ch] text-lg text-cinza">
+          <p className="mt-6 max-w-[42ch] text-lg text-chumbo">
             Encomende o kimono direto com o professor. Preencha os dados do aluno e o pedido chega pronto no WhatsApp
             da academia. O professor vê o tamanho certo e faz a encomenda.
           </p>
           <div className="mt-10 grid grid-cols-2 gap-3">
             <figure>
-              <img src={fotos.cumprimento.src} alt={fotos.cumprimento.alt} width={fotos.cumprimento.w} height={fotos.cumprimento.h} loading="lazy" className="aspect-[3/4] w-full bg-white object-contain" />
-              <figcaption className="mt-2 text-sm text-cinza">Kimono adulto</figcaption>
+              <img src={fotos.cumprimento.src} alt={fotos.cumprimento.alt} width={fotos.cumprimento.w} height={fotos.cumprimento.h} loading="lazy" className="aspect-[3/4] w-full bg-gelo object-contain" />
+              <figcaption className="mt-2 text-sm text-chumbo">Kimono adulto</figcaption>
             </figure>
             <figure>
-              <img src={fotos.kids[2].src} alt={fotos.kids[2].alt} width={fotos.kids[2].w} height={fotos.kids[2].h} loading="lazy" className="aspect-[3/4] w-full bg-white object-cover object-top" />
-              <figcaption className="mt-2 text-sm text-cinza">Kimono infantil</figcaption>
+              <img src={fotos.kids[2].src} alt={fotos.kids[2].alt} width={fotos.kids[2].w} height={fotos.kids[2].h} loading="lazy" className="aspect-[3/4] w-full bg-gelo object-contain object-bottom" />
+              <figcaption className="mt-2 text-sm text-chumbo">Kimono infantil</figcaption>
             </figure>
           </div>
         </div>
 
-        <div className="claro bg-white p-6 text-black sm:p-10">
+        <div className="claro bg-gelo p-6 text-black ring-1 ring-marinho/10 sm:p-10">
           {enviado ? (
-            <div role="status" className="surge-rapido">
+            <div ref={sucessoRef} tabIndex={-1} role="status" className="surge-rapido outline-none">
               <CheckCircle2 className="estala size-10 text-[#1f8a4c]" aria-hidden="true" />
               <h3 className="mt-4 font-display text-3xl font-bold uppercase leading-none">Pedido pronto no WhatsApp</h3>
               <p className="mt-3 text-chumbo">Confira e toque em enviar. O professor responde com o valor e o prazo.</p>
@@ -113,7 +115,7 @@ export function Loja() {
                     aria-invalid={!!erro("nome")} aria-describedby={erro("nome") ? `${uid}-nome-erro` : undefined}
                     className={estiloCampo}
                   />
-                  {erro("nome") && <p id={`${uid}-nome-erro`} className="mt-1.5 text-sm font-medium text-ponteira-escura">{erro("nome")}</p>}
+                  {erro("nome") && <p id={`${uid}-nome-erro`} className="mt-1.5 text-sm font-medium text-erro">{erro("nome")}</p>}
                 </div>
                 <div>
                   <label htmlFor={`${uid}-idade`} className="text-sm font-semibold">Idade</label>
@@ -123,7 +125,7 @@ export function Loja() {
                     aria-invalid={!!erro("idade")} aria-describedby={erro("idade") ? `${uid}-idade-erro` : undefined}
                     className={cn(estiloCampo, "tabular-nums")}
                   />
-                  {erro("idade") && <p id={`${uid}-idade-erro`} className="mt-1.5 text-sm font-medium text-ponteira-escura">{erro("idade")}</p>}
+                  {erro("idade") && <p id={`${uid}-idade-erro`} className="mt-1.5 text-sm font-medium text-erro">{erro("idade")}</p>}
                 </div>
               </div>
 

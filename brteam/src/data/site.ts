@@ -36,6 +36,7 @@ export const endereco = {
 
 export const enderecoCompleto = `${endereco.rua}, ${endereco.bairro}, ${endereco.cidade}, ${endereco.cep}`;
 export const mapaEmbed = `https://maps.google.com/maps?q=${encodeURIComponent(enderecoCompleto)}&output=embed`;
+export const mapaBusca = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(enderecoCompleto)}`;
 export const mapaRota = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(enderecoCompleto)}`;
 
 export function linkWhatsApp(mensagem: string = contato.mensagemPadrao) {

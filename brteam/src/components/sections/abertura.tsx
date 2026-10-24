@@ -15,7 +15,7 @@ export function Hero() {
         data-parallax="0.3"
         className="absolute inset-0 -z-10 size-full object-cover object-[50%_30%]"
       />
-      <div className="absolute inset-0 -z-10 bg-gradient-to-t from-black via-black/55 to-black/20" />
+      <div className="absolute inset-0 -z-10 bg-gradient-to-t from-black via-black/55 to-marinho/20" />
       <div className="absolute inset-0 -z-10 bg-gradient-to-r from-black/60 via-transparent to-transparent" />
 
       <div className="pagina pt-28">
@@ -33,7 +33,7 @@ export function Hero() {
       {/* faixa preta de 1º grau, a do professor, atravessando a tela */}
       <Faixa amarrar graus={1} altura={26} className="mt-7 w-full md:mt-9" />
 
-      <div style={{ animationDelay: "600ms" }} className="pagina hero-entrada grid gap-8 pb-12 pt-8 md:grid-cols-[1.2fr_1fr] md:items-end md:pb-16">
+      <div style={{ animationDelay: "600ms" }} className="pagina hero-entrada grid gap-8 pb-24 pt-8 md:grid-cols-[1.2fr_1fr] md:items-end md:pb-16">
         <p className="max-w-[34ch] text-lg leading-relaxed text-white/85 md:text-xl">
           {academia.lema} Desde {academia.desde}, crianças, jovens e adultos treinam com a gente
           corpo, mente e alma.
@@ -60,11 +60,11 @@ const valores = [
 
 export function Academia() {
   return (
-    <section id="academia" className="bg-black py-24 md:py-32">
+    <section id="academia" className="claro bg-gelo py-16 text-black md:py-32">
       <div className="pagina grid gap-14 lg:grid-cols-[1fr_1.1fr] lg:gap-20">
         <div>
           <h2 className="titulo">Muito mais que uma academia de Jiu-Jitsu</h2>
-          <p className="mt-7 max-w-[46ch] text-lg text-cinza">
+          <p className="mt-7 max-w-[46ch] text-lg text-chumbo">
             Uma equipe especializada em Jiu-Jitsu, com uma proposta de Jiu-Jitsu para todos. Desde {academia.desde} a
             gente transforma vidas em Casimiro de Abreu, com turmas para crianças a partir de {academia.idadeMinima} anos,
             adolescentes e adultos.
@@ -72,19 +72,19 @@ export function Academia() {
           <p className="mt-10 flex flex-wrap items-center gap-x-5 gap-y-2 font-display text-[clamp(2rem,5vw,3.2rem)] font-bold uppercase leading-none">
             {academia.pilares.map((p, i) => (
               <span key={p} className="flex items-center gap-5">
-                {i > 0 && <span aria-hidden="true" className="h-[0.8em] w-px bg-grafite" />}
+                {i > 0 && <span aria-hidden="true" className="h-[0.8em] w-px bg-ouro" />}
                 {p}
               </span>
             ))}
           </p>
-          <p className="mt-3 text-cinza">Os três pilares que a gente treina.</p>
+          <p className="mt-3 text-chumbo">Os três pilares que a gente treina.</p>
         </div>
 
-        <ul className="border-t border-grafite">
+        <ul className="border-t border-marinho/15">
           {valores.map((v) => (
-            <li key={v.nome} className="grid gap-2 border-b border-grafite py-7 sm:grid-cols-[180px_1fr] sm:gap-8">
+            <li key={v.nome} className="grid gap-2 border-b border-marinho/15 py-7 sm:grid-cols-[180px_1fr] sm:gap-8">
               <h3 className="titulo-md">{v.nome}</h3>
-              <p className="text-cinza">{v.texto}</p>
+              <p className="text-chumbo">{v.texto}</p>
             </li>
           ))}
         </ul>
@@ -103,11 +103,11 @@ export function Academia() {
           />
         </div>
         <figcaption className="mt-4 flex flex-wrap items-center justify-between gap-4">
-          <span className="text-cinza">O nosso tatame, na Rua Pastor Luiz Laurentino, em Casimiro de Abreu.</span>
+          <span className="text-chumbo">O nosso tatame, na Rua Pastor Luiz Laurentino, em Casimiro de Abreu.</span>
           <span className="flex flex-wrap gap-2">
             {academia.comodidades.map((c) => (
-              <span key={c} className="inline-flex items-center gap-1.5 rounded-full border border-grafite px-3 py-1.5 text-sm">
-                <Check className="size-3.5 text-ponteira" aria-hidden="true" /> {c}
+              <span key={c} className="inline-flex items-center gap-1.5 rounded-full border border-marinho/15 px-3 py-1.5 text-sm">
+                <Check className="size-3.5 text-ouro-escuro" aria-hidden="true" /> {c}
               </span>
             ))}
           </span>
@@ -119,7 +119,7 @@ export function Academia() {
 
 export function Professor() {
   return (
-    <section id="professor" className="bg-carbono py-24 md:py-32">
+    <section id="professor" className="bg-carbono py-16 md:py-32">
       <div className="pagina grid items-center gap-12 md:grid-cols-[0.85fr_1fr] lg:gap-20">
         <div className="relative">
           <div className="overflow-hidden bg-[#ecebe8]">
@@ -151,19 +151,19 @@ export function Professor() {
               Faixa preta 1º grau de Jiu-Jitsu
             </li>
             <li className="flex items-center gap-4">
-              <Check className="size-5 shrink-0 text-ponteira" aria-hidden="true" />
+              <Check className="size-5 shrink-0 text-ouro" aria-hidden="true" />
               Professor há {professor.anosComoProfessor} anos, com mais de {professor.anosNoJiuJitsu} anos dedicados ao Jiu-Jitsu
             </li>
             <li className="flex items-center gap-4">
-              <Check className="size-5 shrink-0 text-ponteira" aria-hidden="true" />
+              <Check className="size-5 shrink-0 text-ouro" aria-hidden="true" />
               Formado em Educação Física
             </li>
             <li className="flex items-center gap-4">
-              <Check className="size-5 shrink-0 text-ponteira" aria-hidden="true" />
+              <Check className="size-5 shrink-0 text-ouro" aria-hidden="true" />
               Pai da Marina, que também treina
             </li>
           </ul>
-          <blockquote className="mt-10 border-l-2 border-ponteira pl-6">
+          <blockquote className="mt-10 border-l-2 border-ouro pl-6">
             <p className="font-display text-[clamp(1.5rem,3vw,2.1rem)] font-semibold leading-tight">
               “Nosso ambiente é muito mais que uma academia de Jiu-Jitsu: é um local de encorajamento e mudança de hábitos.”
             </p>
@@ -204,7 +204,7 @@ const beneficios = [
 export function Kids() {
   const [principal, segunda, terceira] = fotos.kids;
   return (
-    <section id="kids" className="claro bg-white py-24 text-black md:py-32">
+    <section id="kids" className="claro bg-white py-16 text-black md:py-32">
       <div className="pagina grid gap-14 lg:grid-cols-[1fr_0.9fr] lg:gap-20">
         <div>
           <h2 className="titulo">Jiu-Jitsu para crianças</h2>
