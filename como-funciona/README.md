@@ -22,9 +22,14 @@ Esta pasta guarda o plano do canal, os roteiros e o projeto de cada vídeo.
 
 ## Perfil
 
-- Nomes possíveis: Por Dentro das Coisas, O Porquê das Coisas, Explica Aí, Desvenda Aí.
+- **Nome:** IA Todo Dia (no campo "Nome" do TikTok: "IA Todo Dia | Curiosidades")
+- **@ (nesta ordem de preferência):** @iatododia, @ia.todo.dia, @iatododia.br, @iatododiaoficial.
   Usar o mesmo @ no TikTok, Instagram e YouTube.
-- Bio: "Como as coisas do seu dia a dia funcionam de verdade 🔧 / Vídeo novo toda semana"
+- **Bio do TikTok (até 80 caracteres):** "Como as coisas do dia a dia funcionam por dentro 🔧 Vídeo novo todo dia!"
+- **Bio do Instagram:** "🔧 Como as coisas do dia a dia funcionam por dentro / 🤖 Explicado com IA, vídeo novo todo dia / 👇 Comenta o que você quer ver"
+- **Tipo de conta:** TikTok pessoal (para ter os sons em alta); Instagram profissional, Criador de conteúdo.
+- **Ritmo:** 1 vídeo por dia, produzido em lote uma vez por semana.
+- **Segundo perfil (futuro):** novela dos objetos da casa ("Barraco na Cozinha" é a sugestão), depois de um episódio piloto.
 
 ## Temas (com gancho)
 
