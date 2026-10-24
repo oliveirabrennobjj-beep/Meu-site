@@ -1,7 +1,7 @@
 # Skills do Claude Code neste projeto
 
 Todas as skills ficam em `.claude/skills/` (escopo de projeto, versionadas no Git).
-Instaladas em 2026-10-03 a partir das fontes abaixo.
+Instaladas a partir de 2026-10-03, das fontes abaixo.
 
 ## Procedência
 
@@ -17,13 +17,18 @@ Instaladas em 2026-10-03 a partir das fontes abaixo.
 | impeccable + `.claude/agents/impeccable-*.md` | pbakaus/impeccable (`e103efe`, skill v4.5.0) | Cópia da build para Claude Code commitada no repositório da fonte (`.claude/skills/impeccable` e `.claude/agents/`). Ver observações |
 | brag, brag-slim | latent-spaces/brag (`069432c`, v0.4.0) | `npx skills add latent-spaces/brag -a claude-code --copy -y` (2026-10-14). Revisada antes: só instruções em Markdown, músicas/efeitos e um script Python de análise de batidas (`librosa`), sem acesso à rede nem hooks. No Opus 5.5 o `/brag` passa para o `/brag-slim`. As músicas incluídas não têm licença confirmada (o README da fonte avisa); o vídeo da BN Digital usa trilha original |
 | brainstorming, verification-before-completion | obra/superpowers (`bb92a77`, v7.0.0) | `npx skills add obra/superpowers --skill brainstorming --skill verification-before-completion -a claude-code --copy -y` (2026-10-14). Revisadas antes: o `brainstorming` traz um servidor local (só `localhost`, com token) para mostrar rascunhos no navegador |
+| Restante do Superpowers: writing-plans, executing-plans, systematic-debugging, test-driven-development, requesting-code-review, receiving-code-review, subagent-driven-development, dispatching-parallel-agents, using-git-worktrees, finishing-a-development-branch, using-superpowers, writing-skills, diagnosing-superpowers | obra/superpowers (`2ce8aa1`, v7.0.1) | `npx skills add obra/superpowers --skill '*' -a claude-code --copy -y` (2026-10-24). Atualizou o `brainstorming` para a v7.0.1. Revisadas antes: só Markdown e scripts de exemplo; nenhuma faz chamada de rede sozinha |
+| founder-board, founder-competitors, founder-consumer, founder-pricing, founder-offer, founder-cfo, founder-marketing, founder-brand, founder-ops, founder-launch, founder-plan | Jakeschincariol/founder-skill (`fd9385b`, MIT) | `npx skills add Jakeschincariol/founder-skill --skill '*' -a claude-code --copy -y` (2026-10-24). Testam um negócio antes do lançamento; ordem de uso no README da fonte. Scripts em Python puro (só biblioteca padrão, sem rede). Gravam o trabalho numa pasta `founder/` |
+| video-use (+ `skills/manim-video` dentro dela) | browser-use/video-use (`43cfc56`, MIT) | Cópia do repositório sem `.git` (o README da fonte manda clonar e ligar em `.claude/skills/`; não é instalável pelo CLI `skills`). Edita vídeo por conversa: corta pausas e vícios de fala, color grading, legendas animadas, animações sobrepostas. Única chamada de rede: transcrição na API da ElevenLabs |
+| prompts-chat | **criada aqui**, com dados de f/prompts.chat (`dbb20df`) | `data/prompts.csv` (2.607 prompts, CC0) + `scripts/buscar.py` (busca local). O servidor MCP oficial (`https://prompts.chat/api/mcp`) é bloqueado pela rede da nuvem, por isso a busca é offline |
+| leis-brasil | **criada aqui**, consulta ctresb/leis (`15eb09b`, MIT) | `scripts/leis.sh` faz clone parcial (só a lista de caminhos) em `~/.cache/leis-brasil` e baixa cada norma ao ler. O acervo tem 1,1 milhão de arquivos e não cabe no repositório |
 
 Pré-existentes e preservadas sem alteração: ui-ux-pro-max, banner-design, brand, design, design-system, slides, ui-styling.
 
 `skills-lock.json` (raiz) é gerado pelo CLI `skills` e permite `npx skills update -p`.
 Ele **não** lista `impeccable` nem `context-optimization`, que foram instaladas manualmente.
 
-Os arquivos das skills são cópias idênticas das fontes, sem edições locais.
+Os arquivos das skills são cópias idênticas das fontes, sem edições locais. As exceções são `prompts-chat` e `leis-brasil`, criadas neste projeto.
 
 ### Adiada: vercel-react-best-practices
 
@@ -53,6 +58,10 @@ Quando o projeto adotar React ou Next.js, instale com:
 | find-skills | Node + `npx skills`; busca usa a API de skills.sh |
 | impeccable | Engine baixado pelo launcher; `detect` em URL usa Chrome/Chromium |
 | context-optimization | Python 3 (script de demonstração sem dependências externas) |
+| founder-* | Python 3.8+ (só biblioteca padrão); `founder-competitors` precisa de acesso web |
+| video-use | `ffmpeg`/`ffprobe` (já vêm na nuvem); Python `requests`, `librosa`, `matplotlib`, `pillow`, `numpy` (instalar no `.venv/`); **`ELEVENLABS_API_KEY`** na variável de ambiente ou em `.claude/skills/video-use/.env` (ignorado pelo Git). Opcional: `manim` para animações matemáticas, `yt-dlp` para baixar vídeos |
+| prompts-chat | Python 3 (só biblioteca padrão) |
+| leis-brasil | `git` e acesso a github.com |
 | copywriting, seo-audit, frontend-design | Somente instruções; seo-audit fica melhor com acesso web |
 | web-design-guidelines | Somente instruções. A cada revisão, busca as regras em `https://raw.githubusercontent.com/vercel-labs/web-interface-guidelines/main/command.md` (precisa de acesso web) |
 | webapp-testing | Python 3 + pacote **Python** `playwright` (o pacote Node não serve: os exemplos e `scripts/with_server.py` são Python) e um Chromium compatível com a versão do Playwright |
@@ -88,6 +97,14 @@ python3 -m venv .venv && .venv/bin/pip install playwright
 - **Bloqueio encontrado (bug do script upstream, não do ambiente):** `with_server.py` inicia o servidor com `shell=True` e, no fim, encerra só o `/bin/sh`. O servidor fica órfão, ainda ocupando a porta, e com os pipes fechados. Na próxima execução na mesma porta, o helper acha que o servidor está pronto, e a página falha com `net::ERR_EMPTY_RESPONSE`.
   **Contorno validado** (duas execuções seguidas, sem órfãos): começar o comando do servidor com `exec`, por exemplo `--server "exec npm run dev"`. Para comandos com `cd … &&`, use `--server "cd web && exec npm run dev"`. Para limpar um órfão: `pkill -f '<comando do servidor>'`.
 - **web-design-guidelines:** instalada; a URL de regras respondeu HTTP 200 neste ambiente.
+
+## Vistos nos vídeos e não instalados
+
+| O quê | Por quê |
+|---|---|
+| tashfeenahmed/freellmapi, Alishahryar1/free-claude-code ("Claude Code de graça") | Não são skills: são proxies que fazem o Claude Code conversar com outros modelos usando chaves de terceiros. O código do projeto passaria por servidores desconhecidos, e trocar o modelo por trás do Claude Code pode violar os termos de uso das contas envolvidas |
+| OpenCut-app/OpenCut | É um editor de vídeo completo (app web, alternativa ao CapCut), não uma skill. Use direto em opencut.app ou rode localmente pelo README da fonte. Para editar vídeo pelo Claude, use `video-use` e as `remotion-*` |
+| Ponytail, Graphify, Caveman, Understand Anything, Archify, Awesome Claude Skills (lista "Top 10") | Servem para analisar códigos grandes; este repositório é de sites estáticos pequenos. Instale quando houver projeto que precise (`npx skills add <dono>/<repo> -a claude-code --copy -y`, depois de revisar) |
 
 ## O que não vai para o Git
 
