@@ -22,6 +22,8 @@ Instaladas a partir de 2026-10-03, das fontes abaixo.
 | video-use (+ `skills/manim-video` dentro dela) | browser-use/video-use (`43cfc56`, MIT) | Cópia do repositório sem `.git` (o README da fonte manda clonar e ligar em `.claude/skills/`; não é instalável pelo CLI `skills`). Edita vídeo por conversa: corta pausas e vícios de fala, color grading, legendas animadas, animações sobrepostas. Única chamada de rede: transcrição na API da ElevenLabs |
 | prompts-chat | **criada aqui**, com dados de f/prompts.chat (`dbb20df`) | `data/prompts.csv` (2.607 prompts, CC0) + `scripts/buscar.py` (busca local). O servidor MCP oficial (`https://prompts.chat/api/mcp`) é bloqueado pela rede da nuvem, por isso a busca é offline |
 | leis-brasil | **criada aqui**, consulta ctresb/leis (`15eb09b`, MIT) | `scripts/leis.sh` faz clone parcial (só a lista de caminhos) em `~/.cache/leis-brasil` e baixa cada norma ao ler. O acervo tem 1,1 milhão de arquivos e não cabe no repositório |
+| emil-design-eng, animate, review-animations, improve-animations, find-animation-opportunities, animation-performance, animation-vocabulary, apple-design, mobile-native, break-ui, prototype, pick-ui-library, ask-sonner | emilkowalski/skills (`2d22863`, MIT) | `npx skills add emilkowalski/skills --skill … -a claude-code --copy -y` (2026-10-24). Revisadas antes: só Markdown. Ficaram de fora `write-swift` e `animate-expo` (apps nativos iOS e React Native, fora do escopo destes sites) |
+| design-taste-frontend | Leonxlnx/taste-skill (`6010f91`, MIT) | `npx skills add https://github.com/Leonxlnx/taste-skill --skill design-taste-frontend -a claude-code --copy -y` (2026-10-24). Revisada antes: scripts Node sem dependências; só acessam a internet para buscar fotos de acervos abertos (Openverse, Wikimedia, museus, NASA, Internet Archive) e gravam o crédito de cada uma. Precisa de Node 22+ e Chrome (ver `CHROME_PATH` abaixo) |
 
 Pré-existentes e preservadas sem alteração: ui-ux-pro-max, banner-design, brand, design, design-system, slides, ui-styling.
 
@@ -62,6 +64,7 @@ Quando o projeto adotar React ou Next.js, instale com:
 | video-use | `ffmpeg`/`ffprobe` (já vêm na nuvem); Python `requests`, `librosa`, `matplotlib`, `pillow`, `numpy` (instalar no `.venv/`); **`ELEVENLABS_API_KEY`** na variável de ambiente ou em `.claude/skills/video-use/.env` (ignorado pelo Git). Opcional: `manim` para animações matemáticas, `yt-dlp` para baixar vídeos |
 | prompts-chat | Python 3 (só biblioteca padrão) |
 | leis-brasil | `git` e acesso a github.com |
+| design-taste-frontend | Node 22+ e Chrome/Chromium. Na nuvem, o hook define `CHROME_PATH` para `.claude/bin/chrome-nuvem.sh`. Uma página leva de 30 a 45 minutos e consome muitos tokens (aviso do README da fonte) |
 | copywriting, seo-audit, frontend-design | Somente instruções; seo-audit fica melhor com acesso web |
 | web-design-guidelines | Somente instruções. A cada revisão, busca as regras em `https://raw.githubusercontent.com/vercel-labs/web-interface-guidelines/main/command.md` (precisa de acesso web) |
 | webapp-testing | Python 3 + pacote **Python** `playwright` (o pacote Node não serve: os exemplos e `scripts/with_server.py` são Python) e um Chromium compatível com a versão do Playwright |
@@ -70,12 +73,12 @@ Quando o projeto adotar React ou Next.js, instale com:
 
 Pacotes Python e navegadores **não** ficam no Git; reinstale a cada sessão nova (containers da nuvem são descartados).
 
-**Nuvem (Claude Code na web).** O Chromium já vem em `/opt/pw-browsers` (`PLAYWRIGHT_BROWSERS_PATH` já definido) na revisão `chromium-1194`, a mesma do Playwright **1.56**. Fixe a versão para não precisar baixar navegador (`playwright install` não deve ser usado nesse ambiente):
+**Nuvem (Claude Code na web).** O Chromium já vem em `/opt/pw-browsers` (`PLAYWRIGHT_BROWSERS_PATH` já definido) na revisão `chromium-1243`, a mesma do Playwright **1.63** (a imagem trazia `chromium-1194`/1.56 até o início de out/2026). Fixe a versão para não precisar baixar navegador (`playwright install` não deve ser usado nesse ambiente):
 
 ```bash
 python3 -m venv /tmp/pw-venv
-/tmp/pw-venv/bin/pip install playwright==1.56.0
-/tmp/pw-venv/bin/python -m playwright install --dry-run chromium   # deve apontar para /opt/pw-browsers/chromium-1194
+/tmp/pw-venv/bin/pip install playwright==1.63.0
+/tmp/pw-venv/bin/python -m playwright install --dry-run chromium   # deve apontar para /opt/pw-browsers/chromium-1243
 ```
 
 Se a imagem do ambiente mudar, confira a revisão em `ls /opt/pw-browsers` e ajuste a versão do Playwright. O venv fica fora do repositório; se preferir criar dentro do projeto, use `.venv/`, que já está no `.gitignore`.
@@ -87,7 +90,11 @@ python3 -m venv .venv && .venv/bin/pip install playwright
 .venv/bin/python -m playwright install chromium
 ```
 
-**Automático na nuvem.** O hook SessionStart `.claude/hooks/session-start.sh` (registrado em `.claude/settings.json`) faz isso sozinho: cria `.venv/` no projeto, instala `playwright==1.56.0` se faltar e põe `.venv/bin` no PATH, então `python` já importa o Playwright. Só roda quando `CLAUDE_CODE_REMOTE=true`; em máquina local não faz nada. Se a revisão do Chromium em `/opt/pw-browsers` mudar, o hook avisa e basta ajustar `PLAYWRIGHT_VERSION` nele.
+**Automático na nuvem.** O hook SessionStart `.claude/hooks/session-start.sh` (registrado em `.claude/settings.json`) faz isso sozinho: cria `.venv/` no projeto, instala `playwright==1.63.0` se faltar e põe `.venv/bin` no PATH, então `python` já importa o Playwright. Também exporta `CHROME_PATH` apontando para `.claude/bin/chrome-nuvem.sh`, que abre o Chromium com `--no-sandbox` (exigido porque a nuvem roda como root), para a skill `design-taste-frontend`. Só roda quando `CLAUDE_CODE_REMOTE=true`; em máquina local não faz nada. Se a revisão do Chromium em `/opt/pw-browsers` mudar, o hook avisa e basta ajustar `PLAYWRIGHT_VERSION` nele.
+
+### Estado verificado em 2026-10-24 (nuvem)
+
+Playwright 1.63.0 com `chromium-1243`: `tests/test_site.py` passou inteiro. A skill `design-taste-frontend` abriu o `index.html` no Chromium pelo lançador `chrome-nuvem.sh` e gerou as capturas em três larguras.
 
 ### Estado verificado em 2026-10-03 (nuvem)
 
