@@ -71,9 +71,10 @@ export function EscolhaHorario({
         nome={nome}
         valor={valor}
         onChange={onChange}
+        erroId={erro ? `${nome}-erro` : undefined}
         opcoes={aulasParaIdade(idade).map((a) => ({ v: rotuloAula(a), rotulo: a.nome === "Adulto" ? a.horario : rotuloAula(a) }))}
       />
-      {erro && <p className="mt-1.5 text-sm font-medium text-erro">{erro}</p>}
+      {erro && <p id={`${nome}-erro`} className="mt-1.5 text-sm font-medium text-erro">{erro}</p>}
       {turma === "Kids" && idade >= 10 && (
         <p className="mt-2 text-sm text-chumbo">Se a criança for grande, o professor pode indicar a turma dos adultos.</p>
       )}
@@ -82,10 +83,10 @@ export function EscolhaHorario({
 }
 
 export function Opcoes<T extends string>({
-  legenda, nome, valor, opcoes, onChange,
-}: { legenda: string; nome: string; valor: T; opcoes: { v: T; rotulo: ReactNode }[]; onChange: (v: T) => void }) {
+  legenda, nome, valor, opcoes, onChange, erroId,
+}: { legenda: string; nome: string; valor: T; opcoes: { v: T; rotulo: ReactNode }[]; onChange: (v: T) => void; erroId?: string }) {
   return (
-    <fieldset>
+    <fieldset aria-describedby={erroId} aria-invalid={erroId ? true : undefined}>
       <legend className="text-sm font-semibold">{legenda}</legend>
       <div className="mt-2 flex flex-wrap gap-2">
         {opcoes.map((o) => (
@@ -181,7 +182,7 @@ export function AgendarAula() {
   const descr = (k: keyof Campos) => (mostrarErro(k) ? `${id(k)}-erro` : undefined);
 
   return (
-    <section id="agendar" className="claro bg-gelo py-24 text-black md:py-32">
+    <section id="agendar" className="claro bg-gelo py-16 text-black md:py-32">
       <div className="pagina grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
         <div>
           <h2 className="titulo">Agende sua aula experimental</h2>
@@ -195,7 +196,7 @@ export function AgendarAula() {
               "O professor confirma o dia da sua primeira aula.",
             ].map((passo, i) => (
               <li key={passo} className="flex items-start gap-4">
-                <span className="flex size-9 shrink-0 items-center justify-center rounded-full border-2 border-ouro font-display text-ouro-escuro text-lg font-bold">
+                <span className="flex size-9 shrink-0 items-center justify-center rounded-full border-2 border-ouro-escuro font-display text-ouro-escuro text-lg font-bold">
                   {i + 1}
                 </span>
                 <span className="pt-1.5 text-black/80">{passo}</span>
@@ -392,7 +393,7 @@ const perguntas: { p: string; r: ReactNode }[] = [
 
 export function Duvidas() {
   return (
-    <section id="duvidas" className="claro bg-white py-24 text-black md:py-32">
+    <section id="duvidas" className="claro bg-white py-16 text-black md:py-32">
       <div className="pagina grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
         <div>
           <h2 className="titulo">Dúvidas frequentes</h2>

@@ -1,4 +1,4 @@
-import { useId, useState, type FormEvent } from "react";
+import { useId, useRef, useState, type FormEvent } from "react";
 import { CheckCircle2, Minus, Pencil, Plus } from "lucide-react";
 import { WhatsAppIcon } from "@/components/brand-icons";
 import { EscolhaHorario, Opcoes, estiloCampo } from "@/components/sections/interacoes";
@@ -21,6 +21,7 @@ export function Loja() {
   const [qtd, setQtd] = useState(1);
   const [tentou, setTentou] = useState(false);
   const [enviado, setEnviado] = useState<string | null>(null);
+  const sucessoRef = useRef<HTMLDivElement>(null);
 
   const idadeNum = Number(idade);
   const idadeOk = !!idade && Number.isInteger(idadeNum) && idadeNum >= academia.idadeMinima && idadeNum <= 99;
@@ -54,13 +55,14 @@ export function Loja() {
     }
     const url = linkWhatsApp(mensagem);
     setEnviado(url);
+    requestAnimationFrame(() => sucessoRef.current?.focus());
     window.open(url, "_blank", "noopener");
   }
 
   const erro = (k: keyof typeof erros) => (tentou ? erros[k] : undefined);
 
   return (
-    <section id="loja" className="claro bg-white py-24 text-black md:py-32">
+    <section id="loja" className="claro bg-white py-16 text-black md:py-32">
       <div className="pagina grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
         <div>
           <h2 className="titulo">Loja BR Team</h2>
@@ -82,7 +84,7 @@ export function Loja() {
 
         <div className="claro bg-gelo p-6 text-black ring-1 ring-marinho/10 sm:p-10">
           {enviado ? (
-            <div role="status" className="surge-rapido">
+            <div ref={sucessoRef} tabIndex={-1} role="status" className="surge-rapido outline-none">
               <CheckCircle2 className="estala size-10 text-[#1f8a4c]" aria-hidden="true" />
               <h3 className="mt-4 font-display text-3xl font-bold uppercase leading-none">Pedido pronto no WhatsApp</h3>
               <p className="mt-3 text-chumbo">Confira e toque em enviar. O professor responde com o valor e o prazo.</p>

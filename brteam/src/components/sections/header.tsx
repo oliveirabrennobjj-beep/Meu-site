@@ -119,8 +119,23 @@ export function Header() {
   useEffect(() => {
     if (!aberto) return;
     document.body.style.overflow = "hidden";
-    painel.current?.querySelector<HTMLElement>("button, a")?.focus();
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && fechar();
+    // depois do quadro: com "reduzir movimento" o painel ainda está invisível no mesmo instante
+    requestAnimationFrame(() => painel.current?.querySelector<HTMLElement>("button, a")?.focus());
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") return fechar();
+      if (e.key !== "Tab" || !painel.current) return;
+      // mantém o Tab dentro do menu (aria-modal)
+      const focaveis = painel.current.querySelectorAll<HTMLElement>("button, a[href]");
+      const primeiro = focaveis[0];
+      const ultimo = focaveis[focaveis.length - 1];
+      if (e.shiftKey && (document.activeElement === primeiro || !painel.current.contains(document.activeElement))) {
+        e.preventDefault();
+        ultimo?.focus();
+      } else if (!e.shiftKey && document.activeElement === ultimo) {
+        e.preventDefault();
+        primeiro?.focus();
+      }
+    };
     window.addEventListener("keydown", onKey);
     return () => {
       document.body.style.overflow = "";
@@ -140,6 +155,9 @@ export function Header() {
       setAberto(false);
       setAtivo(id);
       el.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+      // leva o foco para a seção, para o próximo Tab continuar dali
+      if (!el.hasAttribute("tabindex")) el.setAttribute("tabindex", "-1");
+      el.focus({ preventScroll: true });
       history.replaceState(null, "", `#${destino}`);
     } else {
       setAtivo(id);

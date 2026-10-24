@@ -127,13 +127,20 @@ a, button { touch-action: manipulation; }
   border-radius: 4px;
 }
 .claro :focus-visible { outline-color: var(--color-azul); }
+/* seções e avisos recebem foco por código (tabindex=-1): sem moldura */
+[tabindex="-1"]:focus { outline: none; }
+/* seções claras: listas de opções e setinhas de número no tema claro do sistema */
+.claro { color-scheme: light; }
+/* botões fixos passam por cima de fundo claro e escuro: anel duplo para aparecer nos dois */
+.foco-duplo:focus-visible { box-shadow: 0 0 0 5px #08172f; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+    /* none (e não 0.01ms): senão visibility demora um quadro e o foco não entra no menu */
+    transition: none !important;
   }
 }
 
@@ -299,7 +306,7 @@ a, button { touch-action: manipulation; }
   transform: translateX(-120%);
   transition: transform 700ms var(--ease-saida);
 }
-.botao-primario { box-shadow: 0 0 0 0 rgb(214 32 43 / 0); transition: background-color 200ms, color 200ms, border-color 200ms, transform 200ms var(--ease-saida), box-shadow 300ms; }
+.botao-primario { box-shadow: 0 0 0 0 rgb(31 95 214 / 0); transition: background-color 200ms, color 200ms, border-color 200ms, transform 200ms var(--ease-saida), box-shadow 300ms; }
 .botao svg { transition: transform 300ms var(--ease-saida); }
 @media (hover: hover) {
   .botao:hover { transform: translateY(-2px); }
@@ -345,7 +352,7 @@ details[open]::details-content { block-size: auto; }
   inset: 0;
   border-radius: 9999px;
   border: 2px solid var(--color-whatsapp);
-  animation: pulso 2.6s ease-out infinite;
+  animation: pulso 2.6s ease-out 1s 3; /* pulsa 3 vezes e para */
 }
 @keyframes pulso {
   0% { transform: scale(1); opacity: 0.8; }

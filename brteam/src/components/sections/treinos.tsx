@@ -17,7 +17,7 @@ const periodos = ["Manhã", "Tarde", "Noite"] as const;
 
 export function Horarios() {
   return (
-    <section id="horarios" className="claro bg-gelo py-24 text-black md:py-32">
+    <section id="horarios" className="claro bg-gelo py-16 text-black md:py-32">
       <div className="pagina">
         <div className="grid gap-6 md:grid-cols-[1fr_auto] md:items-end">
           <h2 className="titulo">Horários das turmas</h2>
@@ -30,7 +30,7 @@ export function Horarios() {
 
         <div className="mt-12 grid gap-px bg-marinho/10 md:grid-cols-3">
           {periodos.map((periodo) => (
-            <div key={periodo} className="bg-white p-6 md:p-8 md:first:pl-0">
+            <div key={periodo} className="bg-white p-6 md:p-8">
               <h3 className="font-semibold text-ouro-escuro">{periodo}</h3>
               <ul className="mt-4 space-y-6">
                 {aulas
@@ -41,7 +41,7 @@ export function Horarios() {
                       <p className="mt-2 flex items-center gap-2 text-lg">
                         <span
                           aria-hidden="true"
-                          className={cn("size-2.5 rounded-full", a.turma === "Kids" ? "bg-ouro" : "bg-azul")}
+                          className={cn("size-2.5 rounded-full", a.turma === "Kids" ? "bg-ouro-escuro" : "bg-azul")}
                         />
                         {a.nome}
                         <span className="text-chumbo">· {a.publico}</span>
@@ -52,6 +52,7 @@ export function Horarios() {
                         className="mt-2 inline-flex min-h-11 items-center gap-1 text-[15px] text-azul underline underline-offset-4 decoration-azul/40 transition-colors hover:text-azul-escuro hover:decoration-ouro"
                       >
                         Agendar aula neste horário
+                        <span className="sr-only">: {a.nome}, {a.horario}</span>
                       </a>
                     </li>
                   ))}
@@ -184,7 +185,7 @@ function TempoDeTreino() {
   ];
   const max = Math.max(...alunos.map((a) => a.aulas));
   return (
-    <div className="border-l-4 border-ouro bg-gelo p-5 md:p-7">
+    <div className="border-t-2 border-ouro bg-gelo p-5 md:p-7">
       <h4 className="font-display text-2xl font-bold uppercase leading-tight text-black">
         Tempo de matrícula não é tempo de treino
       </h4>
@@ -391,7 +392,7 @@ function ComoGradua() {
 export function TrocaDeFaixa() {
   const { infantil, adulto } = trocaDeFaixa;
   return (
-    <section id="faixas" className="claro bg-gelo py-24 text-black md:py-32">
+    <section id="faixas" className="claro bg-gelo py-16 text-black md:py-32">
       <div className="pagina">
         <div className="grid gap-8 lg:grid-cols-[1fr_1fr] lg:items-end">
           <h2 className="titulo">Troca de faixa</h2>

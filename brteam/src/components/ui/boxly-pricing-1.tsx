@@ -161,7 +161,7 @@ export default function PricingSection({
                 >
                   <div className={`relative mb-6 ${t.linha} border-b p-6`}>
                     <h3
-                      className={`mb-2 font-medium text-xl ${
+                      className={`mb-2 font-display text-2xl font-bold uppercase ${
                         tier.featured ? t.destaqueTitulo : "text-white"
                       }`}
                     >
@@ -188,7 +188,7 @@ export default function PricingSection({
 
                   <div className="mb-6 px-6">
                     <div className="flex items-baseline gap-2">
-                      <span className="font-medium text-4xl text-white">{tier.price}</span>
+                      <span className="font-display text-5xl font-bold tabular-nums text-white">{tier.price}</span>
                       {period && <span className="text-gray-400">{period}</span>}
                     </div>
                     {tier.note && <p className="mt-2 text-gray-400 text-sm">{tier.note}</p>}

@@ -55,7 +55,7 @@ function GaleriaAmpliada({ indice, onFechar, onTrocar }: { indice: number | null
 export function Galeria() {
   const [aberta, setAberta] = useState<number | null>(null);
   return (
-    <section id="galeria" className="bg-black py-24 md:py-32">
+    <section id="galeria" className="bg-black py-16 md:py-32">
       <div className="pagina">
         <h2 className="titulo">No tatame e no pódio</h2>
         <p className="mt-5 max-w-[48ch] text-lg text-cinza">
@@ -63,7 +63,7 @@ export function Galeria() {
         </p>
         <div className="mt-12 columns-2 gap-3 md:columns-3 lg:columns-4 [&>figure]:mb-3">
           {fotos.galeria.map((f, i) => (
-            <figure key={f.src} className="break-inside-avoid">
+            <figure key={f.src} className="break-inside-avoid max-md:nth-[n+9]:hidden">
               <button
                 type="button"
                 onClick={() => setAberta(i)}
@@ -121,10 +121,16 @@ export function Parceiros() {
 */
 function CartaoMapa() {
   const [mostrar, setMostrar] = useState(false);
+  const mapaRef = useRef<HTMLIFrameElement>(null);
+  // o botão some ao abrir o mapa: o foco vai para o mapa em vez de cair no começo da página
+  useEffect(() => {
+    if (mostrar) mapaRef.current?.focus();
+  }, [mostrar]);
   if (mostrar) {
     return (
       <div className="surge-rapido min-h-[360px] overflow-hidden border border-white/15 bg-carbono">
         <iframe
+          ref={mapaRef}
           title={`Mapa: ${endereco.rua}, ${endereco.cidade}`}
           src={mapaEmbed}
           loading="lazy"
@@ -176,7 +182,7 @@ function CartaoMapa() {
 
 export function Contato() {
   return (
-    <section id="contato" className="bg-black py-24 md:py-32">
+    <section id="contato" className="bg-black py-16 md:py-32">
       <div className="pagina grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
         <div>
           <h2 className="titulo">Comece sua jornada</h2>
@@ -203,7 +209,7 @@ export function Contato() {
             <div>
               <dt className="text-sm text-cinza">E-mail</dt>
               <dd className="mt-1 text-lg">
-                <a href={`mailto:${contato.email}`} className="link-corre break-all">{contato.email}</a>
+                <a href={`mailto:${contato.email}`} className="link-corre inline-flex min-h-11 items-center break-all">{contato.email}</a>
               </dd>
             </div>
             <div>
@@ -248,7 +254,7 @@ export function Rodape() {
           </p>
         </div>
         <div className="flex flex-col gap-1 text-sm text-cinza md:items-end">
-          <a href={contato.linktree} target="_blank" rel="noopener noreferrer" className="hover:text-white">linktr.ee/brteamjiu</a>
+          <a href={contato.linktree} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center hover:text-white">linktr.ee/brteamjiu</a>
           <span>© {new Date().getFullYear()} {academia.nomeCompleto}</span>
         </div>
       </div>
@@ -272,7 +278,7 @@ export function WhatsAppFlutuante() {
       {balao && (
         <span className="surge-rapido relative rounded-full bg-white px-4 py-2 text-[15px] font-medium text-black shadow-xl">
           Dúvidas? Fale com a gente
-          <button type="button" onClick={() => setBalao(false)} className="-mr-2 ml-1 inline-flex size-7 items-center justify-center align-middle text-chumbo">
+          <button type="button" onClick={() => setBalao(false)} className="foco-duplo -my-2 -mr-3 ml-0 inline-flex size-11 items-center justify-center align-middle text-chumbo">
             <X className="size-4" aria-hidden="true" /><span className="sr-only">Fechar aviso</span>
           </button>
         </span>
@@ -281,10 +287,10 @@ export function WhatsAppFlutuante() {
         href={linkWhatsApp()}
         target="_blank"
         rel="noopener noreferrer"
-        className="pulso relative inline-flex size-14 items-center justify-center rounded-full bg-whatsapp text-black shadow-[0_10px_30px_rgb(0_0_0/0.5)] transition-transform hover:scale-110 active:scale-95"
+        className="foco-duplo pulso relative inline-flex size-14 items-center justify-center rounded-full bg-whatsapp text-black shadow-[0_10px_30px_rgb(0_0_0/0.5)] transition-transform hover:scale-110 active:scale-95"
       >
         <WhatsAppIcon className="size-7" />
-        <span className="sr-only">Falar com a BR Team no WhatsApp</span>
+        <span className="sr-only">Falar com a BR Team no WhatsApp (abre o WhatsApp)</span>
       </a>
     </div>
   );

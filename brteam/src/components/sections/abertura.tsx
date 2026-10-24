@@ -33,7 +33,7 @@ export function Hero() {
       {/* faixa preta de 1º grau, a do professor, atravessando a tela */}
       <Faixa amarrar graus={1} altura={26} className="mt-7 w-full md:mt-9" />
 
-      <div style={{ animationDelay: "600ms" }} className="pagina hero-entrada grid gap-8 pb-12 pt-8 md:grid-cols-[1.2fr_1fr] md:items-end md:pb-16">
+      <div style={{ animationDelay: "600ms" }} className="pagina hero-entrada grid gap-8 pb-24 pt-8 md:grid-cols-[1.2fr_1fr] md:items-end md:pb-16">
         <p className="max-w-[34ch] text-lg leading-relaxed text-white/85 md:text-xl">
           {academia.lema} Desde {academia.desde}, crianças, jovens e adultos treinam com a gente
           corpo, mente e alma.
@@ -60,7 +60,7 @@ const valores = [
 
 export function Academia() {
   return (
-    <section id="academia" className="claro bg-gelo py-24 text-black md:py-32">
+    <section id="academia" className="claro bg-gelo py-16 text-black md:py-32">
       <div className="pagina grid gap-14 lg:grid-cols-[1fr_1.1fr] lg:gap-20">
         <div>
           <h2 className="titulo">Muito mais que uma academia de Jiu-Jitsu</h2>
@@ -119,7 +119,7 @@ export function Academia() {
 
 export function Professor() {
   return (
-    <section id="professor" className="bg-carbono py-24 md:py-32">
+    <section id="professor" className="bg-carbono py-16 md:py-32">
       <div className="pagina grid items-center gap-12 md:grid-cols-[0.85fr_1fr] lg:gap-20">
         <div className="relative">
           <div className="overflow-hidden bg-[#ecebe8]">
@@ -204,7 +204,7 @@ const beneficios = [
 export function Kids() {
   const [principal, segunda, terceira] = fotos.kids;
   return (
-    <section id="kids" className="claro bg-white py-24 text-black md:py-32">
+    <section id="kids" className="claro bg-white py-16 text-black md:py-32">
       <div className="pagina grid gap-14 lg:grid-cols-[1fr_0.9fr] lg:gap-20">
         <div>
           <h2 className="titulo">Jiu-Jitsu para crianças</h2>
