@@ -101,9 +101,9 @@ Algumas vêm de miniaturas e têm resolução baixa (cerca de 360 px). Para melh
 
 ## Pendências
 
-1. Preços da troca de faixa e dias da semana das aulas (o site já está pronto para recebê-los).
-   Confirmar também as cores de kimono vendidas (o site oferece branco, preto e azul).
-2. Confirmar o número do endereço: o Instagram diz **886** e a apresentação em PDF diz **1049**. O site usa 886.
-3. Confirmar os horários: Adulto 6h–7h, 13h–14h e 20h–21h; Kids I 18h–19h e Kids II 19h–20h; e até que idade a criança fica no Kids (o site usa 12 anos).
-4. Confirmar as idades de cada turma (`faixasEtarias`) e as respostas das dúvidas frequentes.
-5. Autorização dos responsáveis para usar fotos das crianças no site.
+O endereço é o **nº 886** (confirmado pela placa na fachada, no Street View). O Google Maps mostra "896" por estimativa e a apresentação em PDF dizia 1049.
+
+1. Coordenadas da academia (latitude e longitude do pino no Google Maps) para o campo `geo` do JSON-LD em `index.html`.
+2. Perfil da Empresa no Google com o mesmo nome, endereço (886) e telefone do site.
+3. Até que idade a criança fica no Kids (o site usa 12 anos) e as respostas das dúvidas frequentes.
+4. Autorização dos responsáveis para usar fotos das crianças no site.
