@@ -4,28 +4,48 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
-    <title>BR Team Brazilian Jiu-Jitsu · Casimiro de Abreu (RJ)</title>
+    <title>Jiu-Jitsu em Casimiro de Abreu (RJ) · BR Team Brazilian Jiu-Jitsu</title>
     <meta
       name="description"
-      content="Academia de Jiu-Jitsu em Casimiro de Abreu (RJ) desde 2018. Turmas para crianças a partir de 4 anos e adultos, com o professor Bruno Ramos, faixa preta. Mensalidade de R$ 125. Agende sua aula experimental."
+      content="Academia de Jiu-Jitsu em Casimiro de Abreu (RJ) desde 2018. Turmas kids (a partir de 4 anos) e adulto, R$ 125/mês. Agende sua aula experimental."
     />
-    <meta property="og:title" content="BR Team Brazilian Jiu-Jitsu" />
-    <meta property="og:description" content="Jiu-Jitsu como filosofia de vida. Turmas kids e adulto em Casimiro de Abreu (RJ)." />
+    <link rel="canonical" href="https://oliveirabrennobjj-beep.github.io/Meu-site/brteam/" />
+    <meta property="og:title" content="BR Team Brazilian Jiu-Jitsu · Casimiro de Abreu (RJ)" />
+    <meta property="og:description" content="Turmas kids (a partir de 4 anos) e adulto com o professor Bruno Ramos. R$ 125/mês. Agende sua aula experimental." />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="pt_BR" />
-    <meta property="og:image" content="./fotos/turma-kids.webp" />
+    <meta property="og:site_name" content="BR Team Brazilian Jiu-Jitsu" />
+    <meta property="og:url" content="https://oliveirabrennobjj-beep.github.io/Meu-site/brteam/" />
+    <!-- endereço absoluto: o WhatsApp não lê caminho relativo nem WebP na prévia -->
+    <meta property="og:image" content="https://oliveirabrennobjj-beep.github.io/Meu-site/brteam/og-brteam.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Turma kids da BR Team de kimono no tatame" />
+    <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" type="image/png" href="./favicon.png" />
     <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
     <link rel="preload" as="image" href="./fotos/turma-kids.webp" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "SportsActivityLocation",
+        "@type": ["ExerciseGym", "SportsActivityLocation"],
+        "@id": "https://oliveirabrennobjj-beep.github.io/Meu-site/brteam/#academia",
         "name": "BR Team Brazilian Jiu-Jitsu",
+        "description": "Academia de Jiu-Jitsu em Casimiro de Abreu (RJ) desde 2018, turmas kids e adulto.",
+        "url": "https://oliveirabrennobjj-beep.github.io/Meu-site/brteam/",
+        "image": "https://oliveirabrennobjj-beep.github.io/Meu-site/brteam/og-brteam.jpg",
+        "logo": "https://oliveirabrennobjj-beep.github.io/Meu-site/brteam/logo-br-team.png",
+        "foundingDate": "2018",
+        "priceRange": "R$ 125/mês",
+        "areaServed": "Casimiro de Abreu",
         "telephone": "+55 22 99996-8108",
         "email": "brunoramosjiujitsu13@gmail.com",
         "paymentAccepted": "Pix",
-        "openingHours": "Mo,We,Th 06:00-21:00",
+        "openingHoursSpecification": [
+          { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Wednesday", "Thursday"], "opens": "06:00", "closes": "07:00" },
+          { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Wednesday", "Thursday"], "opens": "13:00", "closes": "14:00" },
+          { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Wednesday", "Thursday"], "opens": "18:00", "closes": "21:00" }
+        ],
         "address": {
           "@type": "PostalAddress",
           "streetAddress": "Rua Pastor Luiz Laurentino, 886, Santa Ely",
@@ -34,12 +54,30 @@
           "postalCode": "28860-000",
           "addressCountry": "BR"
         },
-        "sameAs": ["https://instagram.com/brteambjj"]
+        "sameAs": ["https://instagram.com/brteambjj", "https://linktr.ee/brteamjiu"]
       }
     </script>
   </head>
   <body>
-    <div id="root"></div>
+    <!-- Resumo para quem lê o site sem JavaScript (robôs e prévias); o React troca tudo ao carregar.
+         Se mudar horário ou preço em src/data/site.ts, mude aqui também. -->
+    <div id="root">
+      <main style="max-width: 40rem; margin: 0 auto; padding: 2rem 1rem; font-family: sans-serif; color: #fff">
+        <h1>BR Team Brazilian Jiu-Jitsu em Casimiro de Abreu (RJ)</h1>
+        <p>Academia de Jiu-Jitsu desde 2018. Turmas kids (a partir de 4 anos) e adulto com o professor Bruno Ramos, faixa preta.</p>
+        <h2>Horários (segunda, quarta e quinta)</h2>
+        <ul>
+          <li>Adulto: 6h às 7h</li>
+          <li>Turma mista: 13h às 14h</li>
+          <li>Kids 1: 18h às 19h</li>
+          <li>Kids 2: 19h às 20h</li>
+          <li>Adulto: 20h às 21h</li>
+        </ul>
+        <p>Mensalidade: R$ 125 por mês. Aceitamos Pix.</p>
+        <p>Rua Pastor Luiz Laurentino, 886, Santa Ely, Casimiro de Abreu – RJ, 28860-000</p>
+        <p>WhatsApp: <a href="https://wa.me/5522999968108">(22) 99996-8108</a> · Instagram: <a href="https://instagram.com/brteambjj">@brteambjj</a></p>
+      </main>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
