@@ -103,7 +103,7 @@ Algumas vêm de miniaturas e têm resolução baixa (cerca de 360 px). Para melh
 
 O endereço é o **nº 886** (confirmado pela placa na fachada, no Street View). O Google Maps mostra "896" por estimativa e a apresentação em PDF dizia 1049.
 
-1. Coordenadas da academia (latitude e longitude do pino no Google Maps) para o campo `geo` do JSON-LD em `index.html`.
+1. Coordenadas da academia (latitude e longitude) para o campo `geo` do JSON-LD em `index.html`. O pino já está em `mapaBusca` (`src/data/site.ts`) e em `hasMap`.
 2. Perfil da Empresa no Google com o mesmo nome, endereço (886) e telefone do site.
 3. Até que idade a criança fica no Kids (o site usa 12 anos) e as respostas das dúvidas frequentes.
 4. Autorização dos responsáveis para usar fotos das crianças no site.
