@@ -1,0 +1,22 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:M;src:url(montserrat.woff2);font-weight:100 900}
+html,body{margin:0;background:transparent}
+.wrap{width:800px;height:800px;position:relative;background:#B8FF3C;overflow:hidden}
+svg{position:absolute;inset:0}
+</style></head><body>
+<div class="wrap">
+<svg viewBox="0 0 800 800" width="800" height="800">
+  <defs>
+    <clipPath id="top"><rect x="0" y="0" width="800" height="400"/></clipPath>
+    <pattern id="scan" width="10" height="22" patternUnits="userSpaceOnUse" y="410">
+      <rect x="0" y="0" width="10" height="12" fill="#0B0F0E"/>
+    </pattern>
+    <mask id="botm"><rect x="0" y="412" width="800" height="388" fill="url(#scan)" style="fill:white"/></mask>
+    <clipPath id="bot"><rect x="0" y="412" width="800" height="388"/></clipPath>
+  </defs>
+  <g font-family="M" font-weight="900" font-size="420" text-anchor="middle" letter-spacing="-10">
+    <text x="384" y="547" fill="#0B0F0E" clip-path="url(#top)">RX</text>
+    <text x="384" y="547" fill="url(#scan)" clip-path="url(#bot)">RX</text>
+  </g>
+</svg>
+</div></body></html>
