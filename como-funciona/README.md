@@ -36,7 +36,7 @@ Esta pasta guarda o plano do canal, os roteiros e o projeto de cada vídeo.
 | # | Tema | Gancho | Status |
 |---|------|--------|--------|
 | 1 | Elevador | "Se o cabo arrebentar… você cai?" | ✅ pronto ([roteiro](roteiros/01-elevador.md)) |
-| 2 | Tampa da caneta | "Sabe aquele furinho na tampa?" | a fazer |
+| 2 | Tampa da caneta | "Sabe aquele furinho na tampa?" | ✅ pronto ([roteiro](roteiros/02-caneta.md)) |
 | 3 | Chuveiro | "Por que esquenta mais com menos água?" | a fazer |
 | 4 | Geladeira | "Ela não faz frio, tira o calor." | a fazer |
 | 5 | Descarga | "Pra onde vai tudo?" | a fazer |
