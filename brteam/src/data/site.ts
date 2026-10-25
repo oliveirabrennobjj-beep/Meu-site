@@ -47,7 +47,7 @@ export const instagram = (usuario: string) => `https://instagram.com/${usuario}`
 
 /*
   Grade de horários (informada pela academia). Treinos às segundas, quartas e quintas.
-  Kids 1 às 18h (a partir de 4 anos), Kids 2 às 19h (a partir de 10 anos).
+  Kids 1 às 18h (4 a 7 anos), Kids 2 às 19h (8 a 12 anos).
   Adulto às 6h, 13h (turma mista, a partir de 13 anos) e 20h.
 */
 export type TurmaChave = "Kids" | "Adulto";
@@ -58,19 +58,20 @@ export type Aula = {
   periodo: "Manhã" | "Tarde" | "Noite";
   publico: string;
   idadeMin: number;
+  idadeMax?: number;
 };
 export const diasDeAula: string | null = "Segunda, quarta e quinta";
 export const aulas: Aula[] = [
   { turma: "Adulto", nome: "Adulto", horario: "6h às 7h", periodo: "Manhã", publico: "a partir de 13 anos", idadeMin: 13 },
   { turma: "Adulto", nome: "Turma mista", horario: "13h às 14h", periodo: "Tarde", publico: "a partir de 13 anos", idadeMin: 13 },
-  { turma: "Kids", nome: "Kids 1", horario: "18h às 19h", periodo: "Noite", publico: "crianças a partir de 4 anos", idadeMin: 4 },
-  { turma: "Kids", nome: "Kids 2", horario: "19h às 20h", periodo: "Noite", publico: "crianças a partir de 10 anos", idadeMin: 10 },
+  { turma: "Kids", nome: "Kids 1", horario: "18h às 19h", periodo: "Noite", publico: "crianças de 4 a 7 anos", idadeMin: 4, idadeMax: 7 },
+  { turma: "Kids", nome: "Kids 2", horario: "19h às 20h", periodo: "Noite", publico: "crianças de 8 a 12 anos", idadeMin: 8, idadeMax: 12 },
   { turma: "Adulto", nome: "Adulto", horario: "20h às 21h", periodo: "Noite", publico: "a partir de 13 anos", idadeMin: 13 },
 ];
 export const aulasDaTurma = (t: TurmaChave) => aulas.filter((a) => a.turma === t);
-/** Horários que a pessoa pode escolher pela idade (criança de 10 a 12 vê as duas turmas Kids). */
+/** Horários que a pessoa pode escolher pela idade (cada criança vê só a turma Kids da idade dela). */
 export const aulasParaIdade = (idade: number) =>
-  aulasDaTurma(turmaPorIdade(idade).turma).filter((a) => idade >= a.idadeMin);
+  aulasDaTurma(turmaPorIdade(idade).turma).filter((a) => idade >= a.idadeMin && idade <= (a.idadeMax ?? Infinity));
 export const rotuloAula = (a: Aula) => `${a.nome}, ${a.horario}`;
 
 /*
@@ -204,7 +205,7 @@ export const fotos = {
   Ajuste `ate` se a idade de corte das turmas Kids for outra.
 */
 export const faixasEtarias: { ate: number; turma: TurmaChave; detalhe: string }[] = [
-  { ate: 12, turma: "Kids", detalhe: "Kids 1 às 18h (a partir de 4 anos) e Kids 2 às 19h (a partir de 10 anos). Se a criança for grande, o professor pode indicar a turma dos adultos." },
+  { ate: 12, turma: "Kids", detalhe: "Kids 1 às 18h (4 a 7 anos) e Kids 2 às 19h (8 a 12 anos). Se a criança for grande, o professor pode indicar a turma dos adultos." },
   { ate: 120, turma: "Adulto", detalhe: "Turmas às 6h, às 13h (mista) e às 20h. Escolha o horário que encaixa na sua rotina." },
 ];
 export function turmaPorIdade(idade: number) {

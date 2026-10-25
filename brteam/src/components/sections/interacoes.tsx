@@ -343,7 +343,7 @@ const perguntas: { p: string; r: ReactNode }[] = [
   },
   {
     p: "Com que idade a criança pode começar?",
-    r: `A partir de ${academia.idadeMinima} anos. As turmas Kids treinam às 18h e às 19h, e o professor indica a turma pela idade e pela experiência.`,
+    r: `A partir de ${academia.idadeMinima} anos. O Kids 1 (4 a 7 anos) treina às 18h e o Kids 2 (8 a 12 anos) às 19h. A partir de 13 anos, o aluno vai para as turmas de adultos.`,
   },
   {
     p: "Quais as formas de pagamento?",
