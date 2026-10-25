@@ -19,3 +19,6 @@ playwright/.cache/
 
 # Configuração local do Claude Code
 .claude/settings.local.json
+
+# Material pago do minicurso: não publicar no repositório público
+como-funciona/minicurso/

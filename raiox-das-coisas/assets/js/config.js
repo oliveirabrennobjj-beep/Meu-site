@@ -8,7 +8,7 @@ window.RAIOX = {
   precoAntigo: "",
   // Ex.: "ou 5x de R$ 8,40". Copie o valor que o checkout mostrar; vazio esconde a linha.
   parcelas: "",
-  acesso: "Acesso por 1 ano, com as atualizações incluídas.",
+  acesso: "O PDF é seu para sempre.",
   instagram: "raiox.dascoisas",
   tiktok: "raiox.dascoisas",
 };
