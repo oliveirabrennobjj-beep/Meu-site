@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useMovimento } from "@/lib/movimento";
 import { BarraProgresso, VoltarAoTopo } from "@/components/movimento";
 import { Header } from "@/components/sections/header";
-import { Academia, Hero, Kids, Professor } from "@/components/sections/abertura";
+import { Academia, Adultos, Hero, Kids, Professor } from "@/components/sections/abertura";
 import { Horarios, Mensalidade, TrocaDeFaixa } from "@/components/sections/treinos";
 import { AgendarAula, Duvidas } from "@/components/sections/interacoes";
 import { Loja } from "@/components/sections/loja";
@@ -31,6 +31,7 @@ export default function App() {
         <Academia />
         <Professor />
         <Kids />
+        <Adultos />
         <Horarios />
         <Mensalidade />
         <TrocaDeFaixa />

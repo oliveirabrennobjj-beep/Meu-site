@@ -165,6 +165,11 @@ export const fotos = {
   professorFilha: { src: "./fotos/bruno-e-marina.webp", alt: "Bruno Ramos ajoelhado no tatame ao lado da filha Marina, os dois de kimono", w: 356, h: 418 },
   espaco: { src: "./fotos/espaco-tatame.webp", alt: "O tatame da BR Team: salão branco com a bandeira do Brasil, diplomas na parede e o quadro com a marca da academia", w: 904, h: 236 },
   cumprimento: { src: "./fotos/professor-cumprimento.webp", alt: "Professor Bruno cumprimentando o tatame com uma reverência", w: 520, h: 833 },
+  adultos: [
+    { src: "./fotos/turma-mista.webp", alt: "Turma mista de adultos com faixas branca, azul, roxa e marrom no tatame da BR Team", w: 1080, h: 799 },
+    { src: "./fotos/treino-passagem.webp", alt: "Dois alunos treinando passagem de guarda no tatame", w: 685, h: 369 },
+    { src: "./fotos/familia-br-team.webp", alt: "Alunos e professores de todas as turmas reunidos na academia", w: 780, h: 416 },
+  ],
   kids: [
     { src: "./fotos/aluno-faixa-branca.webp", alt: "Aluno faixa branca em posição de guarda, sorrindo", w: 596, h: 1103 },
     { src: "./fotos/treino-meninas.webp", alt: "Duas alunas treinando uma posição de guarda", w: 640, h: 653 },
