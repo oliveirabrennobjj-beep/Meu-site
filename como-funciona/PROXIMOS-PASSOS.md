@@ -9,8 +9,8 @@
 - Instagram @raiox.dascoisas: trocar a foto pela lâmpada neon.
 
 ## Metas do dia
-- [ ] Criar a chave Pix aleatória, colocar no `config.js` e publicar a página (link da bio).
-- [ ] Mandar mensagem no WhatsApp para 20 empresas.
+- [x] Criar a chave Pix aleatória e colocar no `config.js` (falta só o merge pra publicar).
+- [x] Mandar mensagem no WhatsApp para 20 empresas.
 - [ ] Fazer 3 vídeos (sugestão: chuveiro, geladeira, descarga).
 - [ ] Postar o vídeo da caneta entre 18h e 21h.
-- [ ] Anotar as estatísticas do vídeo do elevador.
+- [x] Anotar as estatísticas do vídeo do elevador: Insta 1.374 views, 55 curtidas, 5 salvos; TikTok 1.129 views, 38 curtidas, 0 seguidores.
