@@ -241,3 +241,64 @@ export function Kids() {
     </section>
   );
 }
+
+// Os cinco pontos da série "Pronto para fazer de 2025 o seu ano de transformação?" do Instagram
+const beneficiosAdultos = [
+  {
+    titulo: "Disciplina e constância",
+    texto: "No tatame você aprende que grandes resultados vêm do esforço contínuo. Essa mentalidade vai além do treino.",
+  },
+  {
+    titulo: "Resiliência",
+    texto: "Cada posição difícil ensina a ter calma sob pressão e a não desistir. Uma lição para a vida.",
+  },
+  {
+    titulo: "Autoconfiança",
+    texto: "Superando obstáculos no treino, você descobre a própria força e ganha confiança para enfrentar qualquer coisa.",
+  },
+  {
+    titulo: "Menos estresse, mente limpa",
+    texto: "O Jiu-Jitsu funciona como terapia ativa: movimentos focados e aprendizado constante ajudam a esvaziar a cabeça.",
+  },
+];
+
+export function Adultos() {
+  const [principal, segunda, terceira] = fotos.adultos;
+  return (
+    <section id="adultos" className="bg-carbono py-16 md:py-32">
+      <div className="pagina grid gap-14 lg:grid-cols-[0.9fr_1fr] lg:gap-20">
+        <div className="grid grid-cols-2 gap-3 self-start max-lg:order-last">
+          <img
+            src={principal.src} alt={principal.alt} width={principal.w} height={principal.h} loading="lazy"
+            className="col-span-2 h-auto w-full"
+          />
+          <img src={segunda.src} alt={segunda.alt} width={segunda.w} height={segunda.h} loading="lazy" className="aspect-[4/3] w-full object-cover object-right" />
+          <img src={terceira.src} alt={terceira.alt} width={terceira.w} height={terceira.h} loading="lazy" className="aspect-[4/3] w-full object-cover" />
+        </div>
+
+        <div>
+          <h2 className="titulo">Jiu-Jitsu para adultos</h2>
+          <p className="mt-6 max-w-[44ch] text-xl text-cinza">
+            Nunca treinou? Começa do zero, no seu ritmo. Já é graduado? Treina para evoluir e competir. Aqui você faz parte
+            de uma família que apoia e celebra cada passo, do iniciante à faixa preta.
+          </p>
+          <div className="mt-12 grid gap-x-10 gap-y-9 sm:grid-cols-2">
+            {beneficiosAdultos.map((b) => (
+              <div key={b.titulo}>
+                <h3 className="font-display text-2xl font-bold uppercase leading-tight">{b.titulo}</h3>
+                <p className="mt-2 text-cinza">{b.texto}</p>
+              </div>
+            ))}
+          </div>
+          <a
+            href="#agendar"
+            onClick={() => window.dispatchEvent(new CustomEvent("agendar:para", { detail: "mim" }))}
+            className="botao botao-primario mt-12"
+          >
+            Agendar minha aula experimental
+          </a>
+        </div>
+      </div>
+    </section>
+  );
+}

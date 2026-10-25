@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import {
-  Award, Baby, ShoppingBag, CalendarCheck, CalendarClock, HelpCircle, Home, MapPin, Menu, MessageCircle, Shield, Sparkles, User, Wallet, X, Images,
+  Award, Baby, ShoppingBag, CalendarCheck, CalendarClock, HelpCircle, Home, MapPin, Menu, MessageCircle, Shield, Sparkles, User, Users, Wallet, X, Images,
 } from "lucide-react";
 import { SidebarNav, type NavGroupData, type NavItemData } from "@/components/ui/dashboard-sidebar";
 import { contato, instagram, linkWhatsApp, mapaRota } from "@/data/site";
@@ -11,6 +11,7 @@ const links = [
   { id: "academia", label: "Academia" },
   { id: "professor", label: "Professor" },
   { id: "kids", label: "Kids" },
+  { id: "adultos", label: "Adultos" },
   { id: "horarios", label: "Horários" },
   { id: "planos", label: "Planos" },
   { id: "faixas", label: "Troca de faixa" },
@@ -26,6 +27,7 @@ const grupos: NavGroupData[] = [
       { id: "academia", title: "A academia", icon: Shield },
       { id: "professor", title: "Professor Bruno Ramos", icon: User },
       { id: "kids", title: "Jiu-Jitsu para crianças", icon: Baby },
+      { id: "adultos", title: "Jiu-Jitsu para adultos", icon: Users },
     ],
   },
   {
