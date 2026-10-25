@@ -183,7 +183,7 @@ export const fotos = {
     { src: "./fotos/turma-mista.webp", alt: "Turma mista de adultos com faixas branca, azul, roxa e marrom no tatame da BR Team", legenda: "Turma mista", w: 1080, h: 799 },
     { src: "./fotos/graduacao-adultos.webp", alt: "Alunos adultos de kimono branco na graduação, com certificado", legenda: "Graduação dos adultos", w: 356, h: 417 },
     { src: "./fotos/competicao.webp", alt: "Professor Bruno na arquibancada de um campeonato", legenda: "Dia de campeonato", w: 356, h: 473 },
-    { src: "./fotos/turma-kids-2.webp", alt: "Turma Kids 2 em fila encostada na parede, de kimono e faixas branca, cinza e amarela", legenda: "Turma Kids 2", w: 1080, h: 716 },
+    { src: "./fotos/turma-kids-2.webp", alt: "Crianças pequenas em fila encostadas na parede, de kimono e faixas branca, cinza e amarela", legenda: "Os pequenos da turma kids", w: 1080, h: 716 },
     { src: "./fotos/troca-de-faixa-turma.webp", alt: "Colação de grau e troca de faixa de uma turma infantil", legenda: "Colação de grau", w: 355, h: 474 },
     { src: "./fotos/turma-tatame.webp", alt: "Turma infantil reunida no tatame com o professor", legenda: "Turma no tatame", w: 356, h: 418 },
     { src: "./fotos/familia-br-team.webp", alt: "Alunos e professores de todas as turmas reunidos na academia", legenda: "Todas as turmas juntas", w: 780, h: 416 },
