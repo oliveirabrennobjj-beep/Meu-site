@@ -1,7 +1,9 @@
 import { Easing } from "remotion";
 
 export const FPS = 30;
-export const DURATION_S = 71.8;
+/** Closing card that sends viewers to the course link in the bio (narration ends at 70.3 s). */
+export const END_CARD = 70.8;
+export const DURATION_S = 74.4;
 
 export const C = {
   bg: "#06090a",
@@ -158,4 +160,6 @@ export const SFX: { src: string; at: number; vol: number }[] = [
   { src: "sfx/ding.mp3", at: 64.6, vol: 0.6 },
   { src: "sfx/pop.mp3", at: 65.4, vol: 0.6 },
   { src: "sfx/pop.mp3", at: 67.7, vol: 0.6 },
+  { src: "sfx/whoosh.mp3", at: END_CARD, vol: 0.5 },
+  { src: "sfx/ding.mp3", at: END_CARD + 0.5, vol: 0.55 },
 ];

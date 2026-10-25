@@ -89,7 +89,9 @@ export const at = (phrase: string, after = 0): number => {
 };
 
 const lastEnd = WORDS.length ? WORDS[WORDS.length - 1].e : 80;
-export const DURATION_S = Math.ceil((lastEnd + 2.2) * 10) / 10;
+/** Closing card that sends viewers to the course link in the bio. */
+export const END_CARD = lastEnd + 0.5;
+export const DURATION_S = Math.ceil((END_CARD + 3.6) * 10) / 10;
 
 // Scene marks
 export const T = {
@@ -270,4 +272,6 @@ export const SFX: { src: string; at: number; vol: number }[] = [
   { src: "sfx/ding.mp3", at: T.done + 1.2, vol: 0.6 },
   { src: "sfx/pop.mp3", at: T.cta, vol: 0.6 },
   { src: "sfx/pop.mp3", at: T.cta2, vol: 0.6 },
+  { src: "sfx/whoosh.mp3", at: END_CARD, vol: 0.5 },
+  { src: "sfx/ding.mp3", at: END_CARD + 0.5, vol: 0.55 },
 ];

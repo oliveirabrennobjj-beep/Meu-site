@@ -18,7 +18,7 @@ import { createTikTokStyleCaptions, type Caption } from "@remotion/captions";
 import { loadFont } from "@remotion/fonts";
 import { Fridge, FridgeStill } from "./Fridge";
 import { Cards } from "./Cards";
-import { BEATS, C, DURATION_S, FPS, SFX, T, WORDS, appear, pop, windowed } from "./timeline";
+import { BEATS, C, DURATION_S, END_CARD, FPS, SFX, T, WORDS, appear, pop, windowed } from "./timeline";
 
 loadFont({ family: "Montserrat", url: staticFile("fonts/montserrat.woff2"), weight: "100 900" });
 const FONT = "Montserrat, sans-serif";
@@ -195,7 +195,7 @@ const Confetti: React.FC<{ t: number }> = ({ t }) => {
 };
 
 const CTA: React.FC<{ t: number }> = ({ t }) => {
-  const o = appear(t, T.cta - 0.05, 0.4);
+  const o = appear(t, T.cta - 0.05, 0.4) * (1 - appear(t, END_CARD, 0.3));
   if (o <= 0) return null;
   const row = (from: number, q: string, word: string, color: string) => (
     <div
@@ -231,6 +231,53 @@ const CTA: React.FC<{ t: number }> = ({ t }) => {
       {row(T.cta, "Já sabia? Comenta", "EU SABIA", C.lime)}
       {row(T.cta2, "Não sabia? Comenta", "CHOCADO", C.cyan)}
     </div>
+  );
+};
+
+/** Last seconds: points to the profile, where the course link is. */
+const EndCard: React.FC<{ t: number }> = ({ t }) => {
+  const o = appear(t, END_CARD, 0.35);
+  if (o <= 0) return null;
+  const bounce = Math.abs(Math.sin((t - END_CARD) * 5)) * 36;
+  return (
+    <AbsoluteFill style={{ background: `rgba(6,9,10,${0.93 * o})`, fontFamily: FONT, opacity: o }}>
+      <div
+        style={{
+          position: "absolute",
+          left: 90,
+          right: 90,
+          top: 620,
+          textAlign: "center",
+          transform: `scale(${0.85 + 0.15 * pop(t, END_CARD, 0.5)})`,
+        }}
+      >
+        <div style={{ color: C.white, fontSize: 84, fontWeight: 900, lineHeight: 1.05, letterSpacing: -1 }}>
+          Quer criar vídeos assim?
+        </div>
+        <div
+          style={{
+            marginTop: 50,
+            padding: "36px 40px",
+            borderRadius: 36,
+            border: `5px solid ${C.lime}`,
+            background: "rgba(6,9,10,0.95)",
+            boxShadow: `0 0 60px ${C.lime}55`,
+            opacity: appear(t, END_CARD + 0.5, 0.3),
+          }}
+        >
+          <div style={{ color: C.steel, fontSize: 46, fontWeight: 800 }}>O passo a passo tá no</div>
+          <div style={{ color: C.lime, fontSize: 92, fontWeight: 900, letterSpacing: 2 }}>LINK DA BIO</div>
+        </div>
+      </div>
+      <svg
+        width={200}
+        height={260}
+        viewBox="0 0 200 260"
+        style={{ position: "absolute", left: 440, top: 300 - bounce, opacity: appear(t, END_CARD + 0.8, 0.3) }}
+      >
+        <path d="M 100 250 L 100 40 M 30 110 L 100 30 L 170 110" stroke={C.lime} strokeWidth={26} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    </AbsoluteFill>
   );
 };
 
@@ -358,6 +405,7 @@ export const Geladeira: React.FC = () => {
       <Cards t={t} />
       <Confetti t={t} />
       <CTA t={t} />
+      <EndCard t={t} />
       <Captions t={t} />
 
       {/* progress */}
