@@ -13,6 +13,7 @@ const box = (x1, y1, x2, y2) => ({
 
 const fotos = [
   // [print, recorte, arquivo, largura]
+  ["a88a601a-image.jpg", box(0, 568, 923, 1190), "tatame-cheio", 1080],
   ["c18e5c31-image.jpg", box(0, 440, 923, 1038), "turma-kids-1", 1080],
   ["74423a0a-image.jpg", box(0, 456, 923, 1068), "turma-kids-2", 1080],
   ["2d78077f-image.jpg", box(0, 300, 923, 832), "pequenos-gigantes", 1080],
