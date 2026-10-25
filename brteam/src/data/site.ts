@@ -171,6 +171,7 @@ export const fotos = {
     { src: "./fotos/amigos-kids.webp", alt: "Dois alunos abraçados, de kimono preto e faixa cinza", w: 560, h: 692 },
   ],
   galeria: [
+    { src: "./fotos/tatame-cheio.webp", alt: "Tatame lotado: alunos e professores de kimono branco e preto, com faixas de várias cores, reunidos na academia", legenda: "Tatame cheio", w: 1080, h: 728 },
     { src: "./fotos/turma-kids-1.webp", alt: "Turma Kids 1 reunida no tatame, crianças de kimono preto e branco sorrindo em frente aos quadros da academia", legenda: "Turma Kids 1", w: 1080, h: 700 },
     { src: "./fotos/podio-rio-winter-open.webp", alt: "Alunos no pódio do Rio Winter International Open 2026 da IBJJF", legenda: "Rio Winter International Open 2026 (IBJJF)", w: 356, h: 474 },
     { src: "./fotos/troca-de-faixa-kids-ii.webp", alt: "Colação de grau e troca de faixa da Turma Kids II", legenda: "Troca de faixa, Turma Kids II", w: 356, h: 474 },
