@@ -1,7 +1,7 @@
 import React from "react";
 import { Easing } from "remotion";
 
-export type Pose = "idle" | "wave" | "point" | "dig" | "nose" | "worried" | "thumbs" | "panic" | "party" | "throw";
+export type Pose = "idle" | "wave" | "point" | "dig" | "nose" | "worried" | "thumbs" | "panic" | "party" | "throw" | "pick";
 export type PlanItem = [number, number, number, Pose, number];
 
 
@@ -45,6 +45,8 @@ const poseAngles = (pose: Pose, t: number) => {
       return [-2.7, -0.7, -2.7, 0.7, 0, 0, 0.25 * s(t * 5)];
     case "throw":
       return [0.1 * s(t * 2), -0.15, -2.2 + 1.6 * Math.max(0, s(t * 5)), 0.2, 0.1, 0, 0];
+    case "pick":
+      return [-2.5, -0.45, -1.5, 0.2, 0, 0, 0.12];
     case "thumbs":
       return [0.1 * s(t * 2), -0.15, -1.6, 0.2, 0, 0, 0.1];
     case "panic":
@@ -55,6 +57,30 @@ const poseAngles = (pose: Pose, t: number) => {
       return [0.08 * s(t * 2), -0.15, -0.08 * s(t * 2), 0.15, 0, 0, 0.1 * s(t)];
   }
 };
+
+/** Picareta apoiada no ombro (presa na mão do braço A). */
+export const Pickaxe: React.FC<{ rot?: [number, number, number] }> = ({ rot = [0.4, 0, -1.2] }) => (
+  <group rotation={rot}>
+    <mesh position={[0, -0.55, 0]}>
+      <cylinderGeometry args={[0.05, 0.05, 1.7, 8]} />
+      <M c="#9a6334" />
+    </mesh>
+    <group position={[0, -1.35, 0]}>
+      <mesh rotation={[0, 0, Math.PI / 2]}>
+        <coneGeometry args={[0.09, 0.6, 6]} />
+        <M c="#8f98a3" />
+      </mesh>
+      <mesh rotation={[0, 0, -Math.PI / 2]} position={[-0.42, 0, 0]}>
+        <coneGeometry args={[0.09, 0.6, 6]} />
+        <M c="#8f98a3" />
+      </mesh>
+      <mesh position={[-0.12, 0, 0]}>
+        <boxGeometry args={[0.2, 0.18, 0.18]} />
+        <M c="#6f7782" />
+      </mesh>
+    </group>
+  </group>
+);
 
 const Shovel: React.FC = () => (
   <group rotation={[0.9, 0, 0]}>
@@ -70,7 +96,7 @@ const Shovel: React.FC = () => (
 );
 
 /** plan: [início, x, z, pose, olhar]; o boneco anda até cada ponto. yAt deixa a cena levantar/afundar o boneco. */
-export const Guy: React.FC<{ t: number; plan: PlanItem[]; yAt?: (t: number) => number; scale?: number }> = ({ t, plan, yAt, scale = 0.95 }) => {
+export const Guy: React.FC<{ t: number; plan: PlanItem[]; yAt?: (t: number) => number; scale?: number; pickRot?: [number, number, number] }> = ({ t, plan, yAt, scale = 0.95, pickRot }) => {
   let i = 0;
   for (let k = 0; k < plan.length; k++) if (t >= plan[k][0]) i = k;
   const [s, x1, z1, pose, look] = plan[i];
@@ -112,10 +138,13 @@ export const Guy: React.FC<{ t: number; plan: PlanItem[]; yAt?: (t: number) => n
           r={0.13}
           c="#ff7a1a"
           end={
-            <mesh>
-              <sphereGeometry args={[0.15, 8, 6]} />
-              <M c={SKIN} />
-            </mesh>
+            <>
+              <mesh>
+                <sphereGeometry args={[0.15, 8, 6]} />
+                <M c={SKIN} />
+              </mesh>
+              {pose === "pick" && !walking ? <Pickaxe rot={pickRot} /> : null}
+            </>
           }
         />
         <Limb
@@ -131,7 +160,7 @@ export const Guy: React.FC<{ t: number; plan: PlanItem[]; yAt?: (t: number) => n
                 <sphereGeometry args={[0.15, 8, 6]} />
                 <M c={SKIN} />
               </mesh>
-              {pose === "thumbs" && !walking ? (
+              {(pose === "thumbs" || pose === "pick") && !walking ? (
                 <mesh position={[0, -0.08, 0.14]} rotation={[-1.2, 0, 0]}>
                   <capsuleGeometry args={[0.05, 0.12, 2, 6]} />
                   <M c={SKIN} />

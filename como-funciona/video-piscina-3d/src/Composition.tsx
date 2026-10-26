@@ -8,6 +8,7 @@ import { FPS, appear, pop } from "./lib";
 import { DURATION_S, LABELS, SFX, T, WORDS } from "./timeline";
 import { FOV, H, W, project } from "./camera";
 import { PoolScene } from "./Pool";
+import { Perfis } from "./Perfil";
 
 loadFont({ family: "Montserrat", url: staticFile("fonts/montserrat.woff2"), weight: "100 900" });
 const FONT = "Montserrat, sans-serif";
@@ -226,6 +227,7 @@ const Cover: React.FC = () => {
 export const MyComposition = () => (
   <>
     <Composition id="Piscina" component={Fossa} durationInFrames={Math.round(DURATION_S * FPS)} fps={FPS} width={W} height={H} />
+    <Perfis />
     <Still id="Capa-Piscina" component={Cover} width={W} height={H} />
   </>
 );
