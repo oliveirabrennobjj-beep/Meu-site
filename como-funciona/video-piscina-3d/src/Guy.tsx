@@ -1,0 +1,190 @@
+import React from "react";
+import { Easing } from "remotion";
+
+export type Pose = "idle" | "wave" | "point" | "dig" | "nose" | "worried" | "thumbs" | "panic" | "party" | "throw";
+export type PlanItem = [number, number, number, Pose, number];
+
+
+const WALK = 1.4;
+const SKIN = "#f2c49b";
+
+const M: React.FC<{ c: string }> = ({ c }) => <meshStandardMaterial color={c} flatShading roughness={0.8} />;
+
+/** Braço/perna: grupo no ombro/quadril; o membro pende para baixo e gira em x (frente) e z (lado). */
+const Limb: React.FC<{ p: [number, number, number]; rx: number; rz: number; len: number; r: number; c: string; end?: React.ReactNode; endC?: string }> = ({
+  p,
+  rx,
+  rz,
+  len,
+  r,
+  c,
+  end,
+}) => (
+  <group position={p} rotation={[rx, 0, rz]}>
+    <mesh position={[0, -len / 2, 0]} castShadow>
+      <capsuleGeometry args={[r, len - 2 * r, 3, 8]} />
+      <M c={c} />
+    </mesh>
+    <group position={[0, -len, 0]}>{end}</group>
+  </group>
+);
+
+const poseAngles = (pose: Pose, t: number) => {
+  const s = Math.sin;
+  // [braçoA x, braçoA z, braçoB x, braçoB z, inclinação, pulo, cabeça y]
+  switch (pose) {
+    case "wave":
+      return [0.1 * s(t * 2), -0.15, 0, 2.5 + 0.35 * s(t * 9), 0, 0, 0.15 * s(t * 1.5)];
+    case "point":
+      return [0.1 * s(t * 2), -0.15, -1.35, 0.25, 0.05, 0, -0.2];
+    case "dig":
+      return [-0.9 + 0.55 * s(t * 6), -0.25, -0.9 + 0.55 * s(t * 6), 0.25, 0.25 + 0.12 * s(t * 6), 0, 0];
+    case "nose":
+      return [-2.5, -0.35, 0.1, 0.4, -0.05, 0, 0.35 * s(t * 7)];
+    case "worried":
+      return [-2.7, -0.7, -2.7, 0.7, 0, 0, 0.25 * s(t * 5)];
+    case "throw":
+      return [0.1 * s(t * 2), -0.15, -2.2 + 1.6 * Math.max(0, s(t * 5)), 0.2, 0.1, 0, 0];
+    case "thumbs":
+      return [0.1 * s(t * 2), -0.15, -1.6, 0.2, 0, 0, 0.1];
+    case "panic":
+      return [0.2 * s(t * 14), -2.7 + 0.3 * s(t * 11), 0.2 * s(t * 13), 2.7 + 0.3 * s(t * 12), 0, Math.abs(s(t * 9)) * 0.35, 0.3 * s(t * 8)];
+    case "party":
+      return [0, -2.5 - 0.3 * s(t * 8), 0, 2.5 + 0.3 * s(t * 8), 0, Math.abs(s(t * 6)) * 0.55, 0];
+    default:
+      return [0.08 * s(t * 2), -0.15, -0.08 * s(t * 2), 0.15, 0, 0, 0.1 * s(t)];
+  }
+};
+
+const Shovel: React.FC = () => (
+  <group rotation={[0.9, 0, 0]}>
+    <mesh position={[0, -0.5, 0]}>
+      <cylinderGeometry args={[0.045, 0.045, 1.6, 6]} />
+      <M c="#8a5a32" />
+    </mesh>
+    <mesh position={[0, -1.4, 0]}>
+      <boxGeometry args={[0.4, 0.45, 0.05]} />
+      <M c="#9aa3ad" />
+    </mesh>
+  </group>
+);
+
+/** plan: [início, x, z, pose, olhar]; o boneco anda até cada ponto. yAt deixa a cena levantar/afundar o boneco. */
+export const Guy: React.FC<{ t: number; plan: PlanItem[]; yAt?: (t: number) => number; scale?: number }> = ({ t, plan, yAt, scale = 0.95 }) => {
+  let i = 0;
+  for (let k = 0; k < plan.length; k++) if (t >= plan[k][0]) i = k;
+  const [s, x1, z1, pose, look] = plan[i];
+  const [, x0, z0] = plan[Math.max(0, i - 1)];
+  const k = i === 0 ? 1 : Easing.inOut(Easing.quad)(Math.min(1, (t - s) / WALK));
+  const x = x0 + (x1 - x0) * k;
+  const z = z0 + (z1 - z0) * k;
+  const walking = k < 1 && Math.abs(x1 - x0) > 0.3;
+  const step = walking ? Math.sin(t * 11) : 0;
+  const face = walking ? Math.sign(x1 - x0) * 1.2 : look;
+  const [ax, az, bx, bz, lean, jump, headY] = walking ? [-0.6 * step, -0.15, 0.6 * step, 0.15, 0.08, Math.abs(step) * 0.08, 0] : poseAngles(pose, t);
+  const breathe = 1 + 0.015 * Math.sin(t * 3);
+  return (
+    <group position={[x, (yAt ? yAt(t) : 0.3) + jump, z]} rotation={[0, face, 0]} scale={scale}>
+      {/* pernas */}
+      <Limb p={[-0.22, 1.0, 0]} rx={0.7 * step} rz={0.02} len={1.0} r={0.17} c="#2f5fb3" end={<mesh position={[0, 0.02, 0.08]}><boxGeometry args={[0.32, 0.2, 0.48]} /><M c="#222" /></mesh>} />
+      <Limb p={[0.22, 1.0, 0]} rx={-0.7 * step} rz={-0.02} len={1.0} r={0.17} c="#2f5fb3" end={<mesh position={[0, 0.02, 0.08]}><boxGeometry args={[0.32, 0.2, 0.48]} /><M c="#222" /></mesh>} />
+      <group position={[0, 1.0, 0]} rotation={[lean, 0, 0]} scale={[1, breathe, 1]}>
+        {/* quadril e tronco */}
+        <mesh position={[0, 0.08, 0]}>
+          <boxGeometry args={[0.72, 0.25, 0.42]} />
+          <M c="#2f5fb3" />
+        </mesh>
+        <mesh position={[0, 0.6, 0]} castShadow>
+          <capsuleGeometry args={[0.38, 0.5, 4, 10]} />
+          <M c="#ff7a1a" />
+        </mesh>
+        {/* faixa refletiva */}
+        <mesh position={[0, 0.55, 0]}>
+          <cylinderGeometry args={[0.395, 0.395, 0.1, 10]} />
+          <M c="#e8f04a" />
+        </mesh>
+        {/* braços */}
+        <Limb
+          p={[-0.48, 0.95, 0]}
+          rx={ax}
+          rz={az}
+          len={0.85}
+          r={0.13}
+          c="#ff7a1a"
+          end={
+            <mesh>
+              <sphereGeometry args={[0.15, 8, 6]} />
+              <M c={SKIN} />
+            </mesh>
+          }
+        />
+        <Limb
+          p={[0.48, 0.95, 0]}
+          rx={bx}
+          rz={bz}
+          len={0.85}
+          r={0.13}
+          c="#ff7a1a"
+          end={
+            <>
+              <mesh>
+                <sphereGeometry args={[0.15, 8, 6]} />
+                <M c={SKIN} />
+              </mesh>
+              {pose === "thumbs" && !walking ? (
+                <mesh position={[0, -0.08, 0.14]} rotation={[-1.2, 0, 0]}>
+                  <capsuleGeometry args={[0.05, 0.12, 2, 6]} />
+                  <M c={SKIN} />
+                </mesh>
+              ) : null}
+              {pose === "dig" && !walking ? <Shovel /> : null}
+            </>
+          }
+        />
+        {/* cabeça */}
+        <group position={[0, 1.55, 0]} rotation={[0, headY, 0]}>
+          <mesh castShadow>
+            <sphereGeometry args={[0.55, 14, 10]} />
+            <M c={SKIN} />
+          </mesh>
+          {[-0.2, 0.2].map((ex) => (
+            <group key={ex} position={[ex, 0.08, 0.45]}>
+              <mesh>
+                <sphereGeometry args={[0.16, 10, 8]} />
+                <M c="#ffffff" />
+              </mesh>
+              <mesh position={[0, 0, 0.13]}>
+                <sphereGeometry args={[0.075, 8, 6]} />
+                <M c="#111" />
+              </mesh>
+            </group>
+          ))}
+          {pose === "panic" || pose === "worried" ? (
+            <mesh position={[0, -0.24, 0.5]}>
+              <sphereGeometry args={[0.1, 8, 6]} />
+              <M c="#5a1a1a" />
+            </mesh>
+          ) : (
+            <mesh position={[0, -0.16, 0.48]} rotation={[0.25, 0, Math.PI]}>
+              <torusGeometry args={[0.17, 0.045, 6, 12, Math.PI]} />
+              <M c="#5a1a1a" />
+            </mesh>
+          )}
+          <mesh position={[0, -0.02, 0.56]}>
+            <sphereGeometry args={[0.07, 6, 5]} />
+            <M c="#e8a77c" />
+          </mesh>
+          {/* capacete */}
+          <mesh position={[0, 0.12, 0]}>
+            <sphereGeometry args={[0.6, 14, 8, 0, Math.PI * 2, 0, Math.PI / 2]} />
+            <M c="#ffd60a" />
+          </mesh>
+          <mesh position={[0, 0.13, 0.1]}>
+            <cylinderGeometry args={[0.68, 0.68, 0.06, 14]} />
+            <M c="#f2c200" />
+          </mesh>
+        </group>
+      </group>
+    </group>
+  );
+};
