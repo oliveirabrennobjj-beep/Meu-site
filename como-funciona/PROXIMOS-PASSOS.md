@@ -30,3 +30,14 @@ Começar na semana de 02/11/2026. Antes disso, o foco é o Raio-X. Cuidados:
 - Raio-X: os mesmos vídeos também no YouTube Shorts.
 - Horários iniciais (horário de Brasília): 12h, 18h e 21h. Com 4 vídeos, somar 7h30. Ajustar pelas estatísticas depois de 1 semana.
 - Produção em lote: roteiros de uma vez, depois narrações, depois animações.
+
+## Divisão dos perfis (26/10)
+
+| Perfil | Estilo | O que explica | Começo do vídeo |
+|---|---|---|---|
+| **Raio-X das Coisas** | 2D, palitinho | Como foi inventado e como funciona por dentro (chuveiro, caneta, elevador) | "Você inventou…" |
+| **E Se Você Fizesse?** (@e.se.voce.fizesse) | 3D, boneco de capacete | Como se faz, construindo do zero, na casa e no quintal (piscina, fossa, caixa d'água, poço) | "E se você fizesse…?" |
+| **Contos da Madrugada** | terror/lendas | Histórias | — |
+
+- Dá pra fazer o mesmo tema nos dois perfis, um "por dentro" e outro "construindo", e um puxar público pro outro no final do vídeo.
+- Foto de perfil do E Se Você Fizesse: `entregas/perfil-e-se-voce-fizesse/foto-perfil.png`.
