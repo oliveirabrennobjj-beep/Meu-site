@@ -41,7 +41,7 @@ Esta pasta guarda o plano do canal, os roteiros e o projeto de cada vídeo.
 |---|------|--------|--------|
 | 1 | Elevador | "Se o cabo arrebentar… você cai?" | ✅ pronto ([roteiro](roteiros/01-elevador.md)) |
 | 2 | Tampa da caneta | "Sabe aquele furinho na tampa?" | ✅ pronto ([roteiro](roteiros/02-caneta.md)) |
-| 3 | Chuveiro | "Por que esquenta mais com menos água?" | 📝 roteiro pronto ([roteiro](roteiros/03-chuveiro.md)) |
+| 3 | Chuveiro | "Por que esquenta mais com menos água?" | ✅ pronto com voz ([roteiro](roteiros/03-chuveiro.md)) |
 | 4 | Geladeira | "Ela não faz frio, tira o calor." | ✅ postado no Instagram (25/10) |
 | 5 | Descarga | "Pra onde vai tudo?" | 📝 roteiro pronto ([roteiro](roteiros/04-descarga.md)) |
 | 6 | Chave | "Como ela sabe que é da sua porta?" | 📝 roteiro pronto ([roteiro](roteiros/05-fechadura.md)) |
