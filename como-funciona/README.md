@@ -49,6 +49,7 @@ Esta pasta guarda o plano do canal, os roteiros e o projeto de cada vídeo.
 | 8 | Ar-condicionado | "De onde vem a água que pinga?" | a fazer |
 | 9 | Micro-ondas | "Por que quase não esquenta o prato?" | a fazer |
 | 10 | Telhado | "Se a telha tem frestas, por que a chuva não entra?" | a fazer |
+| 11 | Fossa séptica (3D) | "Pra onde vai o cocô de quem não tem esgoto?" | 🎬 animação pronta, falta voz ([roteiro](roteiros/07-fossa.md)) |
 
 ## Ferramentas
 
