@@ -4,6 +4,7 @@ import * as THREE from "three";
 import { appear, pop } from "./lib";
 import { T } from "./timeline";
 import { camAt } from "./camera";
+import { Guy } from "./Guy";
 
 type V3 = [number, number, number];
 
@@ -450,6 +451,7 @@ export const Yard: React.FC<{ t: number }> = ({ t }) => {
       <Poco t={t} />
       <Distance t={t} />
       <Truck t={t} />
+      <Guy t={t} />
     </>
   );
 };

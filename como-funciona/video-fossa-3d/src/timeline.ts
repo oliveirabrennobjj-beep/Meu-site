@@ -36,7 +36,7 @@ export const T = {
 export const CAM: [number, [number, number, number], [number, number, number]][] = [
   [T.semEsgoto, [-3, 4, 19], [-7.5, -0.3, -1.5]],
   [T.privada, [-4, 1.5, 16], [-6, -0.5, 0]],
-  [T.cava, [-1, 2.5, 19], [-3.6, -1.2, 0]],
+  [T.cava, [0.2, 2.5, 19], [-2.2, -0.9, 0]],
   [T.contamina, [5, 5, 34], [4, -2.4, 0]],
   [T.fossa, [0, 1, 17], [-2, -2.4, 0.6]],
   [T.pesado, [-0.5, -1.5, 13], [-2, -2.8, 0.6]],
