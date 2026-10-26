@@ -10,7 +10,7 @@
 
 ## Metas do dia
 - [ ] Produzir os 4 vídeos (chuveiro, descarga, fechadura, panela de pressão).
-- [ ] Criar o Barraco na Cozinha no TikTok e no Instagram e produzir o episódio 1.
+- [ ] Criar o Contos da Madrugada no TikTok e no Instagram e produzir os 3 primeiros vídeos (estrear antes do Halloween, 31/10).
 - [ ] Postar cada um no TikTok, no Instagram e no YouTube Shorts (mesmo arquivo).
 - [ ] Criar a chave Pix aleatória e publicar a página de vendas.
 - [ ] Mandar mensagem no WhatsApp para 20 empresas.
@@ -23,9 +23,10 @@ Começar na semana de 02/11/2026. Antes disso, o foco é o Raio-X. Cuidados:
 - Agora o foco é fazer o Raio-X pegar tração. Os mesmos vídeos já vão para o YouTube Shorts, para o público geral.
 
 ## Ritmo de postagem (a partir de 26/10)
-- Dois perfis, cada um no TikTok e no Instagram: Raio-X das Coisas (curiosidade) e Barraco na Cozinha
-  (novela em capítulos, plano em `barraco-na-cozinha/`).
-- Começar com 2 vídeos por dia em cada perfil; subir para 3 quando estiver rodando.
+- Dois perfis, cada um no TikTok e no Instagram: Raio-X das Coisas (curiosidade) e Contos da Madrugada
+  (histórias de terror, lendas e mistério, plano em `contos-da-madrugada/`). O Barraco na Cozinha fica guardado.
+- Meta: 3 vídeos por dia em cada perfil (começar com 2 se faltar crédito no ElevenLabs).
+- Horários: Raio-X 12h, 18h e 21h; Contos da Madrugada 12h, 19h e 22h.
 - Raio-X: os mesmos vídeos também no YouTube Shorts.
 - Horários iniciais (horário de Brasília): 12h, 18h e 21h. Com 4 vídeos, somar 7h30. Ajustar pelas estatísticas depois de 1 semana.
 - Produção em lote: roteiros de uma vez, depois narrações, depois animações.
