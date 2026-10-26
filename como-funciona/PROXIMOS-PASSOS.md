@@ -16,7 +16,12 @@
 - [ ] Anotar as estatísticas dos vídeos já postados.
 
 ## YouTube Kids: decisão
-Deixar para depois (rever em uns 30 dias). Motivos:
+Começar na semana de 02/11/2026. Antes disso, o foco é o Raio-X. Cuidados:
 - Conteúdo "feito para crianças" no YouTube não tem anúncio personalizado, não tem comentários e rende bem menos.
 - O espaço infantil é dominado por marcas grandes, e o YouTube corta monetização de conteúdo de IA feito em massa.
 - Agora o foco é fazer o Raio-X pegar tração. Os mesmos vídeos já vão para o YouTube Shorts, para o público geral.
+
+## Ritmo de postagem (a partir de 26/10)
+- Meta: 3 vídeos por dia no Raio-X, os mesmos no TikTok, Instagram e YouTube Shorts.
+- Horários iniciais (horário de Brasília): 12h, 18h e 21h. Com 4 vídeos, somar 7h30. Ajustar pelas estatísticas depois de 1 semana.
+- Produção em lote: roteiros de uma vez, depois narrações, depois animações.
