@@ -41,3 +41,28 @@ Começar na semana de 02/11/2026. Antes disso, o foco é o Raio-X. Cuidados:
 
 - Dá pra fazer o mesmo tema nos dois perfis, um "por dentro" e outro "construindo", e um puxar público pro outro no final do vídeo.
 - Foto de perfil do E Se Você Fizesse: `entregas/perfil-e-se-voce-fizesse/foto-perfil.png`.
+
+## Série "carro e máquinas" (E Se Você Fizesse?, 3D), ideia de 27/10
+
+Referência de estilo: reel do @comoconstroi sobre o motor de 4 tempos (3D com boneco, corte por dentro, problema → solução, "Parabéns, você inventou…"). Usar gancho próprio, não copiar o dele.
+
+| # | Tema | Gancho |
+|---|---|---|
+| 1 | Motor do carro | "E se você fizesse um motor… começando com um isqueiro e uma garrafa?" |
+| 2 | Freio | "E se você fizesse um carro parar só com uma tábua?" |
+| 3 | Câmbio e embreagem | "E se você ligasse o motor direto na roda? O carro morre." |
+| 4 | Diferencial | "Por que a roda de fora gira mais rápido na curva?" |
+| 5 | Turbo | "E se você usasse a fumaça do escapamento pra dar mais força?" |
+| 6 | Suspensão e amortecedor | "E se seu carro só tivesse mola?" |
+| 7 | Radiador | "E se o motor não tivesse água?" |
+| 8 | Alternador e bateria | "Por que a bateria não acaba enquanto o carro anda?" |
+| 9 | Injeção eletrônica | "Como o carro sabe quanto combustível colocar?" |
+| 10 | Turbina de avião | "E se você fizesse um avião voar com um tubo de fogo?" |
+| 11 | Macaco hidráulico | "Como uma pessoa levanta um carro sozinha?" |
+| 12 | Motor 2 tempos (moto) | "Por que a moto faz 'nheeen' e solta fumaça?" |
+| 13 | Air bag | "Como uma bolsa enche em menos de um piscar de olhos?" |
+| 14 | Pneu | "Por que o pneu tem esses desenhos?" |
+| 15 | Elevador de carro | "Como o posto levanta seu carro pro alto?" |
+
+Ordem sugerida: motor → freio → câmbio → turbo → radiador.
+Pendente: créditos da ElevenLabs acabaram em 26/10 (22 restantes de 10.000).
