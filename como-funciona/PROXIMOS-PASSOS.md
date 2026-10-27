@@ -66,3 +66,17 @@ Referência de estilo: reel do @comoconstroi sobre o motor de 4 tempos (3D com b
 
 Ordem sugerida: motor → freio → câmbio → turbo → radiador.
 Pendente: créditos da ElevenLabs acabaram em 26/10 (22 restantes de 10.000).
+
+## Perfil novo: "Se Você Fosse Engenheiro" (ideia de 27/10)
+
+O Brenno quer um canal no estilo do @comoconstruir_yt (referência: youtube.com/shorts/hVnBEtW4njo, a sauna no banheiro),
+construindo coisas grandes do zero, tipo um caminhão. Vai virar um canal do YouTube que ele já tem, e também Instagram e TikTok.
+- **Logo:** `entregas/canal-engenheiro/foto-perfil.png` (projeto `canal-engenheiro/`, `npm run logo`). Engenheiro de capacete branco,
+  óculos e camisa azul, na frente de uma planta de caminhão. É diferente do boneco do E Se Você Fizesse (capacete amarelo, colete laranja).
+- **Fórmula do roteiro** (a mesma da referência, que repete 5 ou 6 vezes):
+  "Se você [faz o simples]… **Mas** [problema engraçado]. **Então** você [solução]. Esse é o/a **[nome técnico]**!"
+  No fim: "E é assim que se constrói um/uma ___." Cada nome técnico aparece numa etiqueta amarela.
+- **Diferença pro E Se Você Fizesse:** lá é casa e quintal. Aqui são máquinas e obras grandes: caminhão, ponte, prédio, avião, navio, guindaste.
+  A série "carro e máquinas" (motor, freio, câmbio…) pode virar episódios do caminhão.
+- **Nomes para escolher:** Se Você Fosse Engenheiro · Engenheiro do Zero · Construindo do Zero.
+- **Primeiros temas:** caminhão (chassi → motor → câmbio → freio a ar → quinta roda), ponte, prédio, guindaste, navio que não afunda, elevador de obra.
