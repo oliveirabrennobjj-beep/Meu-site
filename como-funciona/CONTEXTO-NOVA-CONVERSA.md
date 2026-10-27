@@ -1,4 +1,4 @@
-# Contexto para uma conversa nova (vídeos), atualizado em 27/10/2026
+# Contexto para uma conversa nova (vídeos), atualizado em 27/10/2026 (tarde)
 
 Leia este arquivo primeiro. Responda sempre em **português**: o Brenno reclama quando a resposta vem em inglês.
 Depois leia `PROXIMOS-PASSOS.md` e `README.md` desta pasta.
@@ -22,9 +22,10 @@ Depois leia `PROXIMOS-PASSOS.md` e `README.md` desta pasta.
 |---|---|---|---|---|
 | Piscina | E Se Você Fizesse? | `video-piscina-3d/` | `Piscina` / `Capa-Piscina` | combinado para 26/10 (conferir se foi postado) |
 | Fossa | E Se Você Fizesse? | `video-fossa-3d/` | `Fossa` / `Capa-Fossa` | **postar em 27/10** |
-| Caixa d'água | E Se Você Fizesse? | `video-caixa-3d/` | `Caixa` / `Capa-Caixa` | postar em 28/10 |
+| Caixa d'água | E Se Você Fizesse? | `video-caixa-3d/` | `Caixa` / `Capa-Caixa` | o Brenno estava postando em 27/10 às 13h (conferir) |
 | Chuveiro | Raio-X | `video-chuveiro/` | `Chuveiro` / `Capa` | postado em 26/10 |
 | Elevador, caneta | Raio-X | `video-elevador/`, `video-caneta/` | `Elevador`, `Caneta` | prontos antes |
+| Motor | E Se Você Fizesse? | `video-motor-3d/` | `Motor` / `Capa-Motor` | animação pronta com tempo provisório, **falta a voz** (roteiro `09-motor.md`) |
 | 3h33 | Contos | `../contos-da-madrugada/video/` | — | pronto, falta criar o perfil |
 
 Os MP4 finais ficaram na sessão antiga, que não existe mais. O Brenno guardou os arquivos no celular.
@@ -64,8 +65,13 @@ YouTube: `E se você fizesse uma caixa d'água? 🚰 #shorts`
 
 ## O que fazer a seguir
 
-1. **Série "carro e máquinas"** (E Se Você Fizesse?, 3D): 15 temas em `PROXIMOS-PASSOS.md`. Começar pelo **motor** quando ele disser "bora o motor".
-   Referência: reel do @comoconstroi sobre o motor de 4 tempos (pistão → virabrequim → volante → vela → válvulas → 4 tempos → 4 cilindros, ordem 1-3-4-2).
+1. **Série "carro e máquinas"** (E Se Você Fizesse?, 3D): 15 temas em `PROXIMOS-PASSOS.md`.
+   - **Motor:** animação feita em 27/10 com `fakewords.py`. Quando tiver crédito: gerar a narração do `roteiros/09-motor.md`
+     com o Luiz Henrique num tom mais calmo e neutro (o Brenno gostou da voz do reel do arroz com peixe:
+     instagram.com/reel/Deo6pFJzw0B, "parece IA, mas não muito"), transcrever, trocar o `src/words.json`,
+     salvar o áudio em `public/narracao-motor.mp3`, conferir os quadros e renderizar.
+   - Depois: freio → câmbio → turbo → radiador.
+   - Ideia nova: "E se você criasse peixe dentro do arroz?" (rizipiscicultura), tirada do mesmo reel. Fazer com gancho próprio.
 2. **Raio-X:** descarga (roteiro `04`, sem voz e sem animação), fechadura (`05`), panela de pressão (`06`).
 3. **Contos:** Loira do Banheiro e ET de Varginha precisam de voz.
 4. **Outras ideias 3D:** poço artesiano, placa solar, telhado.

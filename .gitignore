@@ -22,3 +22,6 @@ playwright/.cache/
 
 # Material pago do minicurso: não publicar no repositório público
 como-funciona/minicurso/
+
+# Vídeos renderizados (ficam no celular do Brenno, não no repositório)
+como-funciona/*/out/
