@@ -51,6 +51,7 @@ Esta pasta guarda o plano do canal, os roteiros e o projeto de cada vídeo.
 | 10 | Telhado | "Se a telha tem frestas, por que a chuva não entra?" | a fazer |
 | 11 | Fossa séptica (3D) | "Pra onde vai o cocô de quem não tem esgoto?" | ✅ pronto com voz ([roteiro](roteiros/07-fossa.md)) |
 | 12 | Piscina (3D + boneco) | "Você construiu uma piscina no quintal" | ✅ pronto com voz ([roteiro](roteiros/08-piscina.md)) |
+| 13 | Caixa d'água (3D + boneco) | "E se você fizesse uma caixa d'água?" | ✅ pronto com voz (`video-caixa-3d/`) |
 
 ## Ferramentas
 
