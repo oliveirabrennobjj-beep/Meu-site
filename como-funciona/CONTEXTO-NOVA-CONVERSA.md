@@ -47,6 +47,15 @@ Comenta aí: quando foi a última vez que lavaram a caixa da sua casa? 👇
 ```
 YouTube: `E se você fizesse uma caixa d'água? 🚰 #shorts`
 
+## Estilo realista (a partir de 27/10)
+O Brenno quer os vídeos 3D mais realistas, parecidos com os do @voceconstruiu (reel instagram.com/reel/DfAc52xJ__X):
+cortes de terreno/obra com texturas, luz macia, sombras e cantos arredondados. Já aplicado no `video-motor-3d/` e no `video-caminhao-3d/`
+pelo arquivo `src/realismo.tsx` (copie ele e o `parts.tsx` pra um projeto novo):
+- `<Estudio />` na cena: reflexo de estúdio (RoomEnvironment), tom ACES e sombras macias. `<Sol p={...} />` no lugar do directionalLight.
+- `Box`/`Mat` aceitam `tex` ("concreto", "asfalto", "madeira", "terra", "grama", "metal", "tijolo"), `rep` (repetição), `m` (metal) e `r` (aspereza).
+- Caixas com canto arredondado e materiais lisos (sem `flatShading`). Antes e depois: `entregas/estilo-realista/antes-depois.png`.
+- Próximo passo, se quiser mais: pós-processamento (oclusão de ambiente e profundidade de campo) com `@react-three/postprocessing`.
+
 ## Como os vídeos são feitos
 
 - **Remotion 4.0.538.** Os 3D usam `@remotion/three` + `@react-three/fiber` 9.1.2 + `three` 0.170.0.

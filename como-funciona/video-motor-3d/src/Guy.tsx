@@ -8,7 +8,7 @@ export type PlanItem = [number, number, number, Pose, number];
 const WALK = 1.4;
 const SKIN = "#f2c49b";
 
-const M: React.FC<{ c: string }> = ({ c }) => <meshStandardMaterial color={c} flatShading roughness={0.8} />;
+const M: React.FC<{ c: string }> = ({ c }) => <meshStandardMaterial color={c} roughness={0.55} />;
 
 /** Braço/perna: grupo no ombro/quadril; o membro pende para baixo e gira em x (frente) e z (lado). */
 const Limb: React.FC<{ p: [number, number, number]; rx: number; rz: number; len: number; r: number; c: string; end?: React.ReactNode; endC?: string }> = ({

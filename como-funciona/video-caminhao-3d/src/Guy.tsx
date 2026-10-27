@@ -12,7 +12,7 @@ export const ENGENHEIRO: Look = { helmet: "#f4f6f8", brim: "#d9dee5", shirt: "#2
 const WALK = 1.4;
 const SKIN = "#f2c49b";
 
-const M: React.FC<{ c: string }> = ({ c }) => <meshStandardMaterial color={c} flatShading roughness={0.8} />;
+const M: React.FC<{ c: string }> = ({ c }) => <meshStandardMaterial color={c} roughness={0.55} />;
 
 /** Braço/perna: grupo no ombro/quadril; o membro pende para baixo e gira em x (frente) e z (lado). */
 const Limb: React.FC<{ p: [number, number, number]; rx: number; rz: number; len: number; r: number; c: string; end?: React.ReactNode; endC?: string }> = ({

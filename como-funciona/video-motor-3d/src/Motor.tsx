@@ -4,6 +4,7 @@ import { appear, pop } from "./lib";
 import { M, PLAN, T, phase, pistonPin, theta } from "./timeline";
 import { Box, CameraRig, Flow, Mat, Tube, V3 } from "./parts";
 import { Guy } from "./Guy";
+import { Estudio, Sol } from "./realismo";
 
 const PI = Math.PI;
 const { yc, r, bore, cylBot, head, gap } = M;
@@ -13,15 +14,15 @@ const DARK = "#5b6370";
 
 const Garage: React.FC = () => (
   <>
-    <Box a={[-16, 0, -10]} b={[16, 0.3, 6]} c="#8a8d93" />
+    <Box a={[-16, 0, -10]} b={[16, 0.3, 6]} c="#9a9da3" tex="concreto" rep={[8, 4]} r={0.85} />
     {[-6, -2, 2].map((z) => (
       <Box key={z} a={[-16, 0.3, z]} b={[16, 0.31, z + 0.06]} c="#7a7d83" />
     ))}
-    <Box a={[-16, 0.3, -10]} b={[16, 10, -9.6]} c="#4b5566" />
+    <Box a={[-16, 0.3, -10]} b={[16, 10, -9.6]} c="#646d80" tex="tijolo" rep={[8, 3]} r={0.9} />
     <Box a={[-16, 0.3, -9.6]} b={[16, 1.3, -9.5]} c="#3d4553" />
     {/* bancada e painel de ferramentas */}
-    <Box a={[-8, 0.3, -9.5]} b={[-3.5, 1.8, -8.2]} c="#8a5a32" />
-    <Box a={[-8.1, 1.8, -9.6]} b={[-3.4, 1.95, -8.1]} c="#a8743f" />
+    <Box a={[-8, 0.3, -9.5]} b={[-3.5, 1.8, -8.2]} c="#8a5a32" tex="madeira" />
+    <Box a={[-8.1, 1.8, -9.6]} b={[-3.4, 1.95, -8.1]} c="#a8743f" tex="madeira" />
     <Box a={[-7.6, 2.6, -9.58]} b={[-3.9, 4.8, -9.5]} c="#c9b48a" />
     {[-7, -6, -5, -4.5].map((x, k) => (
       <Box key={x} a={[x, 3.0 + (k % 2) * 0.5, -9.5]} b={[x + 0.15, 4.1 + (k % 2) * 0.3, -9.42]} c={["#e04a3a", "#8f98a3", "#2d7dff", "#8f98a3"][k]} />
@@ -109,12 +110,12 @@ const Cilindro: React.FC<{ t: number; i: number }> = ({ t, i }) => {
         {/* paredes transparentes */}
         <mesh position={[0, (cylBot + top) / 2, z]}>
           <cylinderGeometry args={[bore + 0.06, bore + 0.06, top - cylBot, 20, 1, true]} />
-          <meshStandardMaterial color="#b8c8de" transparent opacity={0.22} side={THREE.DoubleSide} flatShading />
+          <meshStandardMaterial color="#b8c8de" transparent opacity={0.22} side={THREE.DoubleSide} />
         </mesh>
         {[cylBot, top].map((y) => (
           <mesh key={y} position={[0, y, z]} rotation={[PI / 2, 0, 0]}>
             <torusGeometry args={[bore + 0.06, 0.05, 6, 24]} />
-            <Mat c="#8f98a3" />
+            <Mat c="#8f98a3" m={0.6} r={0.35} />
           </mesh>
         ))}
         {/* fase do tubo: fundo fechado, combustível, faísca e tampa */}
@@ -122,7 +123,7 @@ const Cilindro: React.FC<{ t: number; i: number }> = ({ t, i }) => {
           <>
             <mesh position={[0, cylBot, z]}>
               <cylinderGeometry args={[bore + 0.06, bore + 0.06, 0.08, 20]} />
-              <Mat c="#8f98a3" />
+              <Mat c="#8f98a3" m={0.6} r={0.35} />
             </mesh>
             {t > T.combustivel && t < T.bum + 0.2 ? (
               <>
@@ -180,7 +181,7 @@ const Cilindro: React.FC<{ t: number; i: number }> = ({ t, i }) => {
           <>
             <mesh position={[0, pin + 0.1, z]} castShadow>
               <cylinderGeometry args={[bore - 0.02, bore - 0.02, 0.5, 20]} />
-              <Mat c={STEEL} />
+              <Mat c={STEEL} m={0.75} r={0.3} tex="metal" />
             </mesh>
             {[0.22, 0.08].map((dy) => (
               <mesh key={dy} position={[0, pin + 0.1 + dy, z]} rotation={[PI / 2, 0, 0]}>
@@ -205,9 +206,9 @@ const Cilindro: React.FC<{ t: number; i: number }> = ({ t, i }) => {
         {/* cabeçote cortado (só a metade de trás) */}
         {cabecote > 0 && !tuboFase ? (
           <group position={[0, head, z]} scale={[1, cabecote, 1]}>
-            <Box a={[-0.8, 0, -0.75]} b={[0.8, 0.5, 0.0]} c="#8f98a3" />
-            <Box a={[-0.8, 0, 0.0]} b={[-0.45, 0.5, 0.35]} c="#a5adb8" />
-            <Box a={[0.45, 0, 0.0]} b={[0.8, 0.5, 0.35]} c="#a5adb8" />
+            <Box a={[-0.8, 0, -0.75]} b={[0.8, 0.5, 0.0]} c="#8f98a3" m={0.6} r={0.35} />
+            <Box a={[-0.8, 0, 0.0]} b={[-0.45, 0.5, 0.35]} c="#a5adb8" m={0.6} r={0.35} />
+            <Box a={[0.45, 0, 0.0]} b={[0.8, 0.5, 0.35]} c="#a5adb8" m={0.6} r={0.35} />
           </group>
         ) : null}
         {/* válvulas, vela e canos */}
@@ -228,7 +229,7 @@ const Cilindro: React.FC<{ t: number; i: number }> = ({ t, i }) => {
             <Tube a={[0, 0.0, 0.2]} b={[0, 0.85, 0.2]} r={0.08} c="#f2f2f2" />
             <mesh position={[0, 0.35, 0.2]}>
               <cylinderGeometry args={[0.13, 0.13, 0.14, 6]} />
-              <Mat c="#8f98a3" />
+              <Mat c="#8f98a3" m={0.6} r={0.35} />
             </mesh>
             {spark ? (
               <mesh position={[0, -0.04, 0.2]}>
@@ -284,7 +285,7 @@ const Roda: React.FC<{ t: number }> = ({ t }) => {
           {[0, tx].map((x) => (
             <mesh key={x} position={[x, yc, 0.75]} rotation={[PI / 2, 0, 0]}>
               <cylinderGeometry args={[0.36, 0.36, 0.14, 14]} />
-              <Mat c="#8f98a3" />
+              <Mat c="#8f98a3" m={0.6} r={0.35} />
             </mesh>
           ))}
           <Tube a={[0, yc + 0.37, 0.75]} b={[tx * belt, yc + 0.37, 0.75]} r={0.05} c="#222" />
@@ -311,7 +312,7 @@ const Volante: React.FC<{ t: number }> = ({ t }) => {
         </mesh>
         <mesh>
           <torusGeometry args={[1.05, 0.07, 6, 30]} />
-          <Mat c="#8f98a3" />
+          <Mat c="#8f98a3" m={0.6} r={0.35} />
         </mesh>
         <Box a={[-0.12, 0.55, 0.14]} b={[0.12, 0.98, 0.17]} c="#ffd60a" />
       </group>
@@ -322,9 +323,10 @@ const Volante: React.FC<{ t: number }> = ({ t }) => {
 export const MotorScene: React.FC<{ t: number }> = ({ t }) => (
   <>
     <CameraRig t={t} />
-    <hemisphereLight args={["#fff6e0", "#3a3f47", 1.15]} />
-    <directionalLight position={[6, 14, 12]} intensity={2.1} castShadow />
-    <directionalLight position={[-10, 5, 8]} intensity={0.55} color="#bcd4ff" />
+    <Estudio />
+    <hemisphereLight args={["#fff6e0", "#3a3f47", 0.4]} />
+    <Sol p={[6, 14, 12]} i={2.5} area={10} />
+    <directionalLight position={[-10, 5, 8]} intensity={0.4} color="#bcd4ff" />
     <Garage />
     {[0, 1, 2, 3].map((i) => (
       <Cilindro key={i} t={t} i={i} />

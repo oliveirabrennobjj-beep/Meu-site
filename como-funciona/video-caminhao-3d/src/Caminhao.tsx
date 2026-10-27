@@ -3,6 +3,7 @@ import { appear, pop } from "./lib";
 import { PLAN, T, cabTurn, rigidTurn, road, speed, trailerTurn } from "./timeline";
 import { Box, CameraRig, Flow, Mat, Tree, Tube, V3 } from "./parts";
 import { Guy } from "./Guy";
+import { Estudio, Sol } from "./realismo";
 
 const PI = Math.PI;
 const WR = 0.55; // raio da roda
@@ -67,8 +68,8 @@ const Chao: React.FC<{ t: number }> = ({ t }) => {
   const d = road(t);
   return (
     <>
-      <Box a={[-40, 0, -30]} b={[40, 0.28, 30]} c="#7cb35a" />
-      <Box a={[-40, 0.28, -2.3]} b={[40, 0.3, 2.3]} c="#4a4a4f" />
+      <Box a={[-40, 0, -30]} b={[40, 0.28, 30]} c="#7cb35a" tex="grama" rep={[20, 15]} r={0.95} />
+      <Box a={[-40, 0.28, -2.3]} b={[40, 0.3, 2.3]} c="#55555b" tex="asfalto" rep={[30, 2]} r={0.9} />
       {Array.from({ length: 20 }).map((_, k) => {
         const x = ((((k * 4 - d) % 80) + 80) % 80) - 40;
         return <Box key={k} a={[x, 0.3, -0.08]} b={[x + 2, 0.31, 0.08]} c="#f2f2f2" />;
@@ -128,7 +129,7 @@ const Inteiro: React.FC<{ t: number; spin: number }> = ({ t, spin }) => {
             ))
           : null}
         {/* motor */}
-        <Box a={[2.3, 1.6, -0.6]} b={[3.5, 2.5, 0.6]} c="#6f7782" />
+        <Box a={[2.3, 1.6, -0.6]} b={[3.5, 2.5, 0.6]} c="#6f7782" m={0.6} r={0.35} tex="metal" />
         {[2.5, 2.8, 3.1, 3.4].map((x) => (
           <mesh key={x} position={[x - 0.05, 2.6, 0]}>
             <cylinderGeometry args={[0.13, 0.13, 0.2, 8]} />
@@ -141,10 +142,10 @@ const Inteiro: React.FC<{ t: number; spin: number }> = ({ t, spin }) => {
         {tabua > 0 ? (
           <group scale={[tabua, tabua, tabua]}>
             <group position={[0, 1.5, 0]} rotation={[0, 0, crack * 0.22]}>
-              <Box a={[-4.2, -0.1, -1.0]} b={[0, 0.1, 1.0]} c="#b07a45" />
+              <Box a={[-4.2, -0.1, -1.0]} b={[0, 0.1, 1.0]} c="#b07a45" tex="madeira" rep={[2, 1]} />
             </group>
             <group position={[0, 1.5, 0]} rotation={[0, 0, -crack * 0.22]}>
-              <Box a={[0, -0.1, -1.0]} b={[4.2, 0.1, 1.0]} c="#b07a45" />
+              <Box a={[0, -0.1, -1.0]} b={[4.2, 0.1, 1.0]} c="#b07a45" tex="madeira" rep={[2, 1]} />
             </group>
             {/* caixas caindo em cima */}
             {[-2.6, -1.2, 0.2].map((x, k) => {
@@ -153,7 +154,7 @@ const Inteiro: React.FC<{ t: number; spin: number }> = ({ t, spin }) => {
               const y = 1.6 + 0.55 + (1 - drop) * 5 - crack * (0.5 - Math.abs(x + 1.2) * 0.2);
               return (
                 <group key={k} position={[x, y, 0]} rotation={[0, 0, crack * (k - 1) * 0.3]}>
-                  <Box a={[-0.55, -0.55, -0.55]} b={[0.55, 0.55, 0.55]} c="#c98b4a" />
+                  <Box a={[-0.55, -0.55, -0.55]} b={[0.55, 0.55, 0.55]} c="#c98b4a" tex="madeira" />
                   <Box a={[-0.56, -0.08, -0.56]} b={[0.56, 0.08, 0.56]} c="#8a5a32" />
                 </group>
               );
@@ -164,7 +165,7 @@ const Inteiro: React.FC<{ t: number; spin: number }> = ({ t, spin }) => {
         {vigas > 0 ? (
           <group position={[0, (1 - vigas) * 4, 0]}>
             {[0.55, -0.55].map((z) => (
-              <Box key={z} a={[rear, 1.4, z - 0.12]} b={[4.3, 1.62, z + 0.12]} c={RED} />
+              <Box key={z} a={[rear, 1.4, z - 0.12]} b={[4.3, 1.62, z + 0.12]} c={RED} m={0.4} r={0.35} />
             ))}
             {[-3.6, -2.2, -0.8, 0.6, 2.0, 3.4, ...(longo > 0.5 ? [-5, -6.4, -7.8] : [])].map((x) => (
               <Box key={x} a={[x - 0.08, 1.43, -0.5]} b={[x + 0.08, 1.58, 0.5]} c="#9a2620" />
@@ -236,7 +237,7 @@ const Inteiro: React.FC<{ t: number; spin: number }> = ({ t, spin }) => {
         {/* carga comprida */}
         {longo > 0 ? (
           <group scale={[1, longo, 1]}>
-            <Box a={[-8.0, 1.65, -1.2]} b={[1.4, 4.0, 1.2]} c="#e8e8e8" />
+            <Box a={[-8.0, 1.65, -1.2]} b={[1.4, 4.0, 1.2]} c="#e8e8e8" m={0.5} r={0.35} tex="metal" rep={[6, 1]} />
             <Box a={[-8.0, 3.7, -1.22]} b={[1.4, 3.85, 1.22]} c="#2d7dff" />
           </group>
         ) : null}
@@ -261,9 +262,9 @@ const Articulado: React.FC<{ t: number }> = ({ t }) => {
           {[0.55, -0.55].map((z) => (
             <Box key={z} a={[0.2, 1.4, z - 0.12]} b={[4.6, 1.62, z + 0.12]} c={RED} />
           ))}
-          <Box a={[3.0, 1.62, -1.15]} b={[4.7, 3.8, 1.15]} c={ORANGE} />
-          <Box a={[4.68, 2.6, -0.95]} b={[4.74, 3.5, 0.95]} c="#1d3b66" />
-          <Box a={[3.4, 2.7, 1.13]} b={[4.3, 3.5, 1.17]} c="#1d3b66" />
+          <Box a={[3.0, 1.62, -1.15]} b={[4.7, 3.8, 1.15]} c={ORANGE} m={0.3} r={0.3} />
+          <Box a={[4.68, 2.6, -0.95]} b={[4.74, 3.5, 0.95]} c="#1d3b66" m={0.9} r={0.08} />
+          <Box a={[3.4, 2.7, 1.13]} b={[4.3, 3.5, 1.17]} c="#1d3b66" m={0.9} r={0.08} />
           <Box a={[4.7, 1.62, -1.1]} b={[4.85, 2.2, 1.1]} c="#c9ced6" />
           <Tube a={[2.85, 1.7, -1.0]} b={[2.85, 4.4, -1.0]} r={0.09} c="#c9ced6" />
           {/* quinta roda */}
@@ -278,7 +279,7 @@ const Articulado: React.FC<{ t: number }> = ({ t }) => {
         <group position={[-PIN - afasta * 1.6, 0, 0]}>
           {[-6.8, -5.6].map((x) => [WZ, -WZ].map((z) => <Roda key={`${x}${z}`} p={[x, WY, z]} spin={0} />))}
           <Box a={[-8.0, 1.75, -1.2]} b={[2.0, 1.95, 1.2]} c="#3a3f47" />
-          <Box a={[-8.0, 1.95, -1.2]} b={[2.0, 4.3, 1.2]} c="#e8e8e8" />
+          <Box a={[-8.0, 1.95, -1.2]} b={[2.0, 4.3, 1.2]} c="#e8e8e8" m={0.5} r={0.35} tex="metal" rep={[6, 1]} />
           <Box a={[-8.0, 4.0, -1.22]} b={[2.0, 4.15, 1.22]} c="#2d7dff" />
           {[0.8, -0.8].map((z) => (
             <Tube key={z} a={[-0.5, 1.75, z]} b={[-0.5, 0.3 + afasta * 0, z]} r={0.07} c="#5b6370" />
@@ -300,9 +301,10 @@ export const CaminhaoScene: React.FC<{ t: number }> = ({ t }) => {
   return (
     <>
       <CameraRig t={t} />
-      <hemisphereLight args={["#fff6e0", "#5a4030", 1.15]} />
-      <directionalLight position={[8, 14, 10]} intensity={2.1} castShadow />
-      <directionalLight position={[-10, 4, 8]} intensity={0.5} color="#bcd4ff" />
+      <Estudio />
+      <hemisphereLight args={["#fff6e0", "#5a4030", 0.45]} />
+      <Sol p={[8, 14, 10]} i={2.5} area={14} />
+      <directionalLight position={[-10, 4, 8]} intensity={0.35} color="#bcd4ff" />
       <Chao t={t} />
       <Poste t={t} />
       <Inteiro t={t} spin={spin} />

@@ -2,20 +2,41 @@ import React from "react";
 import { useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { camAt } from "./camera";
+import { TexName, textura, useRounded } from "./realismo";
 
 export type V3 = [number, number, number];
 
-export const Mat: React.FC<{ c: string; o?: number; e?: string; ei?: number }> = ({ c, o = 1, e, ei = 0 }) => (
-  <meshStandardMaterial color={c} flatShading roughness={0.85} transparent={o < 1} opacity={o} emissive={e ?? "#000"} emissiveIntensity={ei} />
+export const Mat: React.FC<{ c: string; o?: number; e?: string; ei?: number; m?: number; r?: number; tex?: TexName; rep?: [number, number] }> = ({
+  c,
+  o = 1,
+  e,
+  ei = 0,
+  m = 0,
+  r = 0.6,
+  tex,
+  rep,
+}) => (
+  <meshStandardMaterial
+    color={c}
+    map={tex ? textura(tex, rep) : null}
+    roughness={r}
+    metalness={m}
+    transparent={o < 1}
+    opacity={o}
+    emissive={e ?? "#000"}
+    emissiveIntensity={ei}
+  />
 );
 
 /** Caixa definida pelos cantos (x0..x1, y0..y1, z0..z1). */
-export const Box: React.FC<{ a: V3; b: V3; c: string; o?: number; e?: string; ei?: number }> = ({ a, b, ...m }) => (
-  <mesh position={[(a[0] + b[0]) / 2, (a[1] + b[1]) / 2, (a[2] + b[2]) / 2]} castShadow receiveShadow>
-    <boxGeometry args={[Math.abs(b[0] - a[0]), Math.abs(b[1] - a[1]), Math.abs(b[2] - a[2])]} />
-    <Mat {...m} />
-  </mesh>
-);
+export const Box: React.FC<{ a: V3; b: V3; c: string; o?: number; e?: string; ei?: number; m?: number; r?: number; tex?: TexName; rep?: [number, number] }> = ({ a, b, ...m }) => {
+  const geo = useRounded(Math.abs(b[0] - a[0]), Math.abs(b[1] - a[1]), Math.abs(b[2] - a[2]));
+  return (
+    <mesh position={[(a[0] + b[0]) / 2, (a[1] + b[1]) / 2, (a[2] + b[2]) / 2]} geometry={geo} castShadow receiveShadow>
+      <Mat {...m} />
+    </mesh>
+  );
+};
 
 /** Cilindro entre dois pontos (canos, mangueira). */
 export const Tube: React.FC<{ a: V3; b: V3; r: number; c: string; o?: number }> = ({ a, b, r, c, o }) => {
@@ -27,8 +48,8 @@ export const Tube: React.FC<{ a: V3; b: V3; r: number; c: string; o?: number }> 
   const q = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), vb.clone().sub(va).normalize());
   return (
     <mesh position={mid} quaternion={q} castShadow>
-      <cylinderGeometry args={[r, r, len, 8]} />
-      <Mat c={c} o={o} />
+      <cylinderGeometry args={[r, r, len, 18]} />
+      <Mat c={c} o={o} m={0.3} r={0.4} />
     </mesh>
   );
 };
@@ -105,9 +126,16 @@ export const CameraRig: React.FC<{ t: number }> = ({ t }) => {
 export const Tree: React.FC<{ p: V3; s?: number }> = ({ p, s = 1 }) => (
   <group position={p} scale={s}>
     <Tube a={[0, 0, 0]} b={[0, 1.2, 0]} r={0.16} c="#7a4a2a" />
-    <mesh position={[0, 1.9, 0]} castShadow>
-      <icosahedronGeometry args={[0.95, 0]} />
-      <Mat c="#4f9a3a" />
-    </mesh>
+    {[
+      [0, 1.9, 0, 0.85],
+      [0.45, 1.65, 0.2, 0.6],
+      [-0.4, 1.7, -0.15, 0.62],
+      [0.05, 2.45, -0.05, 0.55],
+    ].map(([x, y, z, r], k) => (
+      <mesh key={k} position={[x, y, z]} castShadow>
+        <icosahedronGeometry args={[r, 2]} />
+        <Mat c={k % 2 ? "#5aa843" : "#4a923a"} r={0.8} tex="grama" />
+      </mesh>
+    ))}
   </group>
 );
