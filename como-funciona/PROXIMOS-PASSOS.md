@@ -78,5 +78,5 @@ construindo coisas grandes do zero, tipo um caminhão. Vai virar um canal do You
   No fim: "E é assim que se constrói um/uma ___." Cada nome técnico aparece numa etiqueta amarela.
 - **Diferença pro E Se Você Fizesse:** lá é casa e quintal. Aqui são máquinas e obras grandes: caminhão, ponte, prédio, avião, navio, guindaste.
   A série "carro e máquinas" (motor, freio, câmbio…) pode virar episódios do caminhão.
-- **Nomes para escolher:** Se Você Fosse Engenheiro · Engenheiro do Zero · Construindo do Zero.
+- **Nome escolhido (27/10):** Engenheirinho (@engenheirinho3d). Bio: "👷 Engenheirinho: construindo tudo do zero em 3D 🚛🏗️ Caminhão, ponte, prédio e muito mais 🔔 Vídeo novo todo dia".
 - **Primeiros temas:** caminhão (chassi → motor → câmbio → freio a ar → quinta roda), ponte, prédio, guindaste, navio que não afunda, elevador de obra.

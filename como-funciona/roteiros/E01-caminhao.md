@@ -1,4 +1,4 @@
-# E01 — Caminhão do zero (perfil novo do engenheiro, 3D)
+# E01 — Caminhão do zero (Engenheirinho, 3D)
 
 **Gancho na tela:** COMO SE CONSTRÓI UM **CAMINHÃO?**
 **Formato:** 3D low-poly, o engenheiro de capacete branco montando o caminhão peça por peça.
