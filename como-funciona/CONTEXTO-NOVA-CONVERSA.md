@@ -26,6 +26,8 @@ Depois leia `PROXIMOS-PASSOS.md` e `README.md` desta pasta.
 | Chuveiro | Raio-X | `video-chuveiro/` | `Chuveiro` / `Capa` | postado em 26/10 |
 | Elevador, caneta | Raio-X | `video-elevador/`, `video-caneta/` | `Elevador`, `Caneta` | prontos antes |
 | Motor | E Se Você Fizesse? | `video-motor-3d/` | `Motor` / `Capa-Motor` | animação pronta com tempo provisório, **falta a voz** (roteiro `09-motor.md`) |
+| Descarga | Raio-X | `video-descarga/` | `Descarga` / `Capa` | animação pronta com tempo provisório, **falta a voz** (roteiro `04-descarga.md`) |
+| Caminhão | Engenheiro (perfil novo) | `video-caminhao-3d/` | `Caminhao` / `Capa-Caminhao` | animação pronta com tempo provisório, **falta a voz** (roteiro `E01-caminhao.md`) |
 | 3h33 | Contos | `../contos-da-madrugada/video/` | — | pronto, falta criar o perfil |
 
 Os MP4 finais ficaram na sessão antiga, que não existe mais. O Brenno guardou os arquivos no celular.
@@ -62,6 +64,13 @@ YouTube: `E se você fizesse uma caixa d'água? 🚰 #shorts`
 - **Créditos da ElevenLabs acabaram em 26/10** (22 de 10.000). Cada vídeo de ~1 min gasta 1.000 a 1.300.
   Falta o Brenno decidir: esperar renovar, subir de plano (Creator ~US$ 22/mês) ou usar outra voz (vidIQ ou Higgsfield).
   Enquanto isso dá para montar a animação com `ferramentas/fakewords.py` e sincronizar depois.
+
+## Quando tiver crédito de voz (motor, descarga e caminhão)
+Para cada um: gerar a narração do roteiro (voz Luiz Henrique), transcrever com `eleven_scribe_v1`, rodar `savewords.py`
+para trocar o `src/words.json`, salvar o áudio em `public/` (`narracao-motor.mp3`, `narracao.mp3` na descarga,
+`narracao-caminhao.mp3`), conferir uns quadros com `remotion still` e renderizar. O código já toca o áudio se o arquivo existir.
+Os projetos `video-descarga/`, `video-caminhao-3d/` e `canal-engenheiro/` usam o `node_modules` do `video-motor-3d/` por um atalho
+(`ln -s ../video-motor-3d/node_modules node_modules`); numa sessão nova, rode `npm install` no `video-motor-3d/` e recrie os atalhos.
 
 ## O que fazer a seguir
 
