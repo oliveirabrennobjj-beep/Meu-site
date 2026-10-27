@@ -4,3 +4,5 @@
   no `src/words.json` que os projetos usam para legendas e tempos.
 - `fakewords.py texto.txt words.json`: gera tempos estimados a partir do texto do roteiro, para montar a animação
   antes de ter a narração. Depois troque pelo `words.json` real.
+- `alinhar.py audio.mp3 texto.txt words.json`: gera o `words.json` de uma narração gravada pelo Brenno (ou qualquer
+  áudio sem transcrição), casando as pausas do áudio com a pontuação do texto. Erro médio de 0,09 s.
