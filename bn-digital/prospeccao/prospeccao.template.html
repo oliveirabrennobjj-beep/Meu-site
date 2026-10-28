@@ -101,7 +101,7 @@ pre.msg { white-space: pre-wrap; font: inherit; font-size: 14px; background: var
 <div class="wrap">
   <header>
     <h1>Prospecção BN Digital</h1>
-    <p class="sub">Comércios de Rio das Ostras, Casimiro, Barra de São João e Unamar. <b>Instagram</b> (ou Facebook) abre a página da loja. <b>WhatsApp</b> abre a conversa com a mensagem completa. <b>Chamar o dono</b> manda a mensagem que pede o responsável e fala da plaquinha: pelo WhatsApp, ou copiada pra você colar na DM quando a loja não tem WhatsApp. Só tem botão de WhatsApp quando o número veio da página da própria loja. Antes de enviar, confira se aparece <b>Conta comercial</b> embaixo do nome.</p>
+    <p class="sub">Só lojas com WhatsApp, e o número sempre tirado da página da própria loja. <b>WhatsApp</b> abre a conversa com a mensagem completa. <b>Chamar o dono</b> abre a conversa com a mensagem que pede o responsável e fala da plaquinha. Antes de enviar, confira se aparece <b>Conta comercial</b> embaixo do nome.</p>
     <div class="stats" id="stats"></div>
   </header>
 
@@ -133,7 +133,7 @@ const IG_BN = "https://www.instagram.com/bn_digital__sites_e_nfc/";
 
 const TIPOS = {
   barbearia: "Barbearia", beleza: "Beleza", pet: "Pet", comida: "Comida", oficina: "Oficina",
-  loja: "Loja", pousada: "Pousada", padaria: "Padaria", hortifruti: "Hortifruti", imovel: "Imóveis",
+  loja: "Loja", pousada: "Pousada", padaria: "Padaria", hortifruti: "Hortifruti", imovel: "Imóveis", mercado: "Mercado e farmácia", servico: "Serviços",
 };
 const SERVICO = {
   barbearia: "Site profissional com fotos dos cortes, serviços e preços, endereço com rota no mapa e botão de agendar direto no WhatsApp.",
@@ -145,6 +145,8 @@ const SERVICO = {
   pousada: "Site com fotos dos quartos, preços da temporada e botão de reserva direto no WhatsApp, sem pagar comissão pra Booking.",
   padaria: "Site com os produtos e encomenda de bolo e salgado direto no WhatsApp.",
   hortifruti: "Site com os produtos e preços da semana, e o cliente monta o pedido direto no WhatsApp.",
+  mercado: "Site com os produtos e as ofertas da semana, e o cliente monta o pedido de entrega direto no WhatsApp de vocês.",
+  servico: "Site com os serviços, fotos dos trabalhos e botão de pedir orçamento direto no WhatsApp.",
   imovel: "Site com os seus imóveis à venda e pra alugar, com fotos, valor e botão que manda o imóvel escolhido no seu WhatsApp.",
 };
 const PLACA = "Placa NFC de avaliação: o cliente encosta o celular e já abre a página pra avaliar vocês no Google. Mais estrelas, mais gente nova chegando.";
@@ -222,19 +224,13 @@ function card(l) {
   );
   if (l.obs) c.append(el("p", { class: "obs" }, l.obs));
 
-  // Botões: Instagram (ou Facebook, se a loja não tiver Instagram), WhatsApp com a mensagem completa
-  // (só quando o número veio da página da própria loja) e chamar o dono (WhatsApp, ou copiar pra mandar na DM).
+  // Botões: WhatsApp com a mensagem completa, chamar o dono pelo WhatsApp e, se a loja tiver, o Instagram pra dar uma olhada.
   const b = el("div", { class: "btns" });
-  const fb = fbPage(l.src);
-  if (l.ig) b.append(el("a", { class: "btn ig", href: igPerfil(l.ig), target: "_blank", rel: "noopener" }, "Instagram"));
-  else if (fb) b.append(el("a", { class: "btn fb", href: fb, target: "_blank", rel: "noopener" }, "Facebook"));
-  if (l.wa) b.append(el("a", { class: "btn wa", href: wa(l.wa, msgCompleta(l)), target: "_blank", rel: "noopener", onclick: () => setTimeout(() => marcar(l, true), 600) }, "WhatsApp"));
   b.append(
-    l.wa
-      ? el("a", { class: "btn dono", href: wa(l.wa, msgDono(l)), target: "_blank", rel: "noopener", onclick: () => setTimeout(() => marcar(l, true), 600) }, "Chamar o dono no WhatsApp")
-      : el("button", { class: "btn dono", type: "button", onclick: () => copiar(msgDono(l)) }, "Copiar: chamar o dono"),
+    el("a", { class: "btn wa", href: wa(l.wa, msgCompleta(l)), target: "_blank", rel: "noopener", onclick: () => setTimeout(() => marcar(l, true), 600) }, "WhatsApp"),
+    el("a", { class: "btn dono", href: wa(l.wa, msgDono(l)), target: "_blank", rel: "noopener", onclick: () => setTimeout(() => marcar(l, true), 600) }, "Chamar o dono"),
   );
-  if (b.children.length !== 2) b.lastElementChild.classList.add("full");
+  if (l.ig) b.append(el("a", { class: "btn ig full", href: igPerfil(l.ig), target: "_blank", rel: "noopener" }, "Ver o Instagram da loja"));
   c.append(b);
 
   const cb = el("input", { type: "checkbox", id: "s-" + btoa(unescape(encodeURIComponent(k))).replace(/[^a-z0-9]/gi, "") });
