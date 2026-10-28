@@ -2,6 +2,7 @@
 #   BN Digital (bn-digital/dist) → https://oliveirabrennobjj-beep.github.io/Meu-site/
 #   BR Team    (brteam/dist)     → https://oliveirabrennobjj-beep.github.io/Meu-site/brteam/
 #   Raio-X     (raiox-das-coisas) → https://oliveirabrennobjj-beep.github.io/Meu-site/raiox/
+#   Prospecção (bn-digital/prospeccao/index.html) → https://oliveirabrennobjj-beep.github.io/Meu-site/prospeccao/
 # Requer, uma vez: Settings → Pages → Build and deployment → Source: "GitHub Actions".
 name: Publicar sites (BN Digital, BR Team e Raio-X)
 
@@ -12,6 +13,7 @@ on:
       - "bn-digital/dist/**"
       - "brteam/dist/**"
       - "raiox-das-coisas/**"
+      - "bn-digital/prospeccao/index.html"
       - ".github/workflows/publicar-bn-digital.yml"
   workflow_dispatch:
 
@@ -42,6 +44,8 @@ jobs:
           mkdir -p _site/raiox
           cp -r raiox-das-coisas/. _site/raiox/
           rm -f _site/raiox/README.md
+          mkdir -p _site/prospeccao
+          cp bn-digital/prospeccao/index.html _site/prospeccao/
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
