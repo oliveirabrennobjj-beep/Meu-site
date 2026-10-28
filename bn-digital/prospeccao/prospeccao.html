@@ -101,7 +101,7 @@ pre.msg { white-space: pre-wrap; font: inherit; font-size: 14px; background: var
 <div class="wrap">
   <header>
     <h1>Prospecção BN Digital</h1>
-    <p class="sub">Só comércios que têm WhatsApp e Instagram. <b>Instagram</b> abre o perfil da loja. <b>WhatsApp</b> abre a conversa com a mensagem completa. <b>Chamar o dono</b> abre o WhatsApp com a mensagem que pede o dono e fala da plaquinha. Lojas que você já chamou antes (Rota, Gordo's, Duga, Oficina do Corte e Bom Pra Cachorro) saíram da lista.</p>
+    <p class="sub">Só comércios que têm WhatsApp e Instagram. <b>Instagram</b> abre o perfil da loja. <b>WhatsApp</b> abre a conversa com a mensagem completa. <b>Chamar o dono</b> abre o WhatsApp com a mensagem que pede o dono e fala da plaquinha. Só entram números tirados do próprio Instagram ou página da loja. Antes de enviar, confira se no WhatsApp aparece <b>Conta comercial</b> embaixo do nome.</p>
     <div class="stats" id="stats"></div>
     <p class="sub">Pro WhatsApp abrir direto no app, use a versão do seu site no Chrome: <a href="https://oliveirabrennobjj-beep.github.io/Meu-site/prospeccao/" target="_blank" rel="noopener">oliveirabrennobjj-beep.github.io/Meu-site/prospeccao/</a></p>
   </header>
@@ -129,7 +129,7 @@ pre.msg { white-space: pre-wrap; font: inherit; font-size: 14px; background: var
 <div class="toast" id="toast" hidden></div>
 
 <script>
-const LEADS = [{"nome": "Pousada Copo de Leite", "cidade": "região de Casimiro/Barra (confirmar a cidade)", "tipo": "pousada", "ig": "pousadacopodeleite", "src": "https://www.instagram.com/pousadacopodeleite/", "wa": "22999704499", "obs": "Número da bio do Instagram, não diz se é WhatsApp. ~475 seguidores: perfil pequeno, um site faz muita diferença.", "lista": "27/10"}, {"nome": "Studio Versatille", "cidade": "Rio das Ostras (Rua Irmã Faustina, 244)", "tipo": "beleza", "ig": "studioversatille", "src": "https://www.facebook.com/sversatille/", "wa": "22999894745", "obs": "Salão e estética.", "lista": "28/10"}, {"nome": "Açaí DuBom", "cidade": "Rio das Ostras", "tipo": "comida", "ig": "dubom_ro", "src": "https://www.instagram.com/dubom_ro/", "wa": "22992680074", "obs": "Açaí gourmet, aberto 14h30 à meia-noite. Mandar antes das 14h.", "lista": "28/10"}, {"nome": "Doces & Salgados (Gui Delícia)", "cidade": "Rio das Ostras", "tipo": "padaria", "ig": "guideliciadoceria", "src": "https://www.instagram.com/guideliciadoceria/", "wa": "22999705763", "obs": "Bolos de festa, docinhos e salgados por encomenda. ~1.200 seguidores.", "lista": "28/10"}, {"nome": "Ótica Reut", "cidade": "Rio das Ostras (Rua Bento Costa Júnior, loja 5)", "tipo": "loja", "ig": "oticareutriodasostras", "src": "https://www.instagram.com/oticareutriodasostras/", "wa": "22992291230", "obs": "Ótica: placa de avaliação e de Pix no balcão.", "lista": "28/10"}, {"nome": "Drogarias Max Casimiro", "cidade": "Casimiro de Abreu (Rua Alfeu Marchon)", "tipo": "loja", "ig": "drogariasmaxcasimiro", "src": "https://www.instagram.com/drogariasmaxcasimiro/", "wa": "22997570729", "obs": "Farmácia com delivery. O número é o do delivery: peça o dono.", "lista": "28/10"}, {"nome": "Jadlog Rio das Ostras", "cidade": "Rio das Ostras (Centro)", "tipo": "loja", "ig": "jadlog.rdo", "src": "https://www.instagram.com/jadlog.rdo/", "wa": "22998081162", "obs": "Agência de envios (franquia). Placa de avaliação no balcão.", "lista": "28/10"}, {"nome": "Bartrô Bar e Bistrô", "cidade": "Rio das Ostras", "tipo": "comida", "ig": "bartrobistro", "src": "https://www.riodasostras.com.br/guiacomercial/categoria/LanchesPetiscos.php", "wa": "22992865731", "obs": "Bar e bistrô. Mandar de manhã ou no começo da tarde.", "lista": "28/10"}, {"nome": "Popostras", "cidade": "Rio das Ostras", "tipo": "comida", "ig": "popostras", "src": "https://www.riodasostras.com.br/guiacomercial/categoria/LanchesPetiscos.php", "wa": "22999013317", "obs": "Hambúrguer, yakisoba, pastel e crepe.", "lista": "28/10"}, {"nome": "Tapiocaria do Luiz", "cidade": "Rio das Ostras", "tipo": "comida", "ig": "tapiocaria_doluiz", "src": "https://www.riodasostras.com.br/guiacomercial/categoria/LanchesPetiscos.php", "wa": "22998331226", "obs": "Tapiocaria.", "lista": "28/10"}, {"nome": "Rooster King", "cidade": "Rio das Ostras", "tipo": "comida", "ig": "roosterkinglanches", "src": "https://www.riodasostras.com.br/guiacomercial/categoria/LanchesPetiscos.php", "wa": "22997176448", "obs": "Lanches e refeições de frango.", "lista": "28/10"}, {"nome": "Café Imperial", "cidade": "Rio das Ostras", "tipo": "comida", "ig": "ocafeimperial", "src": "https://www.facebook.com/OCafeImperial022/", "wa": "22988274753", "obs": "Cafeteria. Placa de avaliação no balcão.", "lista": "28/10"}];
+const LEADS = [{"nome": "Pousada Copo de Leite", "cidade": "região de Casimiro/Barra (confirmar a cidade)", "tipo": "pousada", "ig": "pousadacopodeleite", "src": "https://www.instagram.com/pousadacopodeleite/", "wa": "22999704499", "obs": "Número da bio do Instagram da pousada. Número da bio do Instagram, não diz se é WhatsApp. ~475 seguidores: perfil pequeno, um site faz muita diferença.", "lista": "27/10"}, {"nome": "Studio Versatille", "cidade": "Rio das Ostras (Rua Irmã Faustina, 244)", "tipo": "beleza", "ig": "studioversatille", "src": "https://www.facebook.com/sversatille/", "wa": "22999894745", "obs": "Número da página do salão no Facebook e no Trinks. Salão e estética.", "lista": "28/10"}, {"nome": "Açaí DuBom", "cidade": "Rio das Ostras", "tipo": "comida", "ig": "dubom_ro", "src": "https://www.instagram.com/dubom_ro/", "wa": "22992680074", "obs": "Número de pedidos da bio do Instagram. Açaí gourmet, aberto 14h30 à meia-noite. Mandar antes das 14h.", "lista": "28/10"}, {"nome": "Doces & Salgados (Gui Delícia)", "cidade": "Rio das Ostras", "tipo": "padaria", "ig": "guideliciadoceria", "src": "https://www.instagram.com/guideliciadoceria/", "wa": "22999705763", "obs": "Número da bio do Instagram. Bolos de festa, docinhos e salgados por encomenda. ~1.200 seguidores.", "lista": "28/10"}, {"nome": "Drogarias Max Casimiro", "cidade": "Casimiro de Abreu (Rua Alfeu Marchon)", "tipo": "loja", "ig": "drogariasmaxcasimiro", "src": "https://www.instagram.com/drogariasmaxcasimiro/", "wa": "22997570729", "obs": "Número do delivery na bio do Instagram. Farmácia com delivery. O número é o do delivery: peça o dono.", "lista": "28/10"}, {"nome": "Jadlog Rio das Ostras", "cidade": "Rio das Ostras (Centro)", "tipo": "loja", "ig": "jadlog.rdo", "src": "https://www.instagram.com/jadlog.rdo/", "wa": "22998081162", "obs": "Número marcado como WhatsApp na bio do Instagram. Agência de envios (franquia). Placa de avaliação no balcão.", "lista": "28/10"}, {"nome": "Café Imperial", "cidade": "Rio das Ostras", "tipo": "comida", "ig": "ocafeimperial", "src": "https://www.facebook.com/OCafeImperial022/", "wa": "22988274753", "obs": "Número da página no Facebook. Cafeteria. Placa de avaliação no balcão.", "lista": "28/10"}];
 const IG_BN = "https://www.instagram.com/bn_digital__sites_e_nfc/";
 
 const TIPOS = {
@@ -163,24 +163,24 @@ const saudacao = () => { const h = new Date().getHours(); return h < 12 ? "Bom d
 const key = (l) => l.lista + "|" + l.nome;
 
 function msgCompleta(l) {
-  return `Oi, tudo bem? Aqui é o ${me()}, da BN Digital 👋
+  return `Oi, tudo bem? Aqui é o ${me()}, da BN Digital.
 
 Dei uma olhada em ${l.nome} e curti muito o trabalho de vocês! Por isso acho que vocês merecem aparecer mais no Google.
 
 Eu faço duas coisas que ajudam muito:
-✅ ${SERVICO[l.tipo] || SERVICO.beleza}
-✅ ${PLACA}
+- ${SERVICO[l.tipo] || SERVICO.beleza}
+- ${PLACA}
 
 Alguns trabalhos meus: ${IG_BN}
 
-Posso fazer uma demonstração de como ficaria o site de vocês, pra verem antes? Sem compromisso 🙂`;
+Posso fazer uma demonstração de como ficaria o site de vocês, pra verem antes? Sem compromisso :)`;
 }
 function msgDono(l) {
   return `${saudacao()}! Tudo bem? Aqui é o ${me()}, da BN Digital. Consegue me passar pro responsável de ${l.nome}?
 
 É sobre uma plaquinha de avaliação do Google pro balcão: o cliente encosta o celular nela e já cai na página de avaliar vocês, sem procurar nada. Mais avaliação, mais gente nova achando vocês no Maps.
 
-Tenho um vídeo de 10 segundos mostrando ela funcionando. Posso mandar? 🙂`;
+Tenho um vídeo de 10 segundos mostrando ela funcionando. Posso mandar?`;
 }
 
 // Instagram: link normal do perfil (abre no app que o celular escolher, até o Lite).
