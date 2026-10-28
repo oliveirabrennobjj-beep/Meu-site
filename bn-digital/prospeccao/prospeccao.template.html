@@ -76,12 +76,12 @@ label.toggle { display: flex; gap: 6px; align-items: center; font-size: 13px; co
   display: flex; align-items: center; justify-content: center; gap: 6px; text-align: center; text-decoration: none; cursor: pointer;
   font: inherit; font-weight: 700; font-size: 14px; border-radius: 11px; padding: 11px 10px; border: 1.5px solid transparent; min-height: 46px;
 }
-.btn.wa { background: var(--wa); color: #fff; }
-.btn.wa2 { background: var(--wa-soft); color: var(--wa); border-color: var(--wa); }
-.btn.ig { background: var(--ig); color: #fff; }
-.btn.ig2 { background: var(--ig-soft); color: var(--ig); border-color: var(--ig); }
-.btn.fb { background: var(--fb); color: #fff; }
-.btn.dono { background: var(--brand-soft); color: var(--brand); border-color: var(--brand); }
+.btn.wa, .btn.ig, .btn.fb { background: var(--card); color: var(--fg); border-color: var(--line); }
+.btn.wa::before, .btn.ig::before, .btn.fb::before { content: ""; width: 9px; height: 9px; border-radius: 50%; flex: none; }
+.btn.wa::before { background: var(--wa); }
+.btn.ig::before { background: var(--ig); }
+.btn.fb::before { background: var(--fb); }
+.btn.dono { background: var(--brand); color: var(--card); }
 .btn.ghost { background: transparent; color: var(--fg); border-color: var(--line); }
 .btn:focus-visible, .chip:focus-visible { outline: 3px solid var(--brand); outline-offset: 2px; }
 .full { grid-column: 1 / -1; }
@@ -101,7 +101,7 @@ pre.msg { white-space: pre-wrap; font: inherit; font-size: 14px; background: var
 <div class="wrap">
   <header>
     <h1>Prospecção BN Digital</h1>
-    <p class="sub">Comércios de Rio das Ostras, Casimiro, Barra de São João e Unamar. <b>WhatsApp</b> e <b>Instagram</b> levam a mensagem completa. <b>Pedir o dono</b> manda a mensagem curta, pra chegar em quem decide. No Instagram a mensagem é copiada: é só colar e enviar.</p>
+    <p class="sub">Comércios de Rio das Ostras, Casimiro, Barra de São João e Unamar. <b>WhatsApp</b> e <b>Instagram</b> levam a mensagem completa. <b>Pedir o responsável</b> pede pra falar com quem decide e já fala da plaquinha. No Instagram a mensagem é copiada: é só colar e enviar.</p>
     <div class="stats" id="stats"></div>
   </header>
 
@@ -175,18 +175,15 @@ Alguns trabalhos meus: ${IG_BN}
 Posso fazer uma demonstração de como ficaria o site de vocês, pra verem antes? Sem compromisso 🙂`;
 }
 function msgDono(l) {
-  return `${saudacao()}! Tudo bem? Aqui é o ${me()}, da BN Digital. Consegue me passar pro dono ou pro gerente? É uma ideia rápida pra ${l.nome} aparecer mais no Google. Obrigado! 🙂`;
+  return `${saudacao()}! Tudo bem? Aqui é o ${me()}, da BN Digital. Consegue me passar pro responsável de ${l.nome}?
+
+É sobre uma plaquinha de avaliação do Google pro balcão: o cliente encosta o celular nela e já cai na página de avaliar vocês, sem procurar nada. Mais avaliação, mais gente nova achando vocês no Maps.
+
+Tenho um vídeo de 10 segundos mostrando ela funcionando. Posso mandar? 🙂`;
 }
 
-const isAndroid = /Android/i.test(navigator.userAgent);
-function igDm(h) {
-  // No Android, abre direto no app do Instagram (não no Lite nem no navegador).
-  if (isAndroid) {
-    const fb = encodeURIComponent(`https://www.instagram.com/${h}/`);
-    return `intent://ig.me/m/${h}#Intent;scheme=https;package=com.instagram.android;S.browser_fallback_url=${fb};end`;
-  }
-  return `https://ig.me/m/${h}`;
-}
+// Link https direto: o celular abre no app do Instagram (ou do WhatsApp) se ele estiver instalado.
+const igDm = (h) => `https://ig.me/m/${h}`;
 const wa = (num, text) => `https://wa.me/55${num}?text=${encodeURIComponent(text)}`;
 const fbPage = (src) => (src.includes("facebook.com") ? "https://m.me/" + src.replace(/\/+$/, "").split("/").pop() : "");
 
@@ -225,11 +222,11 @@ function card(l) {
   if (l.ig) b.append(el("a", { class: "btn ig", href: igDm(l.ig), target: "_blank", rel: "noopener", onclick: () => { copiar(msgCompleta(l)); setTimeout(() => marcar(l, true), 600); } }, "Instagram"));
   if (!l.wa && !l.ig && fb) b.append(el("a", { class: "btn fb", href: fb, target: "_blank", rel: "noopener", onclick: () => { copiar(msgCompleta(l)); setTimeout(() => marcar(l, true), 600); } }, "Facebook"));
   const dono = l.wa
-    ? el("a", { class: "btn dono", href: wa(l.wa, msgDono(l)), target: "_blank", rel: "noopener" }, "Pedir o dono")
+    ? el("a", { class: "btn dono", href: wa(l.wa, msgDono(l)), target: "_blank", rel: "noopener" }, "Pedir o responsável")
     : l.ig
-      ? el("a", { class: "btn dono", href: igDm(l.ig), target: "_blank", rel: "noopener", onclick: () => copiar(msgDono(l)) }, "Pedir o dono")
+      ? el("a", { class: "btn dono", href: igDm(l.ig), target: "_blank", rel: "noopener", onclick: () => copiar(msgDono(l)) }, "Pedir o responsável")
       : fb
-        ? el("a", { class: "btn dono", href: fb, target: "_blank", rel: "noopener", onclick: () => copiar(msgDono(l)) }, "Pedir o dono")
+        ? el("a", { class: "btn dono", href: fb, target: "_blank", rel: "noopener", onclick: () => copiar(msgDono(l)) }, "Pedir o responsável")
         : null;
   if (dono) b.append(dono);
   if (!b.children.length) b.append(el("p", { class: "obs full" }, "Sem contato on-line: passe no local."));
