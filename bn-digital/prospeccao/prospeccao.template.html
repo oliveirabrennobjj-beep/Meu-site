@@ -101,7 +101,7 @@ pre.msg { white-space: pre-wrap; font: inherit; font-size: 14px; background: var
 <div class="wrap">
   <header>
     <h1>Prospecção BN Digital</h1>
-    <p class="sub">Só comércios que têm WhatsApp e Instagram. <b>Instagram</b> abre o perfil da loja. <b>WhatsApp</b> abre a conversa com a mensagem completa. <b>Chamar o dono</b> abre o WhatsApp com a mensagem que pede o dono e fala da plaquinha. Lojas que você já chamou antes (Rota, Gordo's, Duga, Oficina do Corte e Bom Pra Cachorro) saíram da lista.</p>
+    <p class="sub">Só comércios que têm WhatsApp e Instagram. <b>Instagram</b> abre o perfil da loja. <b>WhatsApp</b> abre a conversa com a mensagem completa. <b>Chamar o dono</b> abre o WhatsApp com a mensagem que pede o dono e fala da plaquinha. Só entram números tirados do próprio Instagram ou página da loja. Antes de enviar, confira se no WhatsApp aparece <b>Conta comercial</b> embaixo do nome.</p>
     <div class="stats" id="stats"></div>
   </header>
 
@@ -162,24 +162,24 @@ const saudacao = () => { const h = new Date().getHours(); return h < 12 ? "Bom d
 const key = (l) => l.lista + "|" + l.nome;
 
 function msgCompleta(l) {
-  return `Oi, tudo bem? Aqui é o ${me()}, da BN Digital 👋
+  return `Oi, tudo bem? Aqui é o ${me()}, da BN Digital.
 
 Dei uma olhada em ${l.nome} e curti muito o trabalho de vocês! Por isso acho que vocês merecem aparecer mais no Google.
 
 Eu faço duas coisas que ajudam muito:
-✅ ${SERVICO[l.tipo] || SERVICO.beleza}
-✅ ${PLACA}
+- ${SERVICO[l.tipo] || SERVICO.beleza}
+- ${PLACA}
 
 Alguns trabalhos meus: ${IG_BN}
 
-Posso fazer uma demonstração de como ficaria o site de vocês, pra verem antes? Sem compromisso 🙂`;
+Posso fazer uma demonstração de como ficaria o site de vocês, pra verem antes? Sem compromisso :)`;
 }
 function msgDono(l) {
   return `${saudacao()}! Tudo bem? Aqui é o ${me()}, da BN Digital. Consegue me passar pro responsável de ${l.nome}?
 
 É sobre uma plaquinha de avaliação do Google pro balcão: o cliente encosta o celular nela e já cai na página de avaliar vocês, sem procurar nada. Mais avaliação, mais gente nova achando vocês no Maps.
 
-Tenho um vídeo de 10 segundos mostrando ela funcionando. Posso mandar? 🙂`;
+Tenho um vídeo de 10 segundos mostrando ela funcionando. Posso mandar?`;
 }
 
 // Instagram: link normal do perfil (abre no app que o celular escolher, até o Lite).
