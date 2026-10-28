@@ -155,7 +155,7 @@ const store = {
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
 };
 let sent = store.get("bn-sent", {});
-let tipo = store.get("bn-tipo", "");
+let tipo = "";
 
 const $ = (s) => document.querySelector(s);
 const me = () => ($("#me").value || "Brenno").trim();
@@ -260,7 +260,10 @@ function render() {
     (!hide || !sent[key(l)]));
   const list = $("#list");
   list.replaceChildren(...vis.map(card));
-  if (!vis.length) list.append(el("p", { class: "empty" }, "Nenhum comércio com esses filtros."));
+  if (!vis.length) {
+    list.append(el("p", { class: "empty" }, "Nenhuma loja aparece com esses filtros."),
+      el("button", { class: "btn dono full", type: "button", onclick: () => { tipo = ""; $("#q").value = ""; $("#cidade").value = ""; $("#hideSent").checked = false; chips(); render(); } }, "Mostrar todas as lojas"));
+  }
   const n = Object.keys(sent).length;
   $("#stats").replaceChildren(
     el("span", { class: "stat" }, el("b", {}, String(LEADS.length)), " comércios"),
@@ -275,7 +278,7 @@ function chips() {
   LEADS.forEach((l) => (counts[l.tipo] = (counts[l.tipo] || 0) + 1));
   const opts = [["", `Todos (${LEADS.length})`], ...Object.keys(TIPOS).filter((t) => counts[t]).map((t) => [t, `${TIPOS[t]} (${counts[t]})`])];
   $("#chips").replaceChildren(...opts.map(([v, label]) =>
-    el("button", { class: "chip", type: "button", "aria-pressed": String(tipo === v), onclick: () => { tipo = v; store.set("bn-tipo", v); chips(); render(); } }, label)));
+    el("button", { class: "chip", type: "button", "aria-pressed": String(tipo === v), onclick: () => { tipo = v; chips(); render(); } }, label)));
 }
 
 $("#me").value = store.get("bn-me", "Brenno");
