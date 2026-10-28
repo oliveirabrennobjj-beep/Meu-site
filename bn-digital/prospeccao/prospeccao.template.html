@@ -101,7 +101,7 @@ pre.msg { white-space: pre-wrap; font: inherit; font-size: 14px; background: var
 <div class="wrap">
   <header>
     <h1>Prospecção BN Digital</h1>
-    <p class="sub">Só comércios que têm WhatsApp e Instagram. <b>Instagram</b> abre o perfil da loja. <b>WhatsApp</b> abre a conversa com a mensagem pronta. <b>Copiar: chamar o dono</b> copia a mensagem que pede o dono ou o gerente e fala da plaquinha: cole onde quiser.</p>
+    <p class="sub">Só comércios que têm WhatsApp e Instagram. <b>Instagram</b> abre o perfil da loja. <b>WhatsApp</b> abre a conversa com a mensagem completa. <b>Chamar o dono</b> abre o WhatsApp com a mensagem que pede o dono e fala da plaquinha. Lojas que você já chamou antes (Rota, Gordo's, Duga, Oficina do Corte e Bom Pra Cachorro) saíram da lista.</p>
     <div class="stats" id="stats"></div>
   </header>
 
@@ -222,12 +222,12 @@ function card(l) {
   );
   if (l.obs) c.append(el("p", { class: "obs" }, l.obs));
 
-  // Três botões: Instagram (perfil da loja), WhatsApp (conversa com a mensagem pronta) e Copiar (chamar o dono).
+  // Três botões: Instagram (perfil da loja), WhatsApp (mensagem completa) e chamar o dono (WhatsApp com a mensagem curta).
   const b = el("div", { class: "btns" });
   b.append(
     el("a", { class: "btn ig", href: igPerfil(l.ig), target: "_blank", rel: "noopener" }, "Instagram"),
     el("a", { class: "btn wa", href: wa(l.wa, msgCompleta(l)), target: "_blank", rel: "noopener", onclick: () => setTimeout(() => marcar(l, true), 600) }, "WhatsApp"),
-    el("button", { class: "btn dono full", type: "button", onclick: () => copiar(msgDono(l)) }, "Copiar: chamar o dono"),
+    el("a", { class: "btn dono full", href: wa(l.wa, msgDono(l)), target: "_blank", rel: "noopener", onclick: () => setTimeout(() => marcar(l, true), 600) }, "Chamar o dono no WhatsApp"),
   );
   c.append(b);
 
