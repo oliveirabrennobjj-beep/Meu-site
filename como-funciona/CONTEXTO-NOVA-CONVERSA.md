@@ -1,4 +1,28 @@
-# Contexto para uma conversa nova (vídeos), atualizado em 27/10/2026 (tarde)
+# Contexto para uma conversa nova, atualizado em 28/10/2026 (manhã)
+
+## Resumo rápido (leia isto primeiro)
+
+**Situação dos vídeos**
+- Postados: Raio-X (elevador, geladeira, chuveiro, **caneta**), E Se Você Fizesse (piscina?, **caixa d'água** em 27/10, **fossa** entregue em 27/10 à noite). Conferir com o Brenno o que de fato saiu.
+- Prontos sem voz (animação com tempo provisório): **motor** (E Se), **descarga** (Raio-X), **caminhão** (Engenheirinho).
+- **ElevenLabs sem crédito**: em 28/10 às 7h ainda tinha 22 créditos (cada vídeo gasta ~1.200). Voz grátis da Microsoft (edge-tts) e Google são bloqueadas na nuvem; vidIQ e Higgsfield sem crédito.
+- Caminhos: (1) o Brenno grava a voz e manda o áudio → `ferramentas/alinhar.py audio.mp3 texto.txt src/words.json` (erro médio 0,09 s) → salvar o áudio em `public/` → renderizar; (2) ele assina o Creator da ElevenLabs; (3) esperar renovar.
+- Havia uma tarefa agendada diária (10h47) na conversa antiga pra narrar sozinho; foi **desligada** quando a conversa mudou. Se quiser de novo, recrie com `create_trigger` nesta conversa.
+- **Estilo realista** (pedido em 27/10): `src/realismo.tsx` já aplicado no motor e no caminhão. Todo 3D novo usa esse acabamento.
+
+**Perfil novo: Engenheirinho** (@engenheirinho3d). Logo em `entregas/canal-engenheiro/foto-perfil.png`. Bio e plano em `PROXIMOS-PASSOS.md`. Fórmula do canal @comoconstruir_yt: "Mas [problema]. Então você [solução]. Esse é o [nome]!".
+
+**BN Digital (venda de site e placa NFC)**
+- Página de prospecção no ar: https://oliveirabrennobjj-beep.github.io/Meu-site/prospeccao/ (fonte: `bn-digital/prospeccao/prospeccao.template.html` + `leads-whatsapp.json`; gera `index.html` pro site e `prospeccao.html` pro Claude).
+- Regras que o Brenno pediu: **só lojas com WhatsApp**, número tirado da **página da própria loja** (nunca de guia antigo: deu número de pessoa física); 3 botões (Chamar no WhatsApp com a mensagem completa + Instagram da BN; Falar com o dono ou gerente, mensagem curta sem link; Ver o Instagram da loja); **sem emoji** na mensagem (chega como "�"); **revisar com teste automático antes de mandar**.
+- Lojas já chamadas (não repetir): Rota 22, Gordo's, Duga, Oficina do Corte, Bom Pra Cachorro, Popostras, Tapiocaria do Luiz, Barbearia Nobre.
+- Roteiro de abordagem presencial: `bn-digital/prospeccao/abordagem-presencial.md`. Instagram da BN: @bn_digital__sites_e_nfc.
+- Publicar mudanças no site = PR do branch da sessão pro `main` e merge (o Brenno autorizou).
+
+**Minicurso Raio-X**: https://oliveirabrennobjj-beep.github.io/Meu-site/raiox/ (R$ 85, Pix).
+
+---
+
 
 Leia este arquivo primeiro. Responda sempre em **português**: o Brenno reclama quando a resposta vem em inglês.
 Depois leia `PROXIMOS-PASSOS.md` e `README.md` desta pasta.
@@ -21,10 +45,10 @@ Depois leia `PROXIMOS-PASSOS.md` e `README.md` desta pasta.
 | Vídeo | Perfil | Projeto | Composição | Status |
 |---|---|---|---|---|
 | Piscina | E Se Você Fizesse? | `video-piscina-3d/` | `Piscina` / `Capa-Piscina` | combinado para 26/10 (conferir se foi postado) |
-| Fossa | E Se Você Fizesse? | `video-fossa-3d/` | `Fossa` / `Capa-Fossa` | **postar em 27/10** |
+| Fossa | E Se Você Fizesse? | `video-fossa-3d/` | `Fossa` / `Capa-Fossa` | entregue com voz em 27/10 à noite |
 | Caixa d'água | E Se Você Fizesse? | `video-caixa-3d/` | `Caixa` / `Capa-Caixa` | o Brenno estava postando em 27/10 às 13h (conferir) |
 | Chuveiro | Raio-X | `video-chuveiro/` | `Chuveiro` / `Capa` | postado em 26/10 |
-| Elevador, caneta | Raio-X | `video-elevador/`, `video-caneta/` | `Elevador`, `Caneta` | prontos antes |
+| Elevador, caneta | Raio-X | `video-elevador/`, `video-caneta/` | `Elevador`, `Caneta` | postados |
 | Motor | E Se Você Fizesse? | `video-motor-3d/` | `Motor` / `Capa-Motor` | animação pronta com tempo provisório, **falta a voz** (roteiro `09-motor.md`) |
 | Descarga | Raio-X | `video-descarga/` | `Descarga` / `Capa` | animação pronta com tempo provisório, **falta a voz** (roteiro `04-descarga.md`) |
 | Caminhão | Engenheiro (perfil novo) | `video-caminhao-3d/` | `Caminhao` / `Capa-Caminhao` | animação pronta com tempo provisório, **falta a voz** (roteiro `E01-caminhao.md`) |
