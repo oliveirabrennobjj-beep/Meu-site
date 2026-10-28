@@ -89,7 +89,7 @@ label.toggle { display: flex; gap: 6px; align-items: center; font-size: 13px; co
 .btn.ig::before { background: var(--ig); }
 .btn.fb::before { background: var(--fb); }
 .btn.dono { background: var(--brand); color: var(--card); }
-.btn.ghost { background: transparent; color: var(--fg); border-color: var(--line); }
+.btn.ghost { background: transparent; color: var(--muted); border-color: var(--line); border-style: dashed; font-weight: 500; }
 .btn:focus-visible, .chip:focus-visible { outline: 3px solid var(--brand); outline-offset: 2px; }
 .full { grid-column: 1 / -1; }
 details summary { cursor: pointer; font-size: 13px; color: var(--brand); font-weight: 600; }
@@ -110,7 +110,7 @@ pre.msg { white-space: pre-wrap; font: inherit; font-size: 14px; background: var
 <div class="wrap">
   <header>
     <h1>Prospecção BN Digital</h1>
-    <p class="sub">Só lojas com WhatsApp, e o número sempre tirado da página da própria loja. <b>WhatsApp</b> abre a conversa com a mensagem completa. <b>Chamar o dono</b> abre a conversa com a mensagem que pede o responsável e fala da plaquinha. Antes de enviar, confira se aparece <b>Conta comercial</b> embaixo do nome.</p>
+    <p class="sub">Só lojas com WhatsApp, e o número sempre tirado da página da própria loja. <b>Chamar no WhatsApp</b> abre a conversa com a mensagem completa. <b>Falar com o dono ou gerente</b> abre a conversa com a mensagem que pede o responsável e fala da plaquinha. As duas mensagens levam o link do Instagram da BN. Antes de enviar, confira se aparece <b>Conta comercial</b> embaixo do nome.</p>
     <div class="stats" id="stats"></div>
   </header>
 
@@ -190,7 +190,9 @@ function msgDono(l) {
 
 É sobre uma plaquinha de avaliação do Google pro balcão: o cliente encosta o celular nela e já cai na página de avaliar vocês, sem procurar nada. Mais avaliação, mais gente nova achando vocês no Maps.
 
-Tenho um vídeo de 10 segundos mostrando ela funcionando. Posso mandar?`;
+Tenho um vídeo de 10 segundos mostrando ela funcionando. Posso mandar?
+
+Meus trabalhos: ${IG_BN}`;
 }
 
 // Instagram: link normal do perfil (abre no app que o celular escolher, até o Lite).
@@ -233,13 +235,15 @@ function card(l) {
   );
   if (l.obs) c.append(el("p", { class: "obs" }, l.obs));
 
-  // Botões: WhatsApp com a mensagem completa, chamar o dono pelo WhatsApp e, se a loja tiver, o Instagram pra dar uma olhada.
+  // Três botões: chamar no WhatsApp (mensagem completa), falar com o dono ou gerente (WhatsApp) e ver o Instagram da loja.
   const b = el("div", { class: "btns" });
   b.append(
-    el("a", { class: "btn wa", href: wa(l.wa, msgCompleta(l)), target: "_blank", rel: "noopener", onclick: () => setTimeout(() => marcar(l, true), 600) }, "WhatsApp"),
-    el("a", { class: "btn dono", href: wa(l.wa, msgDono(l)), target: "_blank", rel: "noopener", onclick: () => setTimeout(() => marcar(l, true), 600) }, "Chamar o dono"),
+    el("a", { class: "btn wa", href: wa(l.wa, msgCompleta(l)), target: "_blank", rel: "noopener", onclick: () => setTimeout(() => marcar(l, true), 600) }, "Chamar no WhatsApp"),
+    el("a", { class: "btn dono", href: wa(l.wa, msgDono(l)), target: "_blank", rel: "noopener", onclick: () => setTimeout(() => marcar(l, true), 600) }, "Falar com o dono ou gerente"),
+    l.ig
+      ? el("a", { class: "btn ig full", href: igPerfil(l.ig), target: "_blank", rel: "noopener" }, "Ver o Instagram da loja")
+      : el("span", { class: "btn ghost full", "aria-disabled": "true" }, "Essa loja não tem Instagram"),
   );
-  if (l.ig) b.append(el("a", { class: "btn ig full", href: igPerfil(l.ig), target: "_blank", rel: "noopener" }, "Ver o Instagram da loja"));
   c.append(b);
 
   const cb = el("input", { type: "checkbox", id: "s-" + btoa(unescape(encodeURIComponent(k))).replace(/[^a-z0-9]/gi, "") });
