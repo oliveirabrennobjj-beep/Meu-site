@@ -101,7 +101,7 @@ pre.msg { white-space: pre-wrap; font: inherit; font-size: 14px; background: var
 <div class="wrap">
   <header>
     <h1>Prospecção BN Digital</h1>
-    <p class="sub">Comércios de Rio das Ostras, Casimiro, Barra de São João e Unamar. <b>Instagram</b> abre o perfil da loja. <b>WhatsApp</b> abre a conversa com a mensagem pronta. <b>Copiar: chamar o dono</b> copia a mensagem que pede o dono ou o gerente e fala da plaquinha: cole onde quiser.</p>
+    <p class="sub">Só comércios que têm WhatsApp e Instagram. <b>Instagram</b> abre o perfil da loja. <b>WhatsApp</b> abre a conversa com a mensagem pronta. <b>Copiar: chamar o dono</b> copia a mensagem que pede o dono ou o gerente e fala da plaquinha: cole onde quiser.</p>
     <div class="stats" id="stats"></div>
   </header>
 
@@ -182,13 +182,10 @@ function msgDono(l) {
 Tenho um vídeo de 10 segundos mostrando ela funcionando. Posso mandar? 🙂`;
 }
 
-// Na versão do site (fora do Claude), no Android, "intent://" abre o app certo: Instagram normal (não o Lite) e WhatsApp.
-// Dentro do Claude o celular bloqueia isso, então lá ficam os links https normais.
+// Instagram: link normal do perfil (abre no app que o celular escolher, até o Lite).
+const igPerfil = (h) => `https://www.instagram.com/${h}/`;
+// WhatsApp: na versão do site, no Android, "intent://" abre o app do WhatsApp direto com a mensagem.
 const APP_LINKS = __APP__ && /Android/i.test(navigator.userAgent);
-const igPerfil = (h) =>
-  APP_LINKS
-    ? `intent://instagram.com/_u/${h}/#Intent;scheme=https;package=com.instagram.android;S.browser_fallback_url=${encodeURIComponent(`https://www.instagram.com/${h}/`)};end`
-    : `https://www.instagram.com/${h}/`;
 const wa = (num, text) => {
   const web = `https://wa.me/55${num}?text=${encodeURIComponent(text)}`;
   return APP_LINKS
@@ -225,16 +222,13 @@ function card(l) {
   );
   if (l.obs) c.append(el("p", { class: "obs" }, l.obs));
 
-  // Três botões: Instagram (abre o perfil da loja), WhatsApp (abre a conversa com a mensagem pronta)
-  // e Copiar (copia a mensagem pra chamar o dono ou o gerente, falando da plaquinha).
+  // Três botões: Instagram (perfil da loja), WhatsApp (conversa com a mensagem pronta) e Copiar (chamar o dono).
   const b = el("div", { class: "btns" });
-  const fb = fbPage(l.src);
-  if (l.ig) b.append(el("a", { class: "btn ig", href: igPerfil(l.ig), target: "_blank", rel: "noopener" }, "Instagram"));
-  else if (fb) b.append(el("a", { class: "btn fb", href: fb, target: "_blank", rel: "noopener" }, "Facebook"));
-  if (l.wa) b.append(el("a", { class: "btn wa", href: wa(l.wa, msgCompleta(l)), target: "_blank", rel: "noopener", onclick: () => setTimeout(() => marcar(l, true), 600) }, "WhatsApp"));
-  b.append(el("button", { class: "btn dono", type: "button", onclick: () => copiar(msgDono(l)) }, "Copiar: chamar o dono"));
-  if (b.children.length === 1) b.firstElementChild.classList.add("full");
-  if (b.children.length === 3) b.lastElementChild.classList.add("full");
+  b.append(
+    el("a", { class: "btn ig", href: igPerfil(l.ig), target: "_blank", rel: "noopener" }, "Instagram"),
+    el("a", { class: "btn wa", href: wa(l.wa, msgCompleta(l)), target: "_blank", rel: "noopener", onclick: () => setTimeout(() => marcar(l, true), 600) }, "WhatsApp"),
+    el("button", { class: "btn dono full", type: "button", onclick: () => copiar(msgDono(l)) }, "Copiar: chamar o dono"),
+  );
   c.append(b);
 
   const cb = el("input", { type: "checkbox", id: "s-" + btoa(unescape(encodeURIComponent(k))).replace(/[^a-z0-9]/gi, "") });
