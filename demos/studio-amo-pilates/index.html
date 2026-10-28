@@ -1,0 +1,643 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Studio Amo Saúde · Pilates e Fisioterapia em Rio das Ostras</title>
+<meta name="description" content="Fisioterapia, quiropraxia, RPG, Pilates, Yoga, ginástica 60+ e hipopressivo no Jardim Atlântico, em Rio das Ostras. Agende pelo WhatsApp.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Jost:wght@300;400;500;600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+<style>
+/* Tokens: sol e mel (amarelo da marca), tinta (traço), pedra e papel (neutros), ouro para detalhes finos */
+:root{
+  --sol:#F2C21B; --mel:#C99706; --tinta:#1C1A17; --grafite:#4E4A42; --suave:#8A857A;
+  --pedra:#E4E0D6; --papel:#F7F6F2; --branco:#FFFFFF; --linha:#E2DED3;
+  --wa:#1E9E52;
+  --serif:"Cormorant Garamond", Garamond, "Times New Roman", serif;
+  --sans:"Jost", "Futura", system-ui, sans-serif;
+  --lado:272px;
+  --gutter:clamp(18px, 4.5vw, 64px);
+  --ease:cubic-bezier(.22,.8,.24,1);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--sans);font-weight:400;font-size:18px;line-height:1.65;-webkit-font-smoothing:antialiased}
+img,svg{display:block;max-width:100%}
+a{color:inherit}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--tinta);outline-offset:3px;border-radius:6px}
+h1,h2,h3{font-family:var(--serif);font-weight:600;margin:0;letter-spacing:-.005em}
+h2{font-size:clamp(40px,5.2vw,68px);line-height:1.02}
+p{margin:0}
+.sub{max-width:54ch;color:var(--grafite);font-size:18.5px;margin-top:16px;font-weight:300}
+.ico{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+
+/* ===== menu lateral ===== */
+.lado{position:fixed;inset:0 auto 0 0;width:var(--lado);z-index:40;background:var(--branco);border-right:1px solid var(--linha);display:flex;flex-direction:column;padding:16px 14px;transition:transform .35s var(--ease)}
+.marca{display:flex;align-items:center;gap:12px;padding:8px 44px 18px 8px;text-decoration:none;border-bottom:1px solid var(--linha);margin-bottom:12px}
+.marca-sinal{width:40px;height:40px;border-radius:10px;background:var(--sol);display:grid;place-items:center;flex:none}
+.marca-nome{font-family:var(--serif);font-weight:600;font-size:22px;line-height:1.05}
+.marca-local{display:block;font-size:12.5px;color:var(--suave);margin-top:3px;font-family:var(--sans)}
+.busca{display:flex;align-items:center;gap:10px;width:100%;padding:9px 10px;border:1px solid var(--linha);border-radius:10px;background:var(--papel);color:var(--suave);font-size:14px;cursor:pointer;text-align:left;margin-bottom:14px;transition:border-color .2s, color .2s}
+.busca:hover{border-color:#cfc9bb;color:var(--tinta)}
+.busca kbd,.kbd{margin-left:auto;font-family:var(--sans);font-size:11px;border:1px solid var(--linha);border-radius:5px;padding:1px 6px;background:var(--branco);color:var(--suave)}
+.rolagem{flex:1;overflow-y:auto;scrollbar-width:none;display:flex;flex-direction:column;gap:18px}
+.rolagem::-webkit-scrollbar{display:none}
+.grupo-nome{display:block;padding:0 10px;margin-bottom:4px;font-size:12.5px;font-weight:500;color:var(--suave)}
+.item-nav{display:flex;align-items:center;gap:10px;width:100%;padding:8px 10px;border-radius:8px;border:0;background:none;text-decoration:none;color:var(--grafite);font-size:15px;cursor:pointer;text-align:left;transition:background .2s, color .2s}
+.item-nav:hover{background:rgba(28,26,23,.05);color:var(--tinta)}
+.item-nav.ativo{background:rgba(242,194,27,.22);color:var(--tinta);font-weight:500}
+.item-nav.ativo .ico{color:var(--mel)}
+.item-nav .seta{margin-left:auto;width:14px;height:14px;transition:rotate .25s var(--ease);color:var(--suave)}
+.item-nav[aria-expanded="true"] .seta{rotate:90deg}
+.selo-nav{margin-left:auto;font-size:11px;font-weight:600;background:var(--sol);color:var(--tinta);border-radius:99px;padding:1px 8px}
+.filhos{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows .3s var(--ease), opacity .3s}
+.filhos.aberto{grid-template-rows:1fr;opacity:1}
+.filhos > div{overflow:hidden;min-height:0;position:relative;padding-left:18px}
+.filhos > div::before{content:"";position:absolute;left:19px;top:4px;bottom:4px;border-left:1px solid var(--linha)}
+.filhos .item-nav{font-size:14px;padding:6px 10px 6px 16px}
+.base{border-top:1px solid var(--linha);padding-top:12px;display:flex;flex-direction:column;gap:2px}
+.base .zap-nav{color:var(--wa)}
+.base .zap-nav:hover{background:rgba(30,158,82,.08);color:var(--wa)}
+
+/* menu lateral abre como gaveta pelo botão do topo */
+.lado{transform:translateX(-100%)}
+body.gaveta .lado{transform:none;box-shadow:0 0 70px rgba(28,26,23,.3)}
+.fundo-lado{position:fixed;inset:0;z-index:35;background:rgba(28,26,23,.4);opacity:0;pointer-events:none;transition:opacity .3s}
+body.gaveta .fundo-lado{opacity:1;pointer-events:auto}
+.fecha-lado{position:absolute;top:18px;right:12px}
+
+/* topo: transparente sobre a abertura, sólido ao rolar */
+.barra{position:fixed;inset:0 0 auto;z-index:30;height:76px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;padding:0 var(--gutter);color:#F7F6F2;transition:background .35s, color .35s, border-color .35s;border-bottom:1px solid rgba(247,246,242,.12)}
+.barra.solida{background:rgba(247,246,242,.92);backdrop-filter:blur(12px);color:var(--tinta);border-color:var(--linha)}
+.barra-marca{display:flex;align-items:center;gap:12px;text-decoration:none;min-width:0}
+.barra-marca .circ{width:38px;height:38px;border-radius:50%;border:1px solid currentColor;display:grid;place-items:center;flex:none;font-family:var(--serif);font-size:19px;font-style:italic}
+.barra-marca b{display:block;font-family:var(--serif);font-weight:500;font-size:19px;line-height:1.1;letter-spacing:.02em}
+.barra-marca small{display:block;font-size:11.5px;letter-spacing:.12em;opacity:.7}
+.barra-links{display:flex;gap:30px;font-size:13.5px;letter-spacing:.14em}
+.barra-links a{text-decoration:none;opacity:.8;transition:opacity .2s}
+.barra-links a:hover,.barra-links a.ativo{opacity:1}
+.barra-links a.ativo{text-decoration:underline;text-underline-offset:8px;text-decoration-thickness:1px}
+.barra-dir{display:flex;justify-content:flex-end;align-items:center;gap:8px}
+.pilula{display:inline-flex;align-items:center;gap:8px;padding:9px 18px;border-radius:999px;border:1px solid currentColor;text-decoration:none;font-size:13.5px;letter-spacing:.08em;transition:background .25s, color .25s}
+.pilula:hover{background:#F7F6F2;color:var(--tinta)}
+.barra.solida .pilula:hover{background:var(--tinta);color:#F7F6F2}
+.botao-ico{width:40px;height:40px;border-radius:50%;border:1px solid transparent;background:none;display:grid;place-items:center;cursor:pointer;color:inherit}
+.botao-ico:hover{border-color:currentColor}
+@media (max-width:980px){.barra{grid-template-columns:1fr auto}.barra-links{display:none}.barra .pilula{display:none}}
+
+/* botões */
+.btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--sans);font-weight:500;font-size:16px;letter-spacing:.01em;text-decoration:none;padding:15px 26px;border-radius:999px;border:1px solid var(--tinta);transition:background .25s, color .25s, border-color .25s}
+.btn-cheio{background:var(--tinta);color:var(--papel)}
+.btn-cheio:hover{background:var(--wa);border-color:var(--wa)}
+.btn-linha{background:transparent}
+.btn-linha:hover{background:var(--tinta);color:var(--papel)}
+.btn-peq{padding:9px 16px;font-size:14px}
+.wa{width:18px;height:18px;flex:none}
+.acoes{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+
+.wrap{max-width:1080px;margin:0 auto;padding-inline:var(--gutter)}
+section{padding:104px 0}
+
+/* ===== abertura: nome gigante, arco no centro, título e chamada embaixo ===== */
+.hero{position:relative;min-height:100svh;background:radial-gradient(70% 60% at 50% 38%, rgba(242,194,27,.28), transparent 70%), radial-gradient(40% 40% at 12% 90%, rgba(201,151,6,.18), transparent 70%), #17150F;color:#F7F6F2;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;padding:96px 0 44px}
+.palco{position:absolute;inset:76px 0 0;display:flex;justify-content:center;pointer-events:none}
+.nome{position:absolute;top:2%;left:50%;translate:-50% 0;font-family:var(--serif);font-weight:300;font-size:clamp(170px,31vw,480px);line-height:.8;letter-spacing:.04em;white-space:nowrap;will-change:transform}
+.nome span{background:linear-gradient(180deg,#E9D9A6 0%, rgba(201,151,6,.55) 55%, rgba(201,151,6,.05) 92%);-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block;opacity:0;transform:translateY(40%);transition:opacity 1.2s var(--ease), transform 1.2s var(--ease)}
+.hero.pronto .nome span{opacity:1;transform:none}
+.hero.pronto .nome span:nth-child(2){transition-delay:.12s}
+.hero.pronto .nome span:nth-child(3){transition-delay:.24s}
+.arco{position:absolute;bottom:0;left:50%;translate:-50% 0;width:clamp(240px,27vw,400px);aspect-ratio:3/4.3;border-radius:999px 999px 0 0;background:radial-gradient(90% 70% at 50% 30%, #F7D34E, #E5AE10 70%, #C99706);overflow:hidden;clip-path:inset(100% 0 0 0 round 999px 999px 0 0);transition:clip-path 1.4s .25s var(--ease)}
+.hero.pronto .arco{clip-path:inset(0 0 0 0 round 999px 999px 0 0)}
+.arco::after{content:"";position:absolute;inset:12px 12px 0;border:1px solid rgba(28,26,23,.25);border-bottom:0;border-radius:999px 999px 0 0}
+.arco svg{position:absolute;left:50%;bottom:4%;translate:-50% 0;height:84%;width:auto;overflow:visible}
+.legenda-fig{position:absolute;left:calc(50% + clamp(240px,27vw,400px)/2 + 18px);bottom:60%;z-index:2;white-space:nowrap;font-family:var(--serif);font-style:italic;font-size:17px;color:#F7F6F2;opacity:0;transition:opacity .8s 2.2s}
+.legenda-fig::before{content:"";display:inline-block;width:34px;height:1px;background:currentColor;vertical-align:middle;margin-right:10px;opacity:.6}
+.hero.pronto .legenda-fig{opacity:.85}
+.hero-base{position:relative;z-index:2;display:grid;grid-template-columns:1fr calc(clamp(240px,27vw,400px) + 48px) 1fr;gap:0;align-items:end;max-width:none}
+.hero-esq{grid-column:1}
+.hero-dir{grid-column:3}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
+.tags span{border:1px solid rgba(247,246,242,.35);border-radius:999px;padding:4px 14px;font-size:12.5px;letter-spacing:.12em;color:#E9E4D6}
+.hero h1{font-weight:300;font-size:clamp(34px,3.7vw,58px);line-height:1.02;letter-spacing:.01em;text-transform:uppercase;max-width:11ch}
+.hero h1 em{font-style:italic;text-transform:none;font-weight:400;color:#F2C21B}
+.hero-dir{justify-self:end;max-width:330px;text-align:left}
+.hero-dir p{font-size:15.5px;font-weight:300;color:#D9D4C6;line-height:1.6}
+.pilula-clara{display:inline-flex;align-items:center;gap:10px;margin-top:22px;padding:13px 24px;border-radius:999px;background:#F7F6F2;color:var(--tinta);text-decoration:none;font-size:14px;letter-spacing:.08em;transition:background .25s, color .25s}
+.pilula-clara:hover{background:var(--sol)}
+.link-fino{display:block;margin-top:16px;font-size:13px;letter-spacing:.14em;color:#D9D4C6;text-decoration:underline;text-underline-offset:6px;text-decoration-thickness:1px}
+.hero-esq,.hero-dir{opacity:0;transform:translateY(14px);transition:opacity 1s .9s, transform 1s .9s var(--ease)}
+.hero.pronto .hero-esq,.hero.pronto .hero-dir{opacity:1;transform:none}
+.equipe{grid-column:1/-1;margin-top:34px;display:flex;justify-content:space-between;gap:16px;padding-top:22px;border-top:1px solid rgba(247,246,242,.14);font-size:13px;letter-spacing:.1em;color:#B9B3A4}
+@media (max-width:860px){
+  .hero{padding-top:84px;justify-content:flex-start}
+  .palco{position:relative;inset:auto;height:min(118vw,520px);margin:0 0 8px}
+  .nome{font-size:44vw;top:4%}
+  .arco{width:62vw}
+  .legenda-fig{display:none}
+  .hero-base{grid-template-columns:1fr;gap:24px}
+  .hero-esq,.hero-dir{grid-column:1}
+  .hero-dir{justify-self:start}
+  .equipe{margin-top:8px}
+  .equipe{flex-direction:column;gap:4px}
+}
+
+/* ===== tratamentos ===== */
+.lista{margin-top:48px;border-top:1px solid var(--tinta)}
+.trat{border-bottom:1px solid var(--linha)}
+.trat summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:1fr auto;align-items:center;gap:16px;padding:24px 0}
+.trat summary::-webkit-details-marker{display:none}
+.trat h3{font-size:clamp(32px,4.2vw,48px);line-height:1.05;transition:color .25s}
+.trat summary:hover h3{color:var(--mel)}
+.trat .resumo{display:block;font-family:var(--sans);font-size:15.5px;font-weight:300;color:var(--grafite);margin-top:4px}
+.mais{width:42px;height:42px;border-radius:50%;border:1px solid var(--tinta);position:relative;flex:none;transition:background .25s}
+.mais::before,.mais::after{content:"";position:absolute;left:50%;top:50%;width:14px;height:1.5px;background:currentColor;translate:-50% -50%}
+.mais::after{rotate:90deg;transition:rotate .3s var(--ease)}
+.trat[open] .mais{background:var(--sol);border-color:var(--sol)}
+.trat[open] .mais::after{rotate:0deg}
+.abre{display:grid;grid-template-columns:1.3fr .7fr;gap:28px;padding:0 0 28px;align-items:start}
+.abre p{max-width:58ch;color:var(--grafite);font-weight:300}
+.abre .btn{justify-self:start}
+@media (max-width:760px){.abre{grid-template-columns:1fr}}
+
+/* ===== aulas ===== */
+.aulas{background:var(--tinta);color:var(--papel)}
+.aulas h2{color:var(--papel)}
+.aulas .sub{color:#c8c3b6}
+.grade-wrap{margin-top:48px;overflow-x:auto}
+.grade{display:grid;grid-template-columns:120px repeat(6,minmax(100px,1fr));min-width:760px;border:1px solid #3a3731;border-radius:16px;overflow:hidden}
+.grade > div{padding:14px;border-right:1px solid #3a3731;border-bottom:1px solid #3a3731;font-size:14.5px;line-height:1.4;font-weight:300;min-height:76px}
+.grade .dia{font-family:var(--serif);font-size:22px;font-weight:600;min-height:auto;background:#24221e}
+.grade .turno{font-weight:400;color:#c8c3b6;background:#24221e}
+.grade .turno small{display:block;font-size:12.5px;color:#8f897c}
+.grade .aula{background:var(--sol);color:var(--tinta);font-weight:500}
+.grade .aula small{display:block;font-weight:300}
+.grade .fechado{color:#6f6a5e}
+.grade-nota{margin-top:14px;font-size:15px;color:#c8c3b6;font-weight:300}
+.rolo{margin-top:64px;display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:12px;scrollbar-color:#5a554b transparent}
+.rolo figure{margin:0;flex:0 0 min(76vw,300px);scroll-snap-align:start}
+.rolo img{border-radius:14px;width:100%;height:auto}
+.rolo figcaption{margin-top:12px;font-family:var(--serif);font-size:24px;font-weight:600;line-height:1.1}
+.rolo figcaption span{display:block;font-family:var(--sans);font-weight:300;color:#c8c3b6;font-size:15px;margin-top:4px}
+
+/* ===== primeira visita (sequência real) ===== */
+.passos{margin-top:52px;display:grid;grid-template-columns:repeat(3,1fr);gap:36px;counter-reset:passo}
+.passo{border-top:1px solid var(--tinta);padding-top:20px}
+.passo::before{counter-increment:passo;content:counter(passo);font-family:var(--serif);font-weight:500;font-size:64px;line-height:1;color:var(--mel);display:block;margin-bottom:12px}
+.passo h3{font-size:30px;margin-bottom:8px}
+.passo p{color:var(--grafite);font-weight:300}
+@media (max-width:820px){.passos{grid-template-columns:1fr}}
+
+/* ===== depoimentos ===== */
+.vozes{background:var(--pedra)}
+.voz{display:none}
+.voz.on{display:block;animation:entra .5s var(--ease)}
+@keyframes entra{from{opacity:0;transform:translateX(14px)}}
+.voz blockquote{margin:0;font-family:var(--serif);font-style:italic;font-weight:500;font-size:clamp(30px,4vw,48px);line-height:1.15;max-width:26ch}
+.voz cite{display:block;margin-top:18px;font-style:normal;font-size:16px;color:var(--grafite)}
+.troca{display:flex;gap:10px;margin-top:32px}
+.troca button{width:44px;height:44px;border-radius:50%;border:1px solid var(--tinta);background:transparent;cursor:pointer;display:grid;place-items:center}
+.troca button:hover{background:var(--tinta);color:var(--pedra)}
+.aviso{margin-top:24px;font-size:14px;color:var(--grafite);font-weight:300}
+
+/* ===== onde ===== */
+.onde .wrap{display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:start}
+.dados{margin:28px 0 0;display:grid;gap:20px}
+.dados dt{font-weight:500}
+.dados dd{margin:2px 0 0;color:var(--grafite);font-weight:300}
+.mapa{border-radius:20px;overflow:hidden;border:1px solid var(--linha);aspect-ratio:4/5;background:var(--pedra)}
+.mapa iframe{width:100%;height:100%;border:0}
+@media (max-width:860px){.onde .wrap{grid-template-columns:1fr}.mapa{aspect-ratio:1}}
+
+.fim{background:var(--sol)}
+.fim h2{max-width:15ch}
+footer{padding:28px 0 110px;font-size:14.5px;color:var(--suave)}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px}
+
+.zap{position:fixed;right:18px;bottom:18px;z-index:25;width:58px;height:58px;border-radius:50%;background:var(--wa);color:#fff;display:grid;place-items:center;box-shadow:0 10px 26px rgba(30,158,82,.35)}
+.zap svg{width:30px;height:30px}
+
+/* ===== busca rápida ===== */
+.paleta{position:fixed;inset:0;z-index:60;display:none;align-items:flex-start;justify-content:center;padding:14vh 16px 0;background:rgba(247,246,242,.55);backdrop-filter:blur(6px)}
+.paleta.aberta{display:flex}
+.paleta-caixa{width:100%;max-width:560px;background:var(--branco);border:1px solid var(--linha);border-radius:16px;box-shadow:0 30px 80px rgba(28,26,23,.22);overflow:hidden;animation:surge .2s var(--ease)}
+@keyframes surge{from{opacity:0;transform:scale(.97)}}
+.paleta-topo{display:flex;align-items:center;gap:10px;padding:0 14px;border-bottom:1px solid var(--linha)}
+.paleta-topo input{flex:1;border:0;outline:0;background:none;font:inherit;font-size:16px;padding:16px 0;color:var(--tinta)}
+.paleta ul{list-style:none;margin:0;padding:8px;max-height:340px;overflow:auto}
+.paleta li a{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;text-decoration:none;font-size:15px}
+.paleta li a small{margin-left:auto;color:var(--suave);font-size:13px}
+.paleta li a.sel,.paleta li a:hover{background:rgba(242,194,27,.22)}
+.paleta .vazio{padding:28px 16px;text-align:center;color:var(--suave);font-size:15px}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition:none!important;animation:none!important}
+  html{scroll-behavior:auto}
+  .linha-tit > span{transform:none}
+  .hero .sub,.hero .acoes,.legenda-fig{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-wa" viewBox="0 0 32 32"><path fill="currentColor" d="M16 3C9 3 3.3 8.6 3.3 15.6c0 2.4.7 4.7 1.9 6.6L3 29l7-2.1c1.8 1 3.9 1.5 6 1.5 7 0 12.7-5.7 12.7-12.7S23 3 16 3zm0 23.2c-1.9 0-3.8-.5-5.4-1.5l-.4-.2-4.1 1.2 1.2-4-.3-.4c-1.1-1.7-1.7-3.7-1.7-5.7C5.3 9.8 10.1 5 16 5s10.7 4.8 10.7 10.6S21.9 26.2 16 26.2zm5.9-7.9c-.3-.2-1.9-.9-2.2-1s-.5-.2-.7.2-.8 1-1 1.2-.4.2-.7.1c-.3-.2-1.4-.5-2.6-1.6-1-.9-1.6-1.9-1.8-2.2s0-.5.1-.6l.5-.6c.2-.2.2-.4.3-.6.1-.2 0-.4 0-.6l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4s-1.2 1.1-1.2 2.8 1.2 3.2 1.4 3.5c.2.2 2.4 3.6 5.7 5 .8.3 1.4.5 1.9.7.8.3 1.5.2 2.1.1.6-.1 1.9-.8 2.2-1.5.3-.7.3-1.4.2-1.5-.1-.2-.3-.3-.6-.4z"/></symbol>
+  <symbol id="i-marca" viewBox="0 0 60 60">
+    <path d="M30 53C14 43 6 33 8 22 10 12 22 10 28 18" fill="none" stroke="#1C1A17" stroke-width="4.5" stroke-linecap="round"/>
+    <circle cx="38" cy="11" r="4.2" fill="#1C1A17"/>
+    <path d="M27 22c7-2 13 0 19-6M37 20c1 8-3 16-9 24M36 30c4 2 8 0 12-4" fill="none" stroke="#1C1A17" stroke-width="4" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="i-busca" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></symbol>
+  <symbol id="i-casa" viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1z"/></symbol>
+  <symbol id="i-pulso" viewBox="0 0 24 24"><path d="M3 12h4l2-5 4 10 2-5h6"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
+  <symbol id="i-passo" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-voz" viewBox="0 0 24 24"><path d="M21 12a8 8 0 01-11.6 7.1L4 20l1-4.6A8 8 0 1121 12z"/></symbol>
+  <symbol id="i-pino" viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0114 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></symbol>
+  <symbol id="i-insta" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".6" fill="currentColor"/></symbol>
+  <symbol id="i-hash" viewBox="0 0 24 24"><path d="M5 9h14M5 15h14M10 4L8 20M16 4l-2 16"/></symbol>
+  <symbol id="i-seta" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
+  <symbol id="i-painel" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-esq" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol>
+  <symbol id="i-dir" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
+</svg>
+
+<!-- menu lateral -->
+<aside class="lado" id="lado" aria-label="Menu do site">
+  <button class="botao-ico fecha-lado" type="button" data-fecha-gaveta aria-label="Fechar o menu"><svg class="ico"><use href="#i-x"/></svg></button>
+  <a class="marca" href="#inicio">
+    <span class="marca-sinal"><svg width="30" height="30"><use href="#i-marca"/></svg></span>
+    <span><span class="marca-nome">Studio Amo Saúde</span><span class="marca-local">Jardim Atlântico, Rio das Ostras</span></span>
+  </a>
+  <button class="busca" type="button" data-abre-busca><svg class="ico"><use href="#i-busca"/></svg>Buscar tratamento ou aula<kbd>Ctrl K</kbd></button>
+
+  <nav class="rolagem" id="nav">
+    <div>
+      <a class="item-nav" href="#inicio" data-sec="inicio"><svg class="ico"><use href="#i-casa"/></svg>Início</a>
+    </div>
+    <div>
+      <span class="grupo-nome">Cuidar do corpo</span>
+      <button class="item-nav" type="button" aria-expanded="false" data-sec="tratamentos" data-grupo="g-trat"><svg class="ico"><use href="#i-pulso"/></svg>Tratamentos<svg class="ico seta"><use href="#i-seta"/></svg></button>
+      <div class="filhos" id="g-trat"><div>
+        <a class="item-nav" href="#fisioterapia" data-abre="fisioterapia"><svg class="ico"><use href="#i-hash"/></svg>Fisioterapia</a>
+        <a class="item-nav" href="#quiropraxia" data-abre="quiropraxia"><svg class="ico"><use href="#i-hash"/></svg>Quiropraxia</a>
+        <a class="item-nav" href="#rpg" data-abre="rpg"><svg class="ico"><use href="#i-hash"/></svg>RPG</a>
+        <a class="item-nav" href="#desportiva" data-abre="desportiva"><svg class="ico"><use href="#i-hash"/></svg>Terapia desportiva</a>
+      </div></div>
+      <button class="item-nav" type="button" aria-expanded="false" data-sec="aulas" data-grupo="g-aulas"><svg class="ico"><use href="#i-cal"/></svg>Aulas da semana<svg class="ico seta"><use href="#i-seta"/></svg></button>
+      <div class="filhos" id="g-aulas"><div>
+        <a class="item-nav" href="#aulas"><svg class="ico"><use href="#i-hash"/></svg>Pilates</a>
+        <a class="item-nav" href="#a-solo"><svg class="ico"><use href="#i-hash"/></svg>Pilates Solo</a>
+        <a class="item-nav" href="#a-yoga"><svg class="ico"><use href="#i-hash"/></svg>Yoga</a>
+        <a class="item-nav" href="#a-ginastica"><svg class="ico"><use href="#i-hash"/></svg>Ginástica 60+<span class="selo-nav">Nova turma</span></a>
+        <a class="item-nav" href="#a-hipo"><svg class="ico"><use href="#i-hash"/></svg>Hipopressivo</a>
+      </div></div>
+    </div>
+    <div>
+      <span class="grupo-nome">Antes de vir</span>
+      <a class="item-nav" href="#primeira" data-sec="primeira"><svg class="ico"><use href="#i-passo"/></svg>Primeira visita</a>
+      <a class="item-nav" href="#vozes" data-sec="vozes"><svg class="ico"><use href="#i-voz"/></svg>O que dizem os alunos</a>
+      <a class="item-nav" href="#onde" data-sec="onde"><svg class="ico"><use href="#i-pino"/></svg>Onde estamos</a>
+    </div>
+  </nav>
+
+  <div class="base">
+    <a class="item-nav zap-nav js-wa" href="#"><svg class="wa"><use href="#i-wa"/></svg>Agendar pelo WhatsApp</a>
+    <a class="item-nav" href="https://www.instagram.com/studioamopilates_ro/" target="_blank" rel="noopener"><svg class="ico"><use href="#i-insta"/></svg>Instagram</a>
+  </div>
+</aside>
+<div class="fundo-lado" data-fecha-gaveta></div>
+
+<div class="principal">
+  <header class="barra" id="barra">
+    <a class="barra-marca" href="#inicio"><span class="circ">A</span><span><b>Studio Amo Saúde</b><small>Pilates e fisioterapia</small></span></a>
+    <nav class="barra-links" aria-label="Principal">
+      <a href="#inicio" data-sec="inicio">Início</a>
+      <a href="#tratamentos" data-sec="tratamentos">Tratamentos</a>
+      <a href="#aulas" data-sec="aulas">Aulas</a>
+      <a href="#onde" data-sec="onde">Contato</a>
+    </nav>
+    <div class="barra-dir">
+      <a class="pilula js-wa" href="#" data-msg="Olá! Vim pelo site e quero agendar um horário.">Agendar</a>
+      <button class="botao-ico" type="button" data-abre-busca aria-label="Buscar no site"><svg class="ico"><use href="#i-busca"/></svg></button>
+      <button class="botao-ico" type="button" id="alterna" aria-label="Abrir o menu" aria-controls="lado"><svg class="ico"><use href="#i-menu"/></svg></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="inicio" data-sec-alvo="Início">
+      <div class="palco" aria-hidden="true">
+        <div class="nome" id="nome"><span>A</span><span>m</span><span>o</span></div>
+        <div class="arco">
+          <!-- o boneco começa curvado e se endireita ao carregar; a linha de prumo é a referência do RPG -->
+          <svg viewBox="70 0 160 460">
+            <line x1="150" y1="10" x2="150" y2="450" stroke="#1C1A17" stroke-width="1.5" stroke-dasharray="5 8" opacity=".5"/>
+            <circle id="f-cabeca" cx="150" cy="70" r="28" fill="none" stroke="#1C1A17" stroke-width="5"/>
+            <path id="f-coluna" fill="none" stroke="#1C1A17" stroke-width="7" stroke-linecap="round"/>
+            <path id="f-braco" fill="none" stroke="#1C1A17" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path id="f-perna" fill="none" stroke="#1C1A17" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+            <g id="f-vertebras" fill="#F7F6F2" stroke="#1C1A17" stroke-width="2.5"></g>
+            <line x1="104" y1="440" x2="196" y2="440" stroke="#1C1A17" stroke-width="5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <span class="legenda-fig">postura alinhada</span>
+      </div>
+      <div class="wrap hero-base">
+        <div class="hero-esq">
+          <div class="tags"><span>Fisioterapia</span><span>Pilates</span><span>RPG</span></div>
+          <h1>Do corpo travado ao movimento <em>livre</em></h1>
+        </div>
+        <div class="hero-dir">
+          <p>Fisioterapia, quiropraxia, RPG e Pilates com atendimento individual, no Jardim Atlântico, em Rio das Ostras.</p>
+          <a class="pilula-clara js-wa" href="#" data-msg="Olá! Vim pelo site e quero agendar uma avaliação."><svg class="wa"><use href="#i-wa"/></svg>Agendar avaliação</a>
+          <a class="link-fino" href="#tratamentos">Ver tratamentos</a>
+        </div>
+        <div class="equipe"><span>Dr. Bruno Latini e equipe</span><span>Seg a sáb · com hora marcada</span></div>
+      </div>
+    </section>
+
+    <section id="tratamentos" data-sec-alvo="Tratamentos">
+      <div class="wrap">
+        <h2>O que a gente trata</h2>
+        <p class="sub">Atendimento individual e com hora marcada. Toque em cada tratamento para saber mais.</p>
+        <div class="lista">
+          <details class="trat" id="fisioterapia" open>
+            <summary><h3>Fisioterapia<span class="resumo">Lesões, pós-cirurgia e dor do dia a dia</span></h3><span class="mais" aria-hidden="true"></span></summary>
+            <div class="abre"><p>A gente avalia o que está causando a dor e monta o tratamento com técnicas manuais e exercícios, para você voltar à rotina sem medo de se machucar de novo. Joelho, ombro, coluna, tornozelo e reabilitação depois de cirurgia.</p><a class="btn btn-linha js-wa" href="#" data-msg="Olá! Vim pelo site e quero agendar Fisioterapia.">Agendar fisioterapia</a></div>
+          </details>
+          <details class="trat" id="quiropraxia">
+            <summary><h3>Quiropraxia<span class="resumo">Coluna travada, dor lombar e no pescoço</span></h3><span class="mais" aria-hidden="true"></span></summary>
+            <div class="abre"><p>Ajustes precisos na coluna e nas articulações que aliviam a dor e devolvem o movimento. Indicada para travamentos, dor lombar e cervical e dor de cabeça tensional.</p><a class="btn btn-linha js-wa" href="#" data-msg="Olá! Vim pelo site e quero agendar Quiropraxia.">Agendar quiropraxia</a></div>
+          </details>
+          <details class="trat" id="rpg">
+            <summary><h3>RPG<span class="resumo">Reeducação Postural Global</span></h3><span class="mais" aria-hidden="true"></span></summary>
+            <div class="abre"><p>Corrige a postura trabalhando o corpo inteiro, com posturas de alongamento mantidas. Trata a causa da dor, não só o sintoma: escoliose, hérnia de disco, ombros curvados e cabeça projetada para a frente.</p><a class="btn btn-linha js-wa" href="#" data-msg="Olá! Vim pelo site e quero saber sobre o RPG.">Agendar RPG</a></div>
+          </details>
+          <details class="trat" id="desportiva">
+            <summary><h3>Terapia desportiva<span class="resumo">Para quem treina, corre ou luta</span></h3><span class="mais" aria-hidden="true"></span></summary>
+            <div class="abre"><p>Prevenção e tratamento de lesões do esporte, com massagem esportiva para soltar e recuperar os músculos depois do treino. Para atletas amadores e profissionais.</p><a class="btn btn-linha js-wa" href="#" data-msg="Olá! Vim pelo site e quero agendar Terapia desportiva ou Massagem esportiva.">Agendar terapia desportiva</a></div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="aulas" id="aulas" data-sec-alvo="Aulas da semana">
+      <div class="wrap">
+        <h2>Aulas da semana</h2>
+        <p class="sub">Pilates nos aparelhos e no solo, Yoga, ginástica para a terceira idade e hipopressivo. Turmas pequenas, com acompanhamento de perto.</p>
+        <div class="grade-wrap">
+          <div class="grade" role="table" aria-label="Grade de aulas da semana">
+            <div class="turno" role="columnheader"></div>
+            <div class="dia" role="columnheader">Seg</div><div class="dia" role="columnheader">Ter</div><div class="dia" role="columnheader">Qua</div><div class="dia" role="columnheader">Qui</div><div class="dia" role="columnheader">Sex</div><div class="dia" role="columnheader">Sáb</div>
+            <div class="turno" role="rowheader">Manhã<small>7h às 12h</small></div>
+            <div>Pilates e fisioterapia</div><div>Pilates e fisioterapia</div><div>Pilates e fisioterapia</div><div>Pilates e fisioterapia</div><div>Pilates e fisioterapia</div><div>Pilates e fisioterapia</div>
+            <div class="turno" role="rowheader">Tarde<small>a partir das 16h</small></div>
+            <div>Pilates e fisioterapia</div><div class="aula">Ginástica 60+<small>turma da tarde</small></div><div>Pilates e fisioterapia</div><div class="aula">Ginástica 60+<small>turma da tarde</small></div><div>Pilates e fisioterapia</div><div class="fechado">Fechado</div>
+            <div class="turno" role="rowheader">Noite<small>até 21h</small></div>
+            <div>Pilates e fisioterapia</div><div class="aula">Yoga às 19h<small>com a Andrea</small></div><div>Pilates e fisioterapia</div><div class="aula">Yoga às 19h<small>com a Andrea</small></div><div>Pilates e fisioterapia</div><div class="fechado">Fechado</div>
+          </div>
+        </div>
+        <p class="grade-nota">Pilates, fisioterapia e hipopressivo com hora marcada. Chame no WhatsApp para ver o horário livre.</p>
+
+        <div class="rolo" aria-label="Aulas do Studio">
+          <figure id="a-solo"><img src="img/pilates-solo.jpg" alt="Aluna alongando no Pilates Solo" loading="lazy"><figcaption>Pilates Solo<span>No chão, com o peso do próprio corpo</span></figcaption></figure>
+          <figure id="a-yoga"><img src="img/yoga.jpg" alt="Aula de Yoga" loading="lazy"><figcaption>Yoga<span>Terça e quinta, a partir das 19h</span></figcaption></figure>
+          <figure id="a-ginastica"><img src="img/ginastica.jpg" alt="Turma de ginástica para a terceira idade" loading="lazy"><figcaption>Ginástica 60+<span>Força e equilíbrio para o dia a dia</span></figcaption></figure>
+          <figure id="a-hipo"><img src="img/hipopressivo.jpg" alt="Exercício hipopressivo" loading="lazy"><figcaption>Hipopressivo<span>Abdômen profundo e postura</span></figcaption></figure>
+          <figure><img src="img/rpg.jpg" alt="Comparação de postura antes e depois do RPG" loading="lazy"><figcaption>RPG<span>Postura corrigida do pé à cabeça</span></figcaption></figure>
+          <figure><img src="img/massagem.jpg" alt="Massagem esportiva" loading="lazy"><figcaption>Massagem esportiva<span>Recuperação depois do treino</span></figcaption></figure>
+        </div>
+      </div>
+    </section>
+
+    <section id="primeira" data-sec-alvo="Primeira visita">
+      <div class="wrap">
+        <h2>Sua primeira visita</h2>
+        <div class="passos">
+          <div class="passo"><h3>Chame no WhatsApp</h3><p>Conte o que você sente ou qual aula procura e escolha o horário.</p></div>
+          <div class="passo"><h3>Faça a avaliação</h3><p>A gente olha sua postura, seus movimentos e seu histórico de dores e lesões.</p></div>
+          <div class="passo"><h3>Comece o seu plano</h3><p>Tratamento ou aulas no ritmo do seu corpo, com a evolução acompanhada de perto.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="vozes" id="vozes" data-sec-alvo="O que dizem os alunos">
+      <div class="wrap">
+        <div class="voz on"><blockquote>“Cheguei com dor nas costas que não me deixava dormir. Em poucas semanas de Pilates eu já sentia a diferença.”</blockquote><cite>Nome do aluno, Pilates</cite></div>
+        <div class="voz"><blockquote>“Fiz a fisioterapia depois da cirurgia no joelho e voltei a caminhar sem dor.”</blockquote><cite>Nome do paciente, Fisioterapia</cite></div>
+        <div class="voz"><blockquote>“Minha mãe ama a ginástica da tarde. Ganhou disposição e fez amigas na turma.”</blockquote><cite>Nome do aluno, Ginástica 60+</cite></div>
+        <div class="troca">
+          <button type="button" data-dir="-1" aria-label="Depoimento anterior"><svg class="ico"><use href="#i-esq"/></svg></button>
+          <button type="button" data-dir="1" aria-label="Próximo depoimento"><svg class="ico"><use href="#i-dir"/></svg></button>
+        </div>
+        <p class="aviso">Depoimentos de exemplo para a demonstração. No site final entram as avaliações reais dos alunos.</p>
+      </div>
+    </section>
+
+    <section class="onde" id="onde" data-sec-alvo="Onde estamos">
+      <div class="wrap">
+        <div>
+          <h2>Onde estamos</h2>
+          <dl class="dados">
+            <div><dt>Endereço</dt><dd>Rua José Luzente, 16, loja 5<br>Jardim Atlântico, Rio das Ostras (RJ)<br>CEP 28895-668</dd></div>
+            <div><dt>Horário</dt><dd>Segunda a sexta, das 7h às 12h e das 16h às 21h<br>Sábado, das 7h às 12h</dd></div>
+            <div><dt>Contato</dt><dd>(22) 99702-9671<br>amopilates2020@gmail.com</dd></div>
+          </dl>
+          <div class="acoes">
+            <a class="btn btn-cheio js-wa" href="#"><svg class="wa"><use href="#i-wa"/></svg>Agendar pelo WhatsApp</a>
+            <a class="btn btn-linha" href="https://www.google.com/maps/search/?api=1&query=Rua+Jos%C3%A9+Luzente+16+Jardim+Atl%C3%A2ntico+Rio+das+Ostras+RJ" target="_blank" rel="noopener">Abrir rota no mapa</a>
+          </div>
+        </div>
+        <div class="mapa">
+          <iframe title="Mapa do Studio Amo Saúde" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=Rua+Jos%C3%A9+Luzente+16+Jardim+Atl%C3%A2ntico+Rio+das+Ostras+RJ&output=embed"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <section class="fim">
+      <div class="wrap">
+        <h2>Sua primeira aula pode ser essa semana</h2>
+        <p class="sub" style="color:#3b3420">Mande uma mensagem, conte o que você precisa e a gente encontra um horário.</p>
+        <div class="acoes"><a class="btn btn-cheio js-wa" href="#" data-msg="Olá! Vim pelo site e quero agendar um horário."><svg class="wa"><use href="#i-wa"/></svg>Quero agendar</a></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap"><span>Studio Amo Saúde, Rio das Ostras (RJ)</span><span>Demonstração feita por BN Digital</span></div>
+  </footer>
+</div>
+
+<a class="zap js-wa" href="#" aria-label="Falar com o Studio no WhatsApp"><svg><use href="#i-wa"/></svg></a>
+
+<!-- busca rápida -->
+<div class="paleta" id="paleta" role="dialog" aria-modal="true" aria-label="Buscar no site">
+  <div class="paleta-caixa">
+    <div class="paleta-topo">
+      <svg class="ico"><use href="#i-busca"/></svg>
+      <input id="paleta-campo" type="search" placeholder="Fisioterapia, Yoga, horário, endereço…" autocomplete="off" aria-controls="paleta-lista">
+      <span class="kbd">Esc</span>
+      <button class="botao-ico" type="button" data-fecha-busca aria-label="Fechar busca"><svg class="ico"><use href="#i-x"/></svg></button>
+    </div>
+    <ul id="paleta-lista" role="listbox"></ul>
+  </div>
+</div>
+
+<script>
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const calmo = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const telaPequena = () => matchMedia("(max-width:1023px)").matches;
+
+// WhatsApp com mensagem pronta em cada botão
+const WHATS = "5522997029671";
+$$(".js-wa").forEach(a => {
+  const msg = a.dataset.msg || "Olá! Vim pelo site e gostaria de agendar um horário.";
+  a.href = `https://wa.me/${WHATS}?text=${encodeURIComponent(msg)}`;
+  a.target = "_blank"; a.rel = "noopener";
+});
+
+// ===== menu lateral (gaveta) e topo =====
+const abreGaveta = () => { document.body.classList.add("gaveta"); };
+const fechaGaveta = () => document.body.classList.remove("gaveta");
+$("#alterna").addEventListener("click", abreGaveta);
+$$("[data-fecha-gaveta]").forEach(b => b.addEventListener("click", fechaGaveta));
+$$("#lado a").forEach(a => a.addEventListener("click", fechaGaveta));
+addEventListener("keydown", e => { if (e.key === "Escape") fechaGaveta(); });
+const barra = $("#barra"), nome = $("#nome");
+function aoRolar() {
+  const y = scrollY;
+  barra.classList.toggle("solida", y > innerHeight * .7);
+  if (!calmo && y < innerHeight * 1.2) nome.style.transform = `translateY(${y * .35}px)`;
+}
+addEventListener("scroll", aoRolar, { passive: true }); aoRolar();
+
+// grupos com submenu
+$$("[data-grupo]").forEach(b => b.addEventListener("click", () => {
+  const aberto = b.getAttribute("aria-expanded") === "true";
+  b.setAttribute("aria-expanded", String(!aberto));
+  document.getElementById(b.dataset.grupo).classList.toggle("aberto", !aberto);
+}));
+
+// abrir o tratamento certo ao clicar no submenu
+$$("[data-abre]").forEach(a => a.addEventListener("click", () => {
+  const d = document.getElementById(a.dataset.abre);
+  if (d) d.open = true;
+}));
+
+// item ativo e trilha acompanham a rolagem
+const itens = $$("[data-sec]");
+const obs = new IntersectionObserver(es => es.forEach(e => {
+  if (!e.isIntersecting) return;
+  const id = e.target.id;
+  itens.forEach(i => i.classList.toggle("ativo", i.dataset.sec === id));
+}), { rootMargin: "-40% 0px -55% 0px" });
+$$("[data-sec-alvo]").forEach(s => obs.observe(s));
+
+// ===== busca rápida =====
+const BUSCA = [
+  ["Fisioterapia", "Tratamento", "#fisioterapia", "fisioterapia"],
+  ["Quiropraxia", "Tratamento", "#quiropraxia", "quiropraxia"],
+  ["RPG, Reeducação Postural Global", "Tratamento", "#rpg", "rpg"],
+  ["Terapia desportiva e massagem esportiva", "Tratamento", "#desportiva", "desportiva"],
+  ["Pilates nos aparelhos", "Aula", "#aulas"],
+  ["Pilates Solo", "Aula", "#a-solo"],
+  ["Yoga, terça e quinta às 19h", "Aula", "#a-yoga"],
+  ["Ginástica 60+, terça e quinta à tarde", "Aula", "#a-ginastica"],
+  ["Hipopressivo", "Aula", "#a-hipo"],
+  ["Horários de atendimento", "Informação", "#onde"],
+  ["Endereço e mapa", "Informação", "#onde"],
+  ["Primeira visita", "Informação", "#primeira"],
+];
+const sem = s => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+const paleta = $("#paleta"), campo = $("#paleta-campo"), lista = $("#paleta-lista");
+let sel = 0, achados = BUSCA;
+function desenha() {
+  const q = sem(campo.value.trim());
+  achados = BUSCA.filter(([t, g]) => !q || sem(t + " " + g).includes(q));
+  sel = Math.min(sel, Math.max(0, achados.length - 1));
+  lista.innerHTML = achados.length
+    ? achados.map(([t, g, h], i) => `<li role="option" aria-selected="${i === sel}"><a href="${h}" class="${i === sel ? "sel" : ""}" data-i="${i}"><svg class="ico"><use href="#i-hash"/></svg>${t}<small>${g}</small></a></li>`).join("")
+    : `<li class="vazio">Nada encontrado para “${campo.value}”. Chame no WhatsApp que a gente responde.</li>`;
+}
+function abreBusca() { paleta.classList.add("aberta"); campo.value = ""; sel = 0; desenha(); campo.focus(); }
+function fechaBusca() { paleta.classList.remove("aberta"); }
+function vai(i) {
+  const r = achados[i]; if (!r) return;
+  fechaBusca(); document.body.classList.remove("gaveta");
+  if (r[3]) document.getElementById(r[3]).open = true;
+  document.querySelector(r[2]).scrollIntoView({ behavior: calmo ? "auto" : "smooth", block: "start" });
+}
+$$("[data-abre-busca]").forEach(b => b.addEventListener("click", abreBusca));
+$("[data-fecha-busca]").addEventListener("click", fechaBusca);
+paleta.addEventListener("click", e => { if (e.target === paleta) fechaBusca(); });
+campo.addEventListener("input", () => { sel = 0; desenha(); });
+lista.addEventListener("click", e => { const a = e.target.closest("a"); if (a) { e.preventDefault(); vai(+a.dataset.i); } });
+addEventListener("keydown", e => {
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") { e.preventDefault(); paleta.classList.contains("aberta") ? fechaBusca() : abreBusca(); return; }
+  if (!paleta.classList.contains("aberta")) return;
+  if (e.key === "Escape") fechaBusca();
+  if (e.key === "ArrowDown") { e.preventDefault(); sel = Math.min(sel + 1, achados.length - 1); desenha(); }
+  if (e.key === "ArrowUp") { e.preventDefault(); sel = Math.max(sel - 1, 0); desenha(); }
+  if (e.key === "Enter") { e.preventDefault(); vai(sel); }
+});
+
+// ===== boneco: interpola entre a postura curvada e a alinhada =====
+const POSES = {
+  curvado: { cabeca: [196, 104], coluna: [[150, 250], [192, 214], [205, 168], [192, 128]], braco: [[188, 160], [214, 210], [222, 258]], perna: [[150, 250], [168, 340], [150, 436]] },
+  reto:    { cabeca: [150, 64],  coluna: [[150, 250], [150, 200], [150, 150], [150, 98]],  braco: [[150, 140], [160, 196], [158, 250]], perna: [[150, 250], [154, 342], [150, 436]] },
+};
+const el = id => document.getElementById(id);
+const vert = el("f-vertebras");
+for (let i = 0; i < 6; i++) vert.insertAdjacentHTML("beforeend", '<rect width="20" height="11" rx="5.5"/>');
+const lerp = (a, b, k) => a + (b - a) * k;
+const mix = (A, B, k) => A.map((p, i) => [lerp(p[0], B[i][0], k), lerp(p[1], B[i][1], k)]);
+const bez = (p, t) => { const u = 1 - t; return [0, 1].map(j => u*u*u*p[0][j] + 3*u*u*t*p[1][j] + 3*u*t*t*p[2][j] + t*t*t*p[3][j]); };
+function pose(k, respira = 0) {
+  const A = POSES.curvado, B = POSES.reto;
+  const c = mix(A.coluna, B.coluna, k);
+  c[3][1] -= respira; c[2][1] -= respira * .6;
+  el("f-coluna").setAttribute("d", `M${c[0]} C${c[1]} ${c[2]} ${c[3]}`);
+  el("f-cabeca").setAttribute("cx", lerp(A.cabeca[0], B.cabeca[0], k));
+  el("f-cabeca").setAttribute("cy", lerp(A.cabeca[1], B.cabeca[1], k) - respira);
+  const br = mix(A.braco, B.braco, k);
+  el("f-braco").setAttribute("d", `M${br[0]} L${br[1]} L${br[2]}`);
+  const pe = mix(A.perna, B.perna, k);
+  el("f-perna").setAttribute("d", `M${pe[0]} Q${pe[1]} ${pe[2]}`);
+  [...vert.children].forEach((r, i) => {
+    const [x, y] = bez(c, (i + .5) / 6);
+    r.setAttribute("x", x - 10); r.setAttribute("y", y - 5.5);
+    r.setAttribute("fill", k > .98 ? "#FFFFFF" : "#F7F6F2");
+  });
+}
+const hero = $(".hero");
+if (calmo) { pose(1); hero.classList.add("pronto"); }
+else {
+  pose(0);
+  let t0 = Infinity;
+  const ease = t => t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2;
+  (function loop(now) {
+    const k = Math.min(1, Math.max(0, (now - t0) / 1800));
+    pose(ease(k), k >= 1 ? Math.sin((now - t0) / 900) * 2.5 : 0);
+    requestAnimationFrame(loop);
+  })(performance.now());
+  // só começa depois que as fontes carregam, pra as letras não aparecerem trocadas
+  const comeca = () => { if (t0 !== Infinity) return; t0 = performance.now() + 500; hero.classList.add("pronto"); };
+  (document.fonts ? document.fonts.ready : Promise.resolve()).then(() => requestAnimationFrame(comeca));
+  setTimeout(comeca, 2500);
+}
+
+// ===== depoimentos =====
+const vozes = $$(".voz");
+let v = 0;
+$$(".troca button").forEach(b => b.addEventListener("click", () => {
+  vozes[v].classList.remove("on");
+  v = (v + +b.dataset.dir + vozes.length) % vozes.length;
+  vozes[v].classList.add("on");
+}));
+</script>
+</body>
+</html>

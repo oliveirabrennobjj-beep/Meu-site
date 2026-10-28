@@ -7,7 +7,7 @@ __pycache__/
 venv/
 
 # Dependências e navegadores (reinstalar a cada sessão, ver .claude/SKILLS.md)
-node_modules/
+node_modules
 ms-playwright/
 .cache/
 
@@ -22,3 +22,6 @@ playwright/.cache/
 
 # Material pago do minicurso: não publicar no repositório público
 como-funciona/minicurso/
+
+# Vídeos renderizados (ficam no celular do Brenno, não no repositório)
+como-funciona/*/out/

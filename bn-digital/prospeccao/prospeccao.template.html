@@ -1,0 +1,298 @@
+<title>Prospecção BN Digital</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* Ferramenta de bolso: uma coluna de cartões, filtros fixos no topo, botões grandes pro polegar. */
+:root {
+  --bg: #f2f4f8;
+  --card: #ffffff;
+  --fg: #141b2b;
+  --muted: #5b6478;
+  --line: #dde2ec;
+  --brand: #12306b;
+  --brand-soft: #e3e9f6;
+  --wa: #128c4a;
+  --wa-soft: #e2f4ea;
+  --ig: #b5266f;
+  --ig-soft: #f8e4ef;
+  --fb: #1f5fd1;
+  --done: #8a93a6;
+  --display: "Bricolage Grotesque", "Arial Narrow", system-ui, sans-serif;
+  --body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1220; --card: #161d2e; --fg: #e8ecf4; --muted: #9aa4ba; --line: #283149;
+    --brand: #8fb0ff; --brand-soft: #1d2a48; --wa: #3ccf7f; --wa-soft: #14301f; --ig: #ff6fb1; --ig-soft: #3a1729;
+    --fb: #7aa6ff; --done: #6b7489; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1220; --card: #161d2e; --fg: #e8ecf4; --muted: #9aa4ba; --line: #283149;
+  --brand: #8fb0ff; --brand-soft: #1d2a48; --wa: #3ccf7f; --wa-soft: #14301f; --ig: #ff6fb1; --ig-soft: #3a1729;
+  --fb: #7aa6ff; --done: #6b7489; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 15px; line-height: 1.45;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 48px;
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.wrap { max-width: 640px; margin: 0 auto; display: grid; gap: 14px; }
+header { padding-top: 20px; display: grid; gap: 6px; }
+h1 { font-family: var(--display); font-weight: 800; font-size: 30px; line-height: 1.05; margin: 0; letter-spacing: -0.5px; text-wrap: balance; color: var(--brand); }
+.sub { margin: 0; color: var(--muted); }
+.stats { display: flex; gap: 8px; flex-wrap: wrap; font-variant-numeric: tabular-nums; }
+.stat { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 6px 10px; font-size: 13px; color: var(--muted); }
+.stat b { color: var(--fg); font-size: 16px; }
+.bar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg);
+  padding-block: 10px; display: grid; gap: 8px; border-bottom: 1px solid var(--line);
+}
+.row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+input[type="search"], input[type="text"], select {
+  font: inherit; color: var(--fg); background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 9px 12px; min-width: 0;
+}
+input[type="search"] { flex: 1 1 180px; }
+.chips { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none; }
+.chip {
+  font: inherit; font-size: 13px; font-weight: 600; white-space: nowrap; cursor: pointer;
+  border: 1px solid var(--line); background: var(--card); color: var(--muted); border-radius: 999px; padding: 6px 12px;
+}
+.chip[aria-pressed="true"] { background: var(--brand); border-color: var(--brand); color: var(--card); }
+label.toggle { display: flex; gap: 6px; align-items: center; font-size: 13px; color: var(--muted); }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px; display: grid; gap: 10px; }
+.card.sent { opacity: 0.55; }
+.top { display: flex; justify-content: space-between; gap: 10px; align-items: start; }
+.top > div { min-width: 0; }
+.name { font-family: var(--display); font-weight: 600; font-size: 19px; line-height: 1.15; margin: 0; }
+.meta { font-size: 13px; color: var(--muted); margin: 2px 0 0; }
+.pill { font-size: 11px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; color: var(--brand); background: var(--brand-soft); border-radius: 6px; padding: 3px 7px; white-space: nowrap; }
+.obs { font-size: 13px; color: var(--muted); margin: 0; }
+.btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.btn {
+  display: flex; align-items: center; justify-content: center; gap: 6px; text-align: center; text-decoration: none; cursor: pointer;
+  font: inherit; font-weight: 700; font-size: 14px; border-radius: 11px; padding: 11px 10px; border: 1.5px solid transparent; min-height: 46px;
+}
+.btn.wa, .btn.ig, .btn.fb { background: var(--card); color: var(--fg); border-color: var(--line); }
+.btn.wa::before, .btn.ig::before, .btn.fb::before { content: ""; width: 9px; height: 9px; border-radius: 50%; flex: none; }
+.btn.wa::before { background: var(--wa); }
+.btn.ig::before { background: var(--ig); }
+.btn.fb::before { background: var(--fb); }
+.btn.dono { background: var(--brand); color: var(--card); }
+.btn.ghost { background: transparent; color: var(--fg); border-color: var(--line); }
+.btn:focus-visible, .chip:focus-visible { outline: 3px solid var(--brand); outline-offset: 2px; }
+.full { grid-column: 1 / -1; }
+details summary { cursor: pointer; font-size: 13px; color: var(--brand); font-weight: 600; }
+pre.msg { white-space: pre-wrap; font: inherit; font-size: 14px; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 10px; margin: 8px 0 0; }
+.sentrow { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: var(--muted); }
+.sentrow label { display: flex; gap: 8px; align-items: center; font-weight: 600; color: var(--fg); cursor: pointer; }
+.sentrow input { width: 20px; height: 20px; accent-color: var(--wa); }
+.toast {
+  position: fixed; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); translate: -50% 0; background: var(--fg); color: var(--bg);
+  padding: 10px 16px; border-radius: 10px; font-weight: 600; font-size: 14px; z-index: 20;
+}
+.empty { text-align: center; color: var(--muted); padding: 24px 0; }
+@media (prefers-reduced-motion: no-preference) { .card { transition: opacity 0.2s; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Prospecção BN Digital</h1>
+    <p class="sub">Comércios de Rio das Ostras, Casimiro, Barra de São João e Unamar. <b>WhatsApp</b> e <b>Instagram</b> levam a mensagem completa. <b>Pedir o responsável</b> pede pra falar com quem decide e já fala da plaquinha. No Instagram a mensagem é copiada: é só colar e enviar.</p>
+    <div class="stats" id="stats"></div>
+  </header>
+
+  <div class="bar">
+    <div class="row">
+      <input type="search" id="q" placeholder="Buscar comércio ou bairro" aria-label="Buscar">
+      <select id="cidade" aria-label="Cidade">
+        <option value="">Todas as cidades</option>
+        <option value="Rio das Ostras">Rio das Ostras</option>
+        <option value="Casimiro">Casimiro de Abreu</option>
+        <option value="Barra">Barra de São João</option>
+        <option value="Unamar|Tamoios">Unamar e Tamoios</option>
+      </select>
+    </div>
+    <div class="chips" id="chips" role="group" aria-label="Tipo de comércio"></div>
+    <div class="row">
+      <label class="toggle"><input type="checkbox" id="hideSent"> Esconder os que já mandei</label>
+      <label class="toggle">Seu nome <input type="text" id="me" value="Brenno" size="9"></label>
+    </div>
+  </div>
+
+  <main id="list" class="wrap" aria-live="polite"></main>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+const LEADS = __LEADS__;
+const IG_BN = "https://www.instagram.com/bn_digital__sites_e_nfc/";
+
+const TIPOS = {
+  barbearia: "Barbearia", beleza: "Beleza", pet: "Pet", comida: "Comida", oficina: "Oficina",
+  loja: "Loja", pousada: "Pousada", padaria: "Padaria", hortifruti: "Hortifruti", imovel: "Imóveis",
+};
+const SERVICO = {
+  barbearia: "Site profissional com fotos dos cortes, serviços e preços, endereço com rota no mapa e botão de agendar direto no WhatsApp.",
+  beleza: "Site profissional com fotos dos trabalhos, serviços, endereço com rota no mapa e botão de agendar direto no WhatsApp.",
+  pet: "Site com os serviços (banho, tosa, consulta), fotos, rota no mapa e botão de agendar direto no WhatsApp.",
+  comida: "Cardápio digital: o cliente monta o pedido no site e ele chega pronto no WhatsApp de vocês, sem taxa de app.",
+  oficina: "Site com os serviços, fotos da oficina, rota no mapa e botão de pedir orçamento direto no WhatsApp.",
+  loja: "Catálogo online: cada peça com foto, tamanho e preço, e a cliente já chama no WhatsApp com a peça escolhida.",
+  pousada: "Site com fotos dos quartos, preços da temporada e botão de reserva direto no WhatsApp, sem pagar comissão pra Booking.",
+  padaria: "Site com os produtos e encomenda de bolo e salgado direto no WhatsApp.",
+  hortifruti: "Site com os produtos e preços da semana, e o cliente monta o pedido direto no WhatsApp.",
+  imovel: "Site com os seus imóveis à venda e pra alugar, com fotos, valor e botão que manda o imóvel escolhido no seu WhatsApp.",
+};
+const PLACA = "Placa NFC de avaliação: o cliente encosta o celular e já abre a página pra avaliar vocês no Google. Mais estrelas, mais gente nova chegando.";
+
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
+};
+let sent = store.get("bn-sent", {});
+let tipo = store.get("bn-tipo", "");
+
+const $ = (s) => document.querySelector(s);
+const me = () => ($("#me").value || "Brenno").trim();
+const saudacao = () => { const h = new Date().getHours(); return h < 12 ? "Bom dia" : h < 18 ? "Boa tarde" : "Boa noite"; };
+const key = (l) => l.lista + "|" + l.nome;
+
+function msgCompleta(l) {
+  return `Oi, tudo bem? Aqui é o ${me()}, da BN Digital 👋
+
+Dei uma olhada em ${l.nome} e curti muito o trabalho de vocês! Por isso acho que vocês merecem aparecer mais no Google.
+
+Eu faço duas coisas que ajudam muito:
+✅ ${SERVICO[l.tipo] || SERVICO.beleza}
+✅ ${PLACA}
+
+Alguns trabalhos meus: ${IG_BN}
+
+Posso fazer uma demonstração de como ficaria o site de vocês, pra verem antes? Sem compromisso 🙂`;
+}
+function msgDono(l) {
+  return `${saudacao()}! Tudo bem? Aqui é o ${me()}, da BN Digital. Consegue me passar pro responsável de ${l.nome}?
+
+É sobre uma plaquinha de avaliação do Google pro balcão: o cliente encosta o celular nela e já cai na página de avaliar vocês, sem procurar nada. Mais avaliação, mais gente nova achando vocês no Maps.
+
+Tenho um vídeo de 10 segundos mostrando ela funcionando. Posso mandar? 🙂`;
+}
+
+// No Android, o link "intent://" manda o celular abrir o app (Instagram de verdade, não o Lite, e o WhatsApp),
+// mesmo quando a página está aberta dentro de outro app. Se o app não existir, cai no link normal.
+const isAndroid = /Android/i.test(navigator.userAgent);
+const igDm = (h) =>
+  isAndroid
+    ? `intent://ig.me/m/${h}#Intent;scheme=https;package=com.instagram.android;S.browser_fallback_url=${encodeURIComponent(`https://ig.me/m/${h}`)};end`
+    : `https://ig.me/m/${h}`;
+const wa = (num, text) => {
+  const web = `https://wa.me/55${num}?text=${encodeURIComponent(text)}`;
+  return isAndroid
+    ? `intent://send?phone=55${num}&text=${encodeURIComponent(text)}#Intent;scheme=whatsapp;S.browser_fallback_url=${encodeURIComponent(web)};end`
+    : web;
+};
+const fbPage = (src) => (src.includes("facebook.com") ? "https://m.me/" + src.replace(/\/+$/, "").split("/").pop() : "");
+
+function toast(t) {
+  const el = $("#toast"); el.textContent = t; el.hidden = false;
+  clearTimeout(toast.t); toast.t = setTimeout(() => (el.hidden = true), 2200);
+}
+async function copiar(text) {
+  try { await navigator.clipboard.writeText(text); toast("Mensagem copiada: segure na caixa de texto e cole."); return true; }
+  catch { toast("Não deu pra copiar. Segure no texto da mensagem e copie."); return false; }
+}
+
+function el(tag, attrs = {}, ...kids) {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === "class") e.className = v; else if (k.startsWith("on")) e.addEventListener(k.slice(2), v); else e.setAttribute(k, v);
+  }
+  for (const k of kids) if (k != null) e.append(k);
+  return e;
+}
+
+function card(l) {
+  const k = key(l);
+  const c = el("article", { class: "card" + (sent[k] ? " sent" : "") });
+  c.append(
+    el("div", { class: "top" },
+      el("div", {}, el("h2", { class: "name" }, l.nome), el("p", { class: "meta" }, `${l.cidade} · lista de ${l.lista}`)),
+      el("span", { class: "pill" }, TIPOS[l.tipo] || l.tipo)),
+  );
+  if (l.obs) c.append(el("p", { class: "obs" }, l.obs));
+
+  // Três botões: WhatsApp e Instagram com a mensagem completa, e o "pedir o dono" pelo canal que tiver.
+  const b = el("div", { class: "btns" });
+  const fb = fbPage(l.src);
+  if (l.wa) b.append(el("a", { class: "btn wa", href: wa(l.wa, msgCompleta(l)), target: "_blank", rel: "noopener", onclick: () => setTimeout(() => marcar(l, true), 600) }, "WhatsApp"));
+  if (l.ig) b.append(el("a", { class: "btn ig", href: igDm(l.ig), target: "_blank", rel: "noopener", onclick: () => { copiar(msgCompleta(l)); setTimeout(() => marcar(l, true), 600); } }, "Instagram"));
+  if (!l.wa && !l.ig && fb) b.append(el("a", { class: "btn fb", href: fb, target: "_blank", rel: "noopener", onclick: () => { copiar(msgCompleta(l)); setTimeout(() => marcar(l, true), 600); } }, "Facebook"));
+  const dono = l.wa
+    ? el("a", { class: "btn dono", href: wa(l.wa, msgDono(l)), target: "_blank", rel: "noopener" }, "Pedir o responsável")
+    : l.ig
+      ? el("a", { class: "btn dono", href: igDm(l.ig), target: "_blank", rel: "noopener", onclick: () => copiar(msgDono(l)) }, "Pedir o responsável")
+      : fb
+        ? el("a", { class: "btn dono", href: fb, target: "_blank", rel: "noopener", onclick: () => copiar(msgDono(l)) }, "Pedir o responsável")
+        : null;
+  if (dono) b.append(dono);
+  if (!b.children.length) b.append(el("p", { class: "obs full" }, "Sem contato on-line: passe no local."));
+  if (b.children.length === 1) b.firstElementChild.classList.add("full");
+  if (b.children.length === 3) b.lastElementChild.classList.add("full");
+  c.append(b);
+
+  const cb = el("input", { type: "checkbox", id: "s-" + btoa(unescape(encodeURIComponent(k))).replace(/[^a-z0-9]/gi, "") });
+  cb.checked = !!sent[k];
+  cb.addEventListener("change", () => marcar(l, cb.checked));
+  c.append(el("div", { class: "sentrow" },
+    el("label", {}, cb, "Já mandei"),
+    el("span", {}, sent[k] ? "mandei em " + sent[k] : "")));
+  return c;
+}
+
+function marcar(l, on) {
+  const k = key(l);
+  if (on) sent[k] = new Date().toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" }); else delete sent[k];
+  store.set("bn-sent", sent);
+  render();
+}
+
+function render() {
+  const q = $("#q").value.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+  const cid = $("#cidade").value;
+  const hide = $("#hideSent").checked;
+  const norm = (s) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+  const vis = LEADS.filter((l) =>
+    (!tipo || l.tipo === tipo) &&
+    (!cid || new RegExp(cid, "i").test(l.cidade)) &&
+    (!q || norm(l.nome + " " + l.cidade).includes(q)) &&
+    (!hide || !sent[key(l)]));
+  const list = $("#list");
+  list.replaceChildren(...vis.map(card));
+  if (!vis.length) list.append(el("p", { class: "empty" }, "Nenhum comércio com esses filtros."));
+  const n = Object.keys(sent).length;
+  $("#stats").replaceChildren(
+    el("span", { class: "stat" }, el("b", {}, String(LEADS.length)), " comércios"),
+    el("span", { class: "stat" }, el("b", {}, String(LEADS.filter((l) => l.wa).length)), " com WhatsApp"),
+    el("span", { class: "stat" }, el("b", {}, String(LEADS.filter((l) => l.ig).length)), " com Instagram"),
+    el("span", { class: "stat" }, el("b", {}, String(n)), " já mandei"),
+  );
+}
+
+function chips() {
+  const counts = {};
+  LEADS.forEach((l) => (counts[l.tipo] = (counts[l.tipo] || 0) + 1));
+  const opts = [["", `Todos (${LEADS.length})`], ...Object.keys(TIPOS).filter((t) => counts[t]).map((t) => [t, `${TIPOS[t]} (${counts[t]})`])];
+  $("#chips").replaceChildren(...opts.map(([v, label]) =>
+    el("button", { class: "chip", type: "button", "aria-pressed": String(tipo === v), onclick: () => { tipo = v; store.set("bn-tipo", v); chips(); render(); } }, label)));
+}
+
+$("#me").value = store.get("bn-me", "Brenno");
+$("#me").addEventListener("input", () => { store.set("bn-me", $("#me").value); render(); });
+["#q", "#cidade", "#hideSent"].forEach((s) => $(s).addEventListener("input", render));
+chips();
+render();
+</script>

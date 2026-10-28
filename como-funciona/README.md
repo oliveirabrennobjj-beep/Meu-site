@@ -41,14 +41,17 @@ Esta pasta guarda o plano do canal, os roteiros e o projeto de cada vídeo.
 |---|------|--------|--------|
 | 1 | Elevador | "Se o cabo arrebentar… você cai?" | ✅ pronto ([roteiro](roteiros/01-elevador.md)) |
 | 2 | Tampa da caneta | "Sabe aquele furinho na tampa?" | ✅ pronto ([roteiro](roteiros/02-caneta.md)) |
-| 3 | Chuveiro | "Por que esquenta mais com menos água?" | a fazer |
-| 4 | Geladeira | "Ela não faz frio, tira o calor." | a fazer |
-| 5 | Descarga | "Pra onde vai tudo?" | a fazer |
-| 6 | Chave | "Como ela sabe que é da sua porta?" | a fazer |
-| 7 | Panela de pressão | "Por que cozinha na metade do tempo?" | a fazer |
+| 3 | Chuveiro | "Por que esquenta mais com menos água?" | ✅ pronto com voz ([roteiro](roteiros/03-chuveiro.md)) |
+| 4 | Geladeira | "Ela não faz frio, tira o calor." | ✅ postado no Instagram (25/10) |
+| 5 | Descarga | "Pra onde vai tudo?" | 📝 roteiro pronto ([roteiro](roteiros/04-descarga.md)) |
+| 6 | Chave | "Como ela sabe que é da sua porta?" | 📝 roteiro pronto ([roteiro](roteiros/05-fechadura.md)) |
+| 7 | Panela de pressão | "Por que cozinha na metade do tempo?" | 📝 roteiro pronto ([roteiro](roteiros/06-panela-de-pressao.md)) |
 | 8 | Ar-condicionado | "De onde vem a água que pinga?" | a fazer |
 | 9 | Micro-ondas | "Por que quase não esquenta o prato?" | a fazer |
 | 10 | Telhado | "Se a telha tem frestas, por que a chuva não entra?" | a fazer |
+| 11 | Fossa séptica (3D) | "Pra onde vai o cocô de quem não tem esgoto?" | ✅ pronto com voz ([roteiro](roteiros/07-fossa.md)) |
+| 12 | Piscina (3D + boneco) | "Você construiu uma piscina no quintal" | ✅ pronto com voz ([roteiro](roteiros/08-piscina.md)) |
+| 13 | Caixa d'água (3D + boneco) | "E se você fizesse uma caixa d'água?" | ✅ pronto com voz (`video-caixa-3d/`) |
 
 ## Ferramentas
 
