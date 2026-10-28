@@ -182,9 +182,19 @@ function msgDono(l) {
 Tenho um vídeo de 10 segundos mostrando ela funcionando. Posso mandar? 🙂`;
 }
 
-// Link https direto: o celular abre no app do Instagram (ou do WhatsApp) se ele estiver instalado.
-const igDm = (h) => `https://ig.me/m/${h}`;
-const wa = (num, text) => `https://wa.me/55${num}?text=${encodeURIComponent(text)}`;
+// No Android, o link "intent://" manda o celular abrir o app (Instagram de verdade, não o Lite, e o WhatsApp),
+// mesmo quando a página está aberta dentro de outro app. Se o app não existir, cai no link normal.
+const isAndroid = /Android/i.test(navigator.userAgent);
+const igDm = (h) =>
+  isAndroid
+    ? `intent://ig.me/m/${h}#Intent;scheme=https;package=com.instagram.android;S.browser_fallback_url=${encodeURIComponent(`https://ig.me/m/${h}`)};end`
+    : `https://ig.me/m/${h}`;
+const wa = (num, text) => {
+  const web = `https://wa.me/55${num}?text=${encodeURIComponent(text)}`;
+  return isAndroid
+    ? `intent://send?phone=55${num}&text=${encodeURIComponent(text)}#Intent;scheme=whatsapp;S.browser_fallback_url=${encodeURIComponent(web)};end`
+    : web;
+};
 const fbPage = (src) => (src.includes("facebook.com") ? "https://m.me/" + src.replace(/\/+$/, "").split("/").pop() : "");
 
 function toast(t) {
