@@ -101,7 +101,7 @@ pre.msg { white-space: pre-wrap; font: inherit; font-size: 14px; background: var
 <div class="wrap">
   <header>
     <h1>Prospecção BN Digital</h1>
-    <p class="sub">Só comércios que têm WhatsApp e Instagram. <b>Instagram</b> abre o perfil da loja. <b>WhatsApp</b> abre a conversa com a mensagem completa. <b>Chamar o dono</b> abre o WhatsApp com a mensagem que pede o dono e fala da plaquinha. Só entram números tirados do próprio Instagram ou página da loja. Antes de enviar, confira se no WhatsApp aparece <b>Conta comercial</b> embaixo do nome.</p>
+    <p class="sub">Comércios de Rio das Ostras, Casimiro, Barra de São João e Unamar. <b>Instagram</b> (ou Facebook) abre a página da loja. <b>WhatsApp</b> abre a conversa com a mensagem completa. <b>Chamar o dono</b> manda a mensagem que pede o responsável e fala da plaquinha: pelo WhatsApp, ou copiada pra você colar na DM quando a loja não tem WhatsApp. Só tem botão de WhatsApp quando o número veio da página da própria loja. Antes de enviar, confira se aparece <b>Conta comercial</b> embaixo do nome.</p>
     <div class="stats" id="stats"></div>
   </header>
 
@@ -222,13 +222,19 @@ function card(l) {
   );
   if (l.obs) c.append(el("p", { class: "obs" }, l.obs));
 
-  // Três botões: Instagram (perfil da loja), WhatsApp (mensagem completa) e chamar o dono (WhatsApp com a mensagem curta).
+  // Botões: Instagram (ou Facebook, se a loja não tiver Instagram), WhatsApp com a mensagem completa
+  // (só quando o número veio da página da própria loja) e chamar o dono (WhatsApp, ou copiar pra mandar na DM).
   const b = el("div", { class: "btns" });
+  const fb = fbPage(l.src);
+  if (l.ig) b.append(el("a", { class: "btn ig", href: igPerfil(l.ig), target: "_blank", rel: "noopener" }, "Instagram"));
+  else if (fb) b.append(el("a", { class: "btn fb", href: fb, target: "_blank", rel: "noopener" }, "Facebook"));
+  if (l.wa) b.append(el("a", { class: "btn wa", href: wa(l.wa, msgCompleta(l)), target: "_blank", rel: "noopener", onclick: () => setTimeout(() => marcar(l, true), 600) }, "WhatsApp"));
   b.append(
-    el("a", { class: "btn ig", href: igPerfil(l.ig), target: "_blank", rel: "noopener" }, "Instagram"),
-    el("a", { class: "btn wa", href: wa(l.wa, msgCompleta(l)), target: "_blank", rel: "noopener", onclick: () => setTimeout(() => marcar(l, true), 600) }, "WhatsApp"),
-    el("a", { class: "btn dono full", href: wa(l.wa, msgDono(l)), target: "_blank", rel: "noopener", onclick: () => setTimeout(() => marcar(l, true), 600) }, "Chamar o dono no WhatsApp"),
+    l.wa
+      ? el("a", { class: "btn dono", href: wa(l.wa, msgDono(l)), target: "_blank", rel: "noopener", onclick: () => setTimeout(() => marcar(l, true), 600) }, "Chamar o dono no WhatsApp")
+      : el("button", { class: "btn dono", type: "button", onclick: () => copiar(msgDono(l)) }, "Copiar: chamar o dono"),
   );
+  if (b.children.length !== 2) b.lastElementChild.classList.add("full");
   c.append(b);
 
   const cb = el("input", { type: "checkbox", id: "s-" + btoa(unescape(encodeURIComponent(k))).replace(/[^a-z0-9]/gi, "") });
