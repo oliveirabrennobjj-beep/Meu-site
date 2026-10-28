@@ -228,7 +228,9 @@ function card(l) {
     el("a", { class: "btn dono", href: wa(l.wa, msgDono(l)), target: "_blank", rel: "noopener", onclick: () => setTimeout(() => marcar(l, true), 600) }, "Falar com o dono ou gerente"),
     l.ig
       ? el("a", { class: "btn ig full", href: igPerfil(l.ig), target: "_blank", rel: "noopener" }, "Ver o Instagram da loja")
-      : el("span", { class: "btn ghost full", "aria-disabled": "true" }, "Essa loja não tem Instagram"),
+      : l.src && l.src.includes("instagram.com")
+        ? el("a", { class: "btn ig full", href: l.src, target: "_blank", rel: "noopener" }, "Ver o post da loja no Instagram")
+        : el("span", { class: "btn ghost full", "aria-disabled": "true" }, "Essa loja não tem Instagram"),
   );
   c.append(b);
 
