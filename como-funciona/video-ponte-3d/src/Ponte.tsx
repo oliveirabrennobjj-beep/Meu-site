@@ -102,7 +102,7 @@ const Navio: React.FC<{ z: number; shake: number }> = ({ z, shake }) => (
 const SEG = 20;
 /** Tábua de margem a margem: enverga com o caminhão e quebra no meio. */
 const Tabua: React.FC<{ t: number; truckX: number }> = ({ t, truckX }) => {
-  const o = 1 - appear(t, T.pilares + 0.2, 0.4);
+  const o = 1 - appear(t, T.pilares + 0.9, 0.4);
   if (o <= 0) return null;
   const broken = t >= T.quebra;
   const sagNow = (x: number) => 0.55 * Math.max(0, 1 - (x / RV) ** 2);
@@ -323,10 +323,10 @@ const Respingo: React.FC<{ t: number }> = ({ t }) => {
 
 export const PonteScene: React.FC<{ t: number }> = ({ t }) => {
   // caminhão 1: entra, para no meio e cai com a tábua
-  const x1 = Math.min(0, -9 + 9 * appear(t, T.caminhao, 2.2));
+  const x1 = Math.min(0, -9 + 9 * appear(t, T.caminhao, 1.9));
   const fallT = Math.max(0, t - T.quebra);
   const y1 = Math.max(WATER - 0.9, DECK - 0.55 - 4.9 * fallT * fallT);
-  const show1 = t > T.caminhao && t < T.pilares + 0.6;
+  const show1 = t > T.caminhao && t < T.pilares + 1.4;
   // caminhão 2: passa por cima dos pilares
   const x2 = -9 + 18 * Math.min(1, Math.max(0, (t - T.pilares - 2.4) / 4.6));
   const show2 = t > T.pilares + 2.4 && t < T.pilares + 7.2;
@@ -358,7 +358,7 @@ export const PonteScene: React.FC<{ t: number }> = ({ t }) => {
       <Pilares t={t} />
       <Estaiada t={t} />
       <Respingo t={t} />
-      {show1 ? <Caminhao p={[x1, t < T.quebra ? DECK - 0.55 * appear(t, T.enverga - 0.5, 1.0) * Math.max(0, 1 - (x1 / RV) ** 2) : y1, 0]} rot={t > T.quebra ? -0.5 * Math.min(1, fallT * 2) : 0} o={1 - appear(t, T.pilares, 0.5)} /> : null}
+      {show1 ? <Caminhao p={[x1, t < T.quebra ? DECK - 0.55 * appear(t, T.enverga - 0.5, 1.0) * Math.max(0, 1 - (x1 / RV) ** 2) : y1, 0]} rot={t > T.quebra ? -0.5 * Math.min(1, fallT * 2) : 0} o={1 - appear(t, T.pilares + 0.8, 0.5)} /> : null}
       {show2 ? <Caminhao p={[x2, DECK, -0.45]} /> : null}
       {t > T.fim + 0.3 ? <Caminhao p={[x3, DECK, 0.45]} /> : null}
       {shipO ? <Navio z={zShip} shake={shake} /> : null}

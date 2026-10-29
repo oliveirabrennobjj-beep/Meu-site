@@ -11,7 +11,7 @@ export const T = {
   tabua: 0,
   caminhao: at("mas quando o caminhão"),
   enverga: at("a tábua enverga"),
-  quebra: at("a tábua enverga") + 1.6,
+  quebra: at("e quebra no meio"),
   pilares: at("então você coloca pilares"),
   esses: at("esses são os pilares"),
   correnteza: at("mas a correnteza"),
