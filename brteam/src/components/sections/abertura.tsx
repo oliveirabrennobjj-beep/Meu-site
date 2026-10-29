@@ -220,7 +220,7 @@ export function Kids() {
           <div className="mt-12 grid gap-x-10 gap-y-9 sm:grid-cols-2">
             {beneficios.map((b) => (
               <div key={b.titulo}>
-                <Faixa cor={b.faixa} ponteira="#111111" clara altura={10} className="mb-4 w-20" />
+                <Faixa cor={b.faixa} ponteira="#111111" clara altura={14} className="mb-4 w-28" />
                 <h3 className="font-display text-2xl font-bold uppercase leading-tight">{b.titulo}</h3>
                 <p className="mt-2 text-chumbo">{b.texto}</p>
               </div>
@@ -296,7 +296,7 @@ export function Adultos() {
           <div className="mt-12 grid gap-x-10 gap-y-9 sm:grid-cols-2">
             {beneficiosAdultos.map((b) => (
               <div key={b.titulo}>
-                <Faixa cor={b.faixa} ponteira={b.ponteira ?? "#111111"} altura={10} className="faixa-no-escuro mb-4 w-20" />
+                <Faixa cor={b.faixa} ponteira={b.ponteira ?? "#111111"} altura={14} className="faixa-no-escuro mb-4 w-28" />
                 <h3 className="font-display text-2xl font-bold uppercase leading-tight">{b.titulo}</h3>
                 <p className="mt-2 text-cinza">{b.texto}</p>
               </div>
