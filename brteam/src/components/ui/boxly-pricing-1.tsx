@@ -143,7 +143,7 @@ export default function PricingSection({
             <h2 className={titleClassName}>{title}</h2>
           </div>
           <div className="md:col-span-4 md:mt-auto">
-            <p className="text-gray-400">{aside}</p>
+            <p className="text-cinza">{aside}</p>
           </div>
         </div>
 
@@ -167,7 +167,7 @@ export default function PricingSection({
                     >
                       {tier.name}
                     </h3>
-                    <p className="text-gray-400 text-sm">{tier.description}</p>
+                    <p className="text-cinza text-sm">{tier.description}</p>
                     {!tier.featured && (
                       <div aria-hidden="true" className="absolute inset-0 z-10 flex flex-col justify-between">
                         <div className="absolute -top-0.5 -left-0.5">
@@ -189,22 +189,22 @@ export default function PricingSection({
                   <div className="mb-6 px-6">
                     <div className="flex items-baseline gap-2">
                       <span className="font-display text-5xl font-bold tabular-nums text-white">{tier.price}</span>
-                      {period && <span className="text-gray-400">{period}</span>}
+                      {period && <span className="text-cinza">{period}</span>}
                     </div>
-                    {tier.note && <p className="mt-2 text-gray-400 text-sm">{tier.note}</p>}
+                    {tier.note && <p className="mt-2 text-cinza text-sm">{tier.note}</p>}
                   </div>
 
                   <div className="mb-8 flex flex-1 flex-col px-6">
-                    <p className="mb-4 font-bold text-gray-300 text-xs tracking-wide">{includedLabel}</p>
+                    <p className="mb-4 font-bold text-ouro text-xs tracking-wide">{includedLabel}</p>
                     <ul className="mb-6 flex-1 space-y-3">
                       {tier.features.map((feature, idx) => (
                         <li className="flex items-start gap-3" key={idx}>
                           {tier.featured ? (
                             <FeaturedIcon aria-hidden="true" className={`mt-0.5 h-5 w-5 shrink-0 ${t.destaqueIcone}`} />
                           ) : (
-                            <Check aria-hidden="true" className="mt-0.5 h-5 w-5 shrink-0 text-gray-500" />
+                            <Check aria-hidden="true" className="mt-0.5 h-5 w-5 shrink-0 text-ouro" />
                           )}
-                          <span className="text-gray-300 text-sm">{feature}</span>
+                          <span className="text-white/90 text-sm">{feature}</span>
                         </li>
                       ))}
                     </ul>
@@ -214,7 +214,7 @@ export default function PricingSection({
                         className={`relative z-20 w-full gap-2 rounded-sm py-2 ${
                           tier.featured
                             ? t.destaqueBotao
-                            : "bg-white text-black hover:bg-gray-100"
+                            : "bg-white text-black hover:bg-gelo"
                         }`}
                       >
                         <a href={tier.href} target="_blank" rel="noopener noreferrer">
@@ -227,7 +227,7 @@ export default function PricingSection({
                         className={`w-full gap-2 rounded-sm py-2 ${
                           tier.featured
                             ? t.destaqueBotao
-                            : "bg-white text-black hover:bg-gray-100"
+                            : "bg-white text-black hover:bg-gelo"
                         }`}
                       >
                         {tier.cta}

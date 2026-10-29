@@ -182,20 +182,25 @@ export function Professor() {
   );
 }
 
-const beneficios = [
+// Cada benefício leva a cor de uma faixa, no caminho que a criança percorre (amarela, laranja, verde, azul)
+const beneficios: { faixa: string; titulo: string; texto: string }[] = [
   {
+    faixa: "var(--color-faixa-amarela)",
     titulo: "Autoestima e confiança",
     texto: "Cada desafio vencido no treino e cada grau conquistado mostram para a criança do que ela é capaz. A timidez dá lugar à segurança.",
   },
   {
+    faixa: "var(--color-faixa-laranja)",
     titulo: "Menos violência e bullying",
     texto: "A criança aprende a se defender e a controlar as emoções. Quem se sente seguro não precisa brigar, e sabe sair de um conflito.",
   },
   {
+    faixa: "var(--color-faixa-verde)",
     titulo: "Amizade e trabalho em equipe",
     texto: "No tatame se compartilha, coopera e incentiva o colega. A turma vira um grupo de amigos que cresce junto.",
   },
   {
+    faixa: "var(--color-faixa-azul)",
     titulo: "Corpo e mente em movimento",
     texto: "Coordenação, equilíbrio, força e resistência, junto com foco, disciplina e paciência para persistir nos objetivos.",
   },
@@ -215,6 +220,7 @@ export function Kids() {
           <div className="mt-12 grid gap-x-10 gap-y-9 sm:grid-cols-2">
             {beneficios.map((b) => (
               <div key={b.titulo}>
+                <Faixa cor={b.faixa} ponteira="#111111" clara altura={10} className="mb-4 w-20" />
                 <h3 className="font-display text-2xl font-bold uppercase leading-tight">{b.titulo}</h3>
                 <p className="mt-2 text-chumbo">{b.texto}</p>
               </div>
@@ -243,20 +249,25 @@ export function Kids() {
 }
 
 // Os cinco pontos da série "Pronto para fazer de 2025 o seu ano de transformação?" do Instagram
-const beneficiosAdultos = [
+const beneficiosAdultos: { faixa: string; ponteira?: string; titulo: string; texto: string }[] = [
   {
+    faixa: "var(--color-faixa-azul)",
     titulo: "Disciplina e constância",
     texto: "No tatame você aprende que grandes resultados vêm do esforço contínuo. Essa mentalidade vai além do treino.",
   },
   {
+    faixa: "var(--color-faixa-roxa)",
     titulo: "Resiliência",
     texto: "Cada posição difícil ensina a ter calma sob pressão e a não desistir. Uma lição para a vida.",
   },
   {
+    faixa: "var(--color-faixa-marrom)",
     titulo: "Autoconfiança",
     texto: "Superando obstáculos no treino, você descobre a própria força e ganha confiança para enfrentar qualquer coisa.",
   },
   {
+    faixa: "#141414",
+    ponteira: "#d6202b",
     titulo: "Menos estresse, mente limpa",
     texto: "O Jiu-Jitsu funciona como terapia ativa: movimentos focados e aprendizado constante ajudam a esvaziar a cabeça.",
   },
@@ -285,6 +296,7 @@ export function Adultos() {
           <div className="mt-12 grid gap-x-10 gap-y-9 sm:grid-cols-2">
             {beneficiosAdultos.map((b) => (
               <div key={b.titulo}>
+                <Faixa cor={b.faixa} ponteira={b.ponteira ?? "#111111"} altura={10} className="faixa-no-escuro mb-4 w-20" />
                 <h3 className="font-display text-2xl font-bold uppercase leading-tight">{b.titulo}</h3>
                 <p className="mt-2 text-cinza">{b.texto}</p>
               </div>

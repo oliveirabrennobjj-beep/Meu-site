@@ -3,10 +3,11 @@
 
 /*
   BR Team — direção visual
-  Foto em tela cheia na abertura e seções alternando claro (branco e "gelo", levemente azulado),
-  preto (topo, galeria, contato, rodapé) e azul-marinho (professor, mensalidade).
-  Títulos das seções claras em preto, botões em azul, detalhes em dourado. A faixa preta desenhada, com a ponteira
-  vermelha de verdade, continua sendo o elemento de assinatura.
+  Foto em tela cheia na abertura e seções alternando claro (branco e "gelo" azulado) com azul-marinho.
+  Não há cinza neutro nem preto puro: o "preto" do Tailwind é um azul-marinho quase preto (--color-black) e o
+  texto secundário no claro é um azul-ardósia (--color-chumbo). Botões em azul, detalhes em dourado.
+  As cores das faixas (amarela, laranja, verde, azul, roxa, marrom) marcam os benefícios do Kids e dos adultos.
+  A faixa preta desenhada, com a ponteira vermelha de verdade, continua sendo o elemento de assinatura.
   Tipografia: Barlow Condensed nos títulos (ecoa o letreiro da marca) e Barlow no texto.
 */
 
@@ -21,15 +22,24 @@
   --color-carbono: #0d2348;     /* superfícies escuras (agora azul-marinho) */
   --color-grafite: #26406b;     /* linhas no escuro */
   --color-cinza: #aebfde;       /* texto secundário no escuro (8:1 no marinho) */
-  --color-gelo: #f3f6fb;        /* fundo claro levemente azulado */
+  --color-gelo: #eaf1fc;        /* fundo claro azulado */
   --color-azul: #1f5fd6;        /* azul de destaque (botões; 5.3:1 com branco) */
   --color-azul-escuro: #184bb0;
   --color-ouro: #c9a24a;        /* dourado dos detalhes */
-  --color-ouro-escuro: #8a6a1c; /* dourado para texto em fundo claro (5:1) */
+  --color-ouro-escuro: #7d5f17; /* dourado para texto em fundo claro (5:1 no gelo) */
   --color-erro: #b42318;        /* mensagens de erro */
   --color-kimono: #ffffff;      /* branco */
   --color-algodao: #f3f3f1;     /* superfície clara */
-  --color-chumbo: #4a4a4a;      /* texto secundário no claro (8.9:1 no branco) */
+  --color-chumbo: #3d4d6e;      /* texto secundário no claro: azul-ardósia (8.4:1 no branco, 7.5:1 no gelo) */
+  --color-black: #0a1a38;       /* "preto" do site: azul-marinho quase preto (títulos, seções e detalhes escuros) */
+
+  /* cores das faixas (as mesmas de trocaDeFaixa em src/data/site.ts) */
+  --color-faixa-amarela: #f2c21b;
+  --color-faixa-laranja: #ec7a1c;
+  --color-faixa-verde: #1f8a4c;
+  --color-faixa-azul: #1d4fb8;
+  --color-faixa-roxa: #5b2a86;
+  --color-faixa-marrom: #5a3a22;
   --color-ponteira: #1f5fd6;    /* cor de ação (antes vermelho; agora azul) */
   --color-ponteira-escura: #184bb0;
   --color-whatsapp: #25d366;
@@ -129,6 +139,7 @@ a, button { touch-action: manipulation; }
 .claro :focus-visible { outline-color: var(--color-azul); }
 /* seções e avisos recebem foco por código (tabindex=-1): sem moldura */
 [tabindex="-1"]:focus { outline: none; }
+::selection { background: var(--color-ouro); color: var(--color-black); }
 /* seções claras: listas de opções e setinhas de número no tema claro do sistema */
 .claro { color-scheme: light; }
 /* botões fixos passam por cima de fundo claro e escuro: anel duplo para aparecer nos dois */
@@ -194,7 +205,7 @@ a, button { touch-action: manipulation; }
   .botao-ouro { background: var(--color-ouro); color: #0d2348; }
   .botao-ouro:hover { background: #d8b45e; }
   .botao-contorno:hover { background: #fff; color: #000; border-color: #fff; }
-  .claro .botao-contorno:hover { background: #000; color: #fff; border-color: #000; }
+  .claro .botao-contorno:hover { background: var(--color-black); color: #fff; border-color: var(--color-black); }
 }
 
 /*
@@ -214,6 +225,8 @@ a, button { touch-action: manipulation; }
   box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.06);
 }
 .faixa-clara { box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.12); }
+/* faixa pequena sobre o azul-marinho: contorno claro para a azul, roxa, marrom e preta aparecerem */
+.faixa-no-escuro { box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.28); }
 .faixa__ponteira {
   position: absolute;
   top: 0;
