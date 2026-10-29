@@ -11,7 +11,7 @@ export const academia = {
   lema: "Jiu-Jitsu como filosofia de vida.",
   pilares: ["Corpo", "Mente", "Alma"],
   cidade: "Casimiro de Abreu (RJ)",
-  idadeMinima: 4,
+  idadeMinima: 5,
   comodidades: ["Aceitamos Pix", "Lugar para bicicletas"],
 };
 
@@ -47,7 +47,7 @@ export const instagram = (usuario: string) => `https://instagram.com/${usuario}`
 
 /*
   Grade de horários (informada pela academia). Treinos às segundas, quartas e quintas.
-  Kids 1 às 18h (4 a 7 anos), Kids 2 às 19h (8 a 12 anos).
+  Kids 1 das 18h às 18h50 (5 a 7 anos), Kids 2 das 19h às 19h50 (8 a 12 anos).
   Adulto às 6h, 13h (turma mista, a partir de 13 anos) e 20h.
 */
 export type TurmaChave = "Kids" | "Adulto";
@@ -64,8 +64,8 @@ export const diasDeAula: string | null = "Segunda, quarta e quinta";
 export const aulas: Aula[] = [
   { turma: "Adulto", nome: "Adulto", horario: "6h às 7h", periodo: "Manhã", publico: "a partir de 13 anos", idadeMin: 13 },
   { turma: "Adulto", nome: "Turma mista", horario: "13h às 14h", periodo: "Tarde", publico: "a partir de 13 anos", idadeMin: 13 },
-  { turma: "Kids", nome: "Kids 1", horario: "18h às 19h", periodo: "Noite", publico: "crianças de 4 a 7 anos", idadeMin: 4, idadeMax: 7 },
-  { turma: "Kids", nome: "Kids 2", horario: "19h às 20h", periodo: "Noite", publico: "crianças de 8 a 12 anos", idadeMin: 8, idadeMax: 12 },
+  { turma: "Kids", nome: "Kids 1", horario: "18h às 18h50", periodo: "Noite", publico: "crianças de 5 a 7 anos", idadeMin: 5, idadeMax: 7 },
+  { turma: "Kids", nome: "Kids 2", horario: "19h às 19h50", periodo: "Noite", publico: "crianças de 8 a 12 anos", idadeMin: 8, idadeMax: 12 },
   { turma: "Adulto", nome: "Adulto", horario: "20h às 21h", periodo: "Noite", publico: "a partir de 13 anos", idadeMin: 13 },
 ];
 export const aulasDaTurma = (t: TurmaChave) => aulas.filter((a) => a.turma === t);
@@ -119,7 +119,7 @@ export const trocaDeFaixa = {
     titulo: "Faixas infantis",
     descricao: "De 4 a 15 anos. Cinza, amarela, laranja e verde têm três versões: com branco, pura e com preto.",
     faixas: [
-      { nome: "Branca", cor: "#f2f2f0", ponteira: "#111111", idade: "a partir de 4 anos", preco: null },
+      { nome: "Branca", cor: "#f2f2f0", ponteira: "#111111", idade: "a partir de 5 anos", preco: null },
       { nome: "Cinza", cor: "#8d8f93", ponteira: "#111111", idade: "4 a 15 anos", preco: null, variacoes: true },
       { nome: "Amarela", cor: "#f2c21b", ponteira: "#111111", idade: "7 a 15 anos", preco: null, variacoes: true },
       { nome: "Laranja", cor: "#ec7a1c", ponteira: "#111111", idade: "10 a 15 anos", preco: null, variacoes: true },
@@ -205,7 +205,7 @@ export const fotos = {
   Ajuste `ate` se a idade de corte das turmas Kids for outra.
 */
 export const faixasEtarias: { ate: number; turma: TurmaChave; detalhe: string }[] = [
-  { ate: 12, turma: "Kids", detalhe: "Kids 1 às 18h (4 a 7 anos) e Kids 2 às 19h (8 a 12 anos). Se a criança for grande, o professor pode indicar a turma dos adultos." },
+  { ate: 12, turma: "Kids", detalhe: "Kids 1 das 18h às 18h50 (5 a 7 anos) e Kids 2 das 19h às 19h50 (8 a 12 anos). Se a criança for grande, o professor pode indicar a turma dos adultos." },
   { ate: 120, turma: "Adulto", detalhe: "Turmas às 6h, às 13h (mista) e às 20h. Escolha o horário que encaixa na sua rotina." },
 ];
 export function turmaPorIdade(idade: number) {
