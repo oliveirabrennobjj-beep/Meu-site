@@ -35,10 +35,15 @@ export const endereco = {
 };
 
 export const enderecoCompleto = `${endereco.rua}, ${endereco.bairro}, ${endereco.cidade}, ${endereco.cep}`;
-export const mapaEmbed = `https://maps.google.com/maps?q=${encodeURIComponent(enderecoCompleto)}&output=embed`;
+/*
+  Posição da academia (em frente à fachada, tirada do pino que a academia compartilhou no Google Maps).
+  A BR Team ainda não tem cadastro no Google, então pelo nome ela não aparece; o mapa e a rota usam estas coordenadas.
+*/
+export const coordenadas = { lat: -22.4887943, lng: -42.2023354 };
+export const mapaEmbed = `https://maps.google.com/maps?q=${coordenadas.lat},${coordenadas.lng}&z=18&hl=pt-BR&output=embed`;
 /** Pino da academia no Google Maps (link de compartilhar do próprio Maps). */
 export const mapaBusca = "https://maps.app.goo.gl/BvQoizGjWBc1fTGF9";
-export const mapaRota = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(enderecoCompleto)}`;
+export const mapaRota = `https://www.google.com/maps/dir/?api=1&destination=${coordenadas.lat},${coordenadas.lng}`;
 
 export function linkWhatsApp(mensagem: string = contato.mensagemPadrao) {
   return `https://wa.me/${contato.whatsapp}?text=${encodeURIComponent(mensagem)}`;

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ChevronLeft, ChevronRight, Expand, Map as IconeMapa, MapPin, Navigation, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Expand, Info, MapPin, Navigation, X } from "lucide-react";
 import { InstagramIcon, WhatsAppIcon } from "@/components/brand-icons";
 import { Faixa } from "@/components/faixa";
 import { academia, contato, endereco, fotos, instagram, linkWhatsApp, mapaBusca, mapaEmbed, mapaRota, parceiros } from "@/data/site";
@@ -115,66 +115,34 @@ export function Parceiros() {
 }
 
 /*
-  Mapa: começa como um cartão desenhado (sem depender do Google), com o endereço e o botão para abrir
-  no Google Maps. O mapa interativo só carrega se a pessoa pedir. Assim a página abre mais rápido e
-  não mostra erro onde o mapa do Google é bloqueado (prévias de arquivo, navegadores com bloqueio).
+  Mapa do Google com o pino na academia (coordenadas em src/data/site.ts → coordenadas).
+  A academia ainda não tem cadastro no Google, então o mapa marca só o local, sem o nome; o aviso embaixo explica.
 */
 function CartaoMapa() {
-  const [mostrar, setMostrar] = useState(false);
-  const mapaRef = useRef<HTMLIFrameElement>(null);
-  // o botão some ao abrir o mapa: o foco vai para o mapa em vez de cair no começo da página
-  useEffect(() => {
-    if (mostrar) mapaRef.current?.focus();
-  }, [mostrar]);
-  if (mostrar) {
-    return (
-      <div className="surge-rapido min-h-[360px] overflow-hidden border border-white/15 bg-carbono">
-        <iframe
-          ref={mapaRef}
-          title={`Mapa: ${endereco.rua}, ${endereco.cidade}`}
-          src={mapaEmbed}
-          loading="lazy"
-          referrerPolicy="no-referrer-when-downgrade"
-          className="size-full min-h-[360px] border-0"
-        />
-      </div>
-    );
-  }
   return (
-    <div className="relative flex min-h-[400px] flex-col justify-end overflow-hidden border border-white/15 bg-[#0f1830] p-6 md:p-8">
-      {/* ruas desenhadas */}
-      <svg aria-hidden="true" className="absolute inset-0 size-full" preserveAspectRatio="xMidYMid slice" viewBox="0 0 400 300">
-        <rect width="400" height="300" fill="#0f1830" />
-        <g stroke="#1e2d52" strokeWidth="14" fill="none" strokeLinecap="round">
-          <path d="M-20 70 L420 40" />
-          <path d="M-20 190 C120 170 260 230 420 200" />
-          <path d="M90 -20 L130 320" />
-          <path d="M290 -20 C270 120 320 200 300 320" />
-        </g>
-        <g stroke="#17244a" strokeWidth="6" fill="none">
-          <path d="M-20 130 L420 120" />
-          <path d="M200 -20 L210 320" />
-          <path d="M-20 250 L420 270" />
-          <path d="M40 -20 L20 320" />
-        </g>
-        <circle cx="208" cy="128" r="34" fill="#c9a24a" opacity="0.14" />
-      </svg>
-      <div aria-hidden="true" className="absolute left-1/2 top-[30%] -translate-x-1/2 -translate-y-full">
-        <MapPin className="size-12 fill-ouro text-tatame drop-shadow-[0_8px_16px_rgb(0_0_0/0.6)]" strokeWidth={1.5} />
-      </div>
-      <div className="relative">
+    <div className="flex flex-col overflow-hidden border border-white/15 bg-marinho">
+      <iframe
+        title={`Mapa: ${endereco.rua}, ${endereco.cidade}`}
+        src={mapaEmbed}
+        loading="lazy"
+        referrerPolicy="no-referrer-when-downgrade"
+        className="aspect-[4/3] w-full border-0 bg-gelo lg:aspect-auto lg:min-h-[380px] lg:flex-1"
+      />
+      <div className="p-6 md:p-8">
         <p className="font-display text-2xl font-bold uppercase leading-tight">BR Team Jiu-Jitsu</p>
         <p className="mt-1 text-white/85">
           {endereco.rua}, {endereco.bairro}, {endereco.cidade}
         </p>
-        <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-          <a href={mapaBusca} target="_blank" rel="noopener noreferrer" className="botao botao-ouro">
-            <MapPin className="size-5" aria-hidden="true" /> Abrir no Google Maps
-          </a>
-          <button type="button" onClick={() => setMostrar(true)} className="botao botao-contorno text-white">
-            <IconeMapa className="size-5" aria-hidden="true" /> Mostrar o mapa aqui
-          </button>
-        </div>
+        <p className="mt-4 flex gap-2.5 text-[15px] text-cinza">
+          <Info className="mt-0.5 size-5 shrink-0 text-ouro" aria-hidden="true" />
+          <span>
+            A BR Team ainda não aparece pelo nome no Google Maps, porque o cadastro da academia ainda não foi feito.
+            O pino marca o local certo: use este mapa ou o botão abaixo.
+          </span>
+        </p>
+        <a href={mapaBusca} target="_blank" rel="noopener noreferrer" className="botao botao-ouro mt-6 w-full sm:w-auto">
+          <MapPin className="size-5" aria-hidden="true" /> Abrir no Google Maps
+        </a>
       </div>
     </div>
   );
