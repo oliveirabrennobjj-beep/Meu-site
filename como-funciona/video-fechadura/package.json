@@ -1,7 +1,7 @@
 {
   "name": "video-fechadura",
   "version": "1.0.0",
-  "description": "Reel: como funciona a descarga (Raio-X)",
+  "description": "Reel: como funciona a fechadura (Raio-X)",
   "repository": {},
   "license": "UNLICENSED",
   "engines": {
@@ -34,7 +34,7 @@
     "build": "remotion bundle",
     "upgrade": "remotion upgrade",
     "lint": "eslint src && tsc",
-    "render": "remotion render Descarga out/descarga.mp4 --codec=h264 --crf=18",
+    "render": "remotion render Fechadura out/fechadura.mp4 --codec=h264 --crf=18",
     "capa": "remotion still Capa out/capa.png"
   },
   "allowScripts": {
