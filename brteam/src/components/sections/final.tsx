@@ -116,7 +116,7 @@ export function Parceiros() {
 
 /*
   Mapa do Google com o pino na academia (coordenadas em src/data/site.ts → coordenadas).
-  A academia ainda não tem cadastro no Google, então o mapa marca só o local, sem o nome; o aviso embaixo explica.
+  A academia ainda não tem cadastro no Google: no local pode aparecer o nome de outra loja. O aviso embaixo do botão explica.
 */
 function CartaoMapa() {
   return (
@@ -133,16 +133,17 @@ function CartaoMapa() {
         <p className="mt-1 text-white/85">
           {endereco.rua}, {endereco.bairro}, {endereco.cidade}
         </p>
-        <p className="mt-4 flex gap-2.5 text-[15px] text-cinza">
-          <Info className="mt-0.5 size-5 shrink-0 text-ouro" aria-hidden="true" />
-          <span>
-            A BR Team ainda não aparece pelo nome no Google Maps, porque o cadastro da academia ainda não foi feito.
-            O pino marca o local certo: use este mapa ou o botão abaixo.
-          </span>
-        </p>
         <a href={mapaBusca} target="_blank" rel="noopener noreferrer" className="botao botao-ouro mt-6 w-full sm:w-auto">
           <MapPin className="size-5" aria-hidden="true" /> Abrir no Google Maps
         </a>
+        <p className="mt-5 flex gap-3 border border-ouro/50 bg-tatame p-4 text-[15px] text-white/90">
+          <Info className="mt-0.5 size-5 shrink-0 text-ouro" aria-hidden="true" />
+          <span>
+            <strong className="font-semibold text-ouro">Atenção:</strong> o professor ainda não cadastrou a BR Team no Google Maps.
+            Por isso, ao abrir o mapa, pode aparecer o nome de outra loja no lugar. O endereço está certo: a academia
+            fica na {endereco.rua}.
+          </span>
+        </p>
       </div>
     </div>
   );
