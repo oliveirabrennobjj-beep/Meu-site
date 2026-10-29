@@ -3,20 +3,20 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Galaxy S26 Ultra · Conceito 3D</title>
-<meta name="description" content="Página conceito com o Galaxy S26 Ultra em 3D: gira, mostra a câmera, se desmonta em camadas e solta a S Pen conforme você rola.">
-<meta name="theme-color" content="#050608">
+<title>Galaxy S26 Ultra · Conceito</title>
+<meta name="description" content="Página conceito do Galaxy S26 Ultra com fotos de estúdio e animação de rolagem no estilo de filme de lançamento.">
+<meta name="theme-color" content="#000000">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@200;300;400;600;800&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="https://d8j0ntlcm91z4.cloudfront.net/user_3JtZC6ddwx6YVRQn4yG6QiUXAde/hf_20261029_105725_8f0f9951-9a12-499d-829a-fe6bd254d180.png">
 <style>
   :root {
-    --bg: #050608;
-    --fg: #f2f3f5;
-    --muted: #9aa0aa;
-    --line: rgba(255,255,255,.14);
-    --accent: #8fb4ff;
-    --accent-2: #c9a7ff;
+    --bg: #000;
+    --fg: #f4f5f7;
+    --muted: #8d939e;
+    --accent: #9db7ff;
+    --accent-2: #c7a6ff;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { background: var(--bg); }
@@ -28,451 +28,254 @@
     overflow-x: hidden;
   }
 
-  #cena { position: fixed; inset: 0; width: 100%; height: 100%; display: block; z-index: 0; }
-  .brilho {
-    position: fixed; inset: 0; z-index: 0; pointer-events: none;
-    background:
-      radial-gradient(60vmax 40vmax at 70% 35%, rgba(110,140,255,.16), transparent 60%),
-      radial-gradient(50vmax 35vmax at 20% 80%, rgba(190,140,255,.10), transparent 60%);
-  }
+  /* acabamento de filme: grão, vinheta e faixas de cinema */
+  .grao { position: fixed; inset: -50%; z-index: 20; pointer-events: none; opacity: .07;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    animation: grao .6s steps(3) infinite; }
+  @keyframes grao { 0% { transform: translate(0,0); } 33% { transform: translate(-3%,2%); } 66% { transform: translate(2%,-3%); } }
+  .vinheta { position: fixed; inset: 0; z-index: 19; pointer-events: none;
+    background: radial-gradient(120% 90% at 50% 50%, transparent 55%, rgba(0,0,0,.75)); }
+  .faixa { position: fixed; left: 0; right: 0; height: 0; background: #000; z-index: 18; }
+  .faixa.cima { top: 0; } .faixa.baixo { bottom: 0; }
 
   header {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 5;
+    position: fixed; top: 0; left: 0; right: 0; z-index: 30;
     display: flex; align-items: center; justify-content: space-between;
     padding: 18px clamp(16px, 4vw, 40px);
-    font-size: 13px; letter-spacing: .02em; color: var(--muted);
-    background: linear-gradient(var(--bg), transparent);
+    font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted);
   }
-  header strong { color: var(--fg); font-weight: 600; }
-  .progresso { position: fixed; top: 0; left: 0; height: 2px; z-index: 6; width: 0;
-    background: linear-gradient(90deg, var(--accent), var(--accent-2)); }
+  header strong { color: #fff; font-weight: 600; }
+  .tempo { font-variant-numeric: tabular-nums; }
 
-  main { position: relative; z-index: 2; }
-  section {
-    min-height: 100vh; min-height: 100svh;
-    display: flex; align-items: center;
-    padding: 96px clamp(16px, 6vw, 96px);
-  }
-  .bloco { max-width: 440px; }
-  .direita { justify-content: flex-end; }
-  .centro { justify-content: center; text-align: center; align-items: flex-end; padding-bottom: 10vh; }
-  .centro .bloco { max-width: 640px; }
+  /* cenas: cada uma é alta e o quadro fica preso na tela enquanto o scroll avança */
+  .cena { position: relative; height: 260vh; }
+  .cena.curta { height: 200vh; }
+  /* a próxima cena começa por cima da anterior: corte direto, sem tela preta rolando no meio */
+  .cena + .cena { margin-top: -100vh; margin-top: -100svh; }
+  .quadro { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
+  .foto { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; will-change: transform, opacity, filter; }
+  .foto img { height: 100%; width: auto; max-width: none; display: block; user-select: none;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent);
+            mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent); }
+  .foto.direita { justify-content: flex-end; padding-right: 6vw; }
+  .foto.esquerda { justify-content: flex-start; padding-left: 6vw; }
+  .reflexo { position: absolute; inset: 0; pointer-events: none; mix-blend-mode: screen; opacity: 0;
+    background: linear-gradient(105deg, transparent 40%, rgba(170,195,255,.14) 50%, transparent 60%);
+    background-size: 250% 100%; }
 
-  .tag { display: inline-block; font-size: 12px; letter-spacing: .18em; text-transform: uppercase;
-    color: var(--accent); margin-bottom: 14px; }
-  h1 { font-size: clamp(44px, 8vw, 104px); font-weight: 800; line-height: .95; letter-spacing: -.035em; }
-  h2 { font-size: clamp(32px, 5vw, 60px); font-weight: 800; line-height: 1; letter-spacing: -.03em; }
-  .grad { background: linear-gradient(100deg, #fff 10%, var(--accent) 55%, var(--accent-2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
-  p { color: var(--muted); font-size: clamp(16px, 1.6vw, 19px); line-height: 1.5; margin-top: 18px; font-weight: 300; }
-  .numeros { display: flex; gap: 28px; margin-top: 28px; flex-wrap: wrap; }
-  .numeros div { border-top: 1px solid var(--line); padding-top: 10px; min-width: 92px; }
-  .numeros b { display: block; font-size: 28px; font-weight: 600; letter-spacing: -.02em; }
-  .numeros span { font-size: 13px; color: var(--muted); }
-  .rolar { margin-top: 36px; font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 10px; }
-  .rolar i { width: 1px; height: 36px; background: linear-gradient(var(--fg), transparent); animation: desce 1.6s ease-in-out infinite; }
-  @keyframes desce { 0% { transform: scaleY(0); transform-origin: top; } 50% { transform: scaleY(1); transform-origin: top; } 51% { transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
-  .cta { display: inline-block; margin-top: 30px; padding: 14px 26px; border-radius: 999px;
-    background: var(--fg); color: var(--bg); text-decoration: none; font-weight: 600; font-size: 15px; }
-  .aviso { margin-top: 26px; font-size: 12px; color: #6b707a; }
+  .texto { position: absolute; z-index: 2; left: clamp(16px, 7vw, 110px); top: 50%; transform: translateY(-50%); max-width: 520px; }
+  .texto.lado-direito { left: auto; right: clamp(16px, 7vw, 110px); }
+  .tag { display: block; font-size: 12px; letter-spacing: .3em; text-transform: uppercase; color: var(--accent); margin-bottom: 18px; }
+  h1, h2 { font-weight: 800; letter-spacing: -.04em; line-height: .92; }
+  h1 { font-size: clamp(56px, 10vw, 150px); }
+  h2 { font-size: clamp(40px, 6vw, 88px); }
+  .grad { background: linear-gradient(100deg, #fff 15%, var(--accent) 60%, var(--accent-2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  p { color: var(--muted); font-size: clamp(16px, 1.5vw, 19px); line-height: 1.55; font-weight: 300; margin-top: 22px; max-width: 420px; }
 
-  /* rótulos da vista explodida */
-  #rotulos { position: fixed; inset: 0; z-index: 3; pointer-events: none; }
-  .rotulo { position: absolute; left: 0; top: 0; font-size: 12px; letter-spacing: .04em; white-space: nowrap;
-    color: var(--fg); opacity: 0; display: flex; align-items: center; gap: 8px; will-change: transform, opacity; }
-  .rotulo::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
-  #rotulos svg { position: absolute; inset: 0; width: 100%; height: 100%; }
-  #rotulos line { stroke: rgba(255,255,255,.35); stroke-width: 1; }
-  #rotulos circle { fill: #fff; }
-  .rotulo em { font-style: normal; color: var(--muted); }
+  /* linhas que sobem de dentro de uma máscara, como corte de edição */
+  .linha { display: block; overflow: hidden; padding-bottom: .12em; }
+  .linha > span { display: inline-block; transform: translateY(110%); will-change: transform; }
+  .abertura .linha > span { transform: none; }
+
+  .numero { font-size: clamp(90px, 17vw, 260px); font-weight: 200; letter-spacing: -.06em; line-height: .85;
+    font-variant-numeric: tabular-nums; }
+  .numero small { font-size: .28em; font-weight: 600; letter-spacing: 0; margin-left: .1em; color: var(--accent); }
+
+  .abertura .texto { left: 50%; top: 50%; transform: translate(-50%, -50%); text-align: center; max-width: none; width: 100%; }
+  .abertura .sub { font-size: 13px; letter-spacing: .4em; text-transform: uppercase; color: var(--muted); margin-top: 26px; }
+  .rolar { position: absolute; bottom: 34px; left: 50%; transform: translateX(-50%); z-index: 3;
+    font-size: 11px; letter-spacing: .3em; text-transform: uppercase; color: var(--muted); display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .rolar i { width: 1px; height: 44px; background: linear-gradient(var(--fg), transparent); animation: desce 1.8s ease-in-out infinite; transform-origin: top; }
+  @keyframes desce { 0% { transform: scaleY(0); } 60% { transform: scaleY(1); opacity: 1; } 100% { transform: scaleY(1); opacity: 0; } }
+
+  .final { min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 80px 16px; position: relative; }
+  .final p { margin-left: auto; margin-right: auto; }
+  .cta { display: inline-block; margin-top: 34px; padding: 15px 30px; border-radius: 999px; background: var(--fg); color: #000; text-decoration: none; font-weight: 600; font-size: 15px; }
+  .aviso { margin-top: 30px; font-size: 12px; color: #5d626b; max-width: 520px; }
 
   @media (max-width: 760px) {
-    section { align-items: flex-end; padding-bottom: 56px; }
-    .direita, .centro { justify-content: flex-start; text-align: left; }
-    .bloco, .centro .bloco { max-width: none; padding: 18px; border-radius: 18px;
-      background: rgba(5,6,8,.55); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
-    section.topo { align-items: flex-start; padding-top: 80px; }
-    section.topo .bloco { background: none; backdrop-filter: none; -webkit-backdrop-filter: none; padding: 0; }
-    .rotulo { font-size: 11px; }
-    .rotulo em { display: none; }
+    .foto img { height: 100%; width: 100%; object-fit: cover; -webkit-mask-image: none; mask-image: none; }
+    .foto.direita, .foto.esquerda { padding: 0; justify-content: center; }
+    .quadro::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+      background: linear-gradient(transparent 45%, rgba(0,0,0,.88) 80%); }
+    .texto, .texto.lado-direito { left: 16px; right: 16px; top: auto; bottom: 64px; transform: none; max-width: none; }
+    .abertura .quadro::after { background: rgba(0,0,0,.3); }
+    .abertura .texto { left: 0; right: 0; top: 50%; bottom: auto; transform: translateY(-50%); }
+    .numero { font-size: 96px; }
   }
-  @media (prefers-reduced-motion: reduce) { .rolar i { animation: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    .grao, .rolar i { animation: none; }
+    .linha > span { transform: none !important; }
+  }
 </style>
 </head>
 <body>
-<div class="progresso" id="progresso"></div>
-<div class="brilho"></div>
-<canvas id="cena" aria-hidden="true"></canvas>
-<div id="rotulos" aria-hidden="true"></div>
+<div class="grao"></div>
+<div class="vinheta"></div>
+<div class="faixa cima" id="faixaCima"></div>
+<div class="faixa baixo" id="faixaBaixo"></div>
 
-<header><strong>Galaxy S26 Ultra</strong><span>Conceito 3D</span></header>
+<header><strong>Galaxy S26 Ultra</strong><span class="tempo" id="tempo">00:00:00</span></header>
 
 <main>
-  <section class="topo" data-etapa="0">
-    <div class="bloco">
-      <span class="tag">Novo</span>
-      <h1>Galaxy<br><span class="grad">S26 Ultra</span></h1>
-      <p>Titânio, vidro e uma câmera que enxerga longe. Role a página e veja o aparelho por dentro.</p>
-      <div class="rolar"><i></i>Role para explorar</div>
+  <!-- 1. abertura: título no escuro, a foto acende por trás -->
+  <section class="cena abertura" data-cena="abertura">
+    <div class="quadro">
+      <div class="foto" data-foto="hero"><img alt="Galaxy S26 Ultra visto de trás, em estúdio escuro"></div>
+      <div class="reflexo"></div>
+      <div class="texto">
+        <h1><span class="linha"><span>Galaxy</span></span><span class="linha"><span class="grad">S26 Ultra</span></span></h1>
+        <div class="sub"><span class="linha"><span>Titânio. Vidro. Luz.</span></span></div>
+      </div>
+      <div class="rolar"><i></i>Role</div>
     </div>
   </section>
 
-  <section class="direita" data-etapa="1">
-    <div class="bloco">
-      <span class="tag">Câmera</span>
-      <h2>200 MP.<br>Zoom que chega perto de longe.</h2>
-      <p>Quatro lentes alinhadas na traseira: grande-angular de 200 MP, ultra-angular, teleobjetiva e periscópio.</p>
-      <div class="numeros">
-        <div><b>200 MP</b><span>sensor principal</span></div>
-        <div><b>100×</b><span>zoom digital</span></div>
+  <!-- 2. câmera: macro que se afasta enquanto o número sobe -->
+  <section class="cena" data-cena="camera">
+    <div class="quadro">
+      <div class="foto direita" data-foto="camera"><img alt="Close das lentes traseiras do Galaxy S26 Ultra"></div>
+      <div class="reflexo"></div>
+      <div class="texto">
+        <span class="tag"><span class="linha"><span>Câmera</span></span></span>
+        <div class="numero"><span class="linha"><span><b id="mp">0</b><small>MP</small></span></span></div>
+        <p><span class="linha"><span>Um sensor de 200 megapixels e zoom</span></span><span class="linha"><span>que chega perto do que está longe.</span></span></p>
       </div>
     </div>
   </section>
 
-  <section data-etapa="2">
-    <div class="bloco">
-      <span class="tag">Por dentro</span>
-      <h2>Camada por camada.</h2>
-      <p>Tela, bateria, estrutura de titânio, placa principal e vidro traseiro, separados para você ver como tudo se encaixa.</p>
-    </div>
-  </section>
-
-  <section class="direita" data-etapa="3">
-    <div class="bloco">
-      <span class="tag">S Pen</span>
-      <h2>A caneta mora dentro dele.</h2>
-      <p>Puxe, escreva, recorte, assine. Quando terminar, ela volta para o lugar e carrega sozinha.</p>
-    </div>
-  </section>
-
-  <section data-etapa="4">
-    <div class="bloco">
-      <span class="tag">Tela</span>
-      <h2>6,9″ de brilho<br>de ponta a ponta.</h2>
-      <p>Bordas finas, cantos retos e vidro antirreflexo para ler até no sol do meio-dia.</p>
-      <div class="numeros">
-        <div><b>6,9″</b><span>Dynamic AMOLED</span></div>
-        <div><b>120 Hz</b><span>taxa adaptável</span></div>
+  <!-- 3. design: a foto principal volta do outro lado, com deslize de câmera -->
+  <section class="cena curta" data-cena="design">
+    <div class="quadro">
+      <div class="foto esquerda" data-foto="hero"><img alt="Galaxy S26 Ultra em titânio"></div>
+      <div class="reflexo"></div>
+      <div class="texto lado-direito">
+        <span class="tag"><span class="linha"><span>Design</span></span></span>
+        <h2><span class="linha"><span>Moldura de</span></span><span class="linha"><span class="grad">titânio.</span></span></h2>
+        <p><span class="linha"><span>Laterais retas, cantos suaves e vidro fosco</span></span><span class="linha"><span>que não guarda marca de dedo.</span></span></p>
       </div>
     </div>
   </section>
 
-  <section class="centro" data-etapa="5">
-    <div class="bloco">
-      <h2 class="grad">O Ultra, sem segredos.</h2>
-      <p>Uma página feita para mostrar um aparelho de todos os ângulos, do jeito que as marcas grandes fazem.</p>
-      <a class="cta" href="#" id="voltar">Ver de novo</a>
-      <p class="aviso">Conceito de fã, sem ligação com a Samsung. Modelo 3D feito por código e números ilustrativos.</p>
+  <!-- 4. S Pen -->
+  <section class="cena" data-cena="pen">
+    <div class="quadro">
+      <div class="foto direita" data-foto="pen"><img alt="Galaxy S26 Ultra com a S Pen saindo do encaixe"></div>
+      <div class="reflexo"></div>
+      <div class="texto">
+        <span class="tag"><span class="linha"><span>S Pen</span></span></span>
+        <h2><span class="linha"><span>A caneta</span></span><span class="linha"><span>mora <span class="grad">dentro.</span></span></span></h2>
+        <p><span class="linha"><span>Puxe, anote, recorte, assine.</span></span><span class="linha"><span>Ela volta pro lugar e carrega sozinha.</span></span></p>
+      </div>
     </div>
+  </section>
+
+  <section class="final">
+    <h2 class="grad">O Ultra.</h2>
+    <p>Feito para ser visto de perto.</p>
+    <a class="cta" href="#" id="voltar">Assistir de novo</a>
+    <p class="aviso">Conceito de fã, sem ligação com a Samsung. Imagens geradas por IA a partir da aparência do aparelho, só para ilustrar.</p>
   </section>
 </main>
 
-<script type="importmap">
-{ "imports": { "three": "./vendor/three.module.min.js" } }
-</script>
-<script type="module">
-import * as THREE from "three";
-import { RoundedBoxGeometry } from "./vendor/RoundedBoxGeometry.js";
-import { RoomEnvironment } from "./vendor/RoomEnvironment.js";
+<script>
+// Fotos geradas no Higgsfield (Nano Banana), servidas pelo CDN deles.
+const CDN = "https://d8j0ntlcm91z4.cloudfront.net/user_3JtZC6ddwx6YVRQn4yG6QiUXAde/";
+const FOTOS = {
+  hero: CDN + "hf_20261029_105725_8f0f9951-9a12-499d-829a-fe6bd254d180.png",
+  camera: CDN + "hf_20261029_105921_93dcdf2c-84ea-4a39-9285-0dfe2c4659d3.png",
+  pen: CDN + "hf_20261029_105921_b8b4f597-baa6-4d1e-a955-f3a1362aa9d5.png",
+};
+document.querySelectorAll("[data-foto]").forEach((el) => {
+  el.querySelector("img").src = FOTOS[el.dataset.foto];
+});
 
 const reduzir = matchMedia("(prefers-reduced-motion: reduce)").matches;
-const canvas = document.getElementById("cena");
-const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.05;
-renderer.outputColorSpace = THREE.SRGBColorSpace;
+const limita = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const faixa = (p, a, b) => limita((p - a) / (b - a));           // 0→1 entre a e b
+const ease = (t) => 1 - Math.pow(1 - t, 3);                      // desacelera no fim
+const easeIO = (t) => (t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 
-const scene = new THREE.Scene();
-const pmrem = new THREE.PMREMGenerator(renderer);
-scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+const cenas = [...document.querySelectorAll(".cena")].map((el) => ({
+  el,
+  tipo: el.dataset.cena,
+  foto: el.querySelector(".foto"),
+  reflexo: el.querySelector(".reflexo"),
+  linhas: [...el.querySelectorAll(".linha > span")],
+}));
+const mp = document.getElementById("mp");
+const faixaCima = document.getElementById("faixaCima");
+const faixaBaixo = document.getElementById("faixaBaixo");
+const tempo = document.getElementById("tempo");
+const rolar = document.querySelector(".rolar");
 
-const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 100);
-camera.position.set(0, 0, 11);
-
-const luz = new THREE.DirectionalLight(0xffffff, 1.6);
-luz.position.set(4, 6, 8);
-scene.add(luz);
-const contra = new THREE.DirectionalLight(0x9db8ff, 2.2);
-contra.position.set(-6, 2, -6);
-scene.add(contra);
-
-/* ---------- medidas (proporção real: 79 × 163 × 8,2 mm) ---------- */
-const W = 1.58, H = 3.26, D = 0.17, R = 0.07;
-
-/* ---------- materiais ---------- */
-const titanio = new THREE.MeshStandardMaterial({ color: 0x8c9098, metalness: 1, roughness: 0.32 });
-const titanioEscuro = new THREE.MeshStandardMaterial({ color: 0x3b3e44, metalness: 1, roughness: 0.4 });
-const vidroTras = new THREE.MeshPhysicalMaterial({ color: 0x1d2026, metalness: 0.15, roughness: 0.5, clearcoat: 0.6, clearcoatRoughness: 0.25, envMapIntensity: 0.55 });
-const preto = new THREE.MeshStandardMaterial({ color: 0x050506, metalness: 0.3, roughness: 0.2 });
-const lenteVidro = new THREE.MeshPhysicalMaterial({ color: 0x0a0d18, metalness: 0.6, roughness: 0.05, clearcoat: 1, iridescence: 0.8, iridescenceIOR: 1.6 });
-const placaMat = new THREE.MeshStandardMaterial({ color: 0x0f3b2c, metalness: 0.4, roughness: 0.55 });
-const chipMat = new THREE.MeshStandardMaterial({ color: 0x15171b, metalness: 0.7, roughness: 0.35 });
-const ouro = new THREE.MeshStandardMaterial({ color: 0xc9a24a, metalness: 1, roughness: 0.3 });
-const bateriaMat = new THREE.MeshStandardMaterial({ color: 0x1b1d22, metalness: 0.5, roughness: 0.6 });
-
-/* ---------- tela com papel de parede desenhado em canvas ---------- */
-function telaTextura() {
-  const c = document.createElement("canvas");
-  c.width = 600; c.height = 1238;
-  const g = c.getContext("2d");
-  const fundo = g.createLinearGradient(0, 0, 600, 1238);
-  fundo.addColorStop(0, "#0b1030");
-  fundo.addColorStop(0.5, "#2a1b5e");
-  fundo.addColorStop(1, "#05060c");
-  g.fillStyle = fundo; g.fillRect(0, 0, 600, 1238);
-  const bolha = (x, y, r, cor) => {
-    const rg = g.createRadialGradient(x, y, 0, x, y, r);
-    rg.addColorStop(0, cor); rg.addColorStop(1, "rgba(0,0,0,0)");
-    g.fillStyle = rg; g.fillRect(0, 0, 600, 1238);
-  };
-  bolha(460, 360, 420, "rgba(120,150,255,.75)");
-  bolha(120, 860, 460, "rgba(200,120,255,.55)");
-  bolha(380, 1100, 300, "rgba(80,220,255,.35)");
-  g.fillStyle = "#fff"; g.textAlign = "center";
-  g.font = "300 168px 'Inter Tight', system-ui, sans-serif";
-  g.fillText("10:28", 300, 330);
-  g.font = "400 34px 'Inter Tight', system-ui, sans-serif";
-  g.globalAlpha = .85; g.fillText("quinta-feira, 29 de outubro", 300, 392);
-  g.globalAlpha = 1;
-  // câmera frontal (furo)
-  g.fillStyle = "#000"; g.beginPath(); g.arc(300, 44, 16, 0, Math.PI * 2); g.fill();
-  // atalhos da tela de bloqueio
-  g.globalAlpha = .9;
-  [[90, 1140], [510, 1140]].forEach(([x, y]) => {
-    g.fillStyle = "rgba(255,255,255,.14)"; g.beginPath(); g.arc(x, y, 48, 0, Math.PI * 2); g.fill();
+// texto entra linha por linha e sai junto no fim da cena
+function linhas(c, p, entra = 0.08, sai = 0.82) {
+  c.linhas.forEach((s, i) => {
+    const e = ease(faixa(p, entra + i * 0.035, entra + 0.14 + i * 0.035));
+    const x = easeIO(faixa(p, sai, sai + 0.12));
+    s.style.transform = `translateY(${(1 - e) * 110 - x * 110}%)`;
   });
-  g.fillStyle = "rgba(255,255,255,.7)"; g.fillRect(230, 1205, 140, 8);
-  const t = new THREE.CanvasTexture(c);
-  t.colorSpace = THREE.SRGBColorSpace;
-  t.anisotropy = 8;
-  return t;
-}
-const telaMat = new THREE.MeshBasicMaterial({ map: telaTextura(), toneMapped: false });
-document.fonts?.ready.then(() => { telaMat.map = telaTextura(); telaMat.needsUpdate = true; });
-
-/* ---------- montagem do aparelho ---------- */
-const celular = new THREE.Group();
-scene.add(celular);
-const camadas = {};
-function camada(nome) { const g = new THREE.Group(); celular.add(g); camadas[nome] = g; return g; }
-
-// 1. tela (vidro + painel)
-const gTela = camada("tela");
-const vidroFrente = new THREE.Mesh(new RoundedBoxGeometry(W - 0.02, H - 0.02, 0.02, 4, R), preto);
-gTela.add(vidroFrente);
-const painel = new THREE.Mesh(new THREE.PlaneGeometry(W - 0.09, H - 0.09), telaMat);
-painel.position.z = 0.0105;
-gTela.add(painel);
-gTela.userData.base = D / 2 - 0.01;
-
-// 2. bateria
-const gBat = camada("bateria");
-const bat = new THREE.Mesh(new RoundedBoxGeometry(W * 0.78, H * 0.46, 0.05, 3, 0.02), bateriaMat);
-bat.position.y = -0.42;
-gBat.add(bat);
-const etiqueta = new THREE.Mesh(new THREE.PlaneGeometry(W * 0.5, 0.26), new THREE.MeshStandardMaterial({ color: 0x2c3038, roughness: .8 }));
-etiqueta.position.set(0, -0.42, 0.026);
-gBat.add(etiqueta);
-gBat.userData.base = 0.03;
-
-// 3. estrutura de titânio (moldura com laterais retas, cantos levemente arredondados)
-const gMold = camada("moldura");
-const forma = new THREE.Shape();
-const arred = (s, w, h, r) => {
-  s.moveTo(-w / 2 + r, -h / 2); s.lineTo(w / 2 - r, -h / 2); s.quadraticCurveTo(w / 2, -h / 2, w / 2, -h / 2 + r);
-  s.lineTo(w / 2, h / 2 - r); s.quadraticCurveTo(w / 2, h / 2, w / 2 - r, h / 2);
-  s.lineTo(-w / 2 + r, h / 2); s.quadraticCurveTo(-w / 2, h / 2, -w / 2, h / 2 - r);
-  s.lineTo(-w / 2, -h / 2 + r); s.quadraticCurveTo(-w / 2, -h / 2, -w / 2 + r, -h / 2);
-};
-arred(forma, W, H, 0.16);
-const furo = new THREE.Path();
-arred(furo, W - 0.06, H - 0.06, 0.13);
-forma.holes.push(furo);
-const moldGeo = new THREE.ExtrudeGeometry(forma, { depth: D - 0.02, bevelEnabled: true, bevelThickness: 0.01, bevelSize: 0.008, bevelSegments: 3, curveSegments: 12 });
-moldGeo.translate(0, 0, -(D - 0.02) / 2);
-gMold.add(new THREE.Mesh(moldGeo, titanio));
-// chapa interna da estrutura
-const chapa = new THREE.Mesh(new THREE.BoxGeometry(W - 0.07, H - 0.07, 0.012), titanioEscuro);
-gMold.add(chapa);
-// botões laterais
-const botao = (y, h) => { const b = new THREE.Mesh(new RoundedBoxGeometry(0.03, h, 0.05, 2, 0.012), titanio); b.position.set(W / 2 + 0.012, y, 0); gMold.add(b); };
-botao(0.55, 0.42); botao(0.05, 0.22);
-// furo da S Pen e alto-falante embaixo
-const furoPen = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.02, 20), preto);
-furoPen.position.set(-W / 2 + 0.3, -H / 2 - 0.005, 0); gMold.add(furoPen);
-for (let i = 0; i < 6; i++) { const f = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.02, 10), preto); f.position.set(W / 2 - 0.42 + i * 0.05, -H / 2 - 0.005, 0); gMold.add(f); }
-const usb = new THREE.Mesh(new RoundedBoxGeometry(0.2, 0.02, 0.05, 2, 0.02), preto);
-usb.position.set(0.05, -H / 2 - 0.005, 0); gMold.add(usb);
-gMold.userData.base = 0;
-
-// 4. placa principal
-const gPlaca = camada("placa");
-const placa = new THREE.Mesh(new RoundedBoxGeometry(W * 0.84, H * 0.36, 0.025, 2, 0.02), placaMat);
-placa.position.y = 0.92; gPlaca.add(placa);
-const chip = (x, y, w, h, m = chipMat) => { const c = new THREE.Mesh(new THREE.BoxGeometry(w, h, 0.03), m); c.position.set(x, y, -0.02); gPlaca.add(c); };
-chip(-0.18, 0.95, 0.42, 0.42); chip(0.3, 1.25, 0.32, 0.18); chip(0.3, 0.72, 0.28, 0.26);
-chip(-0.42, 1.38, 0.18, 0.1, ouro); chip(0.05, 0.45, 0.5, 0.06, ouro); chip(0.5, 1.0, 0.08, 0.3, ouro);
-const placaBaixo = new THREE.Mesh(new RoundedBoxGeometry(W * 0.84, 0.32, 0.025, 2, 0.02), placaMat);
-placaBaixo.position.y = -H / 2 + 0.3; gPlaca.add(placaBaixo);
-gPlaca.userData.base = -0.035;
-
-// 5. vidro traseiro + câmeras
-const gTras = camada("traseira");
-const tras = new THREE.Mesh(new RoundedBoxGeometry(W - 0.02, H - 0.02, 0.02, 4, R), vidroTras);
-gTras.add(tras);
-// lentes: coluna de três grandes à esquerda (vista de trás) + periscópio, flash e laser ao lado
-function lente(x, y, r) {
-  const g = new THREE.Group();
-  const anel = new THREE.Mesh(new THREE.CylinderGeometry(r, r, 0.07, 48), titanio);
-  anel.rotation.x = Math.PI / 2; g.add(anel);
-  const vidro = new THREE.Mesh(new THREE.CylinderGeometry(r * 0.8, r * 0.8, 0.072, 48), lenteVidro);
-  vidro.rotation.x = Math.PI / 2; g.add(vidro);
-  const centro = new THREE.Mesh(new THREE.CircleGeometry(r * 0.32, 32), new THREE.MeshStandardMaterial({ color: 0x1a2a66, metalness: 1, roughness: .1 }));
-  centro.position.z = -0.037; centro.rotation.y = Math.PI; g.add(centro);
-  g.position.set(x, y, -0.04);
-  gTras.add(g);
-  return g;
-}
-const xCol = W / 2 - 0.36;
-lente(xCol, 1.24, 0.17); lente(xCol, 0.84, 0.17); lente(xCol, 0.44, 0.17);
-lente(xCol - 0.36, 1.04, 0.13);
-const flash = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.03, 24), new THREE.MeshStandardMaterial({ color: 0xfff3cf, emissive: 0x332a10, roughness: .3 }));
-flash.rotation.x = Math.PI / 2; flash.position.set(xCol - 0.36, 0.72, -0.02); gTras.add(flash);
-const laser = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.03, 24), preto);
-laser.rotation.x = Math.PI / 2; laser.position.set(xCol - 0.36, 0.56, -0.02); gTras.add(laser);
-gTras.userData.base = -D / 2 + 0.01;
-
-// 6. S Pen
-const gPen = camada("pen");
-const corpoPen = new THREE.Mesh(new THREE.CylinderGeometry(0.032, 0.032, 2.4, 24), titanioEscuro);
-gPen.add(corpoPen);
-const ponta = new THREE.Mesh(new THREE.ConeGeometry(0.032, 0.12, 24), preto);
-ponta.position.y = 1.26; gPen.add(ponta);
-const tampaPen = new THREE.Mesh(new THREE.CylinderGeometry(0.034, 0.034, 0.1, 24), titanio);
-tampaPen.position.y = -1.18; gPen.add(tampaPen);
-const botaoPen = new THREE.Mesh(new THREE.BoxGeometry(0.015, 0.14, 0.02), preto);
-botaoPen.position.set(0, -0.75, 0.03); gPen.add(botaoPen);
-gPen.position.set(-W / 2 + 0.3, -H / 2 + 1.24, 0);
-gPen.userData.base = gPen.position.y;
-
-/* ---------- etapas (uma por seção) ---------- */
-// ry/rx = giro, x/y = posição, s = escala, ex = explosão (0 a 1), pen = quanto a S Pen saiu, luz = brilho da tela
-const ETAPAS = [
-  { ry: -0.42, rx: 0.08, rz: 0.02, x: 1.25, y: -0.1, s: 1.0, ex: 0, pen: 0, luz: 1 },
-  { ry: Math.PI + 0.32, rx: -0.1, rz: -0.05, x: -1.05, y: -0.45, s: 1.32, ex: 0, pen: 0, luz: 0.6 },
-  { ry: Math.PI * 0.62, rx: 0.32, rz: 0.12, x: 1.35, y: 0, s: 0.86, ex: 1, pen: 0, luz: 1 },
-  { ry: 0.5, rx: 0.1, rz: -0.18, x: -1.2, y: 0.75, s: 0.85, ex: 0, pen: 1, luz: 1 },
-  { ry: -0.12, rx: 0.02, rz: 0, x: 1.35, y: 0, s: 1.22, ex: 0, pen: 0, luz: 1.35 },
-  { ry: Math.PI * 2 + 0.5, rx: 0.12, rz: 0, x: 0, y: 1.05, s: 0.62, ex: 0, pen: 0, luz: 1 },
-];
-// no celular a página é estreita: o aparelho fica centralizado e um pouco acima do texto
-const ETAPAS_CEL = [
-  { x: 0.3, y: -0.95, s: 0.85 }, { x: 0.15, y: 0.75, s: 1.2 }, { x: 0.1, y: 0.75, s: 0.72 },
-  { x: 0.15, y: 1.45, s: 0.72 }, { x: 0, y: 0.9, s: 0.95 }, { x: 0, y: 1.75, s: 0.55 },
-];
-
-const suave = (t) => t * t * (3 - 2 * t);
-const mistura = (a, b, t) => a + (b - a) * t;
-
-let alvo = 0, atual = 0;
-function lerScroll() {
-  const max = document.documentElement.scrollHeight - innerHeight;
-  const p = max > 0 ? scrollY / max : 0;
-  document.getElementById("progresso").style.width = (p * 100) + "%";
-  alvo = p * (ETAPAS.length - 1);
-}
-addEventListener("scroll", lerScroll, { passive: true });
-
-function estado(f) {
-  const i = Math.min(Math.floor(f), ETAPAS.length - 2);
-  const t = suave(Math.min(Math.max(f - i, 0), 1));
-  const a = ETAPAS[i], b = ETAPAS[i + 1];
-  const cel = innerWidth < 760;
-  const out = {};
-  for (const k in a) out[k] = mistura(a[k], b[k], t);
-  if (cel) for (const k in ETAPAS_CEL[0]) out[k] = mistura(ETAPAS_CEL[i][k], ETAPAS_CEL[i + 1][k], t);
-  return out;
 }
 
-/* ---------- rótulos da vista explodida ---------- */
-const ROTULOS = [
-  ["tela", "Tela", "vidro + painel AMOLED"],
-  ["bateria", "Bateria", "células empilhadas"],
-  ["moldura", "Estrutura", "titânio"],
-  ["placa", "Placa principal", "processador e memória"],
-  ["traseira", "Traseira", "vidro + quatro câmeras"],
-];
-const caixaRot = document.getElementById("rotulos");
-const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-caixaRot.appendChild(svg);
-const elsRot = ROTULOS.map(([, nome, desc]) => {
-  const d = document.createElement("div");
-  d.className = "rotulo";
-  d.innerHTML = `${nome} <em>${desc}</em>`;
-  caixaRot.appendChild(d);
-  const linha = document.createElementNS("http://www.w3.org/2000/svg", "line");
-  const ponto = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-  ponto.setAttribute("r", 2.5);
-  svg.append(linha, ponto);
-  return { d, linha, ponto };
-});
-// cada rótulo aponta para uma altura diferente da sua camada, assim as linhas não se cruzam
-const ANCORA = { tela: [0.2, -1.1], bateria: [0.2, -0.55], moldura: [W / 2, 0.1], placa: [0.3, 0.85], traseira: [0, 1.35] };
-const v = new THREE.Vector3();
-
-const DIST = { tela: 1.25, bateria: 0.62, moldura: 0, placa: -0.62, traseira: -1.25 };
-
-function redimensionar() {
-  const w = innerWidth, h = innerHeight;
-  renderer.setSize(w, h, false);
-  camera.aspect = w / h;
-  camera.position.z = w < 760 ? 13.5 : 11;
-  camera.updateProjectionMatrix();
+function progresso(el) {
+  const r = el.getBoundingClientRect();
+  return limita(-r.top / (r.height - innerHeight));
 }
-addEventListener("resize", redimensionar);
-redimensionar();
-lerScroll();
 
-const relogio = new THREE.Clock();
 function quadro() {
-  const tempo = relogio.getElapsedTime();
-  atual += (alvo - atual) * (reduzir ? 1 : 0.075);
-  const e = estado(atual);
+  for (const c of cenas) {
+    const p = progresso(c.el);
+    const f = c.foto.style;
+    const entrada = ease(faixa(p, 0, 0.14));
+    const saida = easeIO(faixa(p, 0.86, 1));
 
-  const balanco = reduzir ? 0 : Math.sin(tempo * 0.6) * 0.06;
-  celular.rotation.set(e.rx + Math.sin(tempo * 0.45) * (reduzir ? 0 : 0.02), e.ry + balanco, e.rz);
-  celular.position.set(e.x, e.y + (reduzir ? 0 : Math.sin(tempo * 0.8) * 0.04), 0);
-  celular.scale.setScalar(e.s);
+    if (c.tipo === "abertura") {
+      // a foto acende devagar por trás do título e se aproxima
+      const acende = reduzir ? 1 : ease(faixa(p, 0.02, 0.55));
+      f.opacity = 0.35 + acende * 0.65 - saida;
+      f.filter = `brightness(${0.45 + acende * 0.6}) blur(${(1 - acende) * 4}px)`;
+      f.transform = `scale(${1.15 - acende * 0.1 + saida * 0.25})`;
+      rolar.style.opacity = 1 - faixa(p, 0, 0.08);
+      c.linhas.forEach((s, i) => {
+        const sai = easeIO(faixa(p, 0.4 + i * 0.03, 0.65 + i * 0.03));
+        s.style.transform = `translateY(${-sai * 110}%)`;
+      });
+    } else if (c.tipo === "camera") {
+      // macro muito perto que vai abrindo; o número conta até 200
+      f.opacity = entrada * (1 - saida);
+      f.transform = `scale(${1.5 - ease(faixa(p, 0, 0.85)) * 0.45}) translateY(${(1 - entrada) * 6}%)`;
+      f.filter = `blur(${(1 - entrada) * 10}px)`;
+      mp.textContent = Math.round(ease(faixa(p, 0.15, 0.55)) * 200);
+      linhas(c, p);
+    } else if (c.tipo === "design") {
+      // corte seco com deslize lateral e leve giro, como um dolly de câmera
+      f.opacity = ease(faixa(p, 0, 0.12)) * (1 - saida);
+      f.transform = `translateX(${(1 - ease(faixa(p, 0, 0.6))) * -8}%) scale(${1.08 - ease(p) * 0.1}) rotate(${(1 - ease(faixa(p, 0, 0.7))) * -4}deg)`;
+      f.filter = "none";
+      linhas(c, p, 0.12, 0.78);
+    } else if (c.tipo === "pen") {
+      f.opacity = entrada * (1 - saida);
+      f.transform = `translateY(${(1 - ease(faixa(p, 0, 0.7))) * 10}%) scale(${1.12 - ease(p) * 0.12})`;
+      f.filter = `blur(${(1 - entrada) * 8}px)`;
+      linhas(c, p);
+    }
 
-  for (const nome in DIST) camadas[nome].position.z = camadas[nome].userData.base + DIST[nome] * e.ex * 1.15;
-  gPen.position.y = gPen.userData.base - e.pen * 1.35;
-  gPen.position.z = e.pen * 0.25;
-  gPen.rotation.z = e.pen * 0.12;
-  telaMat.color.setScalar(e.luz);
-
-  renderer.render(scene, camera);
-
-  // rótulos aparecem só quando o aparelho está bem aberto
-  const vis = Math.max(0, (e.ex - 0.55) / 0.45);
-  caixaRot.style.opacity = vis;
-  if (vis > 0) {
-    const pts = ROTULOS.map(([nome]) => {
-      v.set(ANCORA[nome][0], ANCORA[nome][1], 0);
-      camadas[nome].localToWorld(v);
-      v.project(camera);
-      return [(v.x * 0.5 + 0.5) * innerWidth, (-v.y * 0.5 + 0.5) * innerHeight];
-    });
-    const cel = innerWidth < 760;
-    const coluna = Math.min(Math.max(...pts.map((p) => p[0])) + (cel ? 16 : 40), innerWidth - (cel ? 104 : 250));
-    pts.forEach(([x, y], i) => {
-      const { d, linha, ponto } = elsRot[i];
-      d.style.opacity = 1;
-      d.style.transform = `translate(${coluna}px, ${y}px) translateY(-50%)`;
-      linha.setAttribute("x1", x); linha.setAttribute("y1", y);
-      linha.setAttribute("x2", coluna); linha.setAttribute("y2", y);
-      ponto.setAttribute("cx", x); ponto.setAttribute("cy", y);
-    });
+    // brilho que atravessa a foto no meio de cada cena
+    const brilho = faixa(p, 0.3, 0.65);
+    c.reflexo.style.opacity = Math.sin(brilho * Math.PI) * 0.6;
+    c.reflexo.style.backgroundPosition = `${100 - brilho * 100}% 0`;
   }
+
+  // faixas de cinema nas cenas do meio (só na tela larga)
+  const doc = document.documentElement;
+  const g = scrollY / (doc.scrollHeight - innerHeight || 1);
+  const barra = innerWidth > 760 ? Math.sin(limita((g - 0.12) / 0.7) * Math.PI) * 6 : 0;
+  faixaCima.style.height = faixaBaixo.style.height = barra + "vh";
+
+  // contador como numa timeline de edição (24 quadros por segundo)
+  const q = Math.floor(g * 60 * 24);
+  tempo.textContent = [Math.floor(q / 1440), Math.floor(q / 24) % 60, q % 24].map((n) => String(n).padStart(2, "0")).join(":");
 
   requestAnimationFrame(quadro);
 }
