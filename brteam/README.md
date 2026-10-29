@@ -5,7 +5,9 @@ Site da BR Team, academia de Jiu-Jitsu do professor Bruno Ramos em Casimiro de A
 React + TypeScript + Tailwind CSS v4 na estrutura do shadcn/ui (`components.json`, `src/components/ui`, `src/lib/utils.ts`).
 Direção visual: foto em tela cheia na abertura e seções alternando claro (branco e "gelo") com azul-marinho,
 botões em azul e detalhes em dourado. A faixa preta desenhada (ponteira vermelha e graus) é o elemento de assinatura.
-Cores em `src/index.css` (bloco `@theme`: `marinho`, `azul`, `ouro`, `gelo`…).
+Cores em `src/index.css` (bloco `@theme`: `marinho`, `azul`, `ouro`, `gelo`…). Não há cinza neutro nem preto puro:
+`black` é um azul-marinho quase preto e o texto secundário (`chumbo`) é azul-ardósia. As cores das faixas (`faixa-amarela`,
+`faixa-laranja`, `faixa-verde`, `faixa-azul`, `faixa-roxa`, `faixa-marrom`) marcam os benefícios do Kids e dos adultos.
 Fontes: Barlow Condensed nos títulos e Barlow no texto.
 
 ## Como rodar

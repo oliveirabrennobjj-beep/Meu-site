@@ -298,7 +298,7 @@ function ComoGradua() {
             onClick={() => setAba(a.id)}
             className={cn(
               "min-h-11 rounded-sm px-4 text-[15px] font-medium transition-colors active:scale-[0.97]",
-              aba === a.id ? "bg-black text-white" : "text-chumbo hover:text-black",
+              aba === a.id ? "bg-azul text-white" : "text-chumbo hover:text-black",
             )}
           >
             {a.rotulo}

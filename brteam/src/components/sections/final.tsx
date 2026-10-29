@@ -55,7 +55,7 @@ function GaleriaAmpliada({ indice, onFechar, onTrocar }: { indice: number | null
 export function Galeria() {
   const [aberta, setAberta] = useState<number | null>(null);
   return (
-    <section id="galeria" className="bg-black py-16 md:py-32">
+    <section id="galeria" className="bg-marinho py-16 md:py-32">
       <div className="pagina">
         <h2 className="titulo">No tatame e no pódio</h2>
         <p className="mt-5 max-w-[48ch] text-lg text-cinza">
@@ -182,7 +182,7 @@ function CartaoMapa() {
 
 export function Contato() {
   return (
-    <section id="contato" className="bg-black py-16 md:py-32">
+    <section id="contato" className="bg-tatame py-16 md:py-32">
       <div className="pagina grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
         <div>
           <h2 className="titulo">Comece sua jornada</h2>
