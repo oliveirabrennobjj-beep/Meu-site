@@ -50,15 +50,14 @@ Se disser que sim, dê o preço:
 
 (R$ 129 é o preço da lista de 20/10. O vendedor do vídeo cobra R$ 89,90, ou R$ 79,90 cada levando duas. Decida o seu preço antes de sair e não mude no meio da conversa.)
 
-Garantia, que te diferencia dele:
-> "E se em 60 dias não vierem 10 avaliações novas, eu devolvo o seu dinheiro."
+Sem garantia de devolução: o cliente compra a placa de vez.
 
 ### 6. Respostas pras dúvidas mais comuns
 
 | Ele diz | Você responde |
 |---|---|
 | "Precisa carregar? Quanto tempo dura?" | "Não precisa de bateria. É o mesmo chip do cartão de crédito por aproximação: pega a energia do celular quando encosta. Se não quebrar nem molhar, dura a vida toda. E a configuração não vence." |
-| "Tá caro." | "Se ela trouxer um cliente novo só, já se pagou. E tem a garantia: 10 avaliações em 60 dias ou devolvo." |
+| "Tá caro." | "Se ela trouxer um cliente novo só, já se pagou. E é pagamento único: você paga uma vez e ela fica aí pra sempre." |
 | "Funciona em iPhone?" | "Funciona. iPhone do XS pra cima e quase todo Android com NFC. Pra quem não tem, a placa tem um QR Code atrás." *(confira se as suas têm QR)* |
 | "Vou pensar." | "Tranquilo. O que ficou de dúvida? (escute) Posso deixar configurada hoje e você paga só quando ver funcionando com o primeiro cliente?" *(só se você aceitar esse risco)* |
 | "Já tenho Instagram, não preciso disso." | "O Instagram é pra quem já te segue. O Google é pra quem ainda não te conhece e tá procurando 'barbearia perto de mim' agora." |

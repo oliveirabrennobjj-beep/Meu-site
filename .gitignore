@@ -25,3 +25,6 @@ como-funciona/minicurso/
 
 # Vídeos renderizados (ficam no celular do Brenno, não no repositório)
 como-funciona/*/out/
+
+# Rodadas do /arena (skill arena): arquivos de trabalho, não versionar
+.arena/
