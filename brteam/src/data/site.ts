@@ -55,8 +55,10 @@ export const instagram = (usuario: string) => `https://instagram.com/${usuario}`
   mensagem já escrita, dizendo o que a pessoa quer; dali a conversa continua com ele.
 */
 export const mensagemPreco = {
+  // a branca é a primeira faixa (não é troca): "preço da faixa branca"
   faixa: (faixa: string, infantil: boolean) =>
-    `Olá, professor Bruno! Vim pelo site da BR Team e quero saber o preço da troca para a faixa ${faixa.toLowerCase()}${infantil ? " do meu filho(a)" : ""}.`,
+    `Olá, professor Bruno! Vim pelo site da BR Team e quero saber o preço ${faixa === "Branca" ? "da faixa branca" : `da troca para a faixa ${faixa.toLowerCase()}`}${infantil ? " do meu filho(a)" : ""}.`,
+  duvidaTroca: "Olá, professor Bruno! Vim pelo site da BR Team e tenho uma dúvida sobre a troca de faixa.",
   trocaDeFaixa: "Olá, professor Bruno! Vim pelo site da BR Team e quero saber o preço da troca de faixa.",
   kimono: "Olá, professor Bruno! Vim pelo site da BR Team e quero saber o preço do kimono.",
 };

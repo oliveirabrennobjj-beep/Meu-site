@@ -24,7 +24,7 @@ export function Horarios() {
           <p className="max-w-[40ch] text-chumbo md:text-right">
             <span className="font-display text-2xl font-bold uppercase text-azul">{diasDeAula ?? <Pendente />}</span>
             <br />
-            {resumoHorarios} Terça, sexta e fim de semana não tem aula.
+            {resumoHorarios} Terça, sexta e fim de semana não têm aula.
           </p>
         </div>
 
@@ -313,11 +313,15 @@ function ComoGradua() {
         aria-label="Graduação"
         className="mt-6 inline-flex flex-wrap gap-1 rounded-sm bg-algodao p-1"
         onKeyDown={(e) => {
-          if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
-            const nova = aba === "criancas" ? "adultos" : "criancas";
-            setAba(nova);
-            document.getElementById(`aba-${nova}`)?.focus();
-          }
+          const nova =
+            e.key === "ArrowRight" || e.key === "ArrowLeft" ? (aba === "criancas" ? "adultos" : "criancas")
+            : e.key === "Home" ? "criancas"
+            : e.key === "End" ? "adultos"
+            : null;
+          if (!nova) return;
+          e.preventDefault();
+          setAba(nova);
+          document.getElementById(`aba-${nova}`)?.focus();
         }}
       >
         {abas.map((a) => (
@@ -340,8 +344,9 @@ function ComoGradua() {
         ))}
       </div>
 
-      {aba === "criancas" ? (
-        <div id="painel-criancas" role="tabpanel" aria-labelledby="aba-criancas" className="surge-rapido mt-8 grid gap-x-12 gap-y-9 md:grid-cols-2">
+      {/* os dois painéis ficam na página (aria-controls aponta para os dois); só um aparece */}
+      <>
+        <div id="painel-criancas" role="tabpanel" aria-labelledby="aba-criancas" hidden={aba !== "criancas"} className="surge-rapido mt-8 grid gap-x-12 gap-y-9 md:grid-cols-2">
           <Ponto titulo="Cerca de 1 ano em cada faixa">
             Na BR Team, a criança costuma ficar mais ou menos um ano em cada faixa colorida, da branca até a verde. Não é
             regra fixa: cada criança tem o seu ritmo, e a federação (IBJJF) não exige tempo mínimo para as faixas
@@ -381,8 +386,7 @@ function ComoGradua() {
             roxa, marrom e preta), e o professor indica a faixa certa pelo nível dele.
           </Ponto>
         </div>
-      ) : (
-        <div id="painel-adultos" role="tabpanel" aria-labelledby="aba-adultos" className="surge-rapido mt-8 grid gap-x-12 gap-y-9 md:grid-cols-2">
+        <div id="painel-adultos" role="tabpanel" aria-labelledby="aba-adultos" hidden={aba !== "adultos"} className="surge-rapido mt-8 grid gap-x-12 gap-y-9 md:grid-cols-2">
           <Ponto titulo="Frequência nos treinos">
             <p className="font-display text-5xl font-bold leading-none text-black">{graduacao.frequenciaMinima}</p>
             <p className="mt-2">
@@ -411,7 +415,7 @@ function ComoGradua() {
             <TempoDeTreino />
           </div>
         </div>
-      )}
+      </>
       <DecisaoDoProfessor />
 
       <p className="mt-10 border-t border-black/10 pt-5 text-sm text-chumbo">
@@ -452,7 +456,7 @@ export function TrocaDeFaixa() {
           </ul>
         </article>
 
-        <article id="faixas-adultas" className="mt-6 bg-black p-6 text-white md:p-10" aria-labelledby="faixas-adultas-titulo">
+        <article id="faixas-adultas" data-sem-revelar className="mt-6 bg-black p-6 text-white md:p-10" aria-labelledby="faixas-adultas-titulo">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
               <h3 id="faixas-adultas-titulo" className="titulo-md">{adulto.titulo}</h3>
@@ -466,12 +470,12 @@ export function TrocaDeFaixa() {
             ))}
           </ul>
           <a
-            href={linkWhatsApp(mensagemPreco.trocaDeFaixa)}
+            href={linkWhatsApp(mensagemPreco.duvidaTroca)}
             target="_blank"
             rel="noopener noreferrer"
             className="botao botao-primario mt-8 w-full sm:w-auto"
           >
-            <WhatsAppIcon className="size-5" /> Tirar dúvidas sobre a troca
+            <WhatsAppIcon className="size-5" /> Dúvidas sobre a troca
           </a>
         </article>
 

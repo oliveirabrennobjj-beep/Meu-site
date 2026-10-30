@@ -98,7 +98,6 @@ export function Academia() {
             width={fotos.espaco.w}
             height={fotos.espaco.h}
             loading="lazy"
-            data-parallax="0.08"
             className="aspect-[904/236] w-full min-h-[180px] object-cover"
           />
         </div>
@@ -290,7 +289,7 @@ export function Adultos() {
         <div>
           <h2 className="titulo">Jiu-Jitsu para adultos</h2>
           <p className="mt-6 max-w-[44ch] text-xl text-cinza">
-            Nunca treinou? Começa do zero, no seu ritmo. Já é graduado? Treina para evoluir e competir. Aqui você faz parte
+            Nunca treinou? Comece do zero, no seu ritmo. Já é graduado? Treine para evoluir e competir. Aqui você faz parte
             de uma família que apoia e celebra cada passo, do iniciante à faixa preta.
           </p>
           <div className="mt-12 grid gap-x-10 gap-y-9 sm:grid-cols-2">
