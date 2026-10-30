@@ -378,6 +378,17 @@ const perguntas: { p: string; r: ReactNode }[] = [
     ),
   },
   {
+    p: "Quanto custa a troca de faixa e o kimono?",
+    r: (
+      <>
+        Esses preços o professor Bruno passa direto, pelo WhatsApp. Na seção{" "}
+        <a href="#faixas" className="underline underline-offset-4 hover:text-azul">Troca de faixa</a>, toque em "Pedir o
+        preço" na faixa; na <a href="#loja" className="underline underline-offset-4 hover:text-azul">Loja BR Team</a>,
+        preencha os dados do aluno. O WhatsApp abre com a mensagem pronta, é só enviar.
+      </>
+    ),
+  },
+  {
     p: "Onde fica a academia?",
     r: (
       <>

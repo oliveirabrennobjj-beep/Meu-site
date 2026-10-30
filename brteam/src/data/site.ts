@@ -51,6 +51,17 @@ export function linkWhatsApp(mensagem: string = contato.mensagemPadrao) {
 export const instagram = (usuario: string) => `https://instagram.com/${usuario}`;
 
 /*
+  Preço da troca de faixa e do kimono: não fica no site. O botão abre o WhatsApp do professor Bruno com a
+  mensagem já escrita, dizendo o que a pessoa quer; dali a conversa continua com ele.
+*/
+export const mensagemPreco = {
+  faixa: (faixa: string, infantil: boolean) =>
+    `Olá, professor Bruno! Vim pelo site da BR Team e quero saber o preço da troca para a faixa ${faixa.toLowerCase()}${infantil ? " do meu filho(a)" : ""}.`,
+  trocaDeFaixa: "Olá, professor Bruno! Vim pelo site da BR Team e quero saber o preço da troca de faixa.",
+  kimono: "Olá, professor Bruno! Vim pelo site da BR Team e quero saber o preço do kimono.",
+};
+
+/*
   Grade de horários (informada pela academia). Treinos às segundas, quartas e quintas.
   Kids 1 das 18h às 18h50 (5 a 7 anos), Kids 2 das 19h às 19h50 (8 a 12 anos).
   Adulto às 6h, 13h (turma mista, a partir de 13 anos) e 20h.

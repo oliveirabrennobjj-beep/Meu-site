@@ -4,7 +4,7 @@ import PricingSection from "@/components/ui/boxly-pricing-1";
 import { Faixa } from "@/components/faixa";
 import type { Faixa as FaixaDados } from "@/data/site";
 import { WhatsAppIcon } from "@/components/brand-icons";
-import { aulas, diasDeAula, fotos, graduacao, linkWhatsApp, mensalidade, planos, resumoHorarios, trocaDeFaixa } from "@/data/site";
+import { aulas, diasDeAula, fotos, graduacao, linkWhatsApp, mensagemPreco, mensalidade, planos, resumoHorarios, trocaDeFaixa } from "@/data/site";
 import { cn } from "@/lib/utils";
 
 const A_CONFIRMAR = "A confirmar";
@@ -71,7 +71,7 @@ export function Mensalidade() {
     <section aria-labelledby="planos-titulo">
       <PricingSection
         id="planos"
-        className="min-h-0 bg-marinho pb-8"
+        className="min-h-0 bg-marinho pb-0 [&>div]:pb-10"
         tema={{
           linha: "border-grafite",
           chip: "text-ouro",
@@ -105,7 +105,41 @@ export function Mensalidade() {
           href: linkWhatsApp(`Olá, BR Team! Quero me matricular (${p.nome.toLowerCase()}), mensalidade de ${mensalidade.valor}.`),
         }))}
       />
+      <OutrosPrecos />
     </section>
+  );
+}
+
+/*
+  Troca de faixa e kimono não têm preço no site: o professor passa pelo WhatsApp.
+  Os botões abrem a conversa com a mensagem pronta, então a pessoa só precisa enviar.
+*/
+function OutrosPrecos() {
+  return (
+    <div className="bg-marinho px-4 pb-20">
+      <div className="mx-auto max-w-5xl border-x border-grafite px-4 md:px-10">
+        <div className="border-t-2 border-ouro bg-tatame p-6 md:p-8">
+          <h3 className="titulo-md">Troca de faixa e kimono</h3>
+          <p className="mt-3 max-w-[62ch] text-cinza">
+            Esses preços o professor Bruno passa direto, pelo WhatsApp. Toque no botão: o WhatsApp dele abre com a
+            mensagem pronta, dizendo o que você quer saber. É só enviar e continuar a conversa com ele.
+          </p>
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <a href={linkWhatsApp(mensagemPreco.trocaDeFaixa)} target="_blank" rel="noopener noreferrer" className="botao botao-primario">
+              <WhatsAppIcon className="size-5" /> Preço da troca de faixa
+            </a>
+            <a href={linkWhatsApp(mensagemPreco.kimono)} target="_blank" rel="noopener noreferrer" className="botao botao-contorno text-white">
+              <WhatsAppIcon className="size-5" /> Preço do kimono
+            </a>
+          </div>
+          <p className="mt-4 text-sm text-cinza">
+            Kimono para o seu filho ou para você? Na{" "}
+            <a href="#loja" className="text-white underline underline-offset-4 hover:decoration-ouro">Loja BR Team</a>{" "}
+            a mensagem já vai com o nome, a idade e a turma do aluno.
+          </p>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -115,11 +149,11 @@ const versoes = [
   { rotulo: "com preto", listra: "#111111" },
 ];
 
-/** Sem preço publicado: o valor é combinado direto com o professor Bruno pelo WhatsApp. */
+/** Sem preço publicado: o botão abre o WhatsApp do professor Bruno com o pedido de preço já escrito. */
 function PrecoComProfessor({ faixa, escuro }: { faixa: string; escuro: boolean }) {
   return (
     <a
-      href={linkWhatsApp(`Olá, professor Bruno! Quero saber o valor da troca para a faixa ${faixa.toLowerCase()}.`)}
+      href={linkWhatsApp(mensagemPreco.faixa(faixa, !escuro))}
       target="_blank"
       rel="noopener noreferrer"
       className={cn(
@@ -127,7 +161,7 @@ function PrecoComProfessor({ faixa, escuro }: { faixa: string; escuro: boolean }
         escuro ? "text-white decoration-white/40 hover:decoration-ouro" : "text-azul decoration-azul/40 hover:decoration-ouro",
       )}
     >
-      <WhatsAppIcon className="size-4" /> Falar com o Bruno
+      <WhatsAppIcon className="size-4" /> Pedir o preço
     </a>
   );
 }
@@ -397,9 +431,9 @@ export function TrocaDeFaixa() {
         <div className="grid gap-8 lg:grid-cols-[1fr_1fr] lg:items-end">
           <h2 className="titulo">Troca de faixa</h2>
           <p className="max-w-[48ch] text-lg text-chumbo">
-            Tabela da troca de faixa, da branca até a preta. O valor de cada troca é combinado direto com o professor
-            Bruno: toque em "Falar com o Bruno" na faixa que você quer. A faixa nova é entregue na colação de grau,
-            com a turma e a família no tatame.
+            Tabela da troca de faixa, da branca até a preta. O preço de cada troca é passado pelo professor Bruno:
+            toque em "Pedir o preço" na faixa e o WhatsApp dele abre com a mensagem pronta, é só enviar. A faixa nova
+            é entregue na colação de grau, com a turma e a família no tatame.
           </p>
         </div>
 
@@ -409,7 +443,7 @@ export function TrocaDeFaixa() {
               <h3 id="faixas-infantis-titulo" className="titulo-md">{infantil.titulo}</h3>
               <p className="mt-3 max-w-[60ch] text-chumbo">{infantil.descricao}</p>
             </div>
-            <p className="hidden text-sm text-chumbo md:block">Valor da troca</p>
+            <p className="hidden text-sm text-chumbo md:block">Preço da troca</p>
           </div>
           <ul className="mt-6 border-t border-black/10">
             {infantil.faixas.map((f) => (
@@ -424,7 +458,7 @@ export function TrocaDeFaixa() {
               <h3 id="faixas-adultas-titulo" className="titulo-md">{adulto.titulo}</h3>
               <p className="mt-3 max-w-[60ch] text-cinza">{adulto.descricao}</p>
             </div>
-            <p className="hidden text-sm text-cinza md:block">Valor da troca</p>
+            <p className="hidden text-sm text-cinza md:block">Preço da troca</p>
           </div>
           <ul className="mt-6 border-t border-grafite">
             {adulto.faixas.map((f) => (
@@ -432,7 +466,7 @@ export function TrocaDeFaixa() {
             ))}
           </ul>
           <a
-            href={linkWhatsApp("Olá, BR Team! Quero saber sobre a troca de faixa.")}
+            href={linkWhatsApp(mensagemPreco.trocaDeFaixa)}
             target="_blank"
             rel="noopener noreferrer"
             className="botao botao-primario mt-8 w-full sm:w-auto"

@@ -6,14 +6,16 @@ import { academia, aulasParaIdade, fotos, linkWhatsApp, loja, rotuloAula, turmaP
 import { cn } from "@/lib/utils";
 
 /*
-  Encomenda de kimono: o pedido chega pronto no WhatsApp da academia, com nome,
-  idade e horário do aluno. O professor cuida do tamanho e da encomenda.
+  Kimono: o preço não fica no site. A pessoa diz para quem é o kimono e o pedido de preço chega pronto
+  no WhatsApp do professor Bruno, com nome, idade e turma do aluno. Dali a conversa continua com ele,
+  que passa o valor, vê o tamanho e faz a encomenda.
 */
 
 const corAmostra: Record<string, string> = { Branco: "#f4f4f2", Preto: "#111111", Azul: "#1d4fb8" };
 
 export function Loja() {
   const uid = useId();
+  const [paraQuem, setParaQuem] = useState<"filho" | "mim">("filho");
   const [nome, setNome] = useState("");
   const [idade, setIdade] = useState("");
   const [horario, setHorario] = useState("");
@@ -30,18 +32,19 @@ export function Loja() {
   const horarioOk = idadeOk && aulasParaIdade(idadeNum).some((a) => rotuloAula(a) === horario);
 
   const erros = {
-    nome: nome.trim().length < 2 ? "Escreva o nome do aluno." : undefined,
+    nome: nome.trim().length < 2 ? (paraQuem === "filho" ? "Escreva o nome da criança." : "Escreva seu nome.") : undefined,
     idade: !idadeOk ? `Informe a idade em anos (a partir de ${academia.idadeMinima}).` : undefined,
-    horario: idadeOk && !horarioOk ? "Escolha o horário em que o aluno treina." : undefined,
+    horario: idadeOk && !horarioOk ? "Escolha o horário da turma." : undefined,
   };
 
+  const tipo = produto.nome.toLowerCase();
   const mensagem = [
-    "Olá, professor! Quero encomendar kimono pelo site da BR Team.",
+    paraQuem === "filho"
+      ? `Olá, professor Bruno! Vim pelo site da BR Team e quero saber o preço do ${tipo} para meu filho(a) ${nome.trim()}, de ${idadeNum} anos.`
+      : `Olá, professor Bruno! Vim pelo site da BR Team e quero saber o preço do ${tipo} para mim. Sou ${nome.trim()}, tenho ${idadeNum} anos.`,
     "",
-    `Aluno: ${nome.trim()}`,
-    `Idade: ${idadeNum} anos`,
     `Turma: ${horario}`,
-    `Kimono: ${produto.nome.replace("Kimono ", "")}, ${cor.toLowerCase()}`,
+    `Cor: ${cor.toLowerCase()}`,
     `Quantidade: ${qtd}`,
   ].join("\n");
 
@@ -67,8 +70,9 @@ export function Loja() {
         <div>
           <h2 className="titulo">Loja BR Team</h2>
           <p className="mt-6 max-w-[42ch] text-lg text-chumbo">
-            Encomende o kimono direto com o professor. Preencha os dados do aluno e o pedido chega pronto no WhatsApp
-            da academia. O professor vê o tamanho certo e faz a encomenda.
+            O kimono é encomendado direto com o professor Bruno, e o preço ele passa pelo WhatsApp. Preencha os dados
+            do aluno: a mensagem chega pronta no WhatsApp dele, dizendo o que você quer. Ele responde com o valor, vê o
+            tamanho certo e faz a encomenda.
           </p>
           <div className="mt-10 grid grid-cols-2 gap-3">
             <figure>
@@ -86,8 +90,8 @@ export function Loja() {
           {enviado ? (
             <div ref={sucessoRef} tabIndex={-1} role="status" className="surge-rapido outline-none">
               <CheckCircle2 className="estala size-10 text-[#1f8a4c]" aria-hidden="true" />
-              <h3 className="mt-4 font-display text-3xl font-bold uppercase leading-none">Pedido pronto no WhatsApp</h3>
-              <p className="mt-3 text-chumbo">Confira e toque em enviar. O professor responde com o valor e o prazo.</p>
+              <h3 className="mt-4 font-display text-3xl font-bold uppercase leading-none">Mensagem pronta no WhatsApp</h3>
+              <p className="mt-3 text-chumbo">Confira e toque em enviar. O professor Bruno responde com o preço e o prazo.</p>
               <pre className="mt-6 whitespace-pre-wrap rounded-sm bg-algodao p-4 font-sans text-[15px] leading-relaxed">{mensagem}</pre>
               <div className="mt-6 flex flex-col gap-3 sm:flex-row">
                 <a href={enviado} target="_blank" rel="noopener noreferrer" className="botao botao-primario">
@@ -103,13 +107,21 @@ export function Loja() {
               <div>
                 <h3 className="font-display text-3xl font-bold uppercase leading-none">{produto.nome}</h3>
                 <p className="mt-2 text-chumbo">
-                  {produto.preco ? <span className="font-display text-2xl font-bold tabular-nums text-black">{produto.preco}</span> : "Valor e prazo combinados com o professor."}
+                  {produto.preco ? <span className="font-display text-2xl font-bold tabular-nums text-black">{produto.preco}</span> : "Preço e prazo com o professor Bruno, pelo WhatsApp."}
                 </p>
               </div>
 
+              <Opcoes
+                legenda="O kimono é para quem?"
+                nome={`${uid}-para`}
+                valor={paraQuem}
+                onChange={setParaQuem}
+                opcoes={[{ v: "filho", rotulo: "Para meu filho(a)" }, { v: "mim", rotulo: "Para mim" }]}
+              />
+
               <div className="grid gap-6 sm:grid-cols-[1fr_140px]">
                 <div>
-                  <label htmlFor={`${uid}-nome`} className="text-sm font-semibold">Nome do aluno</label>
+                  <label htmlFor={`${uid}-nome`} className="text-sm font-semibold">{paraQuem === "filho" ? "Nome da criança" : "Seu nome"}</label>
                   <input
                     id={`${uid}-nome`} name={`${uid}-nome`} value={nome} onChange={(e) => setNome(e.target.value)}
                     aria-invalid={!!erro("nome")} aria-describedby={erro("nome") ? `${uid}-nome-erro` : undefined}
@@ -118,7 +130,7 @@ export function Loja() {
                   {erro("nome") && <p id={`${uid}-nome-erro`} className="mt-1.5 text-sm font-medium text-erro">{erro("nome")}</p>}
                 </div>
                 <div>
-                  <label htmlFor={`${uid}-idade`} className="text-sm font-semibold">Idade</label>
+                  <label htmlFor={`${uid}-idade`} className="text-sm font-semibold">{paraQuem === "filho" ? "Idade da criança" : "Sua idade"}</label>
                   <input
                     id={`${uid}-idade`} name={`${uid}-idade`} type="number" inputMode="numeric" min={academia.idadeMinima} max={99} value={idade}
                     onChange={(e) => setIdade(e.target.value)}
@@ -163,7 +175,7 @@ export function Loja() {
               </div>
 
               <button type="submit" className="botao botao-primario w-full">
-                <WhatsAppIcon className="size-5" /> Encomendar pelo WhatsApp
+                <WhatsAppIcon className="size-5" /> Pedir o preço no WhatsApp
               </button>
               <p className="text-center text-sm text-chumbo">O tamanho o professor vê com o aluno. Nada é enviado sem você confirmar.</p>
             </form>
