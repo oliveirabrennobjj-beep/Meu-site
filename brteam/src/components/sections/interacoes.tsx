@@ -1,8 +1,8 @@
 import { useEffect, useId, useRef, useState, type FormEvent, type ReactNode } from "react";
-import { CheckCircle2, Pencil, Plus } from "lucide-react";
+import { CheckCircle2, Minus, Pencil, Plus } from "lucide-react";
 import { WhatsAppIcon } from "@/components/brand-icons";
 import {
-  academia, aulasParaIdade, contato, endereco, idadeAdulto, linkWhatsApp, mapaRota, mensalidade, resumoKids, rotuloAula, trocaDeFaixa, turmaPorIdade,
+  academia, aulasParaIdade, contato, endereco, idadeAdulto, linkWhatsApp, loja, mapaRota, mensalidade, resumoKids, rotuloAula, trocaDeFaixa, turmaPorIdade,
   type Aula,
 } from "@/data/site";
 import { cn } from "@/lib/utils";
@@ -15,6 +15,10 @@ type Campos = {
   experiencia: "nunca" | "ja";
   faixa: string;
   horario: string;
+  // kimono no mesmo pedido: o responsável marca a aula e já pergunta o preço do kimono
+  kimono: boolean;
+  cor: string;
+  qtd: number;
 };
 type Erros = Partial<Record<keyof Campos, string>>;
 
@@ -45,14 +49,42 @@ function montarMensagem(c: Campos) {
     `Horário: ${c.horario}`,
     ...(c.paraQuem === "filho" ? ["Vou acompanhar a criança na aula experimental."] : []),
     c.experiencia === "nunca" ? "Experiência: nunca treinou" : `Experiência: já treinou, faixa ${c.faixa.toLowerCase()}`,
+    ...(c.kimono
+      ? [
+          "",
+          `Também quero saber o preço do kimono ${tipoKimono(idade)}: ${c.cor.toLowerCase()}, ${c.qtd === 1 ? "1 unidade" : `${c.qtd} unidades`}.`,
+        ]
+      : []),
   ];
   return linhas.join("\n");
+}
+
+const tipoKimono = (idade: number) => (turmaPorIdade(idade).turma === "Kids" ? "infantil" : "adulto");
+export const corAmostra: Record<string, string> = { Branco: "#f4f4f2", Preto: "#111111", Azul: "#1d4fb8" };
+
+/** Botões de menos e mais, de 1 a 10 (aria-disabled no limite, para o foco não cair fora do botão). */
+function Quantidade({ valor, onChange, rotuloId }: { valor: number; onChange: (n: number) => void; rotuloId: string }) {
+  const estilo =
+    "inline-flex size-11 items-center justify-center rounded-sm border border-black/25 hover:border-black aria-disabled:cursor-not-allowed aria-disabled:opacity-40 aria-disabled:hover:border-black/25";
+  return (
+    <div role="group" aria-labelledby={rotuloId} className="mt-2 flex items-center">
+      <button type="button" onClick={() => onChange(Math.max(1, valor - 1))} aria-disabled={valor <= 1} className={estilo}>
+        <Minus className="size-4" aria-hidden="true" />
+        <span className="sr-only">Diminuir</span>
+      </button>
+      <output aria-live="polite" className="w-12 text-center font-display text-2xl font-bold tabular-nums">{valor}</output>
+      <button type="button" onClick={() => onChange(Math.min(10, valor + 1))} aria-disabled={valor >= 10} className={estilo}>
+        <Plus className="size-4" aria-hidden="true" />
+        <span className="sr-only">Aumentar</span>
+      </button>
+    </div>
+  );
 }
 
 export const estiloCampo =
   "mt-2 block h-12 w-full rounded-sm border border-black/25 bg-white px-4 text-base text-black outline-none transition-colors placeholder:text-black/40 focus:border-azul focus:ring-2 focus:ring-azul/20 aria-[invalid=true]:border-erro";
 
-/** Horários da turma indicada pela idade (usado no agendamento e na loja). */
+/** Horários da turma indicada pela idade. */
 export function EscolhaHorario({
   idade, valor, onChange, erro, nome = "horario",
 }: { idade: number | null; valor: string; onChange: (v: string) => void; erro?: string; nome?: string }) {
@@ -146,6 +178,7 @@ export function AgendarAula() {
   const sucessoRef = useRef<HTMLDivElement>(null);
   const [c, setC] = useState<Campos>({
     nome: "", paraQuem: "mim", nomeAluno: "", idade: "", experiencia: "nunca", faixa: "Branca", horario: "",
+    kimono: false, cor: loja.cores[0], qtd: 1,
   });
   const [tocado, setTocado] = useState<Partial<Record<keyof Campos, boolean>>>({});
   const [enviado, setEnviado] = useState(false);
@@ -164,11 +197,18 @@ export function AgendarAula() {
       setC((o) => ({ ...o, horario: rotuloAula(aula), paraQuem: aula.turma === "Kids" ? "filho" : o.paraQuem }));
       setEnviado(false);
     };
+    // "Pedir junto com a aula experimental" (seção Loja) chega com o kimono marcado
+    const ouvirKimono = () => {
+      setC((o) => ({ ...o, kimono: true }));
+      setEnviado(false);
+    };
     window.addEventListener("agendar:para", ouvir);
     window.addEventListener("agendar:aula", ouvirAula);
+    window.addEventListener("agendar:kimono", ouvirKimono);
     return () => {
       window.removeEventListener("agendar:para", ouvir);
       window.removeEventListener("agendar:aula", ouvirAula);
+      window.removeEventListener("agendar:kimono", ouvirKimono);
     };
   }, []);
 
@@ -226,7 +266,8 @@ export function AgendarAula() {
               <CheckCircle2 className="estala size-10 text-[#1f8a4c]" aria-hidden="true" />
               <h3 className="mt-4 font-display text-3xl font-bold uppercase leading-none">Mensagem pronta no WhatsApp</h3>
               <p className="mt-3 text-chumbo">
-                Confira e toque em enviar. O professor confirma o dia da sua primeira aula.
+                Confira e toque em enviar. O professor confirma o dia da sua primeira aula
+                {c.kimono ? " e passa o preço do kimono." : "."}
               </p>
               <pre className="mt-6 whitespace-pre-wrap rounded-sm bg-algodao p-4 font-sans text-[15px] leading-relaxed">
                 {montarMensagem(c)}
@@ -335,6 +376,44 @@ export function AgendarAula() {
                 erro={mostrarErro("horario")}
               />
 
+              <div className="rounded-sm border border-black/15 p-4">
+                <label className="flex min-h-11 cursor-pointer items-center gap-3 font-semibold">
+                  <input
+                    type="checkbox" name="kimono" checked={c.kimono}
+                    onChange={(e) => set("kimono", e.target.checked)}
+                    className="size-5 shrink-0 accent-azul"
+                  />
+                  Também quero saber o preço do kimono
+                </label>
+                {c.kimono && (
+                  <div className="surge-rapido mt-4 space-y-6">
+                    <p className="text-[15px] text-chumbo">
+                      Vai na mesma mensagem. O professor Bruno passa o preço{turma ? ` do kimono ${tipoKimono(idadeNum)}` : ""} e
+                      vê o tamanho com o aluno.
+                    </p>
+                    <Opcoes
+                      legenda="Cor do kimono"
+                      nome="cor"
+                      valor={c.cor}
+                      onChange={(v) => set("cor", v)}
+                      opcoes={loja.cores.map((cor) => ({
+                        v: cor,
+                        rotulo: (
+                          <span className="flex items-center gap-2">
+                            <span aria-hidden="true" className="size-4 rounded-full ring-1 ring-black/25" style={{ background: corAmostra[cor] }} />
+                            {cor}
+                          </span>
+                        ),
+                      }))}
+                    />
+                    <div>
+                      <span id={id("qtd")} className="text-sm font-semibold">Quantidade</span>
+                      <Quantidade valor={c.qtd} onChange={(n) => set("qtd", n)} rotuloId={id("qtd")} />
+                    </div>
+                  </div>
+                )}
+              </div>
+
               {c.paraQuem === "filho" && (
                 <p className="surge-rapido rounded-sm bg-algodao p-4 text-[15px]">
                   <strong>Importante:</strong> na aula experimental, a criança precisa ir acompanhada do responsável.
@@ -410,8 +489,9 @@ const perguntas: { p: string; r: ReactNode }[] = [
       <>
         Esses preços o professor Bruno passa direto, pelo WhatsApp. Na seção{" "}
         <a href="#faixas" className="underline underline-offset-4 hover:text-azul">Troca de faixa</a>, toque em "Pedir o
-        preço" na faixa; na <a href="#loja" className="underline underline-offset-4 hover:text-azul">Loja BR Team</a>,
-        preencha os dados do aluno. O WhatsApp abre com a mensagem pronta, é só enviar.
+        preço" na faixa. O kimono dá para perguntar junto com a{" "}
+        <a href="#agendar" className="underline underline-offset-4 hover:text-azul">aula experimental</a>, no mesmo
+        formulário. O WhatsApp abre com a mensagem pronta, é só enviar.
       </>
     ),
   },
