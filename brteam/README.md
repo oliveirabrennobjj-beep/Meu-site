@@ -107,4 +107,10 @@ O endereço é o **nº 886** (confirmado pela placa na fachada, no Street View).
 
 1. Perfil da Empresa no Google com o mesmo nome, endereço (886) e telefone do site. Enquanto não existir, a BR Team não aparece pelo nome no Google Maps; o mapa da seção Contato usa as coordenadas da fachada (`coordenadas` em `src/data/site.ts`, também no `geo` do JSON-LD) e mostra um aviso explicando isso. Quando o cadastro sair, apague o aviso em `CartaoMapa` (`src/components/sections/final.tsx`).
 2. Até que idade a criança fica no Kids (o site usa 12 anos) e as respostas das dúvidas frequentes.
-3. Autorização dos responsáveis para usar fotos das crianças no site.
+
+Resolvido: o professor Bruno autorizou o uso das fotos das crianças (ele pediu o site e falou com os pais).
+
+**Preços de troca de faixa e kimono:** de propósito, não ficam no site. Os botões "Pedir o preço" (troca de faixa),
+o bloco "Troca de faixa e kimono" (embaixo da Mensalidade) e o formulário da Loja abrem o WhatsApp do professor com a
+mensagem pronta (textos em `mensagemPreco`, em `src/data/site.ts`). Se um dia quiser mostrar um valor, preencha `preco`
+em `trocaDeFaixa` ou em `loja`.
