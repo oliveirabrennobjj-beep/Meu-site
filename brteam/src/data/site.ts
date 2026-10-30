@@ -61,6 +61,7 @@ export const mensagemPreco = {
   duvidaTroca: "Olá, professor Bruno! Vim pelo site da BR Team e tenho uma dúvida sobre a troca de faixa.",
   trocaDeFaixa: "Olá, professor Bruno! Vim pelo site da BR Team e quero saber o preço da troca de faixa.",
   kimono: "Olá, professor Bruno! Vim pelo site da BR Team e quero saber o preço do kimono.",
+  kimonoAluno: "Olá, professor Bruno! Sou aluno da BR Team e quero saber o preço do kimono.",
 };
 
 /*
@@ -173,8 +174,8 @@ export const trocaDeFaixa = {
 };
 
 /*
-  Loja: encomenda de kimono com o professor. O pedido chega no WhatsApp da academia
-  com nome, idade e horário do aluno; o professor cuida do tamanho.
+  Loja: kimono encomendado com o professor. O preço de quem vai fazer a aula experimental vai junto
+  no formulário de agendamento; quem já é aluno pede direto pelo WhatsApp.
   `preco: null` aparece como "Consulte".
 */
 export const loja = {

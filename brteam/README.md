@@ -33,7 +33,7 @@ Depois de mudar algo, rode `npm run build` e envie a pasta `dist/` junto.
 |---|---|
 | **Preços da troca de faixa** (crianças: branca, cinza, amarela, laranja e verde; adultos: branca, azul, roxa, marrom e preta; cada uma com seu `preco`) | `src/data/site.ts` → `trocaDeFaixa` (troque `null` por `"R$ 80"`, por exemplo). As três versões de uma cor infantil (com branco, pura, com preto) usam o mesmo preço. |
 | **Mensalidade** (R$ 125, igual para todos) | `src/data/site.ts` → `mensalidade.valor` |
-| **Loja de kimonos** (cores, preço) | `src/data/site.ts` → `loja` (`preco: null` mostra "valor combinado com o professor") |
+| **Loja de kimonos** (cores, preço) | `src/data/site.ts` → `loja` (`preco: null` mostra "Preço e prazo com o professor Bruno") |
 | **Horários das turmas** | `src/data/site.ts` → `aulas` e `diasDeAula`. Os textos que citam os horários (subtítulo da seção, turma indicada no formulário, dúvida "Com que idade…") saem de `aulas` sozinhos; só a frase dos dias sem aula, em `treinos.tsx`, é escrita à mão. |
 | WhatsApp, Instagram, e-mail, endereço, idade mínima, Pix e estacionamento | `src/data/site.ts` → `contato`, `endereco` e `academia` |
 | Parceiros | `src/data/site.ts` → `parceiros` |
@@ -73,9 +73,9 @@ que não existem e apagariam as cores do tema, por isso ficaram de fora. Entrara
   **turma indicada pela idade** enquanto a pessoa digita e, ao enviar, abre o WhatsApp com a mensagem pronta.
   A idade de corte entre Kids e adultos sai das idades em `aulas` (hoje, 13 anos); os textos de cada turma ficam em `faixasEtarias`.
 - O botão "Agendar aula para meu filho" (seção Kids) leva ao formulário já com "Para meu filho(a)" marcado.
-- **Loja BR Team** (`#loja`, `src/components/sections/loja.tsx`): encomenda de kimono com o professor. O visitante
-  informa nome e idade do aluno, escolhe o horário da turma, a cor e a quantidade; o pedido abre pronto no WhatsApp
-  da academia. O tipo (infantil ou adulto) sai da idade, e o tamanho o professor vê com o aluno.
+- **Loja BR Team** (`#loja`, `src/components/sections/loja.tsx`): fotos e dois caminhos. "Pedir junto com a aula
+  experimental" leva ao formulário de agendamento com "Também quero saber o preço do kimono" já marcado (cor e
+  quantidade vão na mesma mensagem). "Já é aluno?" abre o WhatsApp do professor com o pedido de preço pronto.
 - **Horários** (`#horarios`): a grade por período, com "Agendar aula neste horário", que leva ao formulário já
   com o horário marcado. Os horários ficam em `src/data/site.ts` → `aulas` (dias da semana em `diasDeAula`).
 - **Dúvidas frequentes** (`#duvidas`): perguntas que abrem e fecham, com links para planos, troca de faixa e rota.
@@ -111,6 +111,6 @@ O endereço é o **nº 886** (confirmado pela placa na fachada, no Street View).
 Resolvido: o professor Bruno autorizou o uso das fotos das crianças (ele pediu o site e falou com os pais).
 
 **Preços de troca de faixa e kimono:** de propósito, não ficam no site. Os botões "Pedir o preço" (troca de faixa),
-o bloco "Troca de faixa e kimono" (embaixo da Mensalidade) e o formulário da Loja abrem o WhatsApp do professor com a
+o bloco "Troca de faixa e kimono" (embaixo da Mensalidade), a Loja e a opção de kimono do agendamento abrem o WhatsApp do professor com a
 mensagem pronta (textos em `mensagemPreco`, em `src/data/site.ts`). Se um dia quiser mostrar um valor, preencha `preco`
 em `trocaDeFaixa` ou em `loja`.

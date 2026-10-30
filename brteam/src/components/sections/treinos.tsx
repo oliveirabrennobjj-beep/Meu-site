@@ -133,9 +133,9 @@ function OutrosPrecos() {
             </a>
           </div>
           <p className="mt-4 text-sm text-cinza">
-            Kimono para o seu filho ou para você? Na{" "}
-            <a href="#loja" className="text-white underline underline-offset-4 hover:decoration-ouro">Loja BR Team</a>{" "}
-            a mensagem já vai com o nome, a idade e a turma do aluno.
+            Vai marcar a aula experimental? Dá para perguntar o preço do kimono{" "}
+            <a href="#agendar" className="text-white underline underline-offset-4 hover:decoration-ouro">no mesmo formulário</a>,
+            e vai tudo numa mensagem só.
           </p>
         </div>
       </div>
