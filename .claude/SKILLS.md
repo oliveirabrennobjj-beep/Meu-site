@@ -34,6 +34,7 @@ Instaladas em 2026-10-03 a partir das fontes abaixo.
 | setup-matt-pocock-skills, grill-with-docs | mattpocock/skills (`a496f55`) | `npx skills add https://github.com/mattpocock/skills --skill setup-matt-pocock-skills --skill grill-with-docs -a claude-code --copy -y` (2026-10-30). Só instruções |
 | karpathy-guidelines | szkocot/andrej-karpathy-skills (`64723a4`) | `npx skills add https://github.com/szkocot/andrej-karpathy-skills --skill karpathy-guidelines -a claude-code --copy -y` (2026-10-30). Só instruções; mesmas regras do plugin `andrej-karpathy-skills` já ligado |
 | last30days | mvanhorn/last30days-skill (`7efc0ef`) | `npx skills add https://github.com/mvanhorn/last30days-skill --skill last30days -a claude-code --copy -y` (2026-10-30). Revisada: script Python que pesquisa Reddit, X, YouTube, Hacker News, TikTok/Instagram etc. dos últimos 30 dias. Grátis só em parte; o resto pede chaves (`SCRAPECREATORS_API_KEY`, `XAI_API_KEY`, `OPENAI_API_KEY`…), que gastam créditos |
+| humanizer | blader/humanizer (`0ef9fe5`, v3.1.0) | `npx skills add https://github.com/blader/humanizer --skill humanizer -a claude-code --copy -y` (2026-10-30). Só instruções: tira de textos os vícios de escrita de IA (contrastes "não é X, é Y", travessões, trios forçados, palavras infladas). Versão geral da `humanizer-zh` |
 
 ### Da lista do reel, não instaladas (2026-10-30)
 
