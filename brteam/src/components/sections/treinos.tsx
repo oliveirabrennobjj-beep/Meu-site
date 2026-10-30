@@ -4,7 +4,7 @@ import PricingSection from "@/components/ui/boxly-pricing-1";
 import { Faixa } from "@/components/faixa";
 import type { Faixa as FaixaDados } from "@/data/site";
 import { WhatsAppIcon } from "@/components/brand-icons";
-import { aulas, diasDeAula, fotos, graduacao, linkWhatsApp, mensalidade, planos, trocaDeFaixa } from "@/data/site";
+import { aulas, diasDeAula, fotos, graduacao, linkWhatsApp, mensalidade, planos, resumoHorarios, trocaDeFaixa } from "@/data/site";
 import { cn } from "@/lib/utils";
 
 const A_CONFIRMAR = "A confirmar";
@@ -24,7 +24,7 @@ export function Horarios() {
           <p className="max-w-[40ch] text-chumbo md:text-right">
             <span className="font-display text-2xl font-bold uppercase text-azul">{diasDeAula ?? <Pendente />}</span>
             <br />
-            Crianças às 18h e às 19h. Adultos às 6h, às 13h e às 20h. Terça, sexta e fim de semana não tem aula.
+            {resumoHorarios} Terça, sexta e fim de semana não tem aula.
           </p>
         </div>
 
@@ -268,7 +268,7 @@ function DecisaoDoProfessor() {
 function ComoGradua() {
   const [aba, setAba] = useState<"criancas" | "adultos">("criancas");
   const abas = [
-    { id: "criancas", rotulo: "Crianças, de 4 a 15 anos" },
+    { id: "criancas", rotulo: "Crianças, até 15 anos" },
     { id: "adultos", rotulo: "Adultos, a partir de 16" },
   ] as const;
   return (
@@ -324,12 +324,12 @@ function ComoGradua() {
                 <span className="mt-1 block">Laranja</span>
               </div>
               <ArrowRight className="size-4" />
-              <div className="opacity-35">
+              <div>
                 <div className="relative">
-                  <Faixa cor="#ec7a1c" ponteira="#111111" listra="#111111" clara altura={16} />
+                  <Faixa cor="#ec7a1c" ponteira="#111111" listra="#111111" clara altura={16} className="opacity-35" />
                   <span className="absolute inset-x-0 top-1/2 h-0.5 -rotate-6 bg-erro" />
                 </div>
-                <span className="mt-1 block line-through">Laranja e preta</span>
+                <span className="mt-1 block text-chumbo line-through decoration-erro">Laranja e preta</span>
               </div>
               <ArrowRight className="size-4" />
               <div>
@@ -447,7 +447,7 @@ export function TrocaDeFaixa() {
           {[fotos.galeria[1], fotos.galeria[4]].map((f) => (
             <img key={f.src} src={f.src} alt={f.alt} width={f.w} height={f.h} loading="lazy" className="aspect-[4/3] w-full object-cover object-[50%_60%]" />
           ))}
-          <figcaption className="col-span-2 text-sm text-chumbo">Colação de grau e troca de faixa das turmas infantis.</figcaption>
+          <figcaption className="col-span-2 text-sm text-chumbo">A turma Kids 1 e a turma mista no tatame da BR Team.</figcaption>
         </figure>
       </div>
     </section>

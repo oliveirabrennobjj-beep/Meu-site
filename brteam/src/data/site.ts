@@ -78,6 +78,21 @@ export const aulasDaTurma = (t: TurmaChave) => aulas.filter((a) => a.turma === t
 export const aulasParaIdade = (idade: number) =>
   aulasDaTurma(turmaPorIdade(idade).turma).filter((a) => idade >= a.idadeMin && idade <= (a.idadeMax ?? Infinity));
 export const rotuloAula = (a: Aula) => `${a.nome}, ${a.horario}`;
+/* Textos tirados da grade acima, para nunca ficarem diferentes dela */
+const inicio = (a: Aula) => a.horario.split(" às ")[0];
+const lista = (itens: string[]) => (itens.length < 2 ? itens.join("") : `${itens.slice(0, -1).join(", ")} e ${itens[itens.length - 1]}`);
+const idades = (a: Aula) => (a.idadeMax ? `${a.idadeMin} a ${a.idadeMax} anos` : `a partir de ${a.idadeMin} anos`);
+const kids = aulasDaTurma("Kids");
+const adultos = aulasDaTurma("Adulto");
+/** "Kids 1 das 18h às 18h50 (5 a 7 anos) e Kids 2 das 19h às 19h50 (8 a 12 anos)" */
+export const resumoKids = lista(kids.map((a) => `${a.nome} das ${a.horario} (${idades(a)})`));
+/** idade em que o aluno passa para as turmas de adultos (13) */
+export const idadeAdulto = Math.min(...adultos.map((a) => a.idadeMin));
+/** "Crianças às 18h e às 19h. Adultos às 6h, às 13h e às 20h." */
+export const resumoHorarios =
+  `Crianças ${lista(kids.map((a) => `às ${inicio(a)}`))}. Adultos ${lista(adultos.map((a) => `às ${inicio(a)}`))}.`;
+/** "às 6h, às 13h (turma mista) e às 20h" */
+const horariosAdultos = lista(adultos.map((a) => `às ${inicio(a)}${a.nome === "Adulto" ? "" : ` (${a.nome.toLowerCase()})`}`));
 
 /*
   Mensalidade: um valor só para todo mundo (crianças, adultos, mulheres e melhor idade).
@@ -122,10 +137,10 @@ export type Faixa = { nome: string; cor: string; ponteira: string; idade: string
 export const trocaDeFaixa = {
   infantil: {
     titulo: "Faixas infantis",
-    descricao: "De 4 a 15 anos. Cinza, amarela, laranja e verde têm três versões: com branco, pura e com preto.",
+    descricao: "Até 15 anos. Cinza, amarela, laranja e verde têm três versões: com branco, pura e com preto.",
     faixas: [
       { nome: "Branca", cor: "#f2f2f0", ponteira: "#111111", idade: "a partir de 5 anos", preco: null },
-      { nome: "Cinza", cor: "#8d8f93", ponteira: "#111111", idade: "4 a 15 anos", preco: null, variacoes: true },
+      { nome: "Cinza", cor: "#8d8f93", ponteira: "#111111", idade: "5 a 15 anos", preco: null, variacoes: true },
       { nome: "Amarela", cor: "#f2c21b", ponteira: "#111111", idade: "7 a 15 anos", preco: null, variacoes: true },
       { nome: "Laranja", cor: "#ec7a1c", ponteira: "#111111", idade: "10 a 15 anos", preco: null, variacoes: true },
       { nome: "Verde", cor: "#1f8a4c", ponteira: "#111111", idade: "13 a 15 anos", preco: null, variacoes: true },
@@ -207,11 +222,11 @@ export const fotos = {
 
 /*
   Turma indicada pela idade (formulário de aula experimental e loja).
-  Ajuste `ate` se a idade de corte das turmas Kids for outra.
+  A idade de corte (Kids até 12, adultos a partir de 13) sai das idades em `aulas`.
 */
 export const faixasEtarias: { ate: number; turma: TurmaChave; detalhe: string }[] = [
-  { ate: 12, turma: "Kids", detalhe: "Kids 1 das 18h às 18h50 (5 a 7 anos) e Kids 2 das 19h às 19h50 (8 a 12 anos). Se a criança for grande, o professor pode indicar a turma dos adultos." },
-  { ate: 120, turma: "Adulto", detalhe: "Turmas às 6h, às 13h (mista) e às 20h. Escolha o horário que encaixa na sua rotina." },
+  { ate: idadeAdulto - 1, turma: "Kids", detalhe: `${resumoKids}. Se a criança for grande, o professor pode indicar a turma dos adultos.` },
+  { ate: 120, turma: "Adulto", detalhe: `Turmas ${horariosAdultos}. Escolha o horário que encaixa na sua rotina.` },
 ];
 export function turmaPorIdade(idade: number) {
   return faixasEtarias.find((f) => idade <= f.ate) ?? faixasEtarias[faixasEtarias.length - 1];

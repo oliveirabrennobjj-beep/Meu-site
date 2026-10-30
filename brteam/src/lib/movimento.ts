@@ -5,7 +5,7 @@ import { useEffect } from "react";
   - revelação ao rolar: blocos das seções sobem e aparecem quando entram na tela, em sequência;
   - parallax leve nas imagens com [data-parallax];
   - onda no toque dos botões (.botao);
-  - progresso da rolagem em --progresso (barra vermelha do topo).
+  - progresso da rolagem em --progresso (barra dourada do topo).
   Com "reduzir movimento" ativado no aparelho, nada fica escondido nem se mexe.
 */
 
