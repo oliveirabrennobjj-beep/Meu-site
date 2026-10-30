@@ -198,6 +198,14 @@ a, button { touch-action: manipulation; }
     transition: background-color 200ms, color 200ms, border-color 200ms, transform 120ms;
     cursor: pointer;
   }
+  /* celular: o texto pode quebrar a linha em vez de empurrar a página para o lado (telas de 320–360 px) */
+  @media (max-width: 480px) {
+    .botao { white-space: normal; max-width: 100%; text-align: center; text-wrap: balance; }
+  }
+  /* celular estreito: menos respiro lateral para o texto caber numa linha */
+  @media (max-width: 380px) {
+    .botao { padding-inline: 16px; gap: 8px; letter-spacing: 0.02em; }
+  }
   .botao:active { transform: scale(0.98); }
   .botao-primario { background: var(--color-ponteira); color: #fff; }
   .botao-primario:hover { background: var(--color-ponteira-escura); }

@@ -13,13 +13,30 @@ export default function App() {
   // links diretos (ex.: …/#planos): a página é montada pelo React depois do carregamento,
   // então o navegador não acha a seção sozinho; rolamos até ela aqui.
   useEffect(() => {
-    const id = decodeURIComponent(location.hash.slice(1));
+    let id = location.hash.slice(1);
+    try {
+      id = decodeURIComponent(id);
+    } catch {
+      // link com "%" quebrado: usa o texto como veio, em vez de derrubar a página
+    }
     if (!id) return;
-    const ir = () => document.getElementById(id)?.scrollIntoView();
+    // "instant": com a rolagem suave do CSS, a animação longa terminava centenas de pixels depois da seção
+    const ir = () => document.getElementById(id)?.scrollIntoView({ behavior: "instant" });
     ir();
-    // de novo quando fontes e imagens terminam de carregar e a altura da página assenta
-    window.addEventListener("load", ir, { once: true });
-    return () => window.removeEventListener("load", ir);
+    // enquanto fotos e fontes carregam, a altura da página muda e a seção sai do lugar: acompanhamos por
+    // alguns segundos, até a pessoa tocar, rolar ou usar o teclado (aí a rolagem é dela)
+    const eventos = ["wheel", "touchstart", "keydown", "pointerdown"] as const;
+    const acompanhar = new ResizeObserver(() => ir());
+    let limite = 0;
+    const parar = () => {
+      acompanhar.disconnect();
+      clearTimeout(limite);
+      eventos.forEach((ev) => removeEventListener(ev, parar));
+    };
+    acompanhar.observe(document.body);
+    eventos.forEach((ev) => addEventListener(ev, parar, { passive: true }));
+    limite = window.setTimeout(parar, 4000);
+    return parar;
   }, []);
 
   return (

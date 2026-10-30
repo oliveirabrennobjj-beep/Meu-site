@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { ArrowUp } from "lucide-react";
 import { reduzMovimento } from "@/lib/movimento";
 
-/** Barra vermelha no topo que enche conforme a página é lida (lê --progresso). */
+/** Barra dourada no topo que enche conforme a página é lida (lê --progresso). */
 export function BarraProgresso() {
   return (
     <div aria-hidden="true" className="pointer-events-none fixed inset-x-0 top-0 z-[45] h-[3px]">

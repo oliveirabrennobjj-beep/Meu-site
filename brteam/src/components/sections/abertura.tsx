@@ -23,7 +23,7 @@ export function Hero() {
           <span className="block text-[clamp(5.5rem,22vw,16rem)]">
             <span className="hero-palavra">BR</span>{" "}
             <span className="hero-palavra" style={{ animationDelay: "140ms" }}>Team</span>
-          </span>
+          </span>{" "}
           <span style={{ animationDelay: "380ms" }} className="hero-entrada mt-3 block text-[clamp(1.1rem,3.4vw,2rem)] font-semibold tracking-[0.02em] text-white/90 md:mt-4">
             Brazilian Jiu-Jitsu em Casimiro de Abreu
           </span>

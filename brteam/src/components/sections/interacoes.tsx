@@ -2,7 +2,7 @@ import { useEffect, useId, useRef, useState, type FormEvent, type ReactNode } fr
 import { CheckCircle2, Pencil, Plus } from "lucide-react";
 import { WhatsAppIcon } from "@/components/brand-icons";
 import {
-  academia, aulasParaIdade, contato, endereco, linkWhatsApp, mapaRota, mensalidade, rotuloAula, trocaDeFaixa, turmaPorIdade,
+  academia, aulasParaIdade, contato, endereco, idadeAdulto, linkWhatsApp, mapaRota, mensalidade, resumoKids, rotuloAula, trocaDeFaixa, turmaPorIdade,
   type Aula,
 } from "@/data/site";
 import { cn } from "@/lib/utils";
@@ -343,7 +343,7 @@ const perguntas: { p: string; r: ReactNode }[] = [
   },
   {
     p: "Com que idade a criança pode começar?",
-    r: `A partir de ${academia.idadeMinima} anos. O Kids 1 (5 a 7 anos) treina das 18h às 18h50 e o Kids 2 (8 a 12 anos) das 19h às 19h50. A partir de 13 anos, o aluno vai para as turmas de adultos.`,
+    r: `A partir de ${academia.idadeMinima} anos: ${resumoKids}. A partir de ${idadeAdulto} anos, o aluno vai para as turmas de adultos.`,
   },
   {
     p: "Quais as formas de pagamento?",

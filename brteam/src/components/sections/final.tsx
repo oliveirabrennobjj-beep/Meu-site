@@ -243,7 +243,7 @@ export function WhatsAppFlutuante() {
     };
   }, []);
   return (
-    <div className="fixed bottom-5 right-5 z-30 flex items-center gap-3 sm:hidden">
+    <aside aria-label="Atalho do WhatsApp" className="fixed bottom-5 right-5 z-30 flex items-center gap-3 sm:hidden">
       {balao && (
         <span className="surge-rapido relative rounded-full bg-white px-4 py-2 text-[15px] font-medium text-black shadow-xl">
           Dúvidas? Fale com a gente
@@ -261,6 +261,6 @@ export function WhatsAppFlutuante() {
         <WhatsAppIcon className="size-7" />
         <span className="sr-only">Falar com a BR Team no WhatsApp (abre o WhatsApp)</span>
       </a>
-    </div>
+    </aside>
   );
 }

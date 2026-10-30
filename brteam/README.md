@@ -34,7 +34,7 @@ Depois de mudar algo, rode `npm run build` e envie a pasta `dist/` junto.
 | **Preços da troca de faixa** (crianças: branca, cinza, amarela, laranja e verde; adultos: branca, azul, roxa, marrom e preta; cada uma com seu `preco`) | `src/data/site.ts` → `trocaDeFaixa` (troque `null` por `"R$ 80"`, por exemplo). As três versões de uma cor infantil (com branco, pura, com preto) usam o mesmo preço. |
 | **Mensalidade** (R$ 125, igual para todos) | `src/data/site.ts` → `mensalidade.valor` |
 | **Loja de kimonos** (cores, preço) | `src/data/site.ts` → `loja` (`preco: null` mostra "valor combinado com o professor") |
-| **Horários das turmas** | `src/data/site.ts` → `aulas` e `diasDeAula` |
+| **Horários das turmas** | `src/data/site.ts` → `aulas` e `diasDeAula`. Os textos que citam os horários (subtítulo da seção, turma indicada no formulário, dúvida "Com que idade…") saem de `aulas` sozinhos; só a frase dos dias sem aula, em `treinos.tsx`, é escrita à mão. |
 | WhatsApp, Instagram, e-mail, endereço, idade mínima, Pix e estacionamento | `src/data/site.ts` → `contato`, `endereco` e `academia` |
 | Parceiros | `src/data/site.ts` → `parceiros` |
 | Fotos | `public/fotos/*.webp` e a lista `fotos` em `src/data/site.ts` |
@@ -71,7 +71,7 @@ que não existem e apagariam as cores do tema, por isso ficaram de fora. Entrara
 - **Agendar aula experimental** (`#agendar`, `src/components/sections/interacoes.tsx`): formulário curto (para quem é a aula,
   nome, idade, experiência e faixa, horário da turma). Valida os campos com mensagens ao lado de cada um, mostra a
   **turma indicada pela idade** enquanto a pessoa digita e, ao enviar, abre o WhatsApp com a mensagem pronta.
-  As idades de corte das turmas ficam em `src/data/site.ts` → `faixasEtarias`.
+  A idade de corte entre Kids e adultos sai das idades em `aulas` (hoje, 13 anos); os textos de cada turma ficam em `faixasEtarias`.
 - O botão "Agendar aula para meu filho" (seção Kids) leva ao formulário já com "Para meu filho(a)" marcado.
 - **Loja BR Team** (`#loja`, `src/components/sections/loja.tsx`): encomenda de kimono com o professor. O visitante
   informa nome e idade do aluno, escolhe o horário da turma, a cor e a quantidade; o pedido abre pronto no WhatsApp
