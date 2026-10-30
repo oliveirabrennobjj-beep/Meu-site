@@ -10,5 +10,17 @@
         ]
       }
     ]
+  },
+  "extraKnownMarketplaces": {
+    "superpowers-marketplace": { "source": { "source": "github", "repo": "obra/superpowers-marketplace" } },
+    "karpathy-skills": { "source": { "source": "github", "repo": "forrestchang/andrej-karpathy-skills" } },
+    "i-have-adhd": { "source": { "source": "github", "repo": "ayghri/i-have-adhd" } },
+    "nyldn-plugins": { "source": { "source": "github", "repo": "nyldn/plugins" } }
+  },
+  "enabledPlugins": {
+    "superpowers@superpowers-marketplace": true,
+    "andrej-karpathy-skills@karpathy-skills": true,
+    "i-have-adhd@i-have-adhd": true,
+    "octo@nyldn-plugins": true
   }
 }

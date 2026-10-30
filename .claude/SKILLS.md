@@ -109,3 +109,18 @@ Na nuvem, o `magic-21st` também precisa que o domínio `21st.dev` esteja libera
 Ao abrir o projeto, o Claude Code pergunta se você aprova os servidores do `.mcp.json`.
 
 `frontend-design` e `web-design-guidelines`, citadas nos mesmos vídeos, já estavam instaladas.
+
+## Plugins do projeto (`.claude/settings.json`)
+
+Adicionados em 2026-10-30, a pedido do Brenno. Ficam em `extraKnownMarketplaces` e `enabledPlugins`: toda sessão nova
+do Meu-site instala e liga os quatro. Para desligar um, troque `true` por `false` em `enabledPlugins`.
+
+| Plugin | De onde vem | Para que serve |
+|---|---|---|
+| `superpowers` | `obra/superpowers-marketplace` | Planejar antes de programar, testes primeiro, depuração em etapas. As skills `brainstorming` e `verification-before-completion` desta pasta vêm dele também. |
+| `andrej-karpathy-skills` | `forrestchang/andrej-karpathy-skills` | 4 regras: pensar antes de codar, código simples, mexer só no necessário, conferir o resultado. |
+| `i-have-adhd` | `ayghri/i-have-adhd` | Respostas que começam pela próxima ação, com passos numerados e sem enrolação. |
+| `octo` (Claude Octopus) | `nyldn/plugins` | Manda a mesma tarefa para outras IAs (Codex, Grok, Copilot…) e mostra onde elas discordam. Comece com `/octo:setup`. As outras IAs só entram quando um comando `/octo:*` é usado e podem precisar de conta própria. |
+
+Os quatro rodam um aviso no começo da sessão (hook SessionStart). O Octopus também confere alguns comandos antes de
+executar (hooks PreToolUse), por isso é o mais pesado.
