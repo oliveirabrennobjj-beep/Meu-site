@@ -6,11 +6,15 @@ import { academia, contato, endereco, fotos, instagram, linkWhatsApp, mapaBusca,
 
 function GaleriaAmpliada({ indice, onFechar, onTrocar }: { indice: number | null; onFechar: () => void; onTrocar: (i: number) => void }) {
   const ref = useRef<HTMLDialogElement>(null);
+  const fecharRef = useRef<HTMLButtonElement>(null);
   const total = fotos.galeria.length;
   useEffect(() => {
     const d = ref.current;
     if (!d) return;
-    if (indice !== null && !d.open) d.showModal();
+    if (indice !== null && !d.open) {
+      d.showModal();
+      fecharRef.current?.focus(); // o showModal() poria o foco em "Foto anterior"
+    }
     if (indice === null && d.open) d.close();
   }, [indice]);
   const f = indice !== null ? fotos.galeria[indice] : null;
@@ -41,7 +45,7 @@ function GaleriaAmpliada({ indice, onFechar, onTrocar }: { indice: number | null
               <button type="button" onClick={() => ir(1)} className="inline-flex size-11 items-center justify-center rounded-full border border-grafite transition hover:border-white active:scale-90">
                 <ChevronRight className="size-5" aria-hidden="true" /><span className="sr-only">Próxima foto</span>
               </button>
-              <button type="button" onClick={onFechar} autoFocus className="inline-flex size-11 items-center justify-center rounded-full bg-white text-black transition active:scale-90">
+              <button type="button" ref={fecharRef} onClick={onFechar} className="inline-flex size-11 items-center justify-center rounded-full bg-white text-black transition active:scale-90">
                 <X className="size-5" aria-hidden="true" /><span className="sr-only">Fechar</span>
               </button>
             </span>
@@ -234,6 +238,7 @@ export function Rodape() {
 export function WhatsAppFlutuante() {
   // balão "Dúvidas?" aparece uma vez, depois de um tempo na página
   const [balao, setBalao] = useState(false);
+  const linkRef = useRef<HTMLAnchorElement>(null);
   useEffect(() => {
     const abre = setTimeout(() => setBalao(true), 9000);
     const fecha = setTimeout(() => setBalao(false), 17000);
@@ -247,12 +252,13 @@ export function WhatsAppFlutuante() {
       {balao && (
         <span className="surge-rapido relative rounded-full bg-white px-4 py-2 text-[15px] font-medium text-black shadow-xl">
           Dúvidas? Fale com a gente
-          <button type="button" onClick={() => setBalao(false)} className="foco-duplo -my-2 -mr-3 ml-0 inline-flex size-11 items-center justify-center align-middle text-chumbo">
+          <button type="button" onClick={() => { setBalao(false); linkRef.current?.focus(); }} className="foco-duplo -my-2 -mr-3 ml-0 inline-flex size-11 items-center justify-center align-middle text-chumbo">
             <X className="size-4" aria-hidden="true" /><span className="sr-only">Fechar aviso</span>
           </button>
         </span>
       )}
       <a
+        ref={linkRef}
         href={linkWhatsApp()}
         target="_blank"
         rel="noopener noreferrer"

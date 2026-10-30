@@ -25,7 +25,8 @@ function validar(c: Campos): Erros {
   if (c.nome.trim().length < 2) e.nome = "Escreva seu nome para a gente saber com quem fala.";
   if (c.paraQuem === "filho" && c.nomeAluno.trim().length < 2) e.nomeAluno = "Escreva o nome da criança.";
   const idade = Number(c.idade);
-  if (!c.idade || !Number.isInteger(idade) || idade < academia.idadeMinima || idade > 99)
+  if (c.idade && Number.isInteger(idade) && idade > 99) e.idade = "Confira a idade: o número parece alto demais.";
+  else if (!c.idade || !Number.isInteger(idade) || idade < academia.idadeMinima)
     e.idade = `Informe a idade em anos. Aceitamos alunos a partir de ${academia.idadeMinima} anos.`;
   else if (!aulasParaIdade(idade).some((a) => rotuloAula(a) === c.horario))
     e.horario = c.horario ? "Esse horário não é da turma dessa idade. Escolha um dos horários abaixo." : "Escolha o horário da aula.";
@@ -55,11 +56,25 @@ export const estiloCampo =
 export function EscolhaHorario({
   idade, valor, onChange, erro, nome = "horario",
 }: { idade: number | null; valor: string; onChange: (v: string) => void; erro?: string; nome?: string }) {
+  const opcoes = idade === null ? [] : aulasParaIdade(idade);
+  // turma com um horário só (cada idade do Kids): já vem marcado, sem precisar tocar
+  const unico = opcoes.length === 1 ? rotuloAula(opcoes[0]) : null;
+  useEffect(() => {
+    if (unico && valor !== unico) onChange(unico);
+  }, [unico, valor, onChange]);
   if (idade === null) {
     return (
       <div>
         <p className="text-sm font-semibold">Horário da aula</p>
-        <p className="mt-2 text-chumbo">Informe a idade para ver os horários da turma.</p>
+        <p className="mt-2 text-chumbo">
+          {valor ? (
+            <>
+              Horário escolhido: <strong className="text-black">{valor}</strong>. Informe a idade para confirmar a turma.
+            </>
+          ) : (
+            "Informe a idade para ver os horários da turma."
+          )}
+        </p>
       </div>
     );
   }
@@ -72,7 +87,7 @@ export function EscolhaHorario({
         valor={valor}
         onChange={onChange}
         erroId={erro ? `${nome}-erro` : undefined}
-        opcoes={aulasParaIdade(idade).map((a) => ({ v: rotuloAula(a), rotulo: a.nome === "Adulto" ? a.horario : rotuloAula(a) }))}
+        opcoes={opcoes.map((a) => ({ v: rotuloAula(a), rotulo: a.nome === "Adulto" ? a.horario : rotuloAula(a) }))}
       />
       {erro && <p id={`${nome}-erro`} className="mt-1.5 text-sm font-medium text-erro">{erro}</p>}
       {turma === "Kids" && idade >= 10 && (
@@ -218,9 +233,17 @@ export function AgendarAula() {
               </pre>
               <div className="mt-6 flex flex-col gap-3 sm:flex-row">
                 <a href={link} target="_blank" rel="noopener noreferrer" className="botao botao-primario">
-                  <WhatsAppIcon className="size-5" /> Abrir o WhatsApp de novo
+                  <WhatsAppIcon className="size-5" /> Abrir o WhatsApp
                 </a>
-                <button type="button" onClick={() => setEnviado(false)} className="botao botao-contorno">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEnviado(false);
+                    // o botão some: o foco vai para o primeiro campo, em vez de cair no começo da página
+                    requestAnimationFrame(() => form.current?.querySelector<HTMLElement>('[name="nome"]')?.focus());
+                  }}
+                  className="botao botao-contorno"
+                >
                   <Pencil className="size-4" aria-hidden="true" /> Editar respostas
                 </button>
               </div>
@@ -289,7 +312,11 @@ export function AgendarAula() {
                 nome="experiencia"
                 valor={c.experiencia}
                 onChange={(v) => set("experiencia", v)}
-                opcoes={[{ v: "nunca", rotulo: "Nunca treinei" }, { v: "ja", rotulo: "Já treinei" }]}
+                opcoes={
+                  c.paraQuem === "filho"
+                    ? [{ v: "nunca", rotulo: "Nunca treinou" }, { v: "ja", rotulo: "Já treinou" }]
+                    : [{ v: "nunca", rotulo: "Nunca treinei" }, { v: "ja", rotulo: "Já treinei" }]
+                }
               />
               {c.experiencia === "ja" && (
                 <Campo id={id("faixa")} rotulo="Faixa atual">

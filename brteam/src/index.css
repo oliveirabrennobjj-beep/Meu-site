@@ -318,6 +318,12 @@ a, button { touch-action: manipulation; }
     transform 800ms var(--ease-saida) var(--atraso, 0ms);
 }
 .com-movimento [data-rv].visivel { opacity: 1; transform: none; }
+/* imprimir ou salvar em PDF: tudo aparece, mesmo o que ainda não passou pela tela */
+@media print {
+  .com-movimento [data-rv], .com-movimento [data-rv] .faixa-crescer { opacity: 1 !important; transform: none !important; }
+}
+/* foto ampliada aberta: a página atrás não rola */
+html:has(dialog[open]) { overflow: hidden; }
 
 /* faixas da troca de faixa crescem da esquerda quando aparecem */
 .com-movimento [data-rv] .faixa-crescer {

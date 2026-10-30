@@ -24,16 +24,22 @@ export function Loja() {
   const [tentou, setTentou] = useState(false);
   const [enviado, setEnviado] = useState<string | null>(null);
   const sucessoRef = useRef<HTMLDivElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
 
   const idadeNum = Number(idade);
   const idadeOk = !!idade && Number.isInteger(idadeNum) && idadeNum >= academia.idadeMinima && idadeNum <= 99;
   const turma = idadeOk ? turmaPorIdade(idadeNum).turma : null;
-  const produto = turma === "Kids" ? loja.produtos.infantil : loja.produtos.adulto;
+  // sem idade ainda, "para meu filho(a)" já mostra o kimono infantil
+  const produto = turma === "Kids" || (!turma && paraQuem === "filho") ? loja.produtos.infantil : loja.produtos.adulto;
   const horarioOk = idadeOk && aulasParaIdade(idadeNum).some((a) => rotuloAula(a) === horario);
 
   const erros = {
     nome: nome.trim().length < 2 ? (paraQuem === "filho" ? "Escreva o nome da criança." : "Escreva seu nome.") : undefined,
-    idade: !idadeOk ? `Informe a idade em anos (a partir de ${academia.idadeMinima}).` : undefined,
+    idade: idadeOk
+      ? undefined
+      : idadeNum > 99
+        ? "Confira a idade: o número parece alto demais."
+        : `Informe a idade em anos (a partir de ${academia.idadeMinima}).`,
     horario: idadeOk && !horarioOk ? "Escolha o horário da turma." : undefined,
   };
 
@@ -95,15 +101,22 @@ export function Loja() {
               <pre className="mt-6 whitespace-pre-wrap rounded-sm bg-algodao p-4 font-sans text-[15px] leading-relaxed">{mensagem}</pre>
               <div className="mt-6 flex flex-col gap-3 sm:flex-row">
                 <a href={enviado} target="_blank" rel="noopener noreferrer" className="botao botao-primario">
-                  <WhatsAppIcon className="size-5" /> Abrir o WhatsApp de novo
+                  <WhatsAppIcon className="size-5" /> Abrir o WhatsApp
                 </a>
-                <button type="button" onClick={() => setEnviado(null)} className="botao botao-contorno">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEnviado(null);
+                    requestAnimationFrame(() => formRef.current?.querySelector<HTMLElement>(`[name="${uid}-nome"]`)?.focus());
+                  }}
+                  className="botao botao-contorno"
+                >
                   <Pencil className="size-4" aria-hidden="true" /> Editar pedido
                 </button>
               </div>
             </div>
           ) : (
-            <form onSubmit={pedir} noValidate className="space-y-7">
+            <form ref={formRef} onSubmit={pedir} noValidate className="space-y-7">
               <div>
                 <h3 className="font-display text-3xl font-bold uppercase leading-none">{produto.nome}</h3>
                 <p className="mt-2 text-chumbo">
@@ -162,12 +175,12 @@ export function Loja() {
               <div>
                 <span id={`${uid}-qtd`} className="text-sm font-semibold">Quantidade</span>
                 <div role="group" aria-labelledby={`${uid}-qtd`} className="mt-2 flex items-center">
-                  <button type="button" onClick={() => setQtd((q) => Math.max(1, q - 1))} disabled={qtd <= 1} className="inline-flex size-11 items-center justify-center rounded-sm border border-black/25 hover:border-black disabled:opacity-40">
+                  <button type="button" onClick={() => setQtd((q) => Math.max(1, q - 1))} aria-disabled={qtd <= 1} className="inline-flex size-11 items-center justify-center rounded-sm border border-black/25 hover:border-black aria-disabled:cursor-not-allowed aria-disabled:opacity-40 aria-disabled:hover:border-black/25">
                     <Minus className="size-4" aria-hidden="true" />
                     <span className="sr-only">Diminuir</span>
                   </button>
                   <output key={qtd} aria-live="polite" className="estala w-12 text-center font-display text-2xl font-bold tabular-nums">{qtd}</output>
-                  <button type="button" onClick={() => setQtd((q) => Math.min(10, q + 1))} disabled={qtd >= 10} className="inline-flex size-11 items-center justify-center rounded-sm border border-black/25 hover:border-black disabled:opacity-40">
+                  <button type="button" onClick={() => setQtd((q) => Math.min(10, q + 1))} aria-disabled={qtd >= 10} className="inline-flex size-11 items-center justify-center rounded-sm border border-black/25 hover:border-black aria-disabled:cursor-not-allowed aria-disabled:opacity-40 aria-disabled:hover:border-black/25">
                     <Plus className="size-4" aria-hidden="true" />
                     <span className="sr-only">Aumentar</span>
                   </button>

@@ -118,14 +118,24 @@ export function Header() {
     return () => obs.disconnect();
   }, []);
 
+  // menu aberto e a tela passa para o tamanho de computador (tablet girado): fecha, senão a página fica travada
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 1280px)");
+    const aoMudar = () => mq.matches && setAberto(false);
+    mq.addEventListener("change", aoMudar);
+    return () => mq.removeEventListener("change", aoMudar);
+  }, []);
+
   useEffect(() => {
     if (!aberto) return;
+    // trava a rolagem no html e no body (no iPhone, só o body não basta)
+    document.documentElement.style.overflow = "hidden";
     document.body.style.overflow = "hidden";
     // depois do quadro: com "reduzir movimento" o painel ainda está invisível no mesmo instante
     requestAnimationFrame(() => painel.current?.querySelector<HTMLElement>("button, a")?.focus());
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") return fechar();
-      if (e.key !== "Tab" || !painel.current) return;
+      if (e.key !== "Tab" || !painel.current?.offsetParent) return;
       // mantém o Tab dentro do menu (aria-modal)
       const focaveis = painel.current.querySelectorAll<HTMLElement>("button, a[href]");
       const primeiro = focaveis[0];
@@ -140,6 +150,7 @@ export function Header() {
     };
     window.addEventListener("keydown", onKey);
     return () => {
+      document.documentElement.style.overflow = "";
       document.body.style.overflow = "";
       window.removeEventListener("keydown", onKey);
     };
@@ -162,7 +173,9 @@ export function Header() {
       el.focus({ preventScroll: true });
       history.replaceState(null, "", `#${destino}`);
     } else {
+      // WhatsApp, Instagram e "Como chegar" abrem fora: o menu fecha para a pessoa voltar à página
       setAtivo(id);
+      setAberto(false);
     }
   }
 
@@ -238,7 +251,7 @@ export function Header() {
           )}
         >
           <SidebarNav
-            className="!w-full border-none bg-transparent"
+            className="!h-auto !w-full min-h-0 flex-1 border-none bg-transparent"
             groups={grupos}
             bottomItems={rodape}
             activeId={ativo}
@@ -259,8 +272,15 @@ export function Header() {
               </div>
             }
           />
-          <div className="border-t border-border/50 p-3">
-            <a href="#agendar" onClick={() => setAberto(false)} className="botao botao-primario w-full">
+          <div className="shrink-0 border-t border-border/50 p-3">
+            <a
+              href="#agendar"
+              onClick={(e) => {
+                e.preventDefault();
+                irPara("agendar");
+              }}
+              className="botao botao-primario w-full"
+            >
               <CalendarCheck className="size-5" aria-hidden="true" /> Agendar aula
             </a>
           </div>
