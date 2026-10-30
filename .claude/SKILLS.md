@@ -18,6 +18,22 @@ Instaladas em 2026-10-03 a partir das fontes abaixo.
 | brag, brag-slim | latent-spaces/brag (`069432c`, v0.4.0) | `npx skills add latent-spaces/brag -a claude-code --copy -y` (2026-10-14). Revisada antes: só instruções em Markdown, músicas/efeitos e um script Python de análise de batidas (`librosa`), sem acesso à rede nem hooks. No Opus 5.5 o `/brag` passa para o `/brag-slim`. As músicas incluídas não têm licença confirmada (o README da fonte avisa); o vídeo da BN Digital usa trilha original |
 | brainstorming, verification-before-completion | obra/superpowers (`bb92a77`, v7.0.0) | `npx skills add obra/superpowers --skill brainstorming --skill verification-before-completion -a claude-code --copy -y` (2026-10-14). Revisadas antes: o `brainstorming` traz um servidor local (só `localhost`, com token) para mostrar rascunhos no navegador |
 
+| hyperframes, hyperframes-cli, media-use | heygen-com/hyperframes (`443ded4`) | `npx skills add heygen-com/hyperframes --skill hyperframes --skill hyperframes-cli --skill media-use -a claude-code --copy -y` (2026-10-30). `hyperframes-cli` entrou junto porque a `hyperframes` manda usá-la. Revisadas antes: o `media-use` traz efeitos sonoros e scripts Node que só falam com HeyGen, Openverse, Wikimedia, Internet Archive e museus (busca de mídia livre) |
+| research, grilling | mattpocock/skills (`a496f55`) | `npx skills add mattpocock/skills --skill research --skill grilling -a claude-code --copy -y` (2026-10-30). Só instruções |
+| design-mobile-apps | designed-by-ai/skills (`03c20ae`) | `npx skills add designed-by-ai/skills --skill design-mobile-apps -a claude-code --copy -y` (2026-10-30). Só instruções; usa o serviço Sleek |
+| design-taste-frontend | leonxlnx/taste-skill (`12af471`, v2) | `npx skills add leonxlnx/taste-skill --skill design-taste-frontend -a claude-code --copy -y` (2026-10-30). Revisada antes: scripts Node que abrem o Chrome local (sem npm install) para tirar prints e conferir a página. A antiga `high-end-visual-design` não existe mais: virou parte desta |
+| apple-design | emilkowalski/skills (`a81dbca`) | `npx skills add emilkowalski/skills --skill apple-design -a claude-code --copy -y` (2026-10-30). Só instruções |
+| agent-browser | vercel-labs/agent-browser (`f7a4cde`) | `npx skills add vercel-labs/agent-browser --skill agent-browser -a claude-code --copy -y` (2026-10-30). É só um atalho: o conteúdo vem do CLI `agent-browser` |
+| marketing-ideas, marketing-psychology | coreyhaines31/marketingskills (`820ad2c`) | `npx skills add coreyhaines31/marketingskills --skill marketing-ideas --skill marketing-psychology -a claude-code --copy -y` (2026-10-30). Só instruções |
+
+### Recusadas em 2026-10-30 (lista do reel do Instagram)
+
+- `101-skills/superpowers`, `magentosh/superpowers`, `qu-skills/superpowers` (`ai-video-generation`, `ai-image-generation`, `ai-avatar-video`): os três são cópias idênticas (mesmo commit `becc256`) do `inference-sh/skills`, renomeadas como "superpowers", nome do projeto `obra/superpowers`, que é outro. Imitação de nome, então ficaram de fora. O conteúdo exige o CLI pago `belt` (inference.sh). Se quiser, instale da fonte oficial: `npx skills add inference-sh/skills --skill ai-video-generation`. Para vídeo e imagem com IA já há os conectores Higgsfield e ElevenLabs.
+- `heygen-com/hyperframes --skill general-video`: não existe no repositório; a `hyperframes` cobre vídeo em geral.
+- `leonxlnx/taste-skill --skill high-end-visual-design`: não existe mais (ver `design-taste-frontend`).
+- `openakita/openakita --skill obra/superpowers@brainstorming`: cópia da `brainstorming`, que já está instalada direto do `obra/superpowers`.
+- `find-skills`, `frontend-design`, `web-design-guidelines`, `remotion-best-practices`: já estavam instaladas.
+
 Pré-existentes e preservadas sem alteração: ui-ux-pro-max, banner-design, brand, design, design-system, slides, ui-styling.
 
 `skills-lock.json` (raiz) é gerado pelo CLI `skills` e permite `npx skills update -p`.
@@ -54,6 +70,11 @@ Quando o projeto adotar React ou Next.js, instale com:
 | impeccable | Engine baixado pelo launcher; `detect` em URL usa Chrome/Chromium |
 | context-optimization | Python 3 (script de demonstração sem dependências externas) |
 | copywriting, seo-audit, frontend-design | Somente instruções; seo-audit fica melhor com acesso web |
+| hyperframes, hyperframes-cli, media-use | Node + `npx hyperframes` (baixa o pacote na primeira vez); Chrome para renderizar; HeyGen (conta, `npx hyperframes auth login`) é opcional, há caminho grátis local |
+| design-taste-frontend | Node 22+ e Chrome/Chromium local (`CHROME_PATH=/opt/pw-browsers/chromium-*/chrome-linux/chrome` na nuvem, se não achar sozinho) |
+| agent-browser | CLI: `npm i -g agent-browser && agent-browser install` (não vem instalado; reinstalar a cada sessão na nuvem) |
+| design-mobile-apps | `SLEEK_API_KEY` (conta em sleek.design) |
+| research, grilling, apple-design, marketing-ideas, marketing-psychology | Somente instruções |
 | web-design-guidelines | Somente instruções. A cada revisão, busca as regras em `https://raw.githubusercontent.com/vercel-labs/web-interface-guidelines/main/command.md` (precisa de acesso web) |
 | webapp-testing | Python 3 + pacote **Python** `playwright` (o pacote Node não serve: os exemplos e `scripts/with_server.py` são Python) e um Chromium compatível com a versão do Playwright |
 
