@@ -3,7 +3,8 @@
 
 /*
   BR Team — direção visual
-  Foto em tela cheia na abertura e seções alternando claro (branco e "gelo" azulado) com azul-marinho.
+  Foto em tela cheia na abertura e seções claras, alternando branco e "gelo" azulado. Azul-marinho só no topo,
+  na Mensalidade, no cartão das faixas adultas, em "Quem decide é o professor" e no rodapé.
   Não há cinza neutro nem preto puro: o "preto" do Tailwind é um azul-marinho quase preto (--color-black) e o
   texto secundário no claro é um azul-ardósia (--color-chumbo). Botões em azul, detalhes em dourado.
   As cores das faixas (amarela, laranja, verde, azul, roxa, marrom) marcam os benefícios do Kids e dos adultos.

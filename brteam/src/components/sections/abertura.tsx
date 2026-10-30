@@ -119,10 +119,10 @@ export function Academia() {
 
 export function Professor() {
   return (
-    <section id="professor" className="bg-carbono py-16 md:py-32">
+    <section id="professor" className="claro bg-white py-16 text-black md:py-32">
       <div className="pagina grid items-center gap-12 md:grid-cols-[0.85fr_1fr] lg:gap-20">
         <div className="relative">
-          <div className="overflow-hidden bg-[#ecebe8]">
+          <div className="overflow-hidden bg-gelo">
             <img
               src={fotos.professor.src}
               alt={fotos.professor.alt}
@@ -138,28 +138,28 @@ export function Professor() {
             width={fotos.professorFilha.w}
             height={fotos.professorFilha.h}
             loading="lazy"
-            className="absolute -bottom-8 -right-3 w-[38%] border-4 border-carbono shadow-2xl md:-right-8"
+            className="absolute -bottom-8 -right-3 w-[38%] border-4 border-white shadow-[0_18px_40px_-16px_rgb(13_35_72/0.5)] md:-right-8"
           />
         </div>
 
         <div>
-          <p className="text-lg text-cinza">Professor</p>
+          <p className="text-lg text-chumbo">Professor</p>
           <h2 className="titulo mt-1">Bruno Ramos</h2>
           <ul className="mt-8 space-y-4 text-lg">
             <li className="flex items-center gap-4">
-              <Faixa graus={1} altura={14} className="w-16 shrink-0" />
+              <Faixa graus={1} altura={14} clara className="w-16 shrink-0" />
               Faixa preta 1º grau de Jiu-Jitsu
             </li>
             <li className="flex items-center gap-4">
-              <Check className="size-5 shrink-0 text-ouro" aria-hidden="true" />
+              <Check className="size-5 shrink-0 text-azul" aria-hidden="true" />
               Professor há {professor.anosComoProfessor} anos, com mais de {professor.anosNoJiuJitsu} anos dedicados ao Jiu-Jitsu
             </li>
             <li className="flex items-center gap-4">
-              <Check className="size-5 shrink-0 text-ouro" aria-hidden="true" />
+              <Check className="size-5 shrink-0 text-azul" aria-hidden="true" />
               Formado em Educação Física
             </li>
             <li className="flex items-center gap-4">
-              <Check className="size-5 shrink-0 text-ouro" aria-hidden="true" />
+              <Check className="size-5 shrink-0 text-azul" aria-hidden="true" />
               Pai da Marina, que também treina
             </li>
           </ul>
@@ -172,7 +172,7 @@ export function Professor() {
             href={instagram(contato.instagramProfessor)}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-8 inline-flex min-h-11 items-center gap-2 text-white/85 underline-offset-4 hover:text-white hover:underline"
+            className="mt-8 inline-flex min-h-11 items-center gap-2 text-chumbo underline-offset-4 hover:text-black hover:underline"
           >
             <InstagramIcon className="size-5" /> @{contato.instagramProfessor}
           </a>
@@ -209,7 +209,7 @@ const beneficios: { faixa: string; titulo: string; texto: string }[] = [
 export function Kids() {
   const [principal, segunda, terceira] = fotos.kids;
   return (
-    <section id="kids" className="claro bg-white py-16 text-black md:py-32">
+    <section id="kids" className="claro bg-gelo py-16 text-black md:py-32">
       <div className="pagina grid gap-14 lg:grid-cols-[1fr_0.9fr] lg:gap-20">
         <div>
           <h2 className="titulo">Jiu-Jitsu para crianças</h2>
@@ -238,10 +238,10 @@ export function Kids() {
         <div className="grid grid-cols-2 gap-3 self-start">
           <img
             src={principal.src} alt={principal.alt} width={principal.w} height={principal.h} loading="lazy"
-            className="row-span-2 h-full w-full bg-algodao object-contain object-bottom"
+            className="row-span-2 h-full w-full bg-white object-contain object-bottom"
           />
-          <img src={segunda.src} alt={segunda.alt} width={segunda.w} height={segunda.h} loading="lazy" className="aspect-square w-full bg-algodao object-contain object-bottom p-2" />
-          <img src={terceira.src} alt={terceira.alt} width={terceira.w} height={terceira.h} loading="lazy" className="aspect-square w-full bg-algodao object-contain object-bottom pt-3" />
+          <img src={segunda.src} alt={segunda.alt} width={segunda.w} height={segunda.h} loading="lazy" className="aspect-square w-full bg-white object-contain object-bottom p-2" />
+          <img src={terceira.src} alt={terceira.alt} width={terceira.w} height={terceira.h} loading="lazy" className="aspect-square w-full bg-white object-contain object-bottom pt-3" />
         </div>
       </div>
     </section>
@@ -276,7 +276,7 @@ const beneficiosAdultos: { faixa: string; ponteira?: string; titulo: string; tex
 export function Adultos() {
   const [principal, segunda, terceira] = fotos.adultos;
   return (
-    <section id="adultos" className="bg-carbono py-16 md:py-32">
+    <section id="adultos" className="claro bg-white py-16 text-black md:py-32">
       <div className="pagina grid gap-14 lg:grid-cols-[0.9fr_1fr] lg:gap-20">
         <div className="grid grid-cols-2 gap-3 self-start max-lg:order-last">
           <img
@@ -289,16 +289,16 @@ export function Adultos() {
 
         <div>
           <h2 className="titulo">Jiu-Jitsu para adultos</h2>
-          <p className="mt-6 max-w-[44ch] text-xl text-cinza">
+          <p className="mt-6 max-w-[44ch] text-xl text-chumbo">
             Nunca treinou? Comece do zero, no seu ritmo. Já é graduado? Treine para evoluir e competir. Aqui você faz parte
             de uma família que apoia e celebra cada passo, do iniciante à faixa preta.
           </p>
           <div className="mt-12 grid gap-x-10 gap-y-9 sm:grid-cols-2">
             {beneficiosAdultos.map((b) => (
               <div key={b.titulo}>
-                <Faixa cor={b.faixa} ponteira={b.ponteira ?? "#111111"} altura={14} className="faixa-no-escuro mb-4 w-28" />
+                <Faixa cor={b.faixa} ponteira={b.ponteira ?? "#111111"} altura={14} clara className="mb-4 w-28" />
                 <h3 className="font-display text-2xl font-bold uppercase leading-tight">{b.titulo}</h3>
-                <p className="mt-2 text-cinza">{b.texto}</p>
+                <p className="mt-2 text-chumbo">{b.texto}</p>
               </div>
             ))}
           </div>

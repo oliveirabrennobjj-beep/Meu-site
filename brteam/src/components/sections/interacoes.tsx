@@ -241,7 +241,7 @@ export function AgendarAula() {
   const descr = (k: keyof Campos) => (mostrarErro(k) ? `${id(k)}-erro` : undefined);
 
   return (
-    <section id="agendar" className="claro bg-gelo py-16 text-black md:py-32">
+    <section id="agendar" className="claro bg-white py-16 text-black md:py-32">
       <div className="pagina grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
         <div>
           <h2 className="titulo">Agende sua aula experimental grátis</h2>
@@ -268,7 +268,7 @@ export function AgendarAula() {
           </ol>
         </div>
 
-        <div className="claro bg-white p-6 text-black shadow-[0_24px_60px_-32px_rgb(13_35_72/0.45)] ring-1 ring-marinho/10 sm:p-10">
+        <div className="claro bg-gelo p-6 text-black ring-1 ring-marinho/10 sm:p-10">
           {enviado ? (
             <div ref={sucessoRef} tabIndex={-1} className="surge-rapido outline-none" role="status">
               <CheckCircle2 className="estala size-10 text-[#1f8a4c]" aria-hidden="true" />
@@ -400,7 +400,7 @@ export function AgendarAula() {
                       vê o tamanho com o aluno.
                     </p>
                     {c.experiencia === "nunca" && (
-                      <p className="surge-rapido rounded-sm border border-ouro/50 bg-gelo p-4 text-[15px]">
+                      <p className="surge-rapido rounded-sm border border-ouro/50 bg-white p-4 text-[15px]">
                         <strong>Nunca treinou? Não precisa saber o tamanho.</strong>{" "}
                         {c.paraQuem === "filho"
                           ? "Leve a criança na aula experimental: o professor vê lá o tamanho certo do kimono e passa o preço. Na primeira aula, roupa confortável já serve."
@@ -431,7 +431,7 @@ export function AgendarAula() {
               </div>
 
               {c.paraQuem === "filho" && (
-                <p className="surge-rapido rounded-sm bg-algodao p-4 text-[15px]">
+                <p className="surge-rapido rounded-sm bg-white p-4 text-[15px]">
                   <strong>Importante:</strong> na aula experimental, a criança precisa ir acompanhada do responsável.
                 </p>
               )}
@@ -531,7 +531,7 @@ const perguntas: { p: string; r: ReactNode }[] = [
 
 export function Duvidas() {
   return (
-    <section id="duvidas" className="claro bg-white py-16 text-black md:py-32">
+    <section id="duvidas" className="claro bg-gelo py-16 text-black md:py-32">
       <div className="pagina grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
         <div>
           <h2 className="titulo">Dúvidas frequentes</h2>
