@@ -25,13 +25,13 @@ Instaladas em 2026-10-03 a partir das fontes abaixo.
 | apple-design | emilkowalski/skills (`a81dbca`) | `npx skills add emilkowalski/skills --skill apple-design -a claude-code --copy -y` (2026-10-30). Só instruções |
 | agent-browser | vercel-labs/agent-browser (`f7a4cde`) | `npx skills add vercel-labs/agent-browser --skill agent-browser -a claude-code --copy -y` (2026-10-30). É só um atalho: o conteúdo vem do CLI `agent-browser` |
 | marketing-ideas, marketing-psychology | coreyhaines31/marketingskills (`820ad2c`) | `npx skills add coreyhaines31/marketingskills --skill marketing-ideas --skill marketing-psychology -a claude-code --copy -y` (2026-10-30). Só instruções |
+| ai-video-generation, ai-image-generation, ai-avatar-video | `101-skills/superpowers`, `magentosh/superpowers`, `qu-skills/superpowers` (os três no commit `becc256`) | `npx skills add https://github.com/<repo> --skill <nome> -a claude-code --copy -y` (2026-10-30, a pedido do Brenno, que achou no skills.sh). Os três repositórios são cópias idênticas do `inference-sh/skills` com o nome "superpowers" (não têm relação com o `obra/superpowers`). Só instruções em Markdown; para funcionar precisam do CLI `belt` da inference.sh (`curl -fsSL cli.inference.sh \| sh`, depois `belt login`, conta paga) |
+| obra-superpowers-brainstorming | openakita/openakita (`5f5b38d`) | `npx skills add https://github.com/openakita/openakita --skill obra/superpowers@brainstorming -a claude-code --copy -y` (2026-10-30). Versão antiga e mais curta da `brainstorming` (que continua instalada, vinda do `obra/superpowers`). Só instruções |
 
-### Recusadas em 2026-10-30 (lista do reel do Instagram)
+### Da lista do reel, não instaladas (2026-10-30)
 
-- `101-skills/superpowers`, `magentosh/superpowers`, `qu-skills/superpowers` (`ai-video-generation`, `ai-image-generation`, `ai-avatar-video`): os três são cópias idênticas (mesmo commit `becc256`) do `inference-sh/skills`, renomeadas como "superpowers", nome do projeto `obra/superpowers`, que é outro. Imitação de nome, então ficaram de fora. O conteúdo exige o CLI pago `belt` (inference.sh). Se quiser, instale da fonte oficial: `npx skills add inference-sh/skills --skill ai-video-generation`. Para vídeo e imagem com IA já há os conectores Higgsfield e ElevenLabs.
-- `heygen-com/hyperframes --skill general-video`: não existe no repositório; a `hyperframes` cobre vídeo em geral.
-- `leonxlnx/taste-skill --skill high-end-visual-design`: não existe mais (ver `design-taste-frontend`).
-- `openakita/openakita --skill obra/superpowers@brainstorming`: cópia da `brainstorming`, que já está instalada direto do `obra/superpowers`.
+- `heygen-com/hyperframes --skill general-video`: o CLI responde "No matching skills found"; o repositório não tem essa skill. A `hyperframes` cobre vídeo em geral.
+- `leonxlnx/taste-skill --skill high-end-visual-design`: também não existe mais; virou parte da `design-taste-frontend`.
 - `find-skills`, `frontend-design`, `web-design-guidelines`, `remotion-best-practices`: já estavam instaladas.
 
 Pré-existentes e preservadas sem alteração: ui-ux-pro-max, banner-design, brand, design, design-system, slides, ui-styling.
@@ -72,6 +72,7 @@ Quando o projeto adotar React ou Next.js, instale com:
 | copywriting, seo-audit, frontend-design | Somente instruções; seo-audit fica melhor com acesso web |
 | hyperframes, hyperframes-cli, media-use | Node + `npx hyperframes` (baixa o pacote na primeira vez); Chrome para renderizar; HeyGen (conta, `npx hyperframes auth login`) é opcional, há caminho grátis local |
 | design-taste-frontend | Node 22+ e Chrome/Chromium local (`CHROME_PATH=/opt/pw-browsers/chromium-*/chrome-linux/chrome` na nuvem, se não achar sozinho) |
+| ai-video-generation, ai-image-generation, ai-avatar-video | CLI `belt` da inference.sh + conta (`belt login`) |
 | agent-browser | CLI: `npm i -g agent-browser && agent-browser install` (não vem instalado; reinstalar a cada sessão na nuvem) |
 | design-mobile-apps | `SLEEK_API_KEY` (conta em sleek.design) |
 | research, grilling, apple-design, marketing-ideas, marketing-psychology | Somente instruções |

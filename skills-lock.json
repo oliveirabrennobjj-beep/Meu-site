@@ -7,6 +7,24 @@
       "skillPath": "skills/agent-browser/SKILL.md",
       "computedHash": "e32e16db6b9f84f5c7a250485540d002953284a9e9f7d95e43ed56a7c6c43646"
     },
+    "ai-avatar-video": {
+      "source": "qu-skills/superpowers",
+      "sourceType": "github",
+      "skillPath": "tools/video/ai-avatar-video/SKILL.md",
+      "computedHash": "fb79eb46607746eb3666903766873f2d2d2ef8c7c5371046b0b91d60b23da8cb"
+    },
+    "ai-image-generation": {
+      "source": "magentosh/superpowers",
+      "sourceType": "github",
+      "skillPath": "tools/image/ai-image-generation/SKILL.md",
+      "computedHash": "82eca9e2eadda210d66433497ff9d31bc1c0ea2dfcd7f0be4710e9b4ef53addd"
+    },
+    "ai-video-generation": {
+      "source": "101-skills/superpowers",
+      "sourceType": "github",
+      "skillPath": "tools/video/ai-video-generation/SKILL.md",
+      "computedHash": "8524cc49ad3dca2a4502903234061b307636e44b08496e982747cdb9590f5556"
+    },
     "apple-design": {
       "source": "emilkowalski/skills",
       "sourceType": "github",
@@ -102,6 +120,12 @@
       "sourceType": "github",
       "skillPath": "skills/media-use/SKILL.md",
       "computedHash": "2043599afaf2d0b12fff13396f5e6f039ec44597c27e1631387a613d721a2126"
+    },
+    "obra/superpowers@brainstorming": {
+      "source": "openakita/openakita",
+      "sourceType": "github",
+      "skillPath": "skills/superpowers-brainstorming/SKILL.md",
+      "computedHash": "c0a2d0ba296d4da9dfa7b4a4581cc7760df10556da86c620dd9c941d41b32c64"
     },
     "pdf": {
       "source": "anthropics/skills",
