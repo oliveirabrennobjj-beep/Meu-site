@@ -1,7 +1,7 @@
 import { Check } from "lucide-react";
 import { Faixa } from "@/components/faixa";
 import { InstagramIcon, WhatsAppIcon } from "@/components/brand-icons";
-import { academia, contato, fotos, instagram, professor } from "@/data/site";
+import { academia, contato, experimental, fotos, instagram, professor } from "@/data/site";
 
 export function Hero() {
   return (
@@ -36,11 +36,12 @@ export function Hero() {
       <div style={{ animationDelay: "600ms" }} className="pagina hero-entrada grid gap-8 pb-24 pt-8 md:grid-cols-[1.2fr_1fr] md:items-end md:pb-16">
         <p className="max-w-[34ch] text-lg leading-relaxed text-white/85 md:text-xl">
           {academia.lema} Desde {academia.desde}, crianças, jovens e adultos treinam com a gente
-          corpo, mente e alma.
+          corpo, mente e alma.{" "}
+          <strong className="font-semibold text-white">A aula experimental é grátis: {experimental.resumo}.</strong>
         </p>
         <div className="flex flex-col gap-3 sm:flex-row md:justify-end">
           <a href="#agendar" className="botao botao-primario">
-            Agendar aula experimental
+            Agendar aula grátis
           </a>
           <a href="#horarios" className="botao botao-contorno text-white">
             Horários e valores

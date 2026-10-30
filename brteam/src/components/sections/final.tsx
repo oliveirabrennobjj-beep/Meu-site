@@ -160,7 +160,7 @@ export function Contato() {
         <div>
           <h2 className="titulo">Comece sua jornada</h2>
           <p className="mt-6 max-w-[40ch] text-lg text-cinza">
-            Toda jornada começa com o primeiro passo. Mande uma mensagem e agende sua aula experimental.
+            Toda jornada começa com o primeiro passo. Mande uma mensagem e agende sua aula experimental grátis.
           </p>
 
           <dl className="mt-10 space-y-6">
