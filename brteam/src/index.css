@@ -270,6 +270,18 @@ a, button { touch-action: manipulation; }
 .faixa-preta .faixa__ponteira {
   border-inline: max(2px, calc(var(--altura) * 0.14)) solid #f4f4f2;
 }
+/* bandeirinha do Brasil bordada no corpo da faixa, antes da ponteira */
+.faixa__bandeira {
+  position: absolute;
+  top: 50%;
+  right: calc(100% + max(5px, calc(var(--altura) * 0.6)));
+  height: 62%;
+  width: auto;
+  aspect-ratio: 10 / 7;
+  transform: translateY(-50%);
+  border-radius: 1px;
+  box-shadow: 0 0 0 max(1px, calc(var(--altura) * 0.05)) #f4f4f2, 0 1px 2px rgb(0 0 0 / 0.4);
+}
 .faixa__listra {
   position: absolute;
   inset-inline: 0;

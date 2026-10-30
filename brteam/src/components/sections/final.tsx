@@ -218,7 +218,7 @@ export function Contato() {
 export function Rodape() {
   return (
     <footer className="border-t border-white/10 bg-black pb-24 pt-4 sm:pb-12">
-      <Faixa graus={1} altura={14} />
+      <Faixa bandeira graus={1} altura={14} />
       <div className="pagina mt-12 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
         <div>
           <img src="./marca-br-team.png" alt="BR Team Brazilian Jiu-Jitsu" width={240} height={100} className="h-auto w-[200px]" />
