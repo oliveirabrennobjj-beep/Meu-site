@@ -1,4 +1,30 @@
-# Contexto para uma conversa nova, atualizado em 28/10/2026 (manhã)
+# Contexto para uma conversa nova, atualizado em 29/10/2026 (noite)
+
+## Atualização de 29/10 (leia primeiro)
+
+**Voz grátis funcionando:** Kokoro (voz `pm_alex`, pt-BR), roda na própria nuvem, sem conta. `ferramentas/falar.py` gera a narração e `ferramentas/ouvir.py` transcreve pra conferir a pronúncia. Os modelos vêm do GitHub (links no topo dos scripts). Escritas que corrigem a pronúncia: "chassí", "virabrequím", "frésta", "intercúler", "uêist gueit" (wastegate), "a bê ésse" (ABS), "um ponto zero" (1.0). Depois: `ffmpeg` pra mp3 em `public/` e `alinhar.py` pro `words.json`. ElevenLabs continua sem crédito (22 de 10.000 no mês).
+
+**Vídeos com voz (29/10):**
+
+| Perfil | Vídeo | Projeto | Situação |
+|---|---|---|---|
+| Raio-X | fechadura | `video-fechadura/` | postado 29/10 ~20h45 |
+| E Se Você Fizesse | motor | `video-motor-3d/` | postado 29/10 ~20h45 |
+| Engenheirinho | caminhão | `video-caminhao-3d/` | postado 29/10 21h |
+| Raio-X | panela de pressão | `video-panela/` | agendado: sex 30/10 12h |
+| E Se Você Fizesse | freio | `video-freio-3d/` (roteiro 10) | agendado: sex 30/10 19h |
+| Engenheirinho | ponte | `video-ponte-3d/` (roteiro E02) | agendado: sex 30/10 20h |
+| Raio-X | descarga | `video-descarga/` | agendado: sáb 31/10 12h |
+| E Se Você Fizesse | turbo | `video-turbo-3d/` (roteiro 11) | agendado: sáb 31/10 19h |
+| Engenheirinho | navio | `video-navio-3d/` (roteiro E03) | agendado: sáb 31/10 20h |
+| BN Digital | hamburgueria (pedido X Cocó) | `bn-digital/brag-output/brag.mp4` | agendado: ter 03/11 12h |
+
+- Legendas de post ficam em cada roteiro (`roteiros/*.md`, seção "Legenda do post").
+- Arquivo grande demais não abre no celular dele: mandar a versão "leve" (ffmpeg crf 24, ~20-25 MB).
+- Ele não quer mais vídeo de terror (Contos da Madrugada parado).
+- Próximos temas: E Se (câmbio, diferencial, suspensão, radiador...), Engenheirinho (prédio, avião, túnel...), Raio-X (novos temas do dia a dia).
+
+**Duga Burguer (Recanto, Rio das Ostras)** quer a placa. Preço R$ 129 (duas por R$ 229), **sem garantia** (ele pediu pra tirar). Entrega: ele deve ir a Rio das Ostras dia 12 ou 13/11; antes disso, só por motoboy com Pix antes. Pedimos o endereço completo.
 
 ## Resumo rápido (leia isto primeiro)
 
