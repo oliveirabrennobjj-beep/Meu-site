@@ -53,6 +53,10 @@ function montarMensagem(c: Campos) {
       ? [
           "",
           `Também quero saber o preço do kimono ${tipoKimono(idade)}: ${c.cor.toLowerCase()}, ${c.qtd === 1 ? "1 unidade" : `${c.qtd} unidades`}.`,
+          // quem nunca treinou ainda não sabe o tamanho: o professor vê na aula experimental
+          ...(c.experiencia === "nunca"
+            ? [c.paraQuem === "filho" ? "Como ele(a) nunca treinou, o professor pode ver o tamanho na aula experimental." : "Como nunca treinei, o professor pode ver o meu tamanho na aula experimental."]
+            : []),
         ]
       : []),
   ];
@@ -391,6 +395,14 @@ export function AgendarAula() {
                       Vai na mesma mensagem. O professor Bruno passa o preço{turma ? ` do kimono ${tipoKimono(idadeNum)}` : ""} e
                       vê o tamanho com o aluno.
                     </p>
+                    {c.experiencia === "nunca" && (
+                      <p className="surge-rapido rounded-sm border border-ouro/50 bg-gelo p-4 text-[15px]">
+                        <strong>Nunca treinou? Não precisa saber o tamanho.</strong>{" "}
+                        {c.paraQuem === "filho"
+                          ? "Leve a criança na aula experimental: o professor vê lá o tamanho certo do kimono e passa o preço. Na primeira aula, roupa confortável já serve."
+                          : "Na aula experimental o professor vê o seu tamanho certo e passa o preço. Na primeira aula, roupa confortável já serve."}
+                      </p>
+                    )}
                     <Opcoes
                       legenda="Cor do kimono"
                       nome="cor"
