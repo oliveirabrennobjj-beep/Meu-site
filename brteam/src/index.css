@@ -266,6 +266,10 @@ a, button { touch-action: manipulation; }
   justify-content: flex-end;
   padding-inline: calc(var(--altura) * 0.6);
 }
+/* faixa preta: a ponteira vermelha é fechada por duas listras brancas, uma de cada lado (IBJJF) */
+.faixa-preta .faixa__ponteira {
+  border-inline: max(2px, calc(var(--altura) * 0.14)) solid #f4f4f2;
+}
 .faixa__listra {
   position: absolute;
   inset-inline: 0;
