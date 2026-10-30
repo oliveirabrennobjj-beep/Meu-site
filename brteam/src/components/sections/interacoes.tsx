@@ -2,7 +2,7 @@ import { useEffect, useId, useRef, useState, type FormEvent, type ReactNode } fr
 import { CheckCircle2, Minus, Pencil, Plus } from "lucide-react";
 import { WhatsAppIcon } from "@/components/brand-icons";
 import {
-  academia, aulasParaIdade, contato, endereco, idadeAdulto, linkWhatsApp, loja, mapaRota, mensalidade, resumoKids, rotuloAula, trocaDeFaixa, turmaPorIdade,
+  academia, aulasParaIdade, contato, endereco, experimental, idadeAdulto, linkWhatsApp, loja, mapaRota, mensalidade, resumoKids, rotuloAula, trocaDeFaixa, turmaPorIdade,
   type Aula,
 } from "@/data/site";
 import { cn } from "@/lib/utils";
@@ -40,7 +40,7 @@ function validar(c: Campos): Erros {
 function montarMensagem(c: Campos) {
   const idade = Number(c.idade);
   const linhas = [
-    "Olá, BR Team! Quero agendar uma aula experimental.",
+    "Olá, BR Team! Quero agendar a aula experimental grátis.",
     "",
     `Nome: ${c.nome.trim()}`,
     c.paraQuem === "filho"
@@ -244,8 +244,12 @@ export function AgendarAula() {
     <section id="agendar" className="claro bg-gelo py-16 text-black md:py-32">
       <div className="pagina grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
         <div>
-          <h2 className="titulo">Agende sua aula experimental</h2>
+          <h2 className="titulo">Agende sua aula experimental grátis</h2>
           <p className="mt-6 max-w-[42ch] text-lg text-chumbo">
+            <strong className="font-semibold text-black">A aula experimental é grátis: {experimental.resumo}.</strong> Na primeira ou na
+            segunda aula, o pai e o professor já veem se a criança gostou; se ainda estiver na dúvida, ela volta nas outras.
+          </p>
+          <p className="mt-4 max-w-[42ch] text-lg text-chumbo">
             Responda algumas perguntas rápidas e escolha o horário. A gente monta a mensagem e abre o WhatsApp da academia para você enviar.
           </p>
           <ol className="mt-10 space-y-5">
@@ -450,6 +454,10 @@ const perguntas: { p: string; r: ReactNode }[] = [
   {
     p: "Nunca treinei. Posso começar?",
     r: "Pode. A maioria dos alunos começou do zero. A aula experimental existe para isso, e o professor ajusta o treino ao seu ritmo.",
+  },
+  {
+    p: "A aula experimental é paga?",
+    r: `Não, é grátis: ${experimental.resumo}. Na primeira ou na segunda aula já dá para ver se a criança (ou você) gostou; se ainda estiver na dúvida, volta nas outras. Depois, a mensalidade é ${mensalidade.valor} ${mensalidade.periodo}.`,
   },
   {
     p: "O que levar na aula experimental?",

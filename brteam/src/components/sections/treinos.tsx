@@ -88,7 +88,8 @@ export function Mensalidade() {
         aside={
           <>
             <span className="text-white">{mensalidade.valor} {mensalidade.periodo}, para todo mundo.</span> Crianças,
-            adultos, mulheres e melhor idade pagam o mesmo valor. Cada aluno treina na turma da sua idade.
+            adultos, mulheres e melhor idade pagam o mesmo valor. Cada aluno treina na turma da sua idade. A primeira
+            semana, de aula experimental, é grátis.
           </>
         }
         includedLabel="O que está incluso"
