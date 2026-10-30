@@ -23,8 +23,10 @@ export function Faixa({
   className?: string;
 }) {
   const estilo = { "--cor": cor, "--ponta": ponteira, "--altura": `${altura}px` } as CSSProperties;
+  // faixa preta: ponteira vermelha fechada por duas listras brancas (regra da IBJJF)
+  const preta = ponteira.toLowerCase() === "#d6202b";
   return (
-    <div aria-hidden="true" className={cn("faixa", clara && "faixa-clara", amarrar && "faixa-amarra", className)} style={estilo}>
+    <div aria-hidden="true" className={cn("faixa", preta && "faixa-preta", clara && "faixa-clara", amarrar && "faixa-amarra", className)} style={estilo}>
       {listra && <div className="faixa__listra" style={{ background: listra }} />}
       <div className="faixa__ponteira">
         {Array.from({ length: graus }).map((_, i) => (
