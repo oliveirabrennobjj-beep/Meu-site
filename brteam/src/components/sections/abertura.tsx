@@ -31,7 +31,7 @@ export function Hero() {
       </div>
 
       {/* faixa preta de 1º grau, a do professor, atravessando a tela */}
-      <Faixa amarrar graus={1} altura={26} className="mt-7 w-full md:mt-9" />
+      <Faixa amarrar bandeira graus={1} altura={26} className="mt-7 w-full md:mt-9" />
 
       <div style={{ animationDelay: "600ms" }} className="pagina hero-entrada grid gap-8 pb-24 pt-8 md:grid-cols-[1.2fr_1fr] md:items-end md:pb-16">
         <p className="max-w-[34ch] text-lg leading-relaxed text-white/85 md:text-xl">
@@ -147,7 +147,7 @@ export function Professor() {
           <h2 className="titulo mt-1">Bruno Ramos</h2>
           <ul className="mt-8 space-y-4 text-lg">
             <li className="flex items-center gap-4">
-              <Faixa graus={1} altura={14} clara className="w-16 shrink-0" />
+              <Faixa bandeira graus={1} altura={14} clara className="w-20 shrink-0" />
               Faixa preta 1º grau de Jiu-Jitsu
             </li>
             <li className="flex items-center gap-4">
