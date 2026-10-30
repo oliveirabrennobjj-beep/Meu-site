@@ -59,10 +59,10 @@ function GaleriaAmpliada({ indice, onFechar, onTrocar }: { indice: number | null
 export function Galeria() {
   const [aberta, setAberta] = useState<number | null>(null);
   return (
-    <section id="galeria" className="bg-marinho py-16 md:py-32">
+    <section id="galeria" className="claro bg-gelo py-16 text-black md:py-32">
       <div className="pagina">
         <h2 className="titulo">No tatame e no pódio</h2>
-        <p className="mt-5 max-w-[48ch] text-lg text-cinza">
+        <p className="mt-5 max-w-[48ch] text-lg text-chumbo">
           Colações de grau, campeonatos e o dia a dia das turmas. Tem mais no nosso Instagram.
         </p>
         <div className="mt-12 columns-2 gap-3 md:columns-3 lg:columns-4 [&>figure]:mb-3">
@@ -77,12 +77,12 @@ export function Galeria() {
                   src={f.src} alt={f.alt} width={f.w} height={f.h} loading="lazy"
                   className="w-full transition duration-700 ease-[var(--ease-saida)] group-hover:scale-[1.06] group-hover:brightness-75"
                 />
-                <span className="absolute right-3 top-3 inline-flex size-10 items-center justify-center rounded-full bg-black/75 opacity-0 transition duration-300 group-hover:opacity-100 group-focus-visible:opacity-100">
+                <span className="absolute right-3 top-3 inline-flex size-10 items-center justify-center rounded-full bg-black/75 text-white opacity-0 transition duration-300 group-hover:opacity-100 group-focus-visible:opacity-100">
                   <Expand className="size-4" aria-hidden="true" />
                 </span>
                 <span className="sr-only">Ampliar foto: {f.legenda}</span>
               </button>
-              <figcaption className="mt-2 text-sm text-cinza">{f.legenda}</figcaption>
+              <figcaption className="mt-2 text-sm text-chumbo">{f.legenda}</figcaption>
             </figure>
           ))}
         </div>
@@ -90,7 +90,7 @@ export function Galeria() {
           href={instagram(contato.instagramAcademia)}
           target="_blank"
           rel="noopener noreferrer"
-          className="botao botao-contorno mt-10 text-white"
+          className="botao botao-contorno mt-10 text-black"
         >
           <InstagramIcon className="size-5" /> Ver mais no @{contato.instagramAcademia}
         </a>
@@ -102,7 +102,7 @@ export function Galeria() {
 
 export function Parceiros() {
   return (
-    <section aria-labelledby="parceiros-titulo" className="claro border-y border-black/10 bg-gelo py-14 text-black">
+    <section aria-labelledby="parceiros-titulo" className="claro border-y border-black/10 bg-white py-14 text-black">
       <div className="pagina grid gap-8 md:grid-cols-[220px_1fr] md:items-center">
         <h2 id="parceiros-titulo" className="titulo-md text-ouro-escuro">Nossos parceiros</h2>
         <ul className="grid grid-cols-2 gap-x-8 gap-y-5 sm:grid-cols-3 lg:grid-cols-5">
@@ -124,7 +124,7 @@ export function Parceiros() {
 */
 function CartaoMapa() {
   return (
-    <div className="flex flex-col overflow-hidden border border-white/15 bg-marinho">
+    <div className="flex flex-col overflow-hidden bg-white ring-1 ring-marinho/10 shadow-[0_24px_60px_-32px_rgb(13_35_72/0.45)]">
       <iframe
         title={`Mapa: ${endereco.rua}, ${endereco.cidade}`}
         src={mapaEmbed}
@@ -134,16 +134,16 @@ function CartaoMapa() {
       />
       <div className="p-6 md:p-8">
         <p className="font-display text-2xl font-bold uppercase leading-tight">BR Team Jiu-Jitsu</p>
-        <p className="mt-1 text-white/85">
+        <p className="mt-1 text-chumbo">
           {endereco.rua}, {endereco.bairro}, {endereco.cidade}
         </p>
         <a href={mapaBusca} target="_blank" rel="noopener noreferrer" className="botao botao-ouro mt-6 w-full sm:w-auto">
           <MapPin className="size-5" aria-hidden="true" /> Abrir no Google Maps
         </a>
-        <p className="mt-5 flex gap-3 border border-ouro/50 bg-tatame p-4 text-[15px] text-white/90">
-          <Info className="mt-0.5 size-5 shrink-0 text-ouro" aria-hidden="true" />
+        <p className="mt-5 flex gap-3 border border-ouro/50 bg-gelo p-4 text-[15px] text-black/85">
+          <Info className="mt-0.5 size-5 shrink-0 text-ouro-escuro" aria-hidden="true" />
           <span>
-            <strong className="font-semibold text-ouro">Atenção:</strong> o professor ainda não cadastrou a BR Team no Google Maps.
+            <strong className="font-semibold text-black">Atenção:</strong> o professor ainda não cadastrou a BR Team no Google Maps.
             Por isso, ao abrir o mapa, pode aparecer o nome de outra loja no lugar. O endereço está certo: a academia
             fica na {endereco.rua}.
           </span>
@@ -155,23 +155,23 @@ function CartaoMapa() {
 
 export function Contato() {
   return (
-    <section id="contato" className="bg-tatame py-16 md:py-32">
+    <section id="contato" className="claro bg-gelo py-16 text-black md:py-32">
       <div className="pagina grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
         <div>
           <h2 className="titulo">Comece sua jornada</h2>
-          <p className="mt-6 max-w-[40ch] text-lg text-cinza">
+          <p className="mt-6 max-w-[40ch] text-lg text-chumbo">
             Toda jornada começa com o primeiro passo. Mande uma mensagem e agende sua aula experimental grátis.
           </p>
 
           <dl className="mt-10 space-y-6">
             <div>
-              <dt className="text-sm text-cinza">WhatsApp</dt>
+              <dt className="text-sm text-chumbo">WhatsApp</dt>
               <dd className="mt-1 font-display text-3xl font-bold tabular-nums">{contato.whatsappExibicao}</dd>
             </div>
             <div>
-              <dt className="text-sm text-cinza">Endereço</dt>
+              <dt className="text-sm text-chumbo">Endereço</dt>
               <dd className="mt-1 flex gap-2 text-lg">
-                <MapPin className="mt-1 size-5 shrink-0 text-ouro" aria-hidden="true" />
+                <MapPin className="mt-1 size-5 shrink-0 text-azul" aria-hidden="true" />
                 <span>
                   {endereco.rua}, {endereco.bairro}
                   <br />
@@ -180,13 +180,13 @@ export function Contato() {
               </dd>
             </div>
             <div>
-              <dt className="text-sm text-cinza">E-mail</dt>
+              <dt className="text-sm text-chumbo">E-mail</dt>
               <dd className="mt-1 text-lg">
                 <a href={`mailto:${contato.email}`} className="link-corre inline-flex min-h-11 items-center break-all">{contato.email}</a>
               </dd>
             </div>
             <div>
-              <dt className="text-sm text-cinza">Pagamento e bicicleta</dt>
+              <dt className="text-sm text-chumbo">Pagamento e bicicleta</dt>
               <dd className="mt-1 text-lg">Aceitamos Pix. Tem lugar para deixar a bicicleta.</dd>
             </div>
           </dl>
@@ -195,7 +195,7 @@ export function Contato() {
             <a href={linkWhatsApp()} target="_blank" rel="noopener noreferrer" className="botao botao-primario">
               <WhatsAppIcon className="size-5" /> Agendar pelo WhatsApp
             </a>
-            <a href={mapaRota} target="_blank" rel="noopener noreferrer" className="botao botao-contorno text-white">
+            <a href={mapaRota} target="_blank" rel="noopener noreferrer" className="botao botao-contorno text-black">
               <Navigation className="size-5" aria-hidden="true" /> Como chegar
             </a>
           </div>
@@ -203,7 +203,7 @@ export function Contato() {
             href={instagram(contato.instagramAcademia)}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-6 inline-flex min-h-11 items-center gap-2 text-white/85 underline-offset-4 hover:text-white hover:underline"
+            className="mt-6 inline-flex min-h-11 items-center gap-2 text-chumbo underline-offset-4 hover:text-black hover:underline"
           >
             <InstagramIcon className="size-5" /> @{contato.instagramAcademia}
           </a>
