@@ -78,12 +78,15 @@ export function Mensalidade() {
     <section id="planos" aria-labelledby="planos-titulo" className="bg-marinho py-16 text-white md:py-32">
       <div className="pagina grid gap-12 lg:grid-cols-[1fr_1fr] lg:gap-20">
         <div>
-          <p className="font-semibold text-ouro">Mesmo valor para todos</p>
-          <h2 id="planos-titulo" className="titulo mt-2">Mensalidade</h2>
-          <p className="mt-8 flex items-baseline gap-3">
-            <span className="font-display text-[clamp(4.5rem,13vw,8rem)] font-extrabold leading-[0.85] tabular-nums">{mensalidade.valor}</span>
+          <h2 id="planos-titulo" className="titulo">Mensalidade</h2>
+          <p className="mt-8 flex flex-wrap items-baseline gap-x-3">
+            <span className="font-display text-[clamp(3.6rem,12vw,7rem)] font-extrabold leading-[0.85] tabular-nums">
+              {mensalidade.valor}
+              <span className="text-ouro">*</span>
+            </span>
             <span className="font-display text-2xl font-bold uppercase text-cinza">{mensalidade.periodo}</span>
           </p>
+          <p className="mt-3 font-display text-2xl font-bold uppercase text-ouro">{mensalidade.nota}</p>
           <ul className="mt-6 flex flex-wrap gap-2" aria-label="Quem paga esse valor">
             {mensalidade.para.map((p) => (
               <li key={p} className="rounded-full border border-grafite px-3 py-1.5 text-sm">{p}</li>
@@ -97,7 +100,7 @@ export function Mensalidade() {
               <CalendarCheck className="size-5" aria-hidden="true" /> Agendar aula experimental
             </a>
             <a
-              href={linkWhatsApp(`Olá, BR Team! Quero me matricular. Mensalidade de ${mensalidade.valor}.`)}
+              href={linkWhatsApp("Olá, BR Team! Quero me matricular e consultar os planos.")}
               target="_blank"
               rel="noopener noreferrer"
               className="botao botao-contorno text-white"

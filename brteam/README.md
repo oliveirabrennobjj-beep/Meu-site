@@ -32,7 +32,7 @@ Depois de mudar algo, rode `npm run build` e envie a pasta `dist/` junto.
 | O que | Onde |
 |---|---|
 | **Preços da troca de faixa** (crianças: branca, cinza, amarela, laranja e verde; adultos: branca, azul, roxa, marrom e preta; cada uma com seu `preco`) | `src/data/site.ts` → `trocaDeFaixa` (troque `null` por `"R$ 80"`, por exemplo). As três versões de uma cor infantil (com branco, pura, com preto) usam o mesmo preço. |
-| **Mensalidade** (R$ 125, igual para todos) | `src/data/site.ts` → `mensalidade` (`valor`, quem paga em `para` e a lista `inclui`) |
+| **Mensalidade** (R$ 135,00*, consultar planos) | `src/data/site.ts` → `mensalidade` (`valor`, `nota`, quem paga em `para` e a lista `inclui`) |
 | **Loja de kimonos** (cores, preço, idade do kimono adulto) | `src/data/site.ts` → `loja` (`preco: null` mostra "Preço e prazo com o professor Bruno"; até 15 anos o pedido sai como kimono infantil) |
 | **Horários das turmas** | `src/data/site.ts` → `aulas` e `diasDeAula`. Os textos que citam os horários (subtítulo da seção, turma indicada no formulário, dúvida "Com que idade…") saem de `aulas` sozinhos; só a frase dos dias sem aula, em `treinos.tsx`, é escrita à mão. |
 | WhatsApp, Instagram, e-mail, endereço, idade mínima, Pix e estacionamento | `src/data/site.ts` → `contato`, `endereco` e `academia` |

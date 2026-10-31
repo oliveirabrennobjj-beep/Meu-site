@@ -70,7 +70,7 @@ export const mensagemPreco = {
 /*
   Grade de horários (informada pela academia). Treinos às segundas, quartas e quintas.
   Kids 1 das 18h às 18h50 (4 a 7 anos), Kids 2 das 19h às 19h50 (8 a 12 anos).
-  Adulto às 6h, 13h (turma mista, a partir de 13 anos) e 20h.
+  Turma mista (a partir de 13 anos) às 6h, 13h e 20h. O professor pediu "turma mista" em todos, sem "adulto".
 */
 export type TurmaChave = "Kids" | "Adulto";
 export type Aula = {
@@ -84,11 +84,11 @@ export type Aula = {
 };
 export const diasDeAula: string | null = "Segunda, quarta e quinta";
 export const aulas: Aula[] = [
-  { turma: "Adulto", nome: "Adulto", horario: "6h às 7h", periodo: "Manhã", publico: "a partir de 13 anos", idadeMin: 13 },
+  { turma: "Adulto", nome: "Turma mista", horario: "6h às 7h", periodo: "Manhã", publico: "a partir de 13 anos", idadeMin: 13 },
   { turma: "Adulto", nome: "Turma mista", horario: "13h às 14h", periodo: "Tarde", publico: "a partir de 13 anos", idadeMin: 13 },
   { turma: "Kids", nome: "Kids 1", horario: "18h às 18h50", periodo: "Noite", publico: "crianças de 4 a 7 anos", idadeMin: 4, idadeMax: 7 },
   { turma: "Kids", nome: "Kids 2", horario: "19h às 19h50", periodo: "Noite", publico: "crianças de 8 a 12 anos", idadeMin: 8, idadeMax: 12 },
-  { turma: "Adulto", nome: "Adulto", horario: "20h às 21h", periodo: "Noite", publico: "a partir de 13 anos", idadeMin: 13 },
+  { turma: "Adulto", nome: "Turma mista", horario: "20h às 21h", periodo: "Noite", publico: "a partir de 13 anos", idadeMin: 13 },
 ];
 export const aulasDaTurma = (t: TurmaChave) => aulas.filter((a) => a.turma === t);
 /** Horários que a pessoa pode escolher pela idade (cada criança vê só a turma Kids da idade dela). */
@@ -105,18 +105,21 @@ const adultos = aulasDaTurma("Adulto");
 export const resumoKids = lista(kids.map((a) => `${a.nome} das ${a.horario} (${idades(a)})`));
 /** idade em que o aluno passa para as turmas de adultos (13) */
 export const idadeAdulto = Math.min(...adultos.map((a) => a.idadeMin));
-/** "Crianças às 18h e às 19h. Adultos às 6h, às 13h e às 20h." */
+/** "Crianças às 18h e às 19h. Turma mista às 6h, às 13h e às 20h." */
 export const resumoHorarios =
-  `Crianças ${lista(kids.map((a) => `às ${inicio(a)}`))}. Adultos ${lista(adultos.map((a) => `às ${inicio(a)}`))}.`;
+  `Crianças ${lista(kids.map((a) => `às ${inicio(a)}`))}. Turma mista ${lista(adultos.map((a) => `às ${inicio(a)}`))}.`;
 /** "às 6h, às 13h (turma mista) e às 20h" */
-const horariosAdultos = lista(adultos.map((a) => `às ${inicio(a)}${a.nome === "Adulto" ? "" : ` (${a.nome.toLowerCase()})`}`));
+const horariosAdultos = lista(adultos.map((a) => `às ${inicio(a)}`));
+/** nome da turma para o visitante: "Kids" ou "Turma mista" (nunca "Adulto") */
+export const nomeTurma = (t: TurmaChave) => (t === "Kids" ? "Kids" : "Turma mista");
 
 /*
-  Mensalidade: um valor só para todo mundo (crianças, adultos, mulheres e melhor idade).
+  Mensalidade: R$ 135,00 com asterisco, "consultar planos" (pedido do professor).
   Para mudar o preço, troque `mensalidade.valor`.
 */
 export const mensalidade = {
-  valor: "R$ 125",
+  valor: "R$ 135,00",
+  nota: "*Consultar planos!",
   periodo: "por mês",
   para: ["Crianças", "Adultos", "Mulheres", "Melhor idade"],
   inclui: [
@@ -230,8 +233,8 @@ export const fotos = {
   A idade de corte (Kids até 12, adultos a partir de 13) sai das idades em `aulas`.
 */
 export const faixasEtarias: { ate: number; turma: TurmaChave; detalhe: string }[] = [
-  { ate: idadeAdulto - 1, turma: "Kids", detalhe: `${resumoKids}. Se a criança for grande, o professor pode indicar a turma dos adultos.` },
-  { ate: 120, turma: "Adulto", detalhe: `Turmas ${horariosAdultos}. Escolha o horário que encaixa na sua rotina.` },
+  { ate: idadeAdulto - 1, turma: "Kids", detalhe: `${resumoKids}. Se a criança for grande, o professor pode indicar a turma mista.` },
+  { ate: 120, turma: "Adulto", detalhe: `Turma mista ${horariosAdultos}. Escolha o horário que encaixa na sua rotina.` },
 ];
 export function turmaPorIdade(idade: number) {
   return faixasEtarias.find((f) => idade <= f.ate) ?? faixasEtarias[faixasEtarias.length - 1];
