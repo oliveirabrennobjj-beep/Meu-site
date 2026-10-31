@@ -3,8 +3,9 @@ import { cn } from "@/lib/utils";
 
 /** Desenho de uma faixa de Jiu-Jitsu: cor, ponteira e graus (listras brancas). */
 export function Faixa({
-  cor = "#141414",
-  ponteira = "#d6202b",
+  preta = false,
+  cor = preta ? "#141414" : "#f2f2f0",
+  ponteira = preta ? "#d6202b" : "#111111",
   graus = 0,
   altura = 22,
   clara = false,
@@ -13,6 +14,8 @@ export function Faixa({
   listra,
   className,
 }: {
+  /** faixa preta: corpo preto e ponteira vermelha fechada por duas listras brancas (regra da IBJJF) */
+  preta?: boolean;
   cor?: string;
   ponteira?: string;
   graus?: number;
@@ -26,8 +29,6 @@ export function Faixa({
   className?: string;
 }) {
   const estilo = { "--cor": cor, "--ponta": ponteira, "--altura": `${altura}px` } as CSSProperties;
-  // faixa preta: ponteira vermelha fechada por duas listras brancas (regra da IBJJF)
-  const preta = ponteira.toLowerCase() === "#d6202b";
   return (
     <div aria-hidden="true" className={cn("faixa", preta && "faixa-preta", clara && "faixa-clara", amarrar && "faixa-amarra", className)} style={estilo}>
       {listra && <div className="faixa__listra" style={{ background: listra }} />}

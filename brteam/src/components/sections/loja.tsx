@@ -56,7 +56,7 @@ export function Loja() {
 
           <div className="mt-8 border-t border-marinho/15 pt-6">
             <p className="font-semibold">Já é aluno?</p>
-            <p className="mt-1 text-chumbo">O WhatsApp do professor abre com o pedido de preço pronto.</p>
+            <p className="mt-1 text-chumbo">Peça o preço direto ao professor Bruno.</p>
             <a
               href={linkWhatsApp(mensagemPreco.kimonoAluno)}
               target="_blank"

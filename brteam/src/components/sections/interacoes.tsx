@@ -63,7 +63,8 @@ function montarMensagem(c: Campos) {
   return linhas.join("\n");
 }
 
-const tipoKimono = (idade: number) => (turmaPorIdade(idade).turma === "Kids" ? "infantil" : "adulto");
+// pela idade, não pela turma: dos 13 aos 15 o aluno treina com os adultos, mas o kimono ainda é infantil
+const tipoKimono = (idade: number) => (idade < loja.idadeKimonoAdulto ? "infantil" : "adulto");
 export const corAmostra: Record<string, string> = { Branco: "#f4f4f2", Preto: "#111111", Azul: "#1d4fb8" };
 
 /** Botões de menos e mais, de 1 a 10 (aria-disabled no limite, para o foco não cair fora do botão). */
@@ -191,14 +192,14 @@ export function AgendarAula() {
   // "Agendar aula para meu filho" (seção Kids) já chega com a opção marcada
   useEffect(() => {
     const ouvir = (e: Event) => {
-      const para = (e as CustomEvent<Campos["paraQuem"]>).detail;
-      setC((o) => ({ ...o, paraQuem: para }));
+      mudarPara((e as CustomEvent<Campos["paraQuem"]>).detail);
       setEnviado(false);
     };
     // "Agendar aula neste horário" (seção Horários) chega com o horário marcado
     const ouvirAula = (e: Event) => {
       const aula = (e as CustomEvent<Aula>).detail;
-      setC((o) => ({ ...o, horario: rotuloAula(aula), paraQuem: aula.turma === "Kids" ? "filho" : o.paraQuem }));
+      if (aula.turma === "Kids") mudarPara("filho");
+      setC((o) => ({ ...o, horario: rotuloAula(aula) }));
       setEnviado(false);
     };
     // "Pedir junto com a aula experimental" (seção Loja) chega com o kimono marcado
@@ -219,12 +220,17 @@ export function AgendarAula() {
   const erros = validar(c);
   const mostrarErro = (k: keyof Campos) => (tocado[k] ? erros[k] : undefined);
   const set = <K extends keyof Campos>(k: K, v: Campos[K]) => setC((o) => ({ ...o, [k]: v }));
+  // trocar para "Para meu filho(a)" mostra o campo do nome da criança vazio: ele não começa marcado como erro
+  function mudarPara(para: Campos["paraQuem"]) {
+    setTocado((t) => ({ ...t, nomeAluno: false }));
+    setC((o) => ({ ...o, paraQuem: para }));
+  }
   const idadeNum = Number(c.idade);
   const turma = c.idade && !erros.idade ? turmaPorIdade(idadeNum) : null;
 
   function enviar(e: FormEvent) {
     e.preventDefault();
-    setTocado({ nome: true, nomeAluno: true, idade: true, horario: true });
+    setTocado({ nome: true, nomeAluno: c.paraQuem === "filho", idade: true, horario: true });
     const chaves = Object.keys(erros) as (keyof Campos)[];
     if (chaves.length) {
       form.current?.querySelector<HTMLElement>(`[name="${chaves[0]}"]`)?.focus();
@@ -250,7 +256,7 @@ export function AgendarAula() {
             segunda aula, o pai e o professor já veem se a criança gostou; se ainda estiver na dúvida, ela volta nas outras.
           </p>
           <p className="mt-4 max-w-[42ch] text-lg text-chumbo">
-            Responda algumas perguntas rápidas e escolha o horário. A gente monta a mensagem e abre o WhatsApp da academia para você enviar.
+            Responda algumas perguntas rápidas e escolha o horário.
           </p>
           <ol className="mt-10 space-y-5">
             {[
@@ -303,7 +309,7 @@ export function AgendarAula() {
                 legenda="A aula é para quem?"
                 nome="paraQuem"
                 valor={c.paraQuem}
-                onChange={(v) => set("paraQuem", v)}
+                onChange={mudarPara}
                 opcoes={[{ v: "mim", rotulo: "Para mim" }, { v: "filho", rotulo: "Para meu filho(a)" }]}
               />
 
@@ -510,8 +516,14 @@ const perguntas: { p: string; r: ReactNode }[] = [
         Esses preços o professor Bruno passa direto, pelo WhatsApp. Na seção{" "}
         <a href="#faixas" className="underline underline-offset-4 hover:text-azul">Troca de faixa</a>, toque em "Pedir o
         preço" na faixa. O kimono dá para perguntar junto com a{" "}
-        <a href="#agendar" className="underline underline-offset-4 hover:text-azul">aula experimental</a>, no mesmo
-        formulário. O WhatsApp abre com a mensagem pronta, é só enviar.
+        <a
+          href="#agendar"
+          onClick={() => window.dispatchEvent(new CustomEvent("agendar:kimono"))}
+          className="underline underline-offset-4 hover:text-azul"
+        >
+          aula experimental
+        </a>
+        , no mesmo formulário.
       </>
     ),
   },

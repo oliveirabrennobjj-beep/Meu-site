@@ -11,14 +11,14 @@ export const academia = {
   lema: "Jiu-Jitsu como filosofia de vida.",
   pilares: ["Corpo", "Mente", "Alma"],
   cidade: "Casimiro de Abreu (RJ)",
-  idadeMinima: 5,
+  idadeMinima: 4,
   comodidades: ["Aceitamos Pix", "Lugar para bicicletas"],
 };
 
 export const professor = { anosComoProfessor: 6, anosNoJiuJitsu: 15 };
 
 /* Aula experimental: grátis, uma semana de aulas (o pai e o professor veem se a criança gostou). */
-export const experimental = { aulas: 3, resumo: "uma semana, com 3 aulas" };
+export const experimental = { resumo: "uma semana, com 3 aulas" };
 
 export const contato = {
   whatsapp: "5522999968108",
@@ -69,7 +69,7 @@ export const mensagemPreco = {
 
 /*
   Grade de horários (informada pela academia). Treinos às segundas, quartas e quintas.
-  Kids 1 das 18h às 18h50 (5 a 7 anos), Kids 2 das 19h às 19h50 (8 a 12 anos).
+  Kids 1 das 18h às 18h50 (4 a 7 anos), Kids 2 das 19h às 19h50 (8 a 12 anos).
   Adulto às 6h, 13h (turma mista, a partir de 13 anos) e 20h.
 */
 export type TurmaChave = "Kids" | "Adulto";
@@ -86,7 +86,7 @@ export const diasDeAula: string | null = "Segunda, quarta e quinta";
 export const aulas: Aula[] = [
   { turma: "Adulto", nome: "Adulto", horario: "6h às 7h", periodo: "Manhã", publico: "a partir de 13 anos", idadeMin: 13 },
   { turma: "Adulto", nome: "Turma mista", horario: "13h às 14h", periodo: "Tarde", publico: "a partir de 13 anos", idadeMin: 13 },
-  { turma: "Kids", nome: "Kids 1", horario: "18h às 18h50", periodo: "Noite", publico: "crianças de 5 a 7 anos", idadeMin: 5, idadeMax: 7 },
+  { turma: "Kids", nome: "Kids 1", horario: "18h às 18h50", periodo: "Noite", publico: "crianças de 4 a 7 anos", idadeMin: 4, idadeMax: 7 },
   { turma: "Kids", nome: "Kids 2", horario: "19h às 19h50", periodo: "Noite", publico: "crianças de 8 a 12 anos", idadeMin: 8, idadeMax: 12 },
   { turma: "Adulto", nome: "Adulto", horario: "20h às 21h", periodo: "Noite", publico: "a partir de 13 anos", idadeMin: 13 },
 ];
@@ -101,7 +101,7 @@ const lista = (itens: string[]) => (itens.length < 2 ? itens.join("") : `${itens
 const idades = (a: Aula) => (a.idadeMax ? `${a.idadeMin} a ${a.idadeMax} anos` : `a partir de ${a.idadeMin} anos`);
 const kids = aulasDaTurma("Kids");
 const adultos = aulasDaTurma("Adulto");
-/** "Kids 1 das 18h às 18h50 (5 a 7 anos) e Kids 2 das 19h às 19h50 (8 a 12 anos)" */
+/** "Kids 1 das 18h às 18h50 (4 a 7 anos) e Kids 2 das 19h às 19h50 (8 a 12 anos)" */
 export const resumoKids = lista(kids.map((a) => `${a.nome} das ${a.horario} (${idades(a)})`));
 /** idade em que o aluno passa para as turmas de adultos (13) */
 export const idadeAdulto = Math.min(...adultos.map((a) => a.idadeMin));
@@ -115,33 +115,18 @@ const horariosAdultos = lista(adultos.map((a) => `às ${inicio(a)}${a.nome === "
   Mensalidade: um valor só para todo mundo (crianças, adultos, mulheres e melhor idade).
   Para mudar o preço, troque `mensalidade.valor`.
 */
-export const mensalidade = { valor: "R$ 125", periodo: "por mês" };
-
-export type Plano = { nome: string; para: string; preco: string | null; periodo: string; inclui: string[]; destaque?: boolean };
-export const planos: Plano[] = [
-  {
-    nome: "Crianças",
-    para: "Turmas Kids 1 e Kids 2",
-    preco: mensalidade.valor,
-    periodo: mensalidade.periodo,
-    inclui: ["Aulas na turma da idade", "Acompanhamento de graus e faixas", "Participação nas colações de grau"],
-  },
-  {
-    nome: "Adultos",
-    para: "Adolescentes e adultos, do iniciante ao graduado",
-    preco: mensalidade.valor,
-    periodo: mensalidade.periodo,
-    inclui: ["Aulas de Jiu-Jitsu com kimono", "Preparação para campeonatos", "Acompanhamento de graus e faixas"],
-    destaque: true,
-  },
-  {
-    nome: "Mulheres e melhor idade",
-    para: "Treino no seu ritmo",
-    preco: mensalidade.valor,
-    periodo: mensalidade.periodo,
-    inclui: ["Mesmo valor de todos os alunos", "Treino adaptado ao seu ritmo pelo professor", "Acompanhamento de graus e faixas"],
-  },
-];
+export const mensalidade = {
+  valor: "R$ 125",
+  periodo: "por mês",
+  para: ["Crianças", "Adultos", "Mulheres", "Melhor idade"],
+  inclui: [
+    "Aulas na turma da sua idade, em todos os dias de aula",
+    "Acompanhamento de graus e faixas pelo professor",
+    "Colação de grau com a turma e a família",
+    "Preparação para campeonatos, para quem quiser competir",
+    "Treino adaptado ao ritmo de cada aluno",
+  ],
+};
 
 /*
   Troca de faixa: tabela de preços da branca até a preta, separada para crianças e adultos.
@@ -150,14 +135,14 @@ export const planos: Plano[] = [
   Nas faixas infantis (menos a branca) existem 3 versões: com branco, pura e com preto;
   as três têm o mesmo valor da cor.
 */
-export type Faixa = { nome: string; cor: string; ponteira: string; idade: string; preco: string | null; variacoes?: boolean };
+export type Faixa = { nome: string; cor: string; ponteira: string; idade: string; preco: string | null; variacoes?: boolean; preta?: boolean };
 export const trocaDeFaixa = {
   infantil: {
     titulo: "Faixas infantis",
     descricao: "Até 15 anos. Cinza, amarela, laranja e verde têm três versões: com branco, pura e com preto.",
     faixas: [
-      { nome: "Branca", cor: "#f2f2f0", ponteira: "#111111", idade: "a partir de 5 anos", preco: null },
-      { nome: "Cinza", cor: "#8d8f93", ponteira: "#111111", idade: "5 a 15 anos", preco: null, variacoes: true },
+      { nome: "Branca", cor: "#f2f2f0", ponteira: "#111111", idade: "a partir de 4 anos", preco: null },
+      { nome: "Cinza", cor: "#8d8f93", ponteira: "#111111", idade: "4 a 15 anos", preco: null, variacoes: true },
       { nome: "Amarela", cor: "#f2c21b", ponteira: "#111111", idade: "7 a 15 anos", preco: null, variacoes: true },
       { nome: "Laranja", cor: "#ec7a1c", ponteira: "#111111", idade: "10 a 15 anos", preco: null, variacoes: true },
       { nome: "Verde", cor: "#1f8a4c", ponteira: "#111111", idade: "13 a 15 anos", preco: null, variacoes: true },
@@ -171,7 +156,7 @@ export const trocaDeFaixa = {
       { nome: "Azul", cor: "#1d4fb8", ponteira: "#111111", idade: "a partir de 16 anos", preco: null },
       { nome: "Roxa", cor: "#5b2a86", ponteira: "#111111", idade: "a partir de 16 anos", preco: null },
       { nome: "Marrom", cor: "#5a3a22", ponteira: "#111111", idade: "a partir de 18 anos", preco: null },
-      { nome: "Preta", cor: "#0a0a0a", ponteira: "#d6202b", idade: "a partir de 19 anos", preco: null },
+      { nome: "Preta", cor: "#0a0a0a", ponteira: "#d6202b", idade: "a partir de 19 anos", preco: null, preta: true },
     ] as Faixa[],
   },
 };
@@ -179,10 +164,12 @@ export const trocaDeFaixa = {
 /*
   Loja: kimono encomendado com o professor. O preço de quem vai fazer a aula experimental vai junto
   no formulário de agendamento; quem já é aluno pede direto pelo WhatsApp.
-  `preco: null` aparece como "Consulte".
+  Com `preco: null` a loja mostra "Preço e prazo com o professor Bruno"; com um valor, ele aparece na loja.
+  Até 15 anos o kimono é infantil (a mesma idade das faixas infantis); a partir de 16, adulto.
 */
 export const loja = {
   cores: ["Branco", "Preto"],
+  idadeKimonoAdulto: 16,
   produtos: {
     infantil: { nome: "Kimono infantil", preco: null as string | null },
     adulto: { nome: "Kimono adulto", preco: null as string | null },

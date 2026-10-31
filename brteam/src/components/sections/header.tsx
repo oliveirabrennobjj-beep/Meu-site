@@ -173,9 +173,10 @@ export function Header() {
       el.focus({ preventScroll: true });
       history.replaceState(null, "", `#${destino}`);
     } else {
-      // WhatsApp, Instagram e "Como chegar" abrem fora: o menu fecha para a pessoa voltar à página
+      // WhatsApp, Instagram e "Como chegar" abrem fora: o menu fecha e o foco volta ao botão do menu,
+      // para a pessoa voltar à página no mesmo lugar
       setAtivo(id);
-      setAberto(false);
+      fechar();
     }
   }
 
@@ -189,7 +190,8 @@ export function Header() {
         className={cn(
           "fixed inset-x-0 top-0 z-40 transition-[background-color,transform] duration-300 ease-[var(--ease-saida)]",
           oculto && !aberto && "-translate-y-full",
-          rolou ? "border-b border-white/10 bg-black/90 backdrop-blur-md" : "bg-gradient-to-b from-black/70 to-transparent",
+          // sobre a foto do topo: fundo mais escuro atrás dos links, para eles terem contraste
+          rolou ? "border-b border-white/10 bg-black/90 backdrop-blur-md" : "bg-gradient-to-b from-black/90 via-black/60 to-transparent",
         )}
       >
         <div className="pagina flex h-[68px] items-center justify-between gap-4">
@@ -204,7 +206,7 @@ export function Header() {
                     href={`#${l.id}`}
                     aria-current={ativo === l.id ? "location" : undefined}
                     className={cn(
-                      "relative px-3 py-2 text-[15px] font-medium text-white/75 transition-colors hover:text-white",
+                      "relative px-3 py-2 text-[15px] font-medium text-white/90 transition-colors [text-shadow:0_1px_8px_rgb(10_26_56/0.8)] hover:text-white",
                       ativo === l.id && "text-white after:absolute after:inset-x-3 after:-bottom-0.5 after:h-0.5 after:bg-ouro",
                     )}
                   >

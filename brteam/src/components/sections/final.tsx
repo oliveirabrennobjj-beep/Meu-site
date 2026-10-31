@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import { ChevronLeft, ChevronRight, Expand, Info, MapPin, Navigation, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Expand, Info, MapPin, Navigation, Phone, X } from "lucide-react";
 import { InstagramIcon, WhatsAppIcon } from "@/components/brand-icons";
+import { cn } from "@/lib/utils";
 import { Faixa } from "@/components/faixa";
-import { academia, contato, endereco, fotos, instagram, linkWhatsApp, mapaBusca, mapaEmbed, mapaRota, parceiros } from "@/data/site";
+import { academia, contato, diasDeAula, endereco, fotos, instagram, linkWhatsApp, mapaBusca, mapaEmbed, mapaRota, parceiros, resumoHorarios } from "@/data/site";
 
 function GaleriaAmpliada({ indice, onFechar, onTrocar }: { indice: number | null; onFechar: () => void; onTrocar: (i: number) => void }) {
   const ref = useRef<HTMLDialogElement>(null);
@@ -137,7 +138,7 @@ function CartaoMapa() {
         <p className="mt-1 text-chumbo">
           {endereco.rua}, {endereco.bairro}, {endereco.cidade}
         </p>
-        <a href={mapaBusca} target="_blank" rel="noopener noreferrer" className="botao botao-ouro mt-6 w-full sm:w-auto">
+        <a href={mapaBusca} target="_blank" rel="noopener noreferrer" className="botao botao-primario mt-6 w-full sm:w-auto">
           <MapPin className="size-5" aria-hidden="true" /> Abrir no Google Maps
         </a>
         <p className="mt-5 flex gap-3 border border-ouro/50 bg-gelo p-4 text-[15px] text-black/85">
@@ -216,21 +217,60 @@ export function Contato() {
 }
 
 export function Rodape() {
+  const titulo = "font-display text-lg font-bold uppercase tracking-wide text-ouro";
+  const link = "inline-flex min-h-11 items-center gap-2 hover:text-white";
   return (
-    <footer className="border-t border-white/10 bg-black pb-24 pt-4 sm:pb-12">
-      <Faixa bandeira graus={1} altura={14} />
-      <div className="pagina mt-12 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
+    <footer className="border-t border-white/10 bg-black pb-24 pt-4 text-cinza sm:pb-12">
+      <Faixa preta bandeira graus={1} altura={14} />
+      <div className="pagina mt-12 grid gap-10 md:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1fr]">
         <div>
           <img src="./marca-br-team.png" alt="BR Team Brazilian Jiu-Jitsu" width={240} height={100} className="h-auto w-[200px]" />
-          <p className="mt-4 text-cinza">
+          <p className="mt-4">
             {academia.lema} {academia.pilares.join(", ").replace(/, ([^,]*)$/, " e $1")}. Oss.
           </p>
         </div>
-        <div className="flex flex-col gap-1 text-sm text-cinza md:items-end">
-          <a href={contato.linktree} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center hover:text-white">linktr.ee/brteamjiu</a>
-          <span>© {new Date().getFullYear()} {academia.nomeCompleto}</span>
+        <div>
+          <h2 className={titulo}>Aulas</h2>
+          <p className="mt-3 font-semibold text-white">{diasDeAula}</p>
+          <p className="mt-1">{resumoHorarios}</p>
+          <a href="#horarios" className="mt-1 inline-flex min-h-11 items-center underline underline-offset-4 hover:text-white">Ver os horários</a>
+        </div>
+        <div>
+          <h2 className={titulo}>Endereço</h2>
+          <address className="mt-3 not-italic">
+            {endereco.rua}, {endereco.bairro}
+            <br />
+            {endereco.cidade}, <span className="whitespace-nowrap">{endereco.cep}</span>
+          </address>
+          <a href={mapaRota} target="_blank" rel="noopener noreferrer" className={link}>
+            <Navigation className="size-4" aria-hidden="true" /> Como chegar
+          </a>
+        </div>
+        <div>
+          <h2 className={titulo}>Contato</h2>
+          <ul className="mt-2">
+            <li>
+              <a href={linkWhatsApp()} target="_blank" rel="noopener noreferrer" className={link}>
+                <WhatsAppIcon className="size-4" /> {contato.whatsappExibicao}
+              </a>
+            </li>
+            <li>
+              <a href={`tel:+${contato.whatsapp}`} className={link}>
+                <Phone className="size-4" aria-hidden="true" /> Ligar
+              </a>
+            </li>
+            <li>
+              <a href={instagram(contato.instagramAcademia)} target="_blank" rel="noopener noreferrer" className={link}>
+                <InstagramIcon className="size-4" /> @{contato.instagramAcademia}
+              </a>
+            </li>
+            <li>
+              <a href={contato.linktree} target="_blank" rel="noopener noreferrer" className={link}>linktr.ee/brteamjiu</a>
+            </li>
+          </ul>
         </div>
       </div>
+      <p className="pagina mt-10 border-t border-white/10 pt-6 text-sm">© {new Date().getFullYear()} {academia.nomeCompleto}</p>
     </footer>
   );
 }
@@ -239,6 +279,15 @@ export function WhatsAppFlutuante() {
   // balão "Dúvidas?" aparece uma vez, depois de um tempo na página
   const [balao, setBalao] = useState(false);
   const linkRef = useRef<HTMLAnchorElement>(null);
+  // some enquanto o formulário de agendamento está na tela, para não cobrir os campos e o botão de enviar
+  const [sobreFormulario, setSobreFormulario] = useState(false);
+  useEffect(() => {
+    const form = document.getElementById("agendar");
+    if (!form) return;
+    const obs = new IntersectionObserver(([e]) => setSobreFormulario(e.isIntersecting));
+    obs.observe(form);
+    return () => obs.disconnect();
+  }, []);
   useEffect(() => {
     const abre = setTimeout(() => setBalao(true), 9000);
     const fecha = setTimeout(() => setBalao(false), 17000);
@@ -248,7 +297,13 @@ export function WhatsAppFlutuante() {
     };
   }, []);
   return (
-    <aside aria-label="Atalho do WhatsApp" className="fixed bottom-5 right-5 z-30 flex items-center gap-3 sm:hidden">
+    <aside
+      aria-label="Atalho do WhatsApp"
+      className={cn(
+        "fixed bottom-5 right-5 z-30 flex items-center gap-3 transition-[opacity,transform] duration-300 sm:hidden",
+        sobreFormulario && "pointer-events-none invisible translate-y-4 opacity-0",
+      )}
+    >
       {balao && (
         <span className="surge-rapido relative rounded-full bg-white px-4 py-2 text-[15px] font-medium text-black shadow-xl">
           Dúvidas? Fale com a gente
