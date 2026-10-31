@@ -31,13 +31,15 @@ export function Hero() {
       </div>
 
       {/* faixa preta de 1º grau, a do professor, atravessando a tela */}
-      <Faixa preta amarrar bandeira graus={1} altura={26} className="mt-7 w-full md:mt-9" />
+      <Faixa preta amarrar graus={1} altura={26} className="mt-7 w-full md:mt-9" />
 
       <div style={{ animationDelay: "600ms" }} className="pagina hero-entrada flex flex-col gap-8 pb-24 pt-8 md:pb-16">
+        <p className="w-fit max-w-full rounded-sm bg-vermelho px-5 py-3 font-display text-[clamp(1.7rem,6.5vw,2.8rem)] font-extrabold uppercase leading-none tracking-[0.01em] text-white shadow-[0_14px_32px_-12px_rgb(214_32_43/0.75)]">
+          {experimental.chamada}
+        </p>
         <p className="max-w-[34ch] text-lg leading-relaxed text-white/85 md:text-xl">
           {academia.lema} Desde {academia.desde}, crianças, jovens e adultos treinam com a gente
-          corpo, mente e alma.{" "}
-          <strong className="font-semibold text-white">A aula experimental é grátis: {experimental.resumo}.</strong>
+          corpo, mente e alma.
         </p>
         <div className="flex flex-col gap-3 sm:flex-row">
           <a href="#agendar" className="botao botao-primario">
@@ -147,7 +149,7 @@ export function Professor() {
           <h2 className="titulo mt-1">Bruno Ramos</h2>
           <ul className="mt-8 space-y-4 text-lg">
             <li className="flex items-center gap-4">
-              <Faixa preta bandeira graus={1} altura={14} clara className="w-20 shrink-0" />
+              <Faixa preta graus={1} altura={14} clara className="w-16 shrink-0" />
               Faixa preta 1º grau de Jiu-Jitsu
             </li>
             <li className="flex items-center gap-4">

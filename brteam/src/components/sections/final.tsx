@@ -221,7 +221,7 @@ export function Rodape() {
   const link = "inline-flex min-h-11 items-center gap-2 hover:text-white";
   return (
     <footer className="border-t border-white/10 bg-black pb-24 pt-4 text-cinza sm:pb-12">
-      <Faixa preta bandeira graus={1} altura={14} />
+      <Faixa preta graus={1} altura={14} />
       <div className="pagina mt-12 grid gap-10 md:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1fr]">
         <div>
           <img src="./marca-br-team.png" alt="BR Team Brazilian Jiu-Jitsu" width={240} height={100} className="h-auto w-[200px]" />
