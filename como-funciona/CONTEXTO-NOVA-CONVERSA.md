@@ -14,9 +14,9 @@
 | Raio-X | panela de pressão | `video-panela/` | MP4 refeito e entregue 30/10; postar 21h |
 | E Se Você Fizesse | freio | `video-freio-3d/` (roteiro 10) | MP4 refeito e entregue 30/10; postar 22h30 |
 | Engenheirinho | ponte | `video-ponte-3d/` (roteiro E02) | MP4 refeito e entregue 30/10; postar 23h (ou sáb 9h) |
-| Raio-X | descarga | `video-descarga/` | agendado: sáb 31/10 12h |
-| E Se Você Fizesse | turbo | `video-turbo-3d/` (roteiro 11) | agendado: sáb 31/10 19h |
-| Engenheirinho | navio | `video-navio-3d/` (roteiro E03) | agendado: sáb 31/10 20h |
+| Raio-X | descarga | `video-descarga/` | postar sáb 31/10 15h (12h perdido; MP4 refeito em 31/10) |
+| E Se Você Fizesse | turbo | `video-turbo-3d/` (roteiro 11) | postar sáb 31/10 19h (MP4 refeito em 31/10) |
+| Engenheirinho | navio | `video-navio-3d/` (roteiro E03) | postar sáb 31/10 20h (MP4 refeito em 31/10) |
 | BN Digital | hamburgueria (pedido X Cocó) | `bn-digital/brag-output/brag.mp4` | agendado: ter 03/11 12h |
 
 - Legendas de post ficam em cada roteiro (`roteiros/*.md`, seção "Legenda do post").
