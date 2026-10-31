@@ -20,6 +20,10 @@ type Campos = {
   // detalhes que o professor pediu: onde/quanto tempo treinou e saúde (opcionais)
   ondeTreinou: string;
   saude: string;
+  telResp: string;
+  // o que a família/aluno espera do Jiu-Jitsu (vários)
+  objetivos: string[];
+  outroEsporte: string;
   horario: string;
   // kimono no mesmo pedido: o responsável marca a aula e já pergunta o preço do kimono
   kimono: boolean;
@@ -34,6 +38,12 @@ const parentescos = ["Mãe", "Pai", "Avó / Avô", "Tia / Tio", "Irmã / Irmão"
 const ehMenor = (c: Campos) => c.paraQuem === "filho" || (Number(c.idade) > 0 && Number(c.idade) < MAIOR_IDADE);
 const souEuMenor = (c: Campos) => c.paraQuem === "mim" && Number(c.idade) > 0 && Number(c.idade) < MAIOR_IDADE;
 
+const objetivosLista = [
+  "Disciplina e foco", "Defesa pessoal", "Gastar energia", "Perder a timidez / fazer amigos",
+  "Saúde e condicionamento", "Contra bullying", "Competir",
+];
+const digitos = (t: string) => t.replace(/\D/g, "");
+
 const faixasTodas = [...new Set([...trocaDeFaixa.infantil.faixas, ...trocaDeFaixa.adulto.faixas].map((f) => f.nome))];
 
 function validar(c: Campos): Erros {
@@ -42,6 +52,8 @@ function validar(c: Campos): Erros {
   if (c.paraQuem === "filho" && c.nomeAluno.trim().length < 2) e.nomeAluno = "Escreva o nome da criança.";
   if (souEuMenor(c) && c.nomeResp.trim().length < 2)
     e.nomeResp = "Menor de 18 anos vai com o responsável. Escreva o nome do pai, da mãe ou do responsável.";
+  if (souEuMenor(c) && digitos(c.telResp).length < 10)
+    e.telResp = "Escreva o WhatsApp do responsável com DDD, para o professor confirmar com ele(a).";
   const idade = Number(c.idade);
   if (c.idade && Number.isInteger(idade) && idade > 99) e.idade = "Confira a idade: o número parece alto demais.";
   else if (!c.idade || !Number.isInteger(idade) || idade < academia.idadeMinima)
@@ -53,30 +65,42 @@ function validar(c: Campos): Erros {
 
 function montarMensagem(c: Campos) {
   const idade = Number(c.idade);
+  const menor = ehMenor(c);
+  const filho = c.paraQuem === "filho";
+  const aluno = filho ? c.nomeAluno.trim() : c.nome.trim();
+  const respNome = filho ? c.nome.trim() : c.nomeResp.trim();
   const linhas = [
     "Olá, BR Team! Quero agendar a aula experimental de cortesia.",
+    ...(menor ? ["", "⚠️ *Aluno menor de idade: vai acompanhado do responsável.*"] : []),
     "",
-    `Nome: ${c.nome.trim()}`,
-    c.paraQuem === "filho"
-      ? `Aula para: meu filho(a) ${c.nomeAluno.trim()}, ${idade} anos`
-      : `Aula para: mim, ${idade} anos`,
-    `Horário: ${c.horario}`,
-    ...(c.paraQuem === "filho"
-      ? [`Responsável: ${c.nome.trim()} (${c.parentesco.toLowerCase()}). Vou acompanhar a criança na aula experimental.`]
-      : souEuMenor(c)
-        ? [`Sou menor de idade. Responsável: ${c.nomeResp.trim()} (${c.parentesco.toLowerCase()}), que vai comigo na aula experimental.`]
-        : []),
-    c.experiencia === "nunca" ? "Experiência: nunca treinou" : `Experiência: já treinou, faixa ${c.faixa.toLowerCase()}`,
-    ...(c.experiencia === "ja" && c.ondeTreinou.trim() ? [`Onde e quanto tempo treinou: ${c.ondeTreinou.trim()}`] : []),
-    `Saúde / cuidados: ${c.saude.trim() || "nada a informar"}`,
+    "*ALUNO*",
+    `Nome: ${aluno}`,
+    `Idade: ${idade} anos`,
+    `Horário escolhido: ${c.horario}`,
+    ...(menor
+      ? [
+          "",
+          "*RESPONSÁVEL*",
+          `Nome: ${respNome} (${c.parentesco.toLowerCase()})`,
+          ...(filho ? ["Contato: este WhatsApp"] : [`WhatsApp: ${c.telResp.trim()}`]),
+          filho ? "Vou acompanhar a criança na aula experimental." : "Meu responsável vai comigo na aula experimental.",
+        ]
+      : []),
+    "",
+    "*EXPERIÊNCIA*",
+    c.experiencia === "nunca" ? "Nunca treinou Jiu-Jitsu" : `Já treinou, faixa ${c.faixa.toLowerCase()}`,
+    ...(c.experiencia === "ja" && c.ondeTreinou.trim() ? [`Onde e quanto tempo: ${c.ondeTreinou.trim()}`] : []),
+    ...(c.outroEsporte.trim() ? [`Outros esportes/lutas: ${c.outroEsporte.trim()}`] : []),
+    ...(c.objetivos.length ? [`O que ${filho ? "esperamos" : "espero"} do Jiu-Jitsu: ${c.objetivos.join(", ").toLowerCase()}`] : []),
+    "",
+    "*SAÚDE*",
+    c.saude.trim() || "Nada a informar",
     ...(c.kimono
       ? [
           "",
-          `Também quero saber o preço do kimono ${tipoKimono(idade)}: ${c.cor.toLowerCase()}, ${c.qtd === 1 ? "1 unidade" : `${c.qtd} unidades`}.`,
-          // quem nunca treinou ainda não sabe o tamanho: o professor vê na aula experimental
-          ...(c.experiencia === "nunca"
-            ? [c.paraQuem === "filho" ? "Como ele(a) nunca treinou, o professor pode ver o tamanho na aula experimental." : "Como nunca treinei, o professor pode ver o meu tamanho na aula experimental."]
-            : []),
+          "*KIMONO*",
+          `Quero saber o preço do kimono ${tipoKimono(idade)}: ${c.cor.toLowerCase()}, ${c.qtd === 1 ? "1 unidade" : `${c.qtd} unidades`}.`,
+          "O tamanho o professor vê na aula.",
         ]
       : []),
   ];
@@ -203,7 +227,7 @@ export function AgendarAula() {
   const sucessoRef = useRef<HTMLDivElement>(null);
   const [c, setC] = useState<Campos>({
     nome: "", paraQuem: "mim", nomeAluno: "", idade: "", experiencia: "nunca", faixa: "Branca", horario: "",
-    parentesco: parentescos[0], nomeResp: "", ondeTreinou: "", saude: "",
+    parentesco: parentescos[0], nomeResp: "", ondeTreinou: "", saude: "", telResp: "", objetivos: [], outroEsporte: "",
     kimono: false, cor: loja.cores[0], qtd: 1,
   });
   const [tocado, setTocado] = useState<Partial<Record<keyof Campos, boolean>>>({});
@@ -251,7 +275,7 @@ export function AgendarAula() {
 
   function enviar(e: FormEvent) {
     e.preventDefault();
-    setTocado({ nome: true, nomeAluno: c.paraQuem === "filho", idade: true, horario: true, nomeResp: souEuMenor(c) });
+    setTocado({ nome: true, nomeAluno: c.paraQuem === "filho", idade: true, horario: true, nomeResp: souEuMenor(c), telResp: souEuMenor(c) });
     const chaves = Object.keys(erros) as (keyof Campos)[];
     if (chaves.length) {
       form.current?.querySelector<HTMLElement>(`[name="${chaves[0]}"]`)?.focus();
@@ -391,6 +415,17 @@ export function AgendarAula() {
                         />
                       </Campo>
                     )}
+                    {souEuMenor(c) && (
+                      <Campo id={id("telResp")} rotulo="WhatsApp do responsável" erro={mostrarErro("telResp")}>
+                        <input
+                          id={id("telResp")} name="telResp" type="tel" inputMode="tel" autoComplete="tel" placeholder="(22) 99999-9999" value={c.telResp}
+                          onChange={(e) => set("telResp", e.target.value)}
+                          onBlur={() => setTocado((t) => ({ ...t, telResp: true }))}
+                          aria-invalid={!!mostrarErro("telResp")} aria-describedby={descr("telResp")}
+                          className={estiloCampo}
+                        />
+                      </Campo>
+                    )}
                     <Campo id={id("parentesco")} rotulo={c.paraQuem === "filho" ? "Você é o quê da criança?" : "O responsável é seu(sua)"}>
                       <select id={id("parentesco")} name="parentesco" value={c.parentesco} onChange={(e) => set("parentesco", e.target.value)} className={estiloCampo}>
                         {parentescos.map((p) => (
@@ -443,6 +478,40 @@ export function AgendarAula() {
                   />
                 </Campo>
               )}
+
+              <Campo
+                id={id("outroEsporte")}
+                rotulo="Já fez outro esporte ou luta? (opcional)"
+                ajuda="Ex.: futebol, judô, natação, capoeira."
+              >
+                <input
+                  id={id("outroEsporte")} name="outroEsporte" value={c.outroEsporte}
+                  onChange={(e) => set("outroEsporte", e.target.value)}
+                  aria-describedby={`${id("outroEsporte")}-ajuda`}
+                  className={estiloCampo}
+                />
+              </Campo>
+
+              <fieldset>
+                <legend className="text-sm font-semibold">
+                  {c.paraQuem === "filho" ? "O que vocês esperam do Jiu-Jitsu para a criança? (opcional, pode marcar vários)" : "O que você espera do Jiu-Jitsu? (opcional, pode marcar vários)"}
+                </legend>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {objetivosLista.map((o) => (
+                    <label
+                      key={o}
+                      className="inline-flex min-h-11 cursor-pointer items-center rounded-sm border border-black/25 px-4 text-[15px] transition-colors hover:border-black has-[:checked]:border-black has-[:checked]:bg-black has-[:checked]:text-white has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-azul"
+                    >
+                      <input
+                        type="checkbox" name="objetivos" value={o} className="sr-only"
+                        checked={c.objetivos.includes(o)}
+                        onChange={(e) => set("objetivos", e.target.checked ? [...c.objetivos, o] : c.objetivos.filter((x) => x !== o))}
+                      />
+                      {o}
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
 
               <Campo
                 id={id("saude")}
