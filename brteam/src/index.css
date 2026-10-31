@@ -4,7 +4,7 @@
 /*
   BR Team — direção visual
   Foto em tela cheia na abertura e seções claras, alternando branco e "gelo" azulado. Azul-marinho só no topo,
-  na Mensalidade, no cartão das faixas adultas, em "Quem decide é o professor" e no rodapé.
+  na Mensalidade, no cartão das faixas adultas e no rodapé.
   Não há cinza neutro nem preto puro: o "preto" do Tailwind é um azul-marinho quase preto (--color-black) e o
   texto secundário no claro é um azul-ardósia (--color-chumbo). Botões em azul, detalhes em dourado.
   As cores das faixas (amarela, laranja, verde, azul, roxa, marrom) marcam os benefícios do Kids e dos adultos.
@@ -138,6 +138,8 @@ a, button { touch-action: manipulation; }
   border-radius: 4px;
 }
 .claro :focus-visible { outline-color: var(--color-azul); }
+/* foto ampliada: o diálogo fica dentro da galeria (seção clara), mas o fundo é escuro: contorno branco */
+.galeria-ampliada :focus-visible { outline-color: #fff; }
 /* seções e avisos recebem foco por código (tabindex=-1): sem moldura */
 [tabindex="-1"]:focus { outline: none; }
 ::selection { background: var(--color-ouro); color: var(--color-black); }
@@ -211,8 +213,6 @@ a, button { touch-action: manipulation; }
   .botao-primario { background: var(--color-ponteira); color: #fff; }
   .botao-primario:hover { background: var(--color-ponteira-escura); }
   .botao-contorno { border: 1.5px solid currentColor; }
-  .botao-ouro { background: var(--color-ouro); color: #0d2348; }
-  .botao-ouro:hover { background: #d8b45e; }
   .botao-contorno:hover { background: #fff; color: #000; border-color: #fff; }
   .claro .botao-contorno:hover { background: var(--color-black); color: #fff; border-color: var(--color-black); }
 }
@@ -247,8 +247,6 @@ a, button { touch-action: manipulation; }
     0 calc(var(--altura, 22px) * 0.18) calc(var(--altura, 22px) * 0.4) calc(var(--altura, 22px) * -0.12) rgb(0 0 0 / 0.35);
 }
 .faixa-clara { --contorno: rgb(0 0 0 / 0.14); }
-/* faixa pequena sobre o azul-marinho: contorno claro para a azul, roxa, marrom e preta aparecerem */
-.faixa-no-escuro { --contorno: rgb(255 255 255 / 0.3); }
 .faixa__ponteira {
   position: absolute;
   top: 0;

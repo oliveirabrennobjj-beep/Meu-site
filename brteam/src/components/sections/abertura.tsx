@@ -31,15 +31,15 @@ export function Hero() {
       </div>
 
       {/* faixa preta de 1º grau, a do professor, atravessando a tela */}
-      <Faixa amarrar bandeira graus={1} altura={26} className="mt-7 w-full md:mt-9" />
+      <Faixa preta amarrar bandeira graus={1} altura={26} className="mt-7 w-full md:mt-9" />
 
-      <div style={{ animationDelay: "600ms" }} className="pagina hero-entrada grid gap-8 pb-24 pt-8 md:grid-cols-[1.2fr_1fr] md:items-end md:pb-16">
+      <div style={{ animationDelay: "600ms" }} className="pagina hero-entrada flex flex-col gap-8 pb-24 pt-8 md:pb-16">
         <p className="max-w-[34ch] text-lg leading-relaxed text-white/85 md:text-xl">
           {academia.lema} Desde {academia.desde}, crianças, jovens e adultos treinam com a gente
           corpo, mente e alma.{" "}
           <strong className="font-semibold text-white">A aula experimental é grátis: {experimental.resumo}.</strong>
         </p>
-        <div className="flex flex-col gap-3 sm:flex-row md:justify-end">
+        <div className="flex flex-col gap-3 sm:flex-row">
           <a href="#agendar" className="botao botao-primario">
             Agendar aula grátis
           </a>
@@ -147,7 +147,7 @@ export function Professor() {
           <h2 className="titulo mt-1">Bruno Ramos</h2>
           <ul className="mt-8 space-y-4 text-lg">
             <li className="flex items-center gap-4">
-              <Faixa bandeira graus={1} altura={14} clara className="w-20 shrink-0" />
+              <Faixa preta bandeira graus={1} altura={14} clara className="w-20 shrink-0" />
               Faixa preta 1º grau de Jiu-Jitsu
             </li>
             <li className="flex items-center gap-4">
@@ -249,7 +249,7 @@ export function Kids() {
 }
 
 // Os cinco pontos da série "Pronto para fazer de 2025 o seu ano de transformação?" do Instagram
-const beneficiosAdultos: { faixa: string; ponteira?: string; titulo: string; texto: string }[] = [
+const beneficiosAdultos: { faixa?: string; preta?: boolean; titulo: string; texto: string }[] = [
   {
     faixa: "var(--color-faixa-azul)",
     titulo: "Disciplina e constância",
@@ -266,8 +266,7 @@ const beneficiosAdultos: { faixa: string; ponteira?: string; titulo: string; tex
     texto: "Superando obstáculos no treino, você descobre a própria força e ganha confiança para enfrentar qualquer coisa.",
   },
   {
-    faixa: "#141414",
-    ponteira: "#d6202b",
+    preta: true,
     titulo: "Menos estresse, mente limpa",
     texto: "O Jiu-Jitsu funciona como terapia ativa: movimentos focados e aprendizado constante ajudam a esvaziar a cabeça.",
   },
@@ -296,7 +295,7 @@ export function Adultos() {
           <div className="mt-12 grid gap-x-10 gap-y-9 sm:grid-cols-2">
             {beneficiosAdultos.map((b) => (
               <div key={b.titulo}>
-                <Faixa cor={b.faixa} ponteira={b.ponteira ?? "#111111"} altura={14} clara className="mb-4 w-28" />
+                <Faixa preta={b.preta} cor={b.faixa} altura={14} clara className="mb-4 w-28" />
                 <h3 className="font-display text-2xl font-bold uppercase leading-tight">{b.titulo}</h3>
                 <p className="mt-2 text-chumbo">{b.texto}</p>
               </div>

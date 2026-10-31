@@ -32,8 +32,8 @@ Depois de mudar algo, rode `npm run build` e envie a pasta `dist/` junto.
 | O que | Onde |
 |---|---|
 | **Preços da troca de faixa** (crianças: branca, cinza, amarela, laranja e verde; adultos: branca, azul, roxa, marrom e preta; cada uma com seu `preco`) | `src/data/site.ts` → `trocaDeFaixa` (troque `null` por `"R$ 80"`, por exemplo). As três versões de uma cor infantil (com branco, pura, com preto) usam o mesmo preço. |
-| **Mensalidade** (R$ 125, igual para todos) | `src/data/site.ts` → `mensalidade.valor` |
-| **Loja de kimonos** (cores, preço) | `src/data/site.ts` → `loja` (`preco: null` mostra "Preço e prazo com o professor Bruno") |
+| **Mensalidade** (R$ 125, igual para todos) | `src/data/site.ts` → `mensalidade` (`valor`, quem paga em `para` e a lista `inclui`) |
+| **Loja de kimonos** (cores, preço, idade do kimono adulto) | `src/data/site.ts` → `loja` (`preco: null` mostra "Preço e prazo com o professor Bruno"; até 15 anos o pedido sai como kimono infantil) |
 | **Horários das turmas** | `src/data/site.ts` → `aulas` e `diasDeAula`. Os textos que citam os horários (subtítulo da seção, turma indicada no formulário, dúvida "Com que idade…") saem de `aulas` sozinhos; só a frase dos dias sem aula, em `treinos.tsx`, é escrita à mão. |
 | WhatsApp, Instagram, e-mail, endereço, idade mínima, Pix e estacionamento | `src/data/site.ts` → `contato`, `endereco` e `academia` |
 | Parceiros | `src/data/site.ts` → `parceiros` |
@@ -52,19 +52,11 @@ e compatíveis com o original: props `groups`, `bottomItems` e `header`; `href` 
 linhas como `<button>`/`<a>` para funcionar com teclado. A prévia original continua no export padrão e em
 `dashboard-sidebar-demo.tsx`. Dependências: `lucide-react` e `tw-animate-css` (classes `animate-in`).
 
-## Componente integrado: `boxly-pricing-1`
+## Componente `boxly-pricing-1` (fora do site)
 
-`src/components/ui/boxly-pricing-1.tsx` é a tabela de preços enviada, usada na seção **Mensalidade**
-(`Mensalidade` em `src/components/sections/treinos.tsx`), com os planos de `src/data/site.ts`.
-Sem props ela mostra o original (prévia em `boxly-pricing-1-demo.tsx`). Extensões opcionais: `tiers` (com `href`
-para o botão abrir o WhatsApp, `period` e `note`), `eyebrow`, `title`, `aside`, `includedLabel`, `featuredIcon` e `className`.
-Ajustes de acessibilidade: o botão do plano em destaque usa `red-600` (o `red-500` original não tinha contraste suficiente
-com o texto branco) e as cantoneiras decorativas não bloqueiam mais o clique nos botões.
-Depende de `src/components/ui/button.tsx` (Button padrão do shadcn, com `@radix-ui/react-slot` e `class-variance-authority`).
-
-Sobre o CSS enviado junto: as linhas `--ring: var(----ring)` e parecidas (com quatro hífens) apontam para variáveis
-que não existem e apagariam as cores do tema, por isso ficaram de fora. Entraram só os tokens novos
-(`info`, `success`, `warning`, `destructive-foreground`), em `src/index.css`.
+`src/components/ui/boxly-pricing-1.tsx` é a tabela de preços enviada. Ela mostrava três cartões iguais de R$ 125 na
+Mensalidade; como o valor é um só, a seção virou um bloco único (`Mensalidade` em `src/components/sections/treinos.tsx`).
+O componente continua no projeto, com a prévia em `boxly-pricing-1-demo.tsx`, caso um dia existam planos diferentes.
 
 ## Interações com o visitante
 
@@ -80,7 +72,7 @@ que não existem e apagariam as cores do tema, por isso ficaram de fora. Entrara
   com o horário marcado. Os horários ficam em `src/data/site.ts` → `aulas` (dias da semana em `diasDeAula`).
 - **Dúvidas frequentes** (`#duvidas`): perguntas que abrem e fecham, com links para planos, troca de faixa e rota.
 - Os botões "Agendar aula" do topo, do menu e da abertura levam ao formulário; o botão verde flutuante (celular)
-  continua abrindo o WhatsApp direto.
+  continua abrindo o WhatsApp direto e some enquanto o formulário está na tela, para não cobrir os campos.
 
 ## Movimento e interações
 
@@ -111,6 +103,6 @@ O endereço é o **nº 886** (confirmado pela placa na fachada, no Street View).
 Resolvido: o professor Bruno autorizou o uso das fotos das crianças (ele pediu o site e falou com os pais).
 
 **Preços de troca de faixa e kimono:** de propósito, não ficam no site. Os botões "Pedir o preço" (troca de faixa),
-o bloco "Troca de faixa e kimono" (embaixo da Mensalidade), a Loja e a opção de kimono do agendamento abrem o WhatsApp do professor com a
+o bloco "Troca de faixa e kimono" (dentro da Mensalidade), a Loja e a opção de kimono do agendamento abrem o WhatsApp do professor com a
 mensagem pronta (textos em `mensagemPreco`, em `src/data/site.ts`). Se um dia quiser mostrar um valor, preencha `preco`
 em `trocaDeFaixa` ou em `loja`.

@@ -1,10 +1,9 @@
-import { useState, type ReactNode } from "react";
-import { ArrowRight, Check, FastForward, Hourglass } from "lucide-react";
-import PricingSection from "@/components/ui/boxly-pricing-1";
+import { useState, type CSSProperties, type ReactNode } from "react";
+import { ArrowRight, CalendarCheck, Check, FastForward, Hourglass } from "lucide-react";
 import { Faixa } from "@/components/faixa";
 import type { Faixa as FaixaDados } from "@/data/site";
 import { WhatsAppIcon } from "@/components/brand-icons";
-import { aulas, diasDeAula, fotos, graduacao, linkWhatsApp, mensagemPreco, mensalidade, planos, resumoHorarios, trocaDeFaixa } from "@/data/site";
+import { aulas, diasDeAula, experimental, fotos, graduacao, linkWhatsApp, mensagemPreco, mensalidade, resumoHorarios, trocaDeFaixa } from "@/data/site";
 import { cn } from "@/lib/utils";
 
 const A_CONFIRMAR = "A confirmar";
@@ -28,24 +27,28 @@ export function Horarios() {
           </p>
         </div>
 
-        <div className="mt-12 grid gap-px bg-marinho/10 md:grid-cols-3">
-          {periodos.map((periodo) => (
-            <div key={periodo} className="bg-white p-6 md:p-8">
+        {/* cada período ocupa o espaço das suas aulas: a noite (3 turmas) é mais larga que a manhã e a tarde */}
+        <div
+          className="mt-12 grid gap-px bg-marinho/10 md:grid-cols-2 lg:[grid-template-columns:var(--colunas)]"
+          style={{ "--colunas": periodos.map((p) => `${aulas.filter((a) => a.periodo === p).length}fr`).join(" ") } as CSSProperties}
+        >
+          {periodos.map((periodo) => {
+            const doPeriodo = aulas.filter((a) => a.periodo === periodo);
+            return (
+            <div key={periodo} className={cn("bg-white p-6 md:p-8", doPeriodo.length > 1 && "md:col-span-2 lg:col-span-1")}>
               <h3 className="font-semibold text-ouro-escuro">{periodo}</h3>
-              <ul className="mt-4 space-y-6">
-                {aulas
-                  .filter((a) => a.periodo === periodo)
-                  .map((a) => (
+              <ul className={cn("mt-4 grid gap-6", doPeriodo.length > 1 && "md:grid-cols-3 md:gap-8")}>
+                {doPeriodo.map((a) => (
                     <li key={a.horario}>
-                      <p className="font-display text-4xl font-bold tabular-nums leading-none">{a.horario}</p>
-                      <p className="mt-2 flex items-center gap-2 text-lg">
+                      <p className="whitespace-nowrap font-display text-4xl font-bold tabular-nums leading-none md:text-[1.9rem]">{a.horario}</p>
+                      <p className="mt-2 flex items-center gap-2 text-lg font-medium">
                         <span
                           aria-hidden="true"
-                          className={cn("size-2.5 rounded-full", a.turma === "Kids" ? "bg-ouro-escuro" : "bg-azul")}
+                          className={cn("size-2.5 shrink-0 rounded-full", a.turma === "Kids" ? "bg-ouro-escuro" : "bg-azul")}
                         />
                         {a.nome}
-                        <span className="text-chumbo">· {a.publico}</span>
                       </p>
+                      <p className="text-chumbo">{a.publico}</p>
                       <a
                         href="#agendar"
                         onClick={() => window.dispatchEvent(new CustomEvent("agendar:aula", { detail: a }))}
@@ -55,92 +58,92 @@ export function Horarios() {
                         <span className="sr-only">: {a.nome}, {a.horario}</span>
                       </a>
                     </li>
-                  ))}
+                ))}
               </ul>
             </div>
-          ))}
+            );
+          })}
         </div>
       </div>
-    </section>
-  );
-}
-
-/* Mensalidade: o componente boxly-pricing-1 (components/ui) com os planos de src/data/site.ts */
-export function Mensalidade() {
-  return (
-    <section aria-labelledby="planos-titulo">
-      <PricingSection
-        id="planos"
-        className="min-h-0 bg-marinho pb-0 [&>div]:pb-10"
-        tema={{
-          linha: "border-grafite",
-          chip: "text-ouro",
-          cartao: "bg-marinho",
-          destaque: "border-2 border-ouro bg-tatame",
-          destaqueTitulo: "text-ouro",
-          destaqueIcone: "text-ouro",
-          destaqueBotao: "bg-azul text-white hover:bg-azul-escuro",
-          cantos: "border-ouro/70",
-        }}
-        eyebrow="Mesmo valor para todos"
-        title={<span id="planos-titulo">Mensalidade</span>}
-        titleClassName="titulo"
-        aside={
-          <>
-            <span className="text-white">{mensalidade.valor} {mensalidade.periodo}, para todo mundo.</span> Crianças,
-            adultos, mulheres e melhor idade pagam o mesmo valor. Cada aluno treina na turma da sua idade. A primeira
-            semana, de aula experimental, é grátis.
-          </>
-        }
-        includedLabel="O que está incluso"
-        featuredIcon={Check}
-        tiers={planos.map((p) => ({
-          name: p.nome,
-          description: p.para,
-          featured: !!p.destaque,
-          features: p.inclui,
-          price: p.preco ?? A_CONFIRMAR,
-          period: p.preco ? `/${p.periodo.replace("por ", "")}` : null,
-          note: p.preco ? undefined : "Valor em atualização. Confirme pelo WhatsApp.",
-          cta: "Quero me matricular",
-          href: linkWhatsApp(`Olá, BR Team! Quero me matricular (${p.nome.toLowerCase()}), mensalidade de ${mensalidade.valor}.`),
-        }))}
-      />
-      <OutrosPrecos />
     </section>
   );
 }
 
 /*
-  Troca de faixa e kimono não têm preço no site: o professor passa pelo WhatsApp.
-  Os botões abrem a conversa com a mensagem pronta, então a pessoa só precisa enviar.
+  Mensalidade: um bloco só, porque o valor é o mesmo para todo mundo (src/data/site.ts → mensalidade).
+  Troca de faixa e kimono não têm preço no site: os botões abrem o WhatsApp do professor com o pedido pronto.
 */
-function OutrosPrecos() {
+export function Mensalidade() {
   return (
-    <div className="bg-marinho px-4 pb-20">
-      <div className="mx-auto max-w-5xl border-x border-grafite px-4 md:px-10">
-        <div className="border-t-2 border-ouro bg-tatame p-6 md:p-8">
-          <h3 className="titulo-md">Troca de faixa e kimono</h3>
-          <p className="mt-3 max-w-[62ch] text-cinza">
-            Esses preços o professor Bruno passa direto, pelo WhatsApp. Toque no botão: o WhatsApp dele abre com a
-            mensagem pronta, dizendo o que você quer saber. É só enviar e continuar a conversa com ele.
+    <section id="planos" aria-labelledby="planos-titulo" className="bg-marinho py-16 text-white md:py-32">
+      <div className="pagina grid gap-12 lg:grid-cols-[1fr_1fr] lg:gap-20">
+        <div>
+          <p className="font-semibold text-ouro">Mesmo valor para todos</p>
+          <h2 id="planos-titulo" className="titulo mt-2">Mensalidade</h2>
+          <p className="mt-8 flex items-baseline gap-3">
+            <span className="font-display text-[clamp(4.5rem,13vw,8rem)] font-extrabold leading-[0.85] tabular-nums">{mensalidade.valor}</span>
+            <span className="font-display text-2xl font-bold uppercase text-cinza">{mensalidade.periodo}</span>
           </p>
-          <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-            <a href={linkWhatsApp(mensagemPreco.trocaDeFaixa)} target="_blank" rel="noopener noreferrer" className="botao botao-primario">
-              <WhatsAppIcon className="size-5" /> Preço da troca de faixa
+          <ul className="mt-6 flex flex-wrap gap-2" aria-label="Quem paga esse valor">
+            {mensalidade.para.map((p) => (
+              <li key={p} className="rounded-full border border-grafite px-3 py-1.5 text-sm">{p}</li>
+            ))}
+          </ul>
+          <p className="mt-6 max-w-[44ch] text-lg text-cinza">
+            Cada aluno treina na turma da sua idade. <strong className="font-semibold text-white">A aula experimental é grátis: {experimental.resumo}.</strong>
+          </p>
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <a href="#agendar" className="botao botao-primario">
+              <CalendarCheck className="size-5" aria-hidden="true" /> Agendar aula grátis
             </a>
-            <a href={linkWhatsApp(mensagemPreco.kimono)} target="_blank" rel="noopener noreferrer" className="botao botao-contorno text-white">
-              <WhatsAppIcon className="size-5" /> Preço do kimono
+            <a
+              href={linkWhatsApp(`Olá, BR Team! Quero me matricular. Mensalidade de ${mensalidade.valor}.`)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="botao botao-contorno text-white"
+            >
+              <WhatsAppIcon className="size-5" /> Quero me matricular
             </a>
           </div>
-          <p className="mt-4 text-sm text-cinza">
-            Vai marcar a aula experimental? Dá para perguntar o preço do kimono{" "}
-            <a href="#agendar" className="text-white underline underline-offset-4 hover:decoration-ouro">no mesmo formulário</a>,
-            e vai tudo numa mensagem só.
-          </p>
+        </div>
+
+        <div className="lg:pt-3">
+          <h3 className="titulo-md">O que está incluso</h3>
+          <ul className="mt-6 border-t border-grafite">
+            {mensalidade.inclui.map((item) => (
+              <li key={item} className="flex gap-3 border-b border-grafite py-4 text-lg">
+                <Check className="mt-1 size-5 shrink-0 text-ouro" aria-hidden="true" />
+                {item}
+              </li>
+            ))}
+          </ul>
+
+          <div className="mt-10 border-t-2 border-ouro bg-tatame p-6 md:p-8">
+            <h3 className="titulo-md">Troca de faixa e kimono</h3>
+            <p className="mt-3 max-w-[56ch] text-cinza">Esses preços o professor Bruno passa direto, pelo WhatsApp.</p>
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <a href={linkWhatsApp(mensagemPreco.trocaDeFaixa)} target="_blank" rel="noopener noreferrer" className="botao botao-primario">
+                <WhatsAppIcon className="size-5" /> Preço da troca de faixa
+              </a>
+              <a href={linkWhatsApp(mensagemPreco.kimono)} target="_blank" rel="noopener noreferrer" className="botao botao-contorno text-white">
+                <WhatsAppIcon className="size-5" /> Preço do kimono
+              </a>
+            </div>
+            <p className="mt-4 text-sm text-cinza">
+              Vai marcar a aula experimental? Pergunte o preço do kimono{" "}
+              <a
+                href="#agendar"
+                onClick={() => window.dispatchEvent(new CustomEvent("agendar:kimono"))}
+                className="text-white underline underline-offset-4 hover:decoration-ouro"
+              >
+                no mesmo formulário
+              </a>
+              .
+            </p>
+          </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }
 
@@ -151,10 +154,10 @@ const versoes = [
 ];
 
 /** Sem preço publicado: o botão abre o WhatsApp do professor Bruno com o pedido de preço já escrito. */
-function PrecoComProfessor({ faixa, escuro }: { faixa: string; escuro: boolean }) {
+function PrecoComProfessor({ faixa, infantil, escuro }: { faixa: string; infantil: boolean; escuro: boolean }) {
   return (
     <a
-      href={linkWhatsApp(mensagemPreco.faixa(faixa, !escuro))}
+      href={linkWhatsApp(mensagemPreco.faixa(faixa, infantil))}
       target="_blank"
       rel="noopener noreferrer"
       className={cn(
@@ -177,7 +180,7 @@ function LinhaFaixa({ f, escuro = false }: { f: FaixaDados; escuro?: boolean }) 
           <p className={cn("mt-1 text-sm", legenda)}>{f.idade}</p>
         </div>
         <p className="font-display text-2xl font-bold tabular-nums md:hidden">
-          {f.preco ?? <PrecoComProfessor faixa={f.nome} escuro={escuro} />}
+          {f.preco ?? <PrecoComProfessor faixa={f.nome} infantil={!escuro} escuro={escuro} />}
         </p>
       </div>
 
@@ -193,11 +196,11 @@ function LinhaFaixa({ f, escuro = false }: { f: FaixaDados; escuro?: boolean }) 
           ))}
         </ul>
       ) : (
-        <Faixa cor={f.cor} ponteira={f.ponteira} clara={!escuro || f.nome === "Branca"} altura={20} className="faixa-crescer" />
+        <Faixa preta={f.preta} cor={f.cor} ponteira={f.ponteira} clara={!escuro || f.nome === "Branca"} altura={20} className="faixa-crescer" />
       )}
 
       <p className="hidden text-right font-display text-3xl font-bold tabular-nums md:block">
-        {f.preco ?? <PrecoComProfessor faixa={f.nome} escuro={escuro} />}
+        {f.preco ?? <PrecoComProfessor faixa={f.nome} infantil={!escuro} escuro={escuro} />}
       </p>
     </li>
   );
@@ -273,25 +276,25 @@ function DecisaoDoProfessor() {
     },
   ];
   return (
-    <div className="mt-10 bg-black p-6 text-white md:p-8">
+    <div className="mt-10 border-t-2 border-ouro bg-gelo p-6 md:p-8">
       <h4 className="font-display text-3xl font-bold uppercase leading-none">Quem decide é o professor</h4>
-      <p className="mt-3 max-w-[70ch] text-cinza">
+      <p className="mt-3 max-w-[70ch] text-chumbo">
         As federações (IBJJF e CBJJ) definem idades e tempos mínimos. Dentro disso, o professor avalia cada aluno: a
         faixa pode vir antes ou levar mais tempo. O professor Bruno é exigente com os detalhes, e na BR Team a faixa é
         conquistada no treino, não dada pelo calendário.
       </p>
-      <div className="mt-6 grid gap-px bg-grafite md:grid-cols-2">
+      <div className="mt-6 grid gap-px bg-marinho/10 md:grid-cols-2">
         {lados.map((l) => (
-          <div key={l.titulo} className="bg-black p-5 md:p-6">
+          <div key={l.titulo} className="bg-white p-5 md:p-6">
             <h5 className="flex items-center gap-3 font-display text-2xl font-bold uppercase">
-              <l.icone className="size-6 text-ouro" aria-hidden="true" />
+              <l.icone className="size-6 text-ouro-escuro" aria-hidden="true" />
               {l.titulo}
             </h5>
-            <p className="mt-2 text-cinza">{l.texto}</p>
+            <p className="mt-2 text-chumbo">{l.texto}</p>
           </div>
         ))}
       </div>
-      <p className="mt-6 text-white/85">
+      <p className="mt-6 text-black/85">
         O que ele observa: frequência, técnica, comportamento dentro e fora do tatame, respeito aos colegas e cuidado com
         o parceiro de treino.
       </p>
@@ -436,9 +439,8 @@ export function TrocaDeFaixa() {
         <div className="grid gap-8 lg:grid-cols-[1fr_1fr] lg:items-end">
           <h2 className="titulo">Troca de faixa</h2>
           <p className="max-w-[48ch] text-lg text-chumbo">
-            Tabela da troca de faixa, da branca até a preta. O preço de cada troca é passado pelo professor Bruno:
-            toque em "Pedir o preço" na faixa e o WhatsApp dele abre com a mensagem pronta, é só enviar. A faixa nova
-            é entregue na colação de grau, com a turma e a família no tatame.
+            Da branca até a preta. O preço de cada troca o professor Bruno passa pelo WhatsApp: toque em "Pedir o
+            preço" na faixa. A faixa nova é entregue na colação de grau, com a turma e a família no tatame.
           </p>
         </div>
 
