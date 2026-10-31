@@ -185,10 +185,11 @@ export const parceiros = [
 ];
 
 export const fotos = {
-  hero: { src: "./fotos/turma-kids.webp", alt: "Turma infantil da BR Team, de kimono, sorrindo no tatame da academia", w: 1080, h: 702 },
+  // topo do site: o tatame da academia (foto enviada pelo professor)
+  hero: { src: "./fotos/tatame-academia.webp", alt: "O tatame da BR Team: salão amplo com tatame branco, a bandeira do Brasil e os diplomas do professor na parede", w: 1600, h: 984 },
+  turmaKids: { src: "./fotos/turma-kids.webp", alt: "Turma infantil da BR Team, de kimono, sorrindo no tatame da academia", w: 1080, h: 702 },
   professor: { src: "./fotos/professor-bruno.webp", alt: "Professor Bruno Ramos, de kimono branco e faixa preta, de braços cruzados", w: 601, h: 1170 },
   professorFilha: { src: "./fotos/bruno-e-marina.webp", alt: "Bruno Ramos ajoelhado no tatame ao lado da filha Marina, os dois de kimono", w: 356, h: 418 },
-  espaco: { src: "./fotos/espaco-tatame.webp", alt: "O tatame da BR Team: salão branco com a bandeira do Brasil, diplomas na parede e o quadro com a marca da academia", w: 904, h: 236 },
   cumprimento: { src: "./fotos/professor-cumprimento.webp", alt: "Professor Bruno cumprimentando o tatame com uma reverência", w: 520, h: 833 },
   adultos: [
     { src: "./fotos/turma-mista.webp", alt: "Turma mista de adultos com faixas branca, azul, roxa e marrom no tatame da BR Team", w: 1080, h: 799 },
