@@ -13,7 +13,7 @@ export function Hero() {
         height={fotos.hero.h}
         fetchPriority="high"
         data-parallax="0.3"
-        className="absolute inset-0 -z-10 size-full object-cover object-[50%_30%]"
+        className="absolute inset-0 -z-10 size-full object-cover object-[55%_50%]"
       />
       <div className="absolute inset-0 -z-10 bg-gradient-to-t from-black via-black/55 to-marinho/20" />
       <div className="absolute inset-0 -z-10 bg-gradient-to-r from-black/60 via-transparent to-transparent" />
@@ -94,16 +94,16 @@ export function Academia() {
       <figure className="pagina mt-20 md:mt-24">
         <div className="overflow-hidden">
           <img
-            src={fotos.espaco.src}
-            alt={fotos.espaco.alt}
-            width={fotos.espaco.w}
-            height={fotos.espaco.h}
+            src={fotos.turmaKids.src}
+            alt={fotos.turmaKids.alt}
+            width={fotos.turmaKids.w}
+            height={fotos.turmaKids.h}
             loading="lazy"
-            className="aspect-[904/236] w-full min-h-[180px] object-cover"
+            className="aspect-[4/3] w-full object-cover object-[50%_35%] sm:aspect-[21/9]"
           />
         </div>
         <figcaption className="mt-4 flex flex-wrap items-center justify-between gap-4">
-          <span className="text-chumbo">O nosso tatame, na Rua Pastor Luiz Laurentino, em Casimiro de Abreu.</span>
+          <span className="text-chumbo">A turma kids no tatame da BR Team, na Rua Pastor Luiz Laurentino, em Casimiro de Abreu.</span>
           <span className="flex flex-wrap gap-2">
             {academia.comodidades.map((c) => (
               <span key={c} className="inline-flex items-center gap-1.5 rounded-full border border-marinho/15 px-3 py-1.5 text-sm">
