@@ -17,13 +17,13 @@ export const academia = {
 
 export const professor = { anosComoProfessor: 6, anosNoJiuJitsu: 15 };
 
-/* Aula experimental: grátis. Aparece em vermelho, bem visível, no topo e no agendamento. */
-export const experimental = { chamada: "A aula experimental é grátis!" };
+/* Aula experimental de cortesia. Aparece em vermelho, bem visível, no topo e no agendamento. */
+export const experimental = { chamada: "Aula experimental de cortesia" };
 
 export const contato = {
   whatsapp: "5522999968108",
   whatsappExibicao: "(22) 99996-8108",
-  mensagemPadrao: "Olá, BR Team! Quero agendar a aula experimental grátis de Jiu-Jitsu.",
+  mensagemPadrao: "Olá, BR Team! Quero agendar a aula experimental de cortesia de Jiu-Jitsu.",
   instagramAcademia: "brteambjj",
   instagramProfessor: "bjjbrunoramos",
   linktree: "https://linktr.ee/brteamjiu",
