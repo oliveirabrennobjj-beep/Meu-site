@@ -11,9 +11,9 @@
 | Raio-X | fechadura | `video-fechadura/` | postado 29/10 ~20h45 |
 | E Se Você Fizesse | motor | `video-motor-3d/` | postado 29/10 ~20h45 |
 | Engenheirinho | caminhão | `video-caminhao-3d/` | postado 29/10 21h |
-| Raio-X | panela de pressão | `video-panela/` | postar sex 30/10 21h (horário original 12h perdido; MP4 refeito em 30/10) |
-| E Se Você Fizesse | freio | `video-freio-3d/` (roteiro 10) | postar sex 30/10 22h (original 19h perdido; MP4 refeito em 30/10) |
-| Engenheirinho | ponte | `video-ponte-3d/` (roteiro E02) | postar sex 30/10 22h15 (original 20h perdido; MP4 refeito em 30/10) |
+| Raio-X | panela de pressão | `video-panela/` | MP4 refeito e entregue 30/10; postar 21h |
+| E Se Você Fizesse | freio | `video-freio-3d/` (roteiro 10) | MP4 refeito e entregue 30/10; postar 22h30 |
+| Engenheirinho | ponte | `video-ponte-3d/` (roteiro E02) | MP4 refeito e entregue 30/10; postar 23h (ou sáb 9h) |
 | Raio-X | descarga | `video-descarga/` | agendado: sáb 31/10 12h |
 | E Se Você Fizesse | turbo | `video-turbo-3d/` (roteiro 11) | agendado: sáb 31/10 19h |
 | Engenheirinho | navio | `video-navio-3d/` (roteiro E03) | agendado: sáb 31/10 20h |
