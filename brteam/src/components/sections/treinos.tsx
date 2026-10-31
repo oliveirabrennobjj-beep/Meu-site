@@ -94,7 +94,7 @@ export function Mensalidade() {
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             <a href="#agendar" className="botao botao-primario">
-              <CalendarCheck className="size-5" aria-hidden="true" /> Agendar aula grátis
+              <CalendarCheck className="size-5" aria-hidden="true" /> Agendar aula experimental
             </a>
             <a
               href={linkWhatsApp(`Olá, BR Team! Quero me matricular. Mensalidade de ${mensalidade.valor}.`)}

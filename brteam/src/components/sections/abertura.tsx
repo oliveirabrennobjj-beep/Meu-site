@@ -43,7 +43,7 @@ export function Hero() {
         </p>
         <div className="flex flex-col gap-3 sm:flex-row">
           <a href="#agendar" className="botao botao-primario">
-            Agendar aula grátis
+            Agendar aula experimental
           </a>
           <a href="#horarios" className="botao botao-contorno text-white">
             Horários e valores

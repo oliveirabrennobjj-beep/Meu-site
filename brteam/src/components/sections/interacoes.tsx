@@ -40,7 +40,7 @@ function validar(c: Campos): Erros {
 function montarMensagem(c: Campos) {
   const idade = Number(c.idade);
   const linhas = [
-    "Olá, BR Team! Quero agendar a aula experimental grátis.",
+    "Olá, BR Team! Quero agendar a aula experimental de cortesia.",
     "",
     `Nome: ${c.nome.trim()}`,
     c.paraQuem === "filho"
@@ -462,7 +462,7 @@ const perguntas: { p: string; r: ReactNode }[] = [
   },
   {
     p: "A aula experimental é paga?",
-    r: `Não. ${experimental.chamada} Depois, a mensalidade é ${mensalidade.valor} ${mensalidade.periodo}.`,
+    r: `Não, a aula experimental é de cortesia. Depois, a mensalidade é ${mensalidade.valor} ${mensalidade.periodo}.`,
   },
   {
     p: "O que levar na aula experimental?",
