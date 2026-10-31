@@ -14,6 +14,12 @@ type Campos = {
   idade: string;
   experiencia: "nunca" | "ja";
   faixa: string;
+  // menor de idade: vai com o responsável. Quem é (parentesco) e, se o próprio adolescente marcar, o nome do responsável
+  parentesco: string;
+  nomeResp: string;
+  // detalhes que o professor pediu: onde/quanto tempo treinou e saúde (opcionais)
+  ondeTreinou: string;
+  saude: string;
   horario: string;
   // kimono no mesmo pedido: o responsável marca a aula e já pergunta o preço do kimono
   kimono: boolean;
@@ -22,12 +28,20 @@ type Campos = {
 };
 type Erros = Partial<Record<keyof Campos, string>>;
 
+const MAIOR_IDADE = 18;
+const parentescos = ["Mãe", "Pai", "Avó / Avô", "Tia / Tio", "Irmã / Irmão", "Outro responsável"];
+// menor de idade: aula para o filho(a), ou a pessoa marcou "para mim" com menos de 18 anos
+const ehMenor = (c: Campos) => c.paraQuem === "filho" || (Number(c.idade) > 0 && Number(c.idade) < MAIOR_IDADE);
+const souEuMenor = (c: Campos) => c.paraQuem === "mim" && Number(c.idade) > 0 && Number(c.idade) < MAIOR_IDADE;
+
 const faixasTodas = [...new Set([...trocaDeFaixa.infantil.faixas, ...trocaDeFaixa.adulto.faixas].map((f) => f.nome))];
 
 function validar(c: Campos): Erros {
   const e: Erros = {};
   if (c.nome.trim().length < 2) e.nome = "Escreva seu nome para a gente saber com quem fala.";
   if (c.paraQuem === "filho" && c.nomeAluno.trim().length < 2) e.nomeAluno = "Escreva o nome da criança.";
+  if (souEuMenor(c) && c.nomeResp.trim().length < 2)
+    e.nomeResp = "Menor de 18 anos vai com o responsável. Escreva o nome do pai, da mãe ou do responsável.";
   const idade = Number(c.idade);
   if (c.idade && Number.isInteger(idade) && idade > 99) e.idade = "Confira a idade: o número parece alto demais.";
   else if (!c.idade || !Number.isInteger(idade) || idade < academia.idadeMinima)
@@ -47,8 +61,14 @@ function montarMensagem(c: Campos) {
       ? `Aula para: meu filho(a) ${c.nomeAluno.trim()}, ${idade} anos`
       : `Aula para: mim, ${idade} anos`,
     `Horário: ${c.horario}`,
-    ...(c.paraQuem === "filho" ? ["Vou acompanhar a criança na aula experimental."] : []),
+    ...(c.paraQuem === "filho"
+      ? [`Responsável: ${c.nome.trim()} (${c.parentesco.toLowerCase()}). Vou acompanhar a criança na aula experimental.`]
+      : souEuMenor(c)
+        ? [`Sou menor de idade. Responsável: ${c.nomeResp.trim()} (${c.parentesco.toLowerCase()}), que vai comigo na aula experimental.`]
+        : []),
     c.experiencia === "nunca" ? "Experiência: nunca treinou" : `Experiência: já treinou, faixa ${c.faixa.toLowerCase()}`,
+    ...(c.experiencia === "ja" && c.ondeTreinou.trim() ? [`Onde e quanto tempo treinou: ${c.ondeTreinou.trim()}`] : []),
+    `Saúde / cuidados: ${c.saude.trim() || "nada a informar"}`,
     ...(c.kimono
       ? [
           "",
@@ -183,6 +203,7 @@ export function AgendarAula() {
   const sucessoRef = useRef<HTMLDivElement>(null);
   const [c, setC] = useState<Campos>({
     nome: "", paraQuem: "mim", nomeAluno: "", idade: "", experiencia: "nunca", faixa: "Branca", horario: "",
+    parentesco: parentescos[0], nomeResp: "", ondeTreinou: "", saude: "",
     kimono: false, cor: loja.cores[0], qtd: 1,
   });
   const [tocado, setTocado] = useState<Partial<Record<keyof Campos, boolean>>>({});
@@ -230,7 +251,7 @@ export function AgendarAula() {
 
   function enviar(e: FormEvent) {
     e.preventDefault();
-    setTocado({ nome: true, nomeAluno: c.paraQuem === "filho", idade: true, horario: true });
+    setTocado({ nome: true, nomeAluno: c.paraQuem === "filho", idade: true, horario: true, nomeResp: souEuMenor(c) });
     const chaves = Object.keys(erros) as (keyof Campos)[];
     if (chaves.length) {
       form.current?.querySelector<HTMLElement>(`[name="${chaves[0]}"]`)?.focus();
@@ -350,6 +371,37 @@ export function AgendarAula() {
                 </Campo>
               </div>
 
+              {ehMenor(c) && (
+                <div className="surge-rapido space-y-5 rounded-sm border border-ouro/50 bg-white p-4">
+                  <p className="text-[15px]">
+                    <strong>Menor de 18 anos vai com o responsável.</strong>{" "}
+                    {c.paraQuem === "filho"
+                      ? "Conte quem é você para a criança."
+                      : "Coloque os dados do pai, da mãe ou de quem é responsável por você. Ele(a) vai junto na aula experimental."}
+                  </p>
+                  <div className="grid gap-6 sm:grid-cols-2">
+                    {souEuMenor(c) && (
+                      <Campo id={id("nomeResp")} rotulo="Nome do responsável" erro={mostrarErro("nomeResp")}>
+                        <input
+                          id={id("nomeResp")} name="nomeResp" value={c.nomeResp}
+                          onChange={(e) => set("nomeResp", e.target.value)}
+                          onBlur={() => setTocado((t) => ({ ...t, nomeResp: true }))}
+                          aria-invalid={!!mostrarErro("nomeResp")} aria-describedby={descr("nomeResp")}
+                          className={estiloCampo}
+                        />
+                      </Campo>
+                    )}
+                    <Campo id={id("parentesco")} rotulo={c.paraQuem === "filho" ? "Você é o quê da criança?" : "O responsável é seu(sua)"}>
+                      <select id={id("parentesco")} name="parentesco" value={c.parentesco} onChange={(e) => set("parentesco", e.target.value)} className={estiloCampo}>
+                        {parentescos.map((p) => (
+                          <option key={p}>{p}</option>
+                        ))}
+                      </select>
+                    </Campo>
+                  </div>
+                </div>
+              )}
+
               <p aria-live="polite" className={cn("border-l-2 pl-4 transition-colors", turma ? "border-ouro" : "border-black/15")}>
                 {turma ? (
                   <>
@@ -381,6 +433,29 @@ export function AgendarAula() {
                   </select>
                 </Campo>
               )}
+              {c.experiencia === "ja" && (
+                <Campo id={id("ondeTreinou")} rotulo="Onde treinou e por quanto tempo? (opcional)" ajuda="Ex.: academia X, 1 ano, parado há 6 meses.">
+                  <input
+                    id={id("ondeTreinou")} name="ondeTreinou" value={c.ondeTreinou}
+                    onChange={(e) => set("ondeTreinou", e.target.value)}
+                    aria-describedby={`${id("ondeTreinou")}-ajuda`}
+                    className={estiloCampo}
+                  />
+                </Campo>
+              )}
+
+              <Campo
+                id={id("saude")}
+                rotulo={c.paraQuem === "filho" ? "A criança tem algum problema de saúde, alergia ou cuidado especial? (opcional)" : "Algum problema de saúde, lesão ou cuidado especial? (opcional)"}
+                ajuda="Ex.: asma, alergia, cirurgia recente. Se não tiver, deixe em branco."
+              >
+                <input
+                  id={id("saude")} name="saude" value={c.saude}
+                  onChange={(e) => set("saude", e.target.value)}
+                  aria-describedby={`${id("saude")}-ajuda`}
+                  className={estiloCampo}
+                />
+              </Campo>
 
               <EscolhaHorario
                 idade={turma ? idadeNum : null}
@@ -435,9 +510,9 @@ export function AgendarAula() {
                 )}
               </div>
 
-              {c.paraQuem === "filho" && (
+              {ehMenor(c) && (
                 <p className="surge-rapido rounded-sm bg-white p-4 text-[15px]">
-                  <strong>Importante:</strong> na aula experimental, a criança precisa ir acompanhada do responsável.
+                  <strong>Importante:</strong> na aula experimental, {c.paraQuem === "filho" ? "a criança" : "menor de 18 anos"} precisa ir acompanhado(a) do responsável.
                 </p>
               )}
 
@@ -485,8 +560,8 @@ const perguntas: { p: string; r: ReactNode }[] = [
     r: "Tem. A academia tem um lugar para guardar a bicicleta durante o treino. Não temos estacionamento próprio para carros.",
   },
   {
-    p: "Criança precisa ir com o responsável na aula experimental?",
-    r: "Precisa. Na aula experimental, a criança vai acompanhada do pai, da mãe ou do responsável, que conhece o professor e o espaço."
+    p: "Menor de idade precisa ir com o responsável na aula experimental?",
+    r: "Precisa. Na aula experimental, todo aluno menor de 18 anos vai acompanhado do pai, da mãe ou do responsável, que conhece o professor e o espaço. No formulário de agendamento você já informa quem é o responsável."
   },
   {
     p: "Como funciona a troca de faixa?",
