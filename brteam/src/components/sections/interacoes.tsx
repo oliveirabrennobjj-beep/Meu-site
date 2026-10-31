@@ -250,10 +250,9 @@ export function AgendarAula() {
     <section id="agendar" className="claro bg-white py-16 text-black md:py-32">
       <div className="pagina grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
         <div>
-          <h2 className="titulo">Agende sua aula experimental grátis</h2>
-          <p className="mt-6 max-w-[42ch] text-lg text-chumbo">
-            <strong className="font-semibold text-black">A aula experimental é grátis: {experimental.resumo}.</strong> Na primeira ou na
-            segunda aula, o pai e o professor já veem se a criança gostou; se ainda estiver na dúvida, ela volta nas outras.
+          <h2 className="titulo">Agende sua aula experimental</h2>
+          <p className="mt-6 font-display text-[clamp(1.6rem,5vw,2.2rem)] font-extrabold uppercase leading-none text-vermelho-escuro">
+            {experimental.chamada}
           </p>
           <p className="mt-4 max-w-[42ch] text-lg text-chumbo">
             Responda algumas perguntas rápidas e escolha o horário.
@@ -463,7 +462,7 @@ const perguntas: { p: string; r: ReactNode }[] = [
   },
   {
     p: "A aula experimental é paga?",
-    r: `Não, é grátis: ${experimental.resumo}. Na primeira ou na segunda aula já dá para ver se a criança (ou você) gostou; se ainda estiver na dúvida, volta nas outras. Depois, a mensalidade é ${mensalidade.valor} ${mensalidade.periodo}.`,
+    r: `Não. ${experimental.chamada} Depois, a mensalidade é ${mensalidade.valor} ${mensalidade.periodo}.`,
   },
   {
     p: "O que levar na aula experimental?",

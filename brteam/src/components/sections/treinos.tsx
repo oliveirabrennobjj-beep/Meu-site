@@ -90,7 +90,7 @@ export function Mensalidade() {
             ))}
           </ul>
           <p className="mt-6 max-w-[44ch] text-lg text-cinza">
-            Cada aluno treina na turma da sua idade. <strong className="font-semibold text-white">A aula experimental é grátis: {experimental.resumo}.</strong>
+            Cada aluno treina na turma da sua idade. <strong className="font-semibold text-white">{experimental.chamada}</strong>
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             <a href="#agendar" className="botao botao-primario">

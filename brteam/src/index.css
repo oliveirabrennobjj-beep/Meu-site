@@ -29,6 +29,8 @@
   --color-ouro: #c9a24a;        /* dourado dos detalhes */
   --color-ouro-escuro: #7d5f17; /* dourado para texto em fundo claro (5:1 no gelo) */
   --color-erro: #b42318;        /* mensagens de erro */
+  --color-vermelho: #d6202b;    /* chamada "aula experimental grátis" (texto branco em cima: 4.9:1) */
+  --color-vermelho-escuro: #b4161f; /* o mesmo vermelho como texto em fundo claro (6.4:1 no branco) */
   --color-kimono: #ffffff;      /* branco */
   --color-algodao: #f3f3f1;     /* superfície clara */
   --color-chumbo: #3d4d6e;      /* texto secundário no claro: azul-ardósia (8.4:1 no branco, 7.5:1 no gelo) */
@@ -267,18 +269,6 @@ a, button { touch-action: manipulation; }
 /* faixa preta: a ponteira vermelha é fechada por duas listras brancas, uma de cada lado (IBJJF) */
 .faixa-preta .faixa__ponteira {
   border-inline: max(2px, calc(var(--altura) * 0.14)) solid #f4f4f2;
-}
-/* bandeirinha do Brasil bordada no corpo da faixa, antes da ponteira */
-.faixa__bandeira {
-  position: absolute;
-  top: 50%;
-  right: calc(100% + max(5px, calc(var(--altura) * 0.6)));
-  height: 62%;
-  width: auto;
-  aspect-ratio: 10 / 7;
-  transform: translateY(-50%);
-  border-radius: 1px;
-  box-shadow: 0 0 0 max(1px, calc(var(--altura) * 0.05)) #f4f4f2, 0 1px 2px rgb(0 0 0 / 0.4);
 }
 .faixa__listra {
   position: absolute;
