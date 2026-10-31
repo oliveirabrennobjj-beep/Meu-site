@@ -2,7 +2,7 @@ import { useEffect, useId, useRef, useState, type FormEvent, type ReactNode } fr
 import { CheckCircle2, Minus, Pencil, Plus } from "lucide-react";
 import { WhatsAppIcon } from "@/components/brand-icons";
 import {
-  academia, aulasParaIdade, contato, endereco, experimental, idadeAdulto, linkWhatsApp, loja, mapaRota, mensalidade, resumoKids, rotuloAula, trocaDeFaixa, turmaPorIdade,
+  academia, aulasParaIdade, contato, endereco, experimental, idadeAdulto, linkWhatsApp, loja, mapaRota, mensalidade, nomeTurma, resumoKids, rotuloAula, trocaDeFaixa, turmaPorIdade,
   type Aula,
 } from "@/data/site";
 import { cn } from "@/lib/utils";
@@ -119,16 +119,16 @@ export function EscolhaHorario({
   return (
     <div>
       <Opcoes
-        legenda={`Horário da aula (turma ${turma})`}
+        legenda={`Horário da aula (${nomeTurma(turma)})`}
         nome={nome}
         valor={valor}
         onChange={onChange}
         erroId={erro ? `${nome}-erro` : undefined}
-        opcoes={opcoes.map((a) => ({ v: rotuloAula(a), rotulo: a.nome === "Adulto" ? a.horario : rotuloAula(a) }))}
+        opcoes={opcoes.map((a) => ({ v: rotuloAula(a), rotulo: a.turma === "Adulto" ? a.horario : rotuloAula(a) }))}
       />
       {erro && <p id={`${nome}-erro`} className="mt-1.5 text-sm font-medium text-erro">{erro}</p>}
       {turma === "Kids" && idade >= 10 && (
-        <p className="mt-2 text-sm text-chumbo">Se a criança for grande, o professor pode indicar a turma dos adultos.</p>
+        <p className="mt-2 text-sm text-chumbo">Se a criança for grande, o professor pode indicar a turma mista.</p>
       )}
     </div>
   );
@@ -353,7 +353,7 @@ export function AgendarAula() {
               <p aria-live="polite" className={cn("border-l-2 pl-4 transition-colors", turma ? "border-ouro" : "border-black/15")}>
                 {turma ? (
                   <>
-                    <span key={turma.turma} className="surge-rapido block font-display text-2xl font-bold uppercase leading-tight">Turma indicada: {turma.turma}</span>
+                    <span key={turma.turma} className="surge-rapido block font-display text-2xl font-bold uppercase leading-tight">Turma indicada: {nomeTurma(turma.turma)}</span>
                     <span className="text-chumbo">{turma.detalhe}</span>
                   </>
                 ) : (
@@ -462,7 +462,7 @@ const perguntas: { p: string; r: ReactNode }[] = [
   },
   {
     p: "A aula experimental é paga?",
-    r: `Não, a aula experimental é de cortesia. Depois, a mensalidade é ${mensalidade.valor} ${mensalidade.periodo}.`,
+    r: `Não, a aula experimental é de cortesia. Depois, a mensalidade é ${mensalidade.valor} ${mensalidade.periodo} (consulte os planos).`,
   },
   {
     p: "O que levar na aula experimental?",
@@ -474,7 +474,7 @@ const perguntas: { p: string; r: ReactNode }[] = [
   },
   {
     p: "Com que idade a criança pode começar?",
-    r: `A partir de ${academia.idadeMinima} anos: ${resumoKids}. A partir de ${idadeAdulto} anos, o aluno vai para as turmas de adultos.`,
+    r: `A partir de ${academia.idadeMinima} anos: ${resumoKids}. A partir de ${idadeAdulto} anos, o aluno vai para a turma mista.`,
   },
   {
     p: "Quais as formas de pagamento?",
@@ -503,7 +503,7 @@ const perguntas: { p: string; r: ReactNode }[] = [
     p: "Quanto custa a mensalidade?",
     r: (
       <>
-        {mensalidade.valor} {mensalidade.periodo}, o mesmo valor para crianças, adultos, mulheres e melhor idade. Veja o
+        {mensalidade.valor} {mensalidade.periodo}. Consulte os planos com o professor pelo WhatsApp. Veja o
         que está incluso na seção <a href="#planos" className="underline underline-offset-4 hover:text-azul">Mensalidade</a>.
       </>
     ),
