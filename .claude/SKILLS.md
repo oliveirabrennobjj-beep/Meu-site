@@ -113,14 +113,25 @@ Ao abrir o projeto, o Claude Code pergunta se você aprova os servidores do `.mc
 ## Plugins do projeto (`.claude/settings.json`)
 
 Adicionados em 2026-10-30, a pedido do Brenno. Ficam em `extraKnownMarketplaces` e `enabledPlugins`: toda sessão nova
-do Meu-site instala e liga os quatro. Para desligar um, troque `true` por `false` em `enabledPlugins`.
+do Meu-site instala e liga todos. Para desligar um, troque `true` por `false` em `enabledPlugins`.
 
 | Plugin | De onde vem | Para que serve |
 |---|---|---|
 | `superpowers` | `obra/superpowers-marketplace` | Planejar antes de programar, testes primeiro, depuração em etapas. As skills `brainstorming` e `verification-before-completion` desta pasta vêm dele também. |
 | `andrej-karpathy-skills` | `forrestchang/andrej-karpathy-skills` | 4 regras: pensar antes de codar, código simples, mexer só no necessário, conferir o resultado. |
 | `i-have-adhd` | `ayghri/i-have-adhd` | Respostas que começam pela próxima ação, com passos numerados e sem enrolação. |
+| `ponytail` | `DietrichGebert/ponytail` | Adicionado em 2026-11-01. "Dev sênior preguiçoso": a solução mais curta que funciona, sem código a mais. Menos código, menos tokens. O quadro de custos (ledger) grava só neste computador; nenhum webhook configurado. |
+| `caveman` | `JuliusBrussee/caveman` | Adicionado em 2026-11-01. Respostas curtas, sem enrolação, mantendo código e números exatos. Para desligar numa conversa: "normal mode" ou "stop caveman". |
 | `octo` (Claude Octopus) | `nyldn/plugins` | Manda a mesma tarefa para outras IAs (Codex, Grok, Copilot…) e mostra onde elas discordam. Comece com `/octo:setup`. As outras IAs só entram quando um comando `/octo:*` é usado e podem precisar de conta própria. |
 
 Os quatro rodam um aviso no começo da sessão (hook SessionStart). O Octopus também confere alguns comandos antes de
 executar (hooks PreToolUse), por isso é o mais pesado.
+
+## Graphify (`.claude/skills/graphify/`)
+
+Adicionado em 2026-11-01, a pedido do Brenno. Skill `/graphify` do `Graphify-Labs/graphify`: transforma o projeto num
+mapa (grafo) para o Claude consultar em vez de abrir arquivo por arquivo. O comando `graphify` vem do pacote Python
+`graphifyy`, instalado no `.venv/` pelo `hooks/session-start.sh`. Uso: `/graphify .` (gera `graphify-out/`).
+
+O `soumatheusgomes/vibe-coding-toolkit` (5º do mesmo vídeo) não é skill: é um kit de modelos (AGENTS.md, ESLint, Next.js)
+para começar projeto novo. Não foi instalado aqui.

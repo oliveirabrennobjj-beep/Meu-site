@@ -12,15 +12,49 @@
     ]
   },
   "extraKnownMarketplaces": {
-    "superpowers-marketplace": { "source": { "source": "github", "repo": "obra/superpowers-marketplace" } },
-    "karpathy-skills": { "source": { "source": "github", "repo": "forrestchang/andrej-karpathy-skills" } },
-    "i-have-adhd": { "source": { "source": "github", "repo": "ayghri/i-have-adhd" } },
-    "nyldn-plugins": { "source": { "source": "github", "repo": "nyldn/plugins" } }
+    "superpowers-marketplace": {
+      "source": {
+        "source": "github",
+        "repo": "obra/superpowers-marketplace"
+      }
+    },
+    "karpathy-skills": {
+      "source": {
+        "source": "github",
+        "repo": "forrestchang/andrej-karpathy-skills"
+      }
+    },
+    "i-have-adhd": {
+      "source": {
+        "source": "github",
+        "repo": "ayghri/i-have-adhd"
+      }
+    },
+    "nyldn-plugins": {
+      "source": {
+        "source": "github",
+        "repo": "nyldn/plugins"
+      }
+    },
+    "ponytail": {
+      "source": {
+        "source": "github",
+        "repo": "DietrichGebert/ponytail"
+      }
+    },
+    "caveman": {
+      "source": {
+        "source": "github",
+        "repo": "JuliusBrussee/caveman"
+      }
+    }
   },
   "enabledPlugins": {
     "superpowers@superpowers-marketplace": true,
     "andrej-karpathy-skills@karpathy-skills": true,
     "i-have-adhd@i-have-adhd": true,
-    "octo@nyldn-plugins": true
+    "octo@nyldn-plugins": true,
+    "ponytail@ponytail": true,
+    "caveman@caveman": true
   }
 }
