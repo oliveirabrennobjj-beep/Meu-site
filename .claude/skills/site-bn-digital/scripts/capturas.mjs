@@ -58,7 +58,15 @@ async function capturar(nome, opcoes, inteira = false) {
   const largura = await pagina.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
   if (largura > 1) problemas.push(`[${nome}] rolagem lateral de ${largura}px`);
   await pagina.screenshot({ path: join(saida, `${nome}.png`) });
-  if (inteira) await pagina.screenshot({ path: join(saida, `${nome}-inteiro.png`), fullPage: true });
+  if (inteira) {
+    // Rola até o fim para disparar animações de entrada antes da captura inteira.
+    await pagina.evaluate(async () => {
+      for (let y = 0; y < document.body.scrollHeight; y += 400) { window.scrollTo({ top: y, behavior: "instant" }); await new Promise((r) => setTimeout(r, 80)); }
+      window.scrollTo({ top: 0, behavior: "instant" });
+    });
+    await pagina.waitForTimeout(900);
+    await pagina.screenshot({ path: join(saida, `${nome}-inteiro.png`), fullPage: true });
+  }
   await contexto.close();
 }
 
