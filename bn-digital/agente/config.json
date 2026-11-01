@@ -1,0 +1,35 @@
+{
+  "vendedor": {
+    "nome": "Brenno",
+    "empresa": "BN Digital",
+    "cidade_base": "Casimiro de Abreu",
+    "whatsapp": "5522997052912",
+    "instagram": "bn_digital__sites_e_nfc",
+    "site": "https://oliveirabrennobjj-beep.github.io/Meu-site/",
+    "exemplo_de_site": "https://oliveirabrennobjj-beep.github.io/Meu-site/brteam/"
+  },
+  "o_que_vende": [
+    {
+      "produto": "Placa NFC de avaliação no Google (também tem a do WhatsApp e a do Pix)",
+      "preco": "R$ 129, pagamento único. Duas placas por R$ 229.",
+      "melhor_para": ["barbearia", "salao", "estetica", "pet", "oficina", "comida"]
+    },
+    {
+      "produto": "Site com botão de WhatsApp (pousada, restaurante, academia, corretor, loja)",
+      "preco": "",
+      "melhor_para": ["pousada", "comida", "academia", "corretor", "loja", "estetica"]
+    },
+    {
+      "produto": "Cardápio digital",
+      "preco": "",
+      "melhor_para": ["comida"]
+    }
+  ],
+  "cidades": ["Casimiro de Abreu", "Barra de São João", "Rio das Ostras", "Unamar", "Tamoios"],
+  "tipos": ["barbearia", "salao", "estetica", "pet", "oficina", "comida", "pousada", "academia", "loja"],
+  "limites": {
+    "novas_abordagens_por_dia": 15,
+    "dias_ate_lembrete": 3,
+    "maximo_de_lembretes": 1
+  }
+}

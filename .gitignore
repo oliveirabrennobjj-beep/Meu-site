@@ -28,3 +28,6 @@ como-funciona/*/out/
 
 # Rodadas do /arena (skill arena): arquivos de trabalho, não versionar
 .arena/
+
+# Agente de vendas: CRM e conversas com clientes são particulares
+bn-digital/agente/dados/
