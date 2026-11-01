@@ -14,6 +14,15 @@ O Brenno fala português, usa o celular e quer respostas curtas, passo a passo e
 - **Modo direto (padrão):** depois de juntar as informações, faz o site inteiro e só para no final para mostrar. É o "já sai pronto".
 - **Modo etapas:** se o Brenno pedir "por etapas" ou "quero aprovar", pare depois de cada fase marcada com ⏸ abaixo e espere ele dizer "ok".
 
+## A receita (o que o Brenno quer)
+
+**Empresa + referência = site personalizado, de uma vez só.**
+- Da **empresa** (Instagram, prints, logo): nome, logo, cores, fotos reais, cardápio, preços, horários, jeito de falar.
+- Da **referência** (print do Pinterest): estrutura, acabamento, elegância.
+- Junte os dois: o site tem o nível da referência e a cara da empresa. Moderno, bonito, elegante e combinando com a marca.
+
+O Instagram costuma estar bloqueado neste ambiente. Se não abrir, use o que o Brenno mandou em print (perfil, logo, posts com produtos e preços) e diga numa linha o que mais ajudaria.
+
 ## Fase 1. Juntar o que existe (sem inventar)
 
 Pergunte **uma vez só**, numa lista curta, o que ainda faltar. Não trave esperando o que é opcional.
