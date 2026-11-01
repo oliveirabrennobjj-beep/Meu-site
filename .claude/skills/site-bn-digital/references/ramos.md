@@ -17,6 +17,20 @@ Fontes são todas do Google Fonts. Evite Inter/Roboto/Poppins como fonte de tít
 | Clínica / saúde / pet | confiança, calma | azul petróleo #0f4c5c, verde água #5fb3a1, branco #ffffff, areia #f2ece4 | Lexend / Source Sans 3 | ícones simples e muito respiro; equipe com foto real | especialidades, convênios, agendar |
 | Serviços (eletricista, oficina, obra) | sério, direto | azul marinho #14213d, laranja segurança #fca311, cinza #e5e5e5 | Barlow Condensed / Barlow | faixa "orçamento grátis no WhatsApp" fixa | serviços, área atendida, fotos de trabalhos |
 
+## Padrão "comida premium" (aprovado pelo Brenno)
+
+Referência: `inspiracao/hamburgueria-tasty-bites.jpg`. Serve para hamburgueria, pizzaria, lanchonete, açaiteria e restaurante.
+
+1. **Topo escuro com foto de comida em close** (madeira, fundo desfocado, luz quente), cantos de baixo arredondados (~32 px). Menu claro em cima, botão "Pedir agora" amarelo em formato pílula no canto.
+2. **Título em 2 linhas** com sans grossa branca e **uma palavra em fonte manuscrita** na cor de destaque (ex.: "Feito com *Amor*", "O melhor *Burger* da cidade"). Acima, uma linha pequena em caixa alta e espaçada ("ARTESANAL · SUCULENTO · NA BRASA").
+3. Bilhete manuscrito com setinha apontando para a foto ("O mais pedido!").
+4. Linha com 3 ícones finos + texto curto embaixo do botão (ingredientes frescos, entrega rápida, higiene).
+5. **Seção clara (creme #fbf6ee)** "Mais pedidos": cartões brancos com foto em cima, nome, descrição de 2 linhas, preço e botão pílula amarelo "Pedir no WhatsApp". Selo vermelho "Mais pedido" no primeiro.
+6. **Faixa de delivery** verde-escura (ou cor escura da marca) com título manuscrito ("Bateu a fome?") + "A gente entrega!", botão e foto à direita.
+7. Rodapé claro com 3 ícones de confiança e créditos.
+
+Fontes que dão esse resultado: Poppins/Outfit 800 (título), Kaushan Script, Yellowtail ou Caveat Brush (palavra manuscrita), DM Sans (texto). Cores de partida: fundo #1b1410, amarelo #f6b21a, creme #fbf6ee, verde-escuro #1f2a1c, vermelho #d93a2b.
+
 ## Regras de bom gosto
 
 - Uma cor de destaque só para botões de ação (WhatsApp/pedir). O resto apoia.

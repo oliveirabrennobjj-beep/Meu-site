@@ -32,11 +32,22 @@ Ajuda muito (opcional):
 Regras:
 - **Nunca invente** telefone, endereço, horário, preço, depoimento, número de clientes ou prêmio. O que faltar vira campo vazio em `config.js` (o site esconde ou mostra "Consulte pelo WhatsApp") e entra na lista de pendências do README.
 - Se houver Instagram ou site, tente ler (busca na web/Firecrawl). Se a rede bloquear, siga com o que o Brenno mandou e avise numa linha.
-- Fotos: use as reais do cliente. Sem foto real, use banco de imagens gratuito com licença livre (ex.: Unsplash, Pexels) **que mostre o produto daquele ramo**, e marque no README "trocar por fotos da loja". Nunca use foto com marca de outra empresa.
+- Fotos: use as reais do cliente. A foto é metade da beleza do site: produto em close, fundo escuro ou madeira, luz quente. Sem foto real, use banco de imagens gratuito com licença livre (ex.: Unsplash, Pexels) **que mostre o produto daquele ramo**, e marque no README "trocar por fotos da loja". Se a rede bloquear os bancos de imagem, peça fotos ao Brenno ou, com o ok dele, gere com uma ferramenta de imagem conectada (ex.: Higgsfield, Canva), avisando que gasta créditos. Nunca use foto com marca de outra empresa.
 
-## Fase 2. Direção visual ⏸
+## Fase 2. Referência e direção visual ⏸
 
-Leia `references/ramos.md` e escolha a direção do ramo. Depois, para ficar com cara de site caro e não de modelo pronto, carregue a skill **impeccable** (ou **frontend-design** se a impeccable não estiver disponível) e siga o fluxo dela para:
+**Primeiro a referência, depois o código.** O site tem que sair no nível de um "shot" bonito do Pinterest/Dribbble, não de modelo genérico.
+
+1. **Print do Brenno (melhor caminho):** se ele mandou prints do Pinterest/Dribbble, essa é a referência principal. Olhe a imagem com atenção e anote: estrutura das seções, tamanho dos títulos, a palavra em fonte manuscrita, cores, formato dos cartões e dos botões, cantos, como a foto do topo ocupa o espaço.
+2. **Biblioteca da skill:** veja `references/inspiracao/` (prints já aprovados pelo Brenno, um ou mais por ramo) e o padrão descrito em `references/ramos.md`.
+3. **Buscar na web:** se a rede deixar, procure "<ramo> website design" no Pinterest, Dribbble ou Behance (Firecrawl search). Esses sites costumam estar bloqueados neste ambiente: se falhar, siga com 1 e 2 e, se não houver nada para o ramo, peça ao Brenno numa linha: "me manda 1 ou 2 prints do Pinterest do estilo que você curte".
+
+Regras da referência:
+- **Inspirar, não copiar:** use a estrutura, o clima e o nível de acabamento; troque textos, logo, fotos e detalhes. Nunca copie marca, nome ou foto de outro site.
+- Tudo em português e com a cara do cliente (os textos da referência normalmente vêm em inglês).
+- Quando o Brenno aprovar um site novo, salve a referência usada em `references/inspiracao/<ramo>-<nome>.jpg` e acrescente uma linha em `references/inspiracao/LEIA.md`, para a biblioteca crescer.
+
+Depois, leia `references/ramos.md` e escolha a direção do ramo. Depois, para ficar com cara de site caro e não de modelo pronto, carregue a skill **impeccable** (ou **frontend-design** se a impeccable não estiver disponível) e siga o fluxo dela para:
 - definir paleta (4 a 6 cores como variáveis CSS), par de fontes do Google Fonts e o "detalhe assinatura" do site (o elemento que faz o dono falar "nossa");
 - registrar em `<pasta>/PRODUCT.md` e `<pasta>/DESIGN.md`, no mesmo formato de `hortifruti/`.
 
