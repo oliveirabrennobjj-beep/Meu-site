@@ -1,5 +1,10 @@
 # Rio das Ostras: plano de venda das placas (01/11/2026)
 
+**Visita marcada: sábado, 12/12/2026.** Até lá:
+- **Novembro:** retorno pros WhatsApp de Casimiro (mensagem no fim deste arquivo). As placas guardadas podem sair pra eles.
+- **Semana de 07/12:** mensagem pelo Instagram/Facebook pros comércios de Rio das Ostras da lista de 28/10, avisando que vai passar no sábado.
+- **Sábado 12/12:** comércio aberto de manhã. Comece cedo pelo Centro e pela Av. Amazonas. Muita loja de rua fecha mais cedo no sábado, então deixe a Feirinha pro fim da tarde.
+
 ## Antes de tudo: o dia em Casimiro não foi perdido
 Você saiu com **WhatsApp de alguns donos**. Isso é lead quente: a pessoa já viu a placa na mão e deu o número.
 A maioria das vendas desse tipo fecha no **segundo ou terceiro contato**, não na hora.
