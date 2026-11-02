@@ -544,7 +544,7 @@ export function reindexar(cofre) {
 // Textos entregues ao agente
 // ---------------------------------------------------------------------------
 
-export function protocolo(cofre, cmdBusca) {
+export function protocolo(cofre, cmdBusca, git = false) {
   return `Como o segundo cérebro funciona (combinado com o usuário, vale para qualquer projeto):
 - Antes de começar uma tarefa, leia as notas relacionadas que o hook anexar ao pedido e use o que já foi decidido/aprendido. Para buscar mais: ${cmdBusca} "termos" (ou procure direto nos arquivos .md do cofre).
 - Ao terminar uma entrega (arquivos criados/alterados, problema resolvido, decisão tomada), registre no cofre ${cofre} o que vale reaproveitar em OUTROS projetos, sem esperar o usuário pedir:
@@ -553,7 +553,7 @@ export function protocolo(cofre, cmdBusca) {
   • Frontmatter: tipo (padrao|decisao|preferencia|stack|aprendizado), projetos: ["[[nome-do-projeto]]"], tags, criado, atualizado (AAAA-MM-DD) e resumo (1 linha). Use [[wikilinks]] entre notas.
   • Atualize também 01 Projetos/<projeto>.md (O que é, Stack, Como rodar, links das notas novas).
   • Nunca grave senhas, tokens, chaves de API ou dados pessoais de clientes.
-- O índice (00 Início/Índice.md), a linha do tempo dos projetos e o diário de sessões (07 Sessões) são atualizados automaticamente pelos hooks.`;
+- O índice (00 Início/Índice.md), a linha do tempo dos projetos e o diário de sessões (07 Sessões) são atualizados automaticamente pelos hooks.${git ? '\n- O cofre é um repositório Git: o hook baixa as notas no início e faz commit e push sozinho no fim de cada entrega. Não precisa commitar o cofre à mão.' : ''}`;
 }
 
 function comandoBusca() {
@@ -605,11 +605,37 @@ function textoComando(c) {
 }
 
 // ---------------------------------------------------------------------------
+// Cofre guardado num repositório Git (ex.: GitHub privado): baixa no início, envia no fim
+// ---------------------------------------------------------------------------
+
+function git(cofre, args, timeout = 20000) {
+  return execFileSync('git', ['-C', cofre, ...args], { encoding: 'utf8', timeout, stdio: ['ignore', 'pipe', 'ignore'] });
+}
+
+export function sincronizar(cfg, modo) {
+  if (!cfg || !cfg.git || !fs.existsSync(path.join(cfg.cofre, '.git'))) return false;
+  try {
+    if (modo === 'baixar') {
+      git(cfg.cofre, ['pull', '--ff-only', '--quiet'], 15000);
+      return true;
+    }
+    git(cfg.cofre, ['add', '-A']);
+    if (!git(cfg.cofre, ['status', '--porcelain']).trim()) return false;
+    git(cfg.cofre, ['-c', 'user.name=Cérebro', '-c', 'user.email=cerebro@local', 'commit', '-q', '-m', `Cérebro: registro automático ${hoje()} ${hora()}`]);
+    try { git(cfg.cofre, ['push', '-q', 'origin', 'HEAD']); } catch {
+      try { git(cfg.cofre, ['pull', '--rebase', '--quiet']); git(cfg.cofre, ['push', '-q', 'origin', 'HEAD']); } catch {}
+    }
+    return true;
+  } catch { return false; }
+}
+
+// ---------------------------------------------------------------------------
 // Hooks
 // ---------------------------------------------------------------------------
 
 function hookInicioSessao(entrada, cfg, ferramenta) {
   limparEstadosAntigos();
+  sincronizar(cfg, 'baixar');
   const cofre = cfg.cofre;
   const raiz = raizProjeto(entrada.cwd);
   const projeto = nomeProjeto(raiz);
@@ -632,7 +658,7 @@ function hookInicioSessao(entrada, cfg, ferramenta) {
   if (prefs.length) {
     partes.push('Preferências registradas do usuário (04 Preferências):\n' + prefs.map((n) => `- ${n.titulo}${n.resumo ? `: ${cortar(n.resumo, 160)}` : ''}`).join('\n'));
   }
-  partes.push(protocolo(cofre, comandoBusca()));
+  partes.push(protocolo(cofre, comandoBusca(), !!cfg.git));
   return { hookSpecificOutput: { hookEventName: 'SessionStart', additionalContext: partes.join('\n\n') } };
 }
 
@@ -711,6 +737,7 @@ function finalizarTurno(entrada, cfg, ferramenta, st) {
     arquivos: st.arquivos || [],
   });
   reindexar(cfg.cofre);
+  sincronizar(cfg, 'enviar');
   salvarEstado(entrada.session_id, { ...st, sujo: false, cofreTocado: false, bloqueado: false, arquivos: [] });
 }
 
