@@ -1,6 +1,6 @@
 {
   "collapse-filter": false,
-  "search": "-path:\"99 Sistema\"",
+  "search": "-path:\"99 Sistema\" -path:\"00 Início\"",
   "showTags": false,
   "showAttachments": false,
   "hideUnresolved": true,
@@ -71,9 +71,9 @@
   "lineSizeMultiplier": 1,
   "collapse-forces": true,
   "centerStrength": 0.5,
-  "repelStrength": 12,
+  "repelStrength": 16,
   "linkStrength": 1,
-  "linkDistance": 180,
+  "linkDistance": 220,
   "scale": 1,
   "close": false
 }
