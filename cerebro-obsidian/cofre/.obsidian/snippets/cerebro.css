@@ -1,0 +1,82 @@
+/* Cores do segundo cérebro. Instalado pelo kit cerebro-obsidian; pode editar à vontade. */
+body {
+  --cerebro-projeto: #4f8ef7;
+  --cerebro-padrao: #3dbe7a;
+  --cerebro-decisao: #f59e3b;
+  --cerebro-preferencia: #a86bf5;
+  --cerebro-stack: #e3b341;
+  --cerebro-aprendizado: #ef5b5b;
+  --cerebro-sessao: #8a94a6;
+  --cerebro-inicio: #e6eaf2;
+  --cerebro-sistema: #6b7280;
+}
+.theme-light {
+  --cerebro-projeto: #2563eb;
+  --cerebro-padrao: #15803d;
+  --cerebro-decisao: #c2410c;
+  --cerebro-preferencia: #7c3aed;
+  --cerebro-stack: #a16207;
+  --cerebro-aprendizado: #dc2626;
+  --cerebro-sessao: #64748b;
+  --cerebro-inicio: #111827;
+}
+
+/* ---- Pastas no explorador de arquivos ---- */
+.nav-folder-title[data-path="00 Início"]        { --c: var(--cerebro-inicio); }
+.nav-folder-title[data-path="01 Projetos"]      { --c: var(--cerebro-projeto); }
+.nav-folder-title[data-path="02 Padrões"]       { --c: var(--cerebro-padrao); }
+.nav-folder-title[data-path="03 Decisões"]      { --c: var(--cerebro-decisao); }
+.nav-folder-title[data-path="04 Preferências"]  { --c: var(--cerebro-preferencia); }
+.nav-folder-title[data-path="05 Stack"]         { --c: var(--cerebro-stack); }
+.nav-folder-title[data-path="06 Aprendizados"]  { --c: var(--cerebro-aprendizado); }
+.nav-folder-title[data-path="07 Sessões"]       { --c: var(--cerebro-sessao); }
+.nav-folder-title[data-path="99 Sistema"]       { --c: var(--cerebro-sistema); }
+
+.nav-folder-title[data-path="00 Início"], .nav-folder-title[data-path="01 Projetos"],
+.nav-folder-title[data-path="02 Padrões"], .nav-folder-title[data-path="03 Decisões"],
+.nav-folder-title[data-path="04 Preferências"], .nav-folder-title[data-path="05 Stack"],
+.nav-folder-title[data-path="06 Aprendizados"], .nav-folder-title[data-path="07 Sessões"],
+.nav-folder-title[data-path="99 Sistema"] {
+  color: var(--c);
+  font-weight: 650;
+  border-radius: var(--radius-s);
+  background: color-mix(in srgb, var(--c) 12%, transparent);
+  margin-block: 2px;
+}
+.nav-folder-title[data-path="00 Início"]:hover, .nav-folder-title[data-path="01 Projetos"]:hover,
+.nav-folder-title[data-path="02 Padrões"]:hover, .nav-folder-title[data-path="03 Decisões"]:hover,
+.nav-folder-title[data-path="04 Preferências"]:hover, .nav-folder-title[data-path="05 Stack"]:hover,
+.nav-folder-title[data-path="06 Aprendizados"]:hover, .nav-folder-title[data-path="07 Sessões"]:hover,
+.nav-folder-title[data-path="99 Sistema"]:hover {
+  background: color-mix(in srgb, var(--c) 22%, transparent);
+}
+
+/* Arquivos dentro de cada pasta ganham um fio na cor da pasta */
+.nav-file-title[data-path^="01 Projetos/"]     { border-left: 2px solid var(--cerebro-projeto); }
+.nav-file-title[data-path^="02 Padrões/"]      { border-left: 2px solid var(--cerebro-padrao); }
+.nav-file-title[data-path^="03 Decisões/"]     { border-left: 2px solid var(--cerebro-decisao); }
+.nav-file-title[data-path^="04 Preferências/"] { border-left: 2px solid var(--cerebro-preferencia); }
+.nav-file-title[data-path^="05 Stack/"]        { border-left: 2px solid var(--cerebro-stack); }
+.nav-file-title[data-path^="06 Aprendizados/"] { border-left: 2px solid var(--cerebro-aprendizado); }
+.nav-file-title[data-path^="07 Sessões/"]      { border-left: 2px solid var(--cerebro-sessao); }
+
+/* ---- Tags coloridas ---- */
+.tag[href^="#cerebro/projeto"]     { --t: var(--cerebro-projeto); }
+.tag[href^="#cerebro/padrao"]      { --t: var(--cerebro-padrao); }
+.tag[href^="#cerebro/decisao"]     { --t: var(--cerebro-decisao); }
+.tag[href^="#cerebro/preferencia"] { --t: var(--cerebro-preferencia); }
+.tag[href^="#cerebro/stack"]       { --t: var(--cerebro-stack); }
+.tag[href^="#cerebro/aprendizado"] { --t: var(--cerebro-aprendizado); }
+.tag[href^="#cerebro/sessao"]      { --t: var(--cerebro-sessao); }
+.tag[href^="#cerebro/"] {
+  color: var(--t, var(--text-accent));
+  background-color: color-mix(in srgb, var(--t, var(--text-accent)) 16%, transparent);
+  border: 1px solid color-mix(in srgb, var(--t, var(--text-accent)) 35%, transparent);
+}
+
+/* ---- Página inicial e índice ---- */
+.cerebro-inicio .inline-title,
+.cerebro-indice .inline-title { color: var(--cerebro-projeto); }
+.cerebro-inicio h1, .cerebro-indice h1 { letter-spacing: -0.01em; }
+.cerebro-indice h2 { border-bottom: 1px solid var(--background-modifier-border); padding-bottom: 4px; margin-top: 1.6em; }
+.cerebro-inicio table td:first-child { white-space: nowrap; font-weight: 600; }

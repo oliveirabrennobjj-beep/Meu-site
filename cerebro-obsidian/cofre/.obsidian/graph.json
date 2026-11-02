@@ -1,0 +1,79 @@
+{
+  "collapse-filter": false,
+  "search": "-path:\"99 Sistema\"",
+  "showTags": false,
+  "showAttachments": false,
+  "hideUnresolved": true,
+  "showOrphans": true,
+  "collapse-color-groups": false,
+  "colorGroups": [
+    {
+      "query": "path:\"01 Projetos\"",
+      "color": {
+        "a": 1,
+        "rgb": 5213943
+      }
+    },
+    {
+      "query": "path:\"02 Padrões\"",
+      "color": {
+        "a": 1,
+        "rgb": 4046458
+      }
+    },
+    {
+      "query": "path:\"03 Decisões\"",
+      "color": {
+        "a": 1,
+        "rgb": 16096827
+      }
+    },
+    {
+      "query": "path:\"04 Preferências\"",
+      "color": {
+        "a": 1,
+        "rgb": 11037685
+      }
+    },
+    {
+      "query": "path:\"05 Stack\"",
+      "color": {
+        "a": 1,
+        "rgb": 14922561
+      }
+    },
+    {
+      "query": "path:\"06 Aprendizados\"",
+      "color": {
+        "a": 1,
+        "rgb": 15686491
+      }
+    },
+    {
+      "query": "path:\"07 Sessões\"",
+      "color": {
+        "a": 1,
+        "rgb": 9082022
+      }
+    },
+    {
+      "query": "path:\"00 Início\"",
+      "color": {
+        "a": 1,
+        "rgb": 15133426
+      }
+    }
+  ],
+  "collapse-display": false,
+  "showArrow": false,
+  "textFadeMultiplier": 0,
+  "nodeSizeMultiplier": 1.3,
+  "lineSizeMultiplier": 1,
+  "collapse-forces": true,
+  "centerStrength": 0.5,
+  "repelStrength": 12,
+  "linkStrength": 1,
+  "linkDistance": 180,
+  "scale": 1,
+  "close": false
+}
