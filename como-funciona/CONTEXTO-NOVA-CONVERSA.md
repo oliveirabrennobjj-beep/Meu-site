@@ -1,4 +1,21 @@
-# Contexto para uma conversa nova, atualizado em 29/10/2026 (noite)
+# Contexto para uma conversa nova, atualizado em 02/11/2026
+
+## Atualização de 02/11 (leia primeiro)
+
+O Brenno não postou em 01/11. Em 02/11 saíram 3 vídeos novos com voz grátis (Kokoro `pm_alex`, velocidade 1.1):
+
+| Perfil | Vídeo | Projeto | Roteiro |
+|---|---|---|---|
+| Raio-X | micro-ondas | `video-microondas/` (2D, copiado do `video-descarga/`) | `roteiros/12-microondas.md` |
+| E Se Você Fizesse | câmbio e embreagem | `video-cambio-3d/` (copiado do turbo) | `roteiros/13-cambio.md` |
+| Engenheirinho | prédio | `video-predio-3d/` (copiado do navio) | `roteiros/E04-predio.md` |
+
+- Os três projetos usam o `node_modules` do `video-motor-3d/` por atalho (`ln -s ../video-motor-3d/node_modules node_modules`).
+- Conferir a pronúncia com `ferramentas/ouvir.py` antes de renderizar: "sacode-sacode" saiu "sacó de sacó de" e foi trocado por "chacoalhar".
+- Câmera 3D em vídeo vertical: cena larga (motor → roda) não cabe de lado; usar vista 3/4 e afastar (ex.: `[10, 9, 24]`).
+- Próximos: Raio-X (ar-condicionado, telhado), E Se (diferencial, suspensão, radiador), Engenheirinho (avião, túnel).
+
+
 
 ## Atualização de 29/10 (leia primeiro)
 
