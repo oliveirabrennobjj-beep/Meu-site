@@ -18,6 +18,10 @@ Instaladas em 2026-10-03 a partir das fontes abaixo.
 | brag, brag-slim | latent-spaces/brag (`069432c`, v0.4.0) | `npx skills add latent-spaces/brag -a claude-code --copy -y` (2026-10-14). Revisada antes: só instruções em Markdown, músicas/efeitos e um script Python de análise de batidas (`librosa`), sem acesso à rede nem hooks. No Opus 5.5 o `/brag` passa para o `/brag-slim`. As músicas incluídas não têm licença confirmada (o README da fonte avisa); o vídeo da BN Digital usa trilha original |
 | brainstorming, verification-before-completion | obra/superpowers (`bb92a77`, v7.0.0) | `npx skills add obra/superpowers --skill brainstorming --skill verification-before-completion -a claude-code --copy -y` (2026-10-14). Revisadas antes: o `brainstorming` traz um servidor local (só `localhost`, com token) para mostrar rascunhos no navegador |
 | site-bn-digital | Própria (criada em 2026-11-01 para a BN Digital) | Escrita neste repositório: `SKILL.md`, `references/ramos.md`, `references/checklist.md` e `scripts/capturas.mjs` (Playwright já instalado no ambiente). Uso: "faz um site pra <negócio>" |
+| stop-slop | hardikpandya/stop-slop (`8da1f03`) | `npx skills add hardikpandya/stop-slop -a claude-code --copy -y` (2026-11-03). Só instruções: tira "cara de IA" de textos |
+| design-taste-frontend | Leonxlnx/taste-skill (`12af471`, v2.1.5) | `npx skills add https://github.com/Leonxlnx/taste-skill -a claude-code --copy -y` (2026-11-03). Scripts precisam de Node 22+ e Chrome/Chromium; busca de fotos usa a rede |
+| moneyprinterturbo-video | harry0703/MoneyPrinterTurbo (`ab6004e`, skill v1.3.2) | `npx skills add harry0703/MoneyPrinterTurbo -a claude-code --copy -y` (2026-11-03). Instala o MoneyPrinterTurbo (via `uv`) no home na primeira geração; pede chaves de API (LLM e Pexels). Padrão é vídeo em chinês: peça português |
+| blueprint-figure, build-project, check-understanding, claude-certification, course-guide, course-style, find-your-level, isometric-explainer, learn, learn-agent-skills, learn-mcp, learn-reverse-engineering, lesson-screen, mcpa-certification, motion-figure, start-learning, write-manual | rohitg00/ai-engineering-from-scratch (`fe6c657`) | `npx skills add rohitg00/ai-engineering-from-scratch -a claude-code --copy -y --skill '*'` (2026-11-03). Tutores do curso de engenharia de IA; comece por `/start-learning` |
 
 Pré-existentes e preservadas sem alteração: ui-ux-pro-max, banner-design, brand, design, design-system, slides, ui-styling.
 
@@ -32,6 +36,24 @@ Fica para depois. Em 2026-10-03 o site ainda não tinha tecnologia definida (nã
 Quando o projeto adotar React ou Next.js, instale com:
 `npx skills add vercel-labs/agent-skills --skill vercel-react-best-practices -a claude-code --copy -y`
 (no repositório, a pasta é `skills/react-best-practices`, mas o nome da skill é `vercel-react-best-practices`).
+
+## Plugins (marketplaces em `.claude/settings.json`)
+
+Instalados em 2026-11-03 com `claude plugin marketplace add <repo>` e `claude plugin install <plugin> --scope project`:
+
+| Plugin | Marketplace (repo) | O que traz |
+|---|---|---|
+| understand-anything | Lum1104/Understand-Anything (`4e6d329`, v2.9.8) | `/understand` e afins: grafo de conhecimento do código, tours e explicações. Tem hooks: atualiza o grafo sozinho só se `.understand-anything/config.json` tiver `autoUpdate: true` |
+| harness | revfactory/harness (`92d9f1b`, v2.1.0) | Meta-skill que monta equipes de agentes e skills para um domínio |
+| cybersecurity-skills | mukul975/Anthropic-Cybersecurity-Skills (`54a7988`, v1.3.0) | 818 skills de segurança (pentest, forense, nuvem, MITRE ATT&CK) |
+| marketing, sales, small-business, productivity, brand-voice | anthropics/knowledge-work-plugins (`2574e29`) | Plugins oficiais da Anthropic para trabalho de negócio. O marketplace tem muitos outros (finance, legal, design…): `claude plugin install <nome>@knowledge-work-plugins --scope project` |
+
+## Servidores MCP (`.mcp.json`)
+
+| Servidor | Fonte | Observação |
+|---|---|---|
+| codegraph | colbymchenry/codegraph (npm `@colbymchenry/codegraph@1.6.2`) | Grafo de código para o agente. Rode `npx -y @colbymchenry/codegraph@1.6.2 init` uma vez para indexar; `.codegraph/` está no `.gitignore` |
+| markitdown | microsoft/markitdown (PyPI `markitdown-mcp@0.0.1a8`) | Converte PDF, Word, Excel, PowerPoint, imagens etc. em Markdown. Roda com `uvx --prerelease=allow` (uma dependência só existe em pré-lançamento) |
 
 ## Observações
 

@@ -1,6 +1,13 @@
 {
   "version": 1,
   "skills": {
+    "blueprint-figure": {
+      "source": "rohitg00/ai-engineering-from-scratch",
+      "sourceType": "github",
+      "skillPath": "skills/blueprint-figure/SKILL.md",
+      "computedHash": "3f8accb00ede373b4606920c794ec1f5f5c3603bc3a79ce228f2d6163348fa41",
+      "installMode": "copy"
+    },
     "brag": {
       "source": "latent-spaces/brag",
       "sourceType": "github",
@@ -19,11 +26,53 @@
       "skillPath": "skills/brainstorming/SKILL.md",
       "computedHash": "fc6339f0e5b48c63279bd4f6c6340db55301b69ccc37a13e1e52bd5b3062746c"
     },
+    "build-project": {
+      "source": "rohitg00/ai-engineering-from-scratch",
+      "sourceType": "github",
+      "skillPath": "skills/build-project/SKILL.md",
+      "computedHash": "1b7af50990416a5c32fe91059b66c67898dc09c3d815b487c80365595fc6d635",
+      "installMode": "copy"
+    },
+    "check-understanding": {
+      "source": "rohitg00/ai-engineering-from-scratch",
+      "sourceType": "github",
+      "skillPath": "skills/check-understanding/SKILL.md",
+      "computedHash": "bbf30c5f3cafe9dd28210bafad81d3d291f02d029c5d249273d7fd44fb015af1",
+      "installMode": "copy"
+    },
+    "claude-certification": {
+      "source": "rohitg00/ai-engineering-from-scratch",
+      "sourceType": "github",
+      "skillPath": "skills/claude-certification/SKILL.md",
+      "computedHash": "1edb0178d5c67336b2da2ac0d921b24480ea3d00d7d84a45c239e7159592d1fc",
+      "installMode": "copy"
+    },
     "copywriting": {
       "source": "coreyhaines31/marketingskills",
       "sourceType": "github",
       "skillPath": "skills/copywriting/SKILL.md",
       "computedHash": "34095dc1ba236967c7515c62568591008f8ec795e1a5fd4b018f2b127a36b32c"
+    },
+    "course-guide": {
+      "source": "rohitg00/ai-engineering-from-scratch",
+      "sourceType": "github",
+      "skillPath": "skills/course-guide/SKILL.md",
+      "computedHash": "2515ac87b53f1d4d30002c1c70dca5972afe8f2942f2767e6fa9478689b77eaf",
+      "installMode": "copy"
+    },
+    "course-style": {
+      "source": "rohitg00/ai-engineering-from-scratch",
+      "sourceType": "github",
+      "skillPath": "skills/course-style/SKILL.md",
+      "computedHash": "f81c35c5cf3cd1d06dede6477dd445db584f88c8b161d881c4ac5eaf83e2a7fa",
+      "installMode": "copy"
+    },
+    "design-taste-frontend": {
+      "source": "Leonxlnx/taste-skill",
+      "sourceType": "github",
+      "skillPath": "skills/taste-skill/SKILL.md",
+      "computedHash": "6ac8ba6089dcbc303744a507a4587113c5d845ca2f658b3ce2b0b5eab108fb0d",
+      "installMode": "copy"
     },
     "docx": {
       "source": "anthropics/skills",
@@ -37,11 +86,81 @@
       "skillPath": "skills/find-skills/SKILL.md",
       "computedHash": "913b9d37d0d54047dd65222bb8c67b2bf04e3cb87dcad1729068d7a8b2c8c396"
     },
+    "find-your-level": {
+      "source": "rohitg00/ai-engineering-from-scratch",
+      "sourceType": "github",
+      "skillPath": "skills/find-your-level/SKILL.md",
+      "computedHash": "d50102e9ad46fa02c00bfeafce7030ff6e38a5a751a63eab5a79b522546ce5db",
+      "installMode": "copy"
+    },
     "frontend-design": {
       "source": "anthropics/skills",
       "sourceType": "github",
       "skillPath": "skills/frontend-design/SKILL.md",
       "computedHash": "89496d5dd00f4810205f351759594fc2742bf8eea85a2f2b2d1de59f4bd91576"
+    },
+    "isometric-explainer": {
+      "source": "rohitg00/ai-engineering-from-scratch",
+      "sourceType": "github",
+      "skillPath": "skills/isometric-explainer/SKILL.md",
+      "computedHash": "5f5ebec69598560f904707683f434e9ad42348c4d03d26a266ea894494aaea1b",
+      "installMode": "copy"
+    },
+    "learn": {
+      "source": "rohitg00/ai-engineering-from-scratch",
+      "sourceType": "github",
+      "skillPath": "skills/learn/SKILL.md",
+      "computedHash": "4a8c5adfd68e3b4ec6d366e71215661cccd3c0cd8a7cdfd58e8392356ca6b4ac",
+      "installMode": "copy"
+    },
+    "learn-agent-skills": {
+      "source": "rohitg00/ai-engineering-from-scratch",
+      "sourceType": "github",
+      "skillPath": "skills/learn-agent-skills/SKILL.md",
+      "computedHash": "f16a9f628fb6dd7969196168e5116ca6a11c752613edcb1fd87b1966d6961689",
+      "installMode": "copy"
+    },
+    "learn-mcp": {
+      "source": "rohitg00/ai-engineering-from-scratch",
+      "sourceType": "github",
+      "skillPath": "skills/learn-mcp/SKILL.md",
+      "computedHash": "291032641bac86d6de4828e0cc63309dc7d5d101c9866981b7f7a51640426395",
+      "installMode": "copy"
+    },
+    "learn-reverse-engineering": {
+      "source": "rohitg00/ai-engineering-from-scratch",
+      "sourceType": "github",
+      "skillPath": "skills/learn-reverse-engineering/SKILL.md",
+      "computedHash": "3cac8640fcf2ae50914ca863887bc7c805469012cfa27741ef244a9adae3bbf1",
+      "installMode": "copy"
+    },
+    "lesson-screen": {
+      "source": "rohitg00/ai-engineering-from-scratch",
+      "sourceType": "github",
+      "skillPath": "skills/lesson-screen/SKILL.md",
+      "computedHash": "701eb60262497c3d82c916f0cb9b3213b6261cdb1be15072259464f0297a291c",
+      "installMode": "copy"
+    },
+    "mcpa-certification": {
+      "source": "rohitg00/ai-engineering-from-scratch",
+      "sourceType": "github",
+      "skillPath": "skills/mcpa-certification/SKILL.md",
+      "computedHash": "f3e60c170168c08664f4624cf027529d376e2550b44d4430be0f12b51a8eec5a",
+      "installMode": "copy"
+    },
+    "moneyprinterturbo-video": {
+      "source": "harry0703/MoneyPrinterTurbo",
+      "sourceType": "github",
+      "skillPath": "docs/skill/SKILL.md",
+      "computedHash": "6fa6b305e45276f76942257987cd4354b97ef72a7d00236a74dfcfe706060410",
+      "installMode": "copy"
+    },
+    "motion-figure": {
+      "source": "rohitg00/ai-engineering-from-scratch",
+      "sourceType": "github",
+      "skillPath": "skills/motion-figure/SKILL.md",
+      "computedHash": "83f101c8eee8109ca2df5419ac24e2686cc63bc97fd7bd350383095054f1c773",
+      "installMode": "copy"
     },
     "pdf": {
       "source": "anthropics/skills",
@@ -139,6 +258,20 @@
       "skillPath": "skills/skill-creator/SKILL.md",
       "computedHash": "5ea13a6d9f0d4bb694405d79acd00cadec0d21bb138c4dd10fcf3c500cb835c2"
     },
+    "start-learning": {
+      "source": "rohitg00/ai-engineering-from-scratch",
+      "sourceType": "github",
+      "skillPath": "skills/start-learning/SKILL.md",
+      "computedHash": "86e6d84501af7dd6a0cdcce4bd6a0a6ae6fae1704530f92e39f6960eeec09511",
+      "installMode": "copy"
+    },
+    "stop-slop": {
+      "source": "hardikpandya/stop-slop",
+      "sourceType": "github",
+      "skillPath": "SKILL.md",
+      "computedHash": "617bf97d33162a6bd0da4f40a97aac589de58e5a6c9cf011ed6108992210e7cb",
+      "installMode": "copy"
+    },
     "verification-before-completion": {
       "source": "obra/superpowers",
       "sourceType": "github",
@@ -156,6 +289,13 @@
       "sourceType": "github",
       "skillPath": "skills/webapp-testing/SKILL.md",
       "computedHash": "ad5b1fc52807e9afa4635e59218a026b164dc58b6c3f41b0f7c644dcd6ccf572"
+    },
+    "write-manual": {
+      "source": "rohitg00/ai-engineering-from-scratch",
+      "sourceType": "github",
+      "skillPath": "skills/write-manual/SKILL.md",
+      "computedHash": "a59c6d3d64dd048c2fbcb766b71748c0829e43ff65af63aedf6890975d64f2f2",
+      "installMode": "copy"
     },
     "xlsx": {
       "source": "anthropics/skills",

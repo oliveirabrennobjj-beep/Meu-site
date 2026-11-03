@@ -28,3 +28,4 @@ como-funciona/*/out/
 
 # Rodadas do /arena (skill arena): arquivos de trabalho, não versionar
 .arena/
+.codegraph/

@@ -2,11 +2,21 @@
   "mcpServers": {
     "chrome-devtools": {
       "command": "npx",
-      "args": ["-y", "chrome-devtools-mcp@1.10.1", "--headless", "--isolated"]
+      "args": [
+        "-y",
+        "chrome-devtools-mcp@1.10.1",
+        "--headless",
+        "--isolated"
+      ]
     },
     "shadcn-ui": {
       "command": "npx",
-      "args": ["-y", "@jpisnice/shadcn-ui-mcp-server@3.0.0", "--framework", "react"],
+      "args": [
+        "-y",
+        "@jpisnice/shadcn-ui-mcp-server@3.0.0",
+        "--framework",
+        "react"
+      ],
       "env": {
         "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PERSONAL_ACCESS_TOKEN:-}"
       }
@@ -17,6 +27,22 @@
       "headers": {
         "x-api-key": "${TWENTY_FIRST_API_KEY:-}"
       }
+    },
+    "codegraph": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@colbymchenry/codegraph@1.6.2",
+        "serve",
+        "--mcp"
+      ]
+    },
+    "markitdown": {
+      "command": "uvx",
+      "args": [
+        "--prerelease=allow",
+        "markitdown-mcp@0.0.1a8"
+      ]
     }
   }
 }
