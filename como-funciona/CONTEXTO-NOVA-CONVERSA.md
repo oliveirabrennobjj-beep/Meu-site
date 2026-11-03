@@ -1,4 +1,16 @@
-# Contexto para uma conversa nova, atualizado em 02/11/2026
+# Contexto para uma conversa nova, atualizado em 03/11/2026
+
+## Atualização de 03/11
+
+| Perfil | Vídeo | Projeto | Roteiro |
+|---|---|---|---|
+| Raio-X | ar-condicionado | `video-arcondicionado/` (2D) | `roteiros/14-arcondicionado.md` |
+| E Se Você Fizesse | radiador | `video-radiador-3d/` | `roteiros/15-radiador.md` |
+| Engenheirinho | túnel | `video-tunel-3d/` | `roteiros/E05-tunel.md` |
+
+- O segundo cérebro (repositório privado C-rebro-) já entrega o que foi aprendido; leia as notas que o hook anexar.
+- Próximos: Raio-X (telhado), E Se (diferencial, suspensão, alternador), Engenheirinho (avião, barragem).
+
 
 ## Atualização de 02/11 (leia primeiro)
 

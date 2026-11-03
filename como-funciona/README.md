@@ -46,7 +46,7 @@ Esta pasta guarda o plano do canal, os roteiros e o projeto de cada vídeo.
 | 5 | Descarga | "Pra onde vai tudo?" | 📝 roteiro pronto ([roteiro](roteiros/04-descarga.md)) |
 | 6 | Chave | "Como ela sabe que é da sua porta?" | 📝 roteiro pronto ([roteiro](roteiros/05-fechadura.md)) |
 | 7 | Panela de pressão | "Por que cozinha na metade do tempo?" | 📝 roteiro pronto ([roteiro](roteiros/06-panela-de-pressao.md)) |
-| 8 | Ar-condicionado | "De onde vem a água que pinga?" | a fazer |
+| 8 | Ar-condicionado | "De onde vem a água que pinga?" | ✅ pronto com voz ([roteiro](roteiros/14-arcondicionado.md)) |
 | 9 | Micro-ondas | "Por que quase não esquenta o prato?" | ✅ pronto com voz ([roteiro](roteiros/12-microondas.md)) |
 | 10 | Telhado | "Se a telha tem frestas, por que a chuva não entra?" | a fazer |
 | 11 | Fossa séptica (3D) | "Pra onde vai o cocô de quem não tem esgoto?" | ✅ pronto com voz ([roteiro](roteiros/07-fossa.md)) |
