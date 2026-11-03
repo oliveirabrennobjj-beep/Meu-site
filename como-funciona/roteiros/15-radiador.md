@@ -6,7 +6,7 @@
 
 ## Narração
 
-E se você fizesse um radiador? O motor queima combustível o tempo todo, e esquenta tanto que as peças dilatam e o motor pode fundir. Então você faz canais por dentro do motor e passa água por eles. A água pega o calor do motor. Mas logo a água começa a ferver. Então você leva a água quente pra uma grade de canos finos, lá na frente do carro, onde bate o vento. O vento esfria a água, e ela volta pro motor. Esse é o radiador. Mas quem empurra a água? Uma bombinha girada pelo próprio motor. Essa é a bomba d'água. Mas com o carro parado no trânsito, não tem vento. Então você coloca um ventilador atrás do radiador, que liga sozinho quando esquenta. Essa é a ventoinha. E de manhã, com o motor frio? Você coloca uma portinha que só deixa a água ir pro radiador depois que o motor esquenta. Essa é a válvula termostática. E pra água não ferver nem congelar fácil, você mistura um líquido especial. Esse é o aditivo. Parabéns: você fez um radiador. Comenta aí: o seu carro já ferveu na estrada?
+E se você fizesse um radiador? O motor queima combustível o tempo todo, e esquenta tanto que as peças dilatam e o motor pode fundir. Então você faz canais por dentro do motor e passa água por eles. A água pega o calor do motor. Mas logo a água começa a ferver. Então você leva a água quente pra uma grade de canos finos, lá na frente do carro, onde bate o vento. O vento esfria a água, e ela volta pro motor. Esse é o radiador. Mas quem empurra a água? Uma bombinha girada pelo próprio motor. Essa é a bomba d'água. Mas com o carro parado no trânsito, não tem vento. Então você coloca um ventilador atrás do radiador, que liga sozinho quando esquenta. Essa é a ventoinha. E de manhã, com o motor frio? Você coloca uma portinha que só deixa a água ir pro radiador depois que o motor esquenta. Essa é a válvula termostática. E pra água não ferver nem congelar fácil, você mistura um líquido especial. Esse é o aditivo. Parabéns: você fez um radiador. Comenta aí: o seu carro já ferveu na estrada? Você quer aprender a fazer vídeos assim? Clique no link da bio.
 
 ## Legenda do post
 
@@ -16,6 +16,7 @@ Canais de água → radiador → bomba d'água → ventoinha → válvula termos
 Repara: de manhã a água nem vai pro radiador 👀
 
 Comenta aí: o seu carro já ferveu na estrada? 👇
+🎬 Quer aprender a fazer vídeos assim? Link na bio.
 
 #esevocefizesse #comofunciona #radiador #carros #curiosidades #animacao3d
 ```

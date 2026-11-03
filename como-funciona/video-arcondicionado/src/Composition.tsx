@@ -197,7 +197,7 @@ const Confetti: React.FC<{ t: number }> = ({ t }) => {
 };
 
 const CTA: React.FC<{ t: number }> = ({ t }) => {
-  const o = appear(t, T.cta, 0.4);
+  const o = appear(t, T.cta, 0.4) * (1 - appear(t, T.curso - 0.2, 0.25));
   if (o <= 0) return null;
   const row = (from: number, q: string, word: string, color: string) => (
     <div
@@ -232,6 +232,24 @@ const CTA: React.FC<{ t: number }> = ({ t }) => {
     >
       {row(T.cta, "Já sabia? Comenta", "GELADO", C.cyan)}
       {row(T.cta2, "Não sabia? Comenta", "CALOR", C.amber)}
+    </div>
+  );
+};
+
+
+/** Fim de todo vídeo: chamada pro minicurso (link da bio). */
+const Curso: React.FC<{ t: number }> = ({ t }) => {
+  if (t < T.curso) return null;
+  const s = pop(t, T.curso + 0.05, 0.45);
+  const pulse = 1 + 0.04 * Math.sin((t - T.curso) * 8);
+  return (
+    <div style={{ position: "absolute", top: 760, left: 70, right: 70, display: "flex", flexDirection: "column", alignItems: "center", gap: 26, fontFamily: "Montserrat, sans-serif", scale: String(s) }}>
+      <div style={{ background: "#111", color: "#fff", border: "6px solid #FFD60A", borderRadius: 30, padding: "26px 40px", fontWeight: 900, fontSize: 62, textAlign: "center", lineHeight: 1.1, boxShadow: "0 12px 0 #000" }}>
+        QUER FAZER VÍDEOS ASSIM?
+      </div>
+      <div style={{ scale: String(pulse), background: "#FFD60A", color: "#111", border: "6px solid #111", borderRadius: 30, padding: "22px 46px", fontWeight: 900, fontSize: 84, boxShadow: "0 12px 0 #111" }}>
+        👆 LINK NA BIO
+      </div>
     </div>
   );
 };
@@ -355,6 +373,7 @@ export const ArVideo: React.FC = () => {
       <Badge t={t} from={T.carrier + 0.3} to={T.parabens} text="1902 · WILLIS CARRIER" top={1460} color={C.amber} />
       <Confetti t={t} />
       <CTA t={t} />
+      <Curso t={t} />
       <Captions t={t} />
 
       {/* progress */}

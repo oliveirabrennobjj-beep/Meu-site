@@ -2,6 +2,8 @@
 
 ## Atualização de 03/11
 
+**Regra nova (03/11): todo vídeo termina com "Você quer aprender a fazer vídeos assim? Clique no link da bio."** (falado e no cartão `Curso` da composição). Ver a nota "Todo vídeo termina com o link do curso" no cérebro.
+
 | Perfil | Vídeo | Projeto | Roteiro |
 |---|---|---|---|
 | Raio-X | ar-condicionado | `video-arcondicionado/` (2D) | `roteiros/14-arcondicionado.md` |

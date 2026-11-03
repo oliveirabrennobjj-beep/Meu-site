@@ -92,6 +92,7 @@ export const T = {
   parabens: at("parabéns"),
   cta: at("já sabia"),
   cta2: at("não sabia"),
+  curso: at("você quer aprender"),
 };
 
 export type Beat = { at: number; a: string; b: string; color?: string };

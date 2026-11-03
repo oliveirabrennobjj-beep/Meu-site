@@ -191,7 +191,7 @@ const Confetti: React.FC<{ t: number }> = ({ t }) => {
 };
 
 const Cta: React.FC<{ t: number }> = ({ t }) => {
-  if (t < T.cta) return null;
+  if (t < T.cta || t >= T.curso) return null;
   const a = pop(t, T.cta + 0.1, 0.45);
   const b = pop(t, T.cta + 0.35, 0.45);
   const box = (txt: string, c: string, s: number) => (
@@ -203,6 +203,24 @@ const Cta: React.FC<{ t: number }> = ({ t }) => {
     <div style={{ position: "absolute", top: 1060, left: 0, right: 0, display: "flex", justifyContent: "center", gap: 40 }}>
       {box("JÁ FERVEU 🔥", "#ff3b3b", a)}
       {box("NUNCA ❄️", "#2d7dff", b)}
+    </div>
+  );
+};
+
+
+/** Fim de todo vídeo: chamada pro minicurso (link da bio). */
+const Curso: React.FC<{ t: number }> = ({ t }) => {
+  if (t < T.curso) return null;
+  const s = pop(t, T.curso + 0.05, 0.45);
+  const pulse = 1 + 0.04 * Math.sin((t - T.curso) * 8);
+  return (
+    <div style={{ position: "absolute", top: 760, left: 70, right: 70, display: "flex", flexDirection: "column", alignItems: "center", gap: 26, fontFamily: "Montserrat, sans-serif", scale: String(s) }}>
+      <div style={{ background: "#111", color: "#fff", border: "6px solid #FFD60A", borderRadius: 30, padding: "26px 40px", fontWeight: 900, fontSize: 62, textAlign: "center", lineHeight: 1.1, boxShadow: "0 12px 0 #000" }}>
+        QUER FAZER VÍDEOS ASSIM?
+      </div>
+      <div style={{ scale: String(pulse), background: "#FFD60A", color: "#111", border: "6px solid #111", borderRadius: 30, padding: "22px 46px", fontWeight: 900, fontSize: 84, boxShadow: "0 12px 0 #111" }}>
+        👆 LINK NA BIO
+      </div>
     </div>
   );
 };
@@ -221,6 +239,7 @@ export const Radiador: React.FC = () => {
       <Term t={t} />
       <Headline t={t} />
       <Cta t={t} />
+      <Curso t={t} />
       <Captions t={t} />
       <Confetti t={t} />
       {hasNarration ? <Audio name="Narração" src={staticFile("narracao-radiador.mp3")} premountFor={FPS} /> : null}

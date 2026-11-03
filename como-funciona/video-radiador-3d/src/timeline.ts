@@ -26,6 +26,7 @@ export const T = {
   aditivo: at("esse é o aditivo"),
   parabens: at("parabéns"),
   cta: at("comenta aí"),
+  curso: at("você quer aprender"),
 };
 
 /** Posições: motor no meio, radiador na frente do carro (x+). */

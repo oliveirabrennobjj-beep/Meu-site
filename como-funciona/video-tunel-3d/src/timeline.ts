@@ -26,6 +26,7 @@ export const T = {
   luz: at("e pra ninguém"),
   fim: at("e é assim"),
   cta: at("comenta aí"),
+  curso: at("você quer aprender"),
 };
 
 /** Medidas: boca do túnel em x = X0, fim da montanha em X1; arco com centro em YC e raio R. */
