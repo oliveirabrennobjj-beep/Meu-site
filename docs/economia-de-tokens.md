@@ -38,9 +38,21 @@ Pesquisado em 04/11/2026. O ponto mais importante: **o que mais gasta não é o 
 - `CLAUDE.md` curto (menos de 25 linhas) com regras de economia e instruções de compactação. É carregado em toda conversa, então foi mantido pequeno de propósito.
 - Skill própria `economia-tokens` (`.claude/skills/economia-tokens/`): diga "modo econômico" para respostas curtas e trabalho enxuto.
 
-## 5. Ferramentas da comunidade (não instaladas, avalie antes)
+## 5. Ferramentas da comunidade
 
-A instalação automática de código de terceiros foi bloqueada nesta sessão por segurança. Os números são **dos próprios autores**, não testados aqui.
+### Instaladas em 04/11 (skills do Caveman, só texto, sem scripts)
+
+| Skill | Como usar | O que faz |
+|---|---|---|
+| `caveman` | Diga **"caveman mode"** ou `/caveman`. Para desligar: **"normal mode"** | Respostas no estilo telegrama: corta enrolação e mantém código, comandos e números exatos. Economia anunciada de 65–75% na saída (testes independentes: 15–33%) |
+| `caveman-commit` | "write a commit" | Mensagens de commit curtas |
+| `caveman-explore` | Automático, em buscas grandes no código | Subagente barato (modelo Haiku) que só procura onde está o código e devolve `arquivo:linha`, sem encher a conversa principal |
+
+Dica: `caveman` é mais radical que a `economia-tokens` (que deixa o português normal, só mais curto). Use o caveman quando estiver acabando o limite.
+
+### Não instaladas (precisam rodar no seu computador ou mexem em hooks)
+
+Os números são **dos próprios autores**, não testados aqui.
 
 | Ferramenta | O que faz | Economia anunciada | Como instalar | Cuidado |
 |---|---|---|---|---|
@@ -50,8 +62,11 @@ A instalação automática de código de terceiros foi bloqueada nesta sessão p
 | [claude-token-optimizer (nadimtuhin)](https://github.com/nadimtuhin/claude-token-optimizer) | Reorganiza o CLAUDE.md em arquivos lidos só quando precisa | início de sessão de ~11 mil para ~800 tokens | ver README | Seu CLAUDE.md já é pequeno, ganho baixo aqui |
 | [usage-limit-reducer](https://github.com/Dubibubii/usage-limit-reducer) / [claude-usage-analyzer](https://github.com/SingggggYee/claude-usage-analyzer) | Analisam os logs locais e mostram onde foram os tokens | (diagnóstico) | ver README | Hoje o `/usage` oficial já faz quase isso |
 | ccusage | Relatório diário de tokens e custo pelos logs locais | (diagnóstico) | `npx ccusage` | Só no computador (lê `~/.claude`) |
+| lean-ctx | Intercepta leitura de arquivo, grep e comandos e comprime | alto em sessões que releem muito | ver GitHub | Ganha pouco em conversa curta |
+| CompressMCP | Comprime respostas JSON grandes de ferramentas MCP | ~45% no exemplo do autor | ver artigo (thedecipherist.com) | Um autor só, sem teste independente |
+| cc-ledger | Mostra o custo de cada mensagem via hook | (diagnóstico) | ver GitHub | Só no computador |
 
-Recomendação: **comece pelo item 1 (desligar PostHog/plugins/conectores) e pelos comandos da seção 2.** Só depois experimente o Caveman (só a skill) se ainda faltar limite.
+Recomendação: **comece pelo item 1 (desligar PostHog/plugins/conectores) e pelos comandos da seção 2.** O Caveman (só a skill) já está instalado: diga "caveman mode" quando o limite estiver no fim.
 
 ## 6. "Repositórios que dão tokens"
 

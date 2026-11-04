@@ -71,6 +71,7 @@ Não achei skill boa e confiável para "finanças de pequena agência". Melhor c
 
 - ✅ `brainstorming`, `docx`, `pdf`, `pptx`, `xlsx`, `slides`, `find-skills`, `skill-creator`.
 - ✅ `economia-tokens` (nova, própria).
+- ✅ `caveman`, `caveman-commit`, `caveman-explore` (JuliusBrussee/caveman): modo telegrama, commits curtos e busca barata com Haiku.
 - ➖ `anthropic-skills:deep-research` (já disponível na conta) para pesquisas grandes. Gasta bastante, use com moderação.
 
 ## 8. Skills próprias da BN Digital (a ideia do PDF)

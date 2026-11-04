@@ -21,6 +21,7 @@ Instaladas em 2026-10-03 a partir das fontes abaixo.
 | social, offers, marketing-psychology, cro, ads, sales-enablement, pricing, schema, ai-seo | coreyhaines31/marketingskills (`88c79f6`) | `npx skills add coreyhaines31/marketingskills --skill … -a claude-code --copy -y` (2026-11-04, a pedido do Brenno). Revisadas: só Markdown e `evals/evals.json`, sem scripts nem hooks |
 | emil-design-eng, break-ui, mobile-native | emilkowalski/skills (`f1090be`, MIT) | `npx skills add emilkowalski/skills --skill … -a claude-code --copy -y` (2026-11-04). Revisadas: só Markdown |
 | economia-tokens | Própria (criada em 2026-11-04) | Escrita neste repositório: só `SKILL.md`. Uso: "modo econômico". Guia completo em `docs/economia-de-tokens.md`; catálogo por categoria em `docs/biblioteca-de-skills.md` |
+| caveman, caveman-commit, caveman-explore | JuliusBrussee/caveman (`2e068f7`, MIT) | `npx skills add JuliusBrussee/caveman --skill caveman --skill caveman-commit --skill caveman-explore -a claude-code --copy -y` (2026-11-04). Revisadas: só Markdown (+ testes do explore). Não instalado: `caveman-compress` (scripts Python que chamam API) e o CLI/hooks |
 
 Pré-existentes e preservadas sem alteração: ui-ux-pro-max, banner-design, brand, design, design-system, slides, ui-styling.
 
