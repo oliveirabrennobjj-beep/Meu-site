@@ -18,7 +18,6 @@ Instaladas em 2026-10-03 a partir das fontes abaixo.
 | brag, brag-slim | latent-spaces/brag (`069432c`, v0.4.0) | `npx skills add latent-spaces/brag -a claude-code --copy -y` (2026-10-14). Revisada antes: só instruções em Markdown, músicas/efeitos e um script Python de análise de batidas (`librosa`), sem acesso à rede nem hooks. No Opus 5.5 o `/brag` passa para o `/brag-slim`. As músicas incluídas não têm licença confirmada (o README da fonte avisa); o vídeo da BN Digital usa trilha original |
 | brainstorming, verification-before-completion | obra/superpowers (`bb92a77`, v7.0.0) | `npx skills add obra/superpowers --skill brainstorming --skill verification-before-completion -a claude-code --copy -y` (2026-10-14). Revisadas antes: o `brainstorming` traz um servidor local (só `localhost`, com token) para mostrar rascunhos no navegador |
 | site-bn-digital | Própria (criada em 2026-11-01 para a BN Digital) | Escrita neste repositório: `SKILL.md`, `references/ramos.md`, `references/checklist.md` e `scripts/capturas.mjs` (Playwright já instalado no ambiente). Uso: "faz um site pra <negócio>" |
-
 | economia-tokens | Própria (criada em 2026-11-04) | Escrita neste repositório: só `SKILL.md`. Uso: "modo econômico". Guia completo em `docs/economia-de-tokens.md`; catálogo por categoria em `docs/biblioteca-de-skills.md` |
 
 Pré-existentes e preservadas sem alteração: ui-ux-pro-max, banner-design, brand, design, design-system, slides, ui-styling.
