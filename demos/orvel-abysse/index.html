@@ -1,0 +1,943 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Orvel Abysse</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Orvel Abysse 300: relógio de mergulho fictício. Role a página e acompanhe o relógio afundando até o fundo do mar.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Manrope:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Layout: palco 3D fixo em tela cheia; a rolagem é a linha do tempo do mergulho. Textos entram e saem por faixa de progresso. Visual único escuro, por escolha. */
+:root{
+  --abismo:#04080b;      /* fundo */
+  --aco:#d6dcdf;         /* texto principal, tom de aço */
+  --nevoa:#8c9ca3;       /* texto secundário */
+  --latao:#c4a472;       /* acento: latão envelhecido */
+  --lume:#a8ecd0;        /* lume dos ponteiros */
+  --filete:rgba(214,220,223,.16);
+  --display:"Bodoni Moda", "Didot", "Bodoni 72", Georgia, serif;
+  --texto:"Manrope", "Helvetica Neue", Arial, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  --gutter:clamp(20px, 6vw, 96px);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--abismo);color:var(--aco)}
+body{font-family:var(--texto);font-weight:300;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
+#palco{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0}
+.trilha{position:relative;height:900vh;z-index:1;pointer-events:none}
+
+/* cabeçalho */
+.topo{position:fixed;top:0;left:0;right:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:calc(18px + env(safe-area-inset-top, 0px)) max(var(--gutter), env(safe-area-inset-right, 0px)) 18px max(var(--gutter), env(safe-area-inset-left, 0px));
+  background:linear-gradient(to bottom, rgba(4,8,11,.7), rgba(4,8,11,0))}
+.marca{display:flex;align-items:center;gap:10px;color:var(--aco);text-decoration:none;font-family:var(--display);font-size:20px;letter-spacing:.32em;text-transform:uppercase}
+.marca svg{width:18px;height:18px}
+.menu{display:flex;gap:clamp(14px,3vw,40px);list-style:none;margin:0;padding:0}
+.menu button{background:none;border:0;color:var(--nevoa);font:500 11px/1 var(--texto);letter-spacing:.28em;text-transform:uppercase;cursor:pointer;padding:8px 0}
+.menu button:hover,.menu button[aria-current="true"]{color:var(--aco)}
+.menu button:focus-visible,.cta:focus-visible{outline:1px solid var(--latao);outline-offset:6px}
+
+/* medidor de profundidade */
+.medidor{position:fixed;right:max(var(--gutter), env(safe-area-inset-right, 0px));top:50%;transform:translateY(-50%);z-index:4;
+  display:flex;flex-direction:column;align-items:flex-end;gap:10px;font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--nevoa)}
+.medidor .regua{position:relative;width:1px;height:32vh;background:var(--filete)}
+.medidor .ponto{position:absolute;right:-3px;top:0;width:7px;height:7px;border-radius:50%;background:var(--latao);box-shadow:0 0 12px var(--latao)}
+.medidor .valor{font-size:22px;color:var(--aco);font-variant-numeric:tabular-nums;letter-spacing:.04em}
+.medidor .valor small{font-size:11px;color:var(--nevoa);margin-left:4px}
+
+/* textos da cena */
+.cena{position:fixed;z-index:3;left:max(var(--gutter), env(safe-area-inset-left, 0px));top:50%;transform:translateY(-50%);
+  width:min(440px, 40vw);opacity:0;transition:opacity .2s linear;pointer-events:none}
+.cena.ativa{pointer-events:auto}
+.cena .sobre{font-family:var(--mono);font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--latao);margin:0 0 18px}
+.cena h1,.cena h2{font-family:var(--display);font-weight:400;line-height:.98;margin:0 0 20px;text-wrap:balance;letter-spacing:-.01em}
+.cena h1{font-size:clamp(64px, 9vw, 148px);letter-spacing:.02em}
+.cena h2{font-size:clamp(38px, 4.6vw, 72px)}
+.cena h2 em,.cena h1 em{font-style:italic;color:var(--latao)}
+.cena p{margin:0;color:var(--nevoa);font-size:16px;max-width:38ch}
+.cena .dica{margin-top:42px;font-family:var(--mono);font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--aco);display:flex;align-items:center;gap:14px}
+.cena .dica::before{content:"";width:1px;height:42px;background:linear-gradient(var(--aco),transparent);animation:desce 2.4s ease-in-out infinite}
+@keyframes desce{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+.ficha{display:grid;grid-template-columns:auto 1fr;gap:8px 24px;margin:26px 0 30px;padding:18px 0;border-block:1px solid var(--filete);font-size:13px}
+.ficha dt{font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--nevoa);padding-top:3px}
+.ficha dd{margin:0;color:var(--aco);font-variant-numeric:tabular-nums}
+.cta{display:inline-flex;align-items:center;gap:14px;padding:16px 26px;border:1px solid var(--latao);color:var(--aco);background:rgba(196,164,114,.08);
+  font:500 11px/1 var(--texto);letter-spacing:.3em;text-transform:uppercase;text-decoration:none;cursor:pointer}
+.cta:hover{background:rgba(196,164,114,.2)}
+.nota{margin-top:22px !important;font-size:12px !important;color:rgba(140,156,163,.7) !important}
+.aviso-cta{margin-top:14px !important;font-size:13px !important;color:var(--lume) !important}
+
+.veu{display:none}
+.semgl{position:fixed;inset:0;z-index:2;background:radial-gradient(ellipse at 50% 30%, #12303a 0%, #04080b 70%)}
+
+@media (max-width: 760px){
+  .menu{display:none}
+  .cena{top:auto;bottom:calc(40px + env(safe-area-inset-bottom, 0px));transform:none;width:auto;right:max(var(--gutter), env(safe-area-inset-right, 0px));
+}
+  .veu{position:fixed;left:0;right:0;bottom:0;height:62vh;z-index:2;pointer-events:none;
+    background:linear-gradient(to bottom, rgba(4,8,11,0), rgba(4,8,11,.55) 45%, rgba(4,8,11,.85))}
+  .cena h1{font-size:64px}
+  .cena h2{font-size:38px;margin-bottom:12px}
+  .cena p{font-size:15px}
+  .cena .dica{margin-top:22px}
+  .medidor{top:calc(80px + env(safe-area-inset-top, 0px));transform:none}
+  .medidor .regua{height:16vh}
+  .ficha{margin:16px 0 18px;padding:12px 0}
+}
+@media (prefers-reduced-motion: reduce){.cena .dica::before{animation:none}}
+</style>
+</head>
+<body>
+<canvas id="palco" aria-hidden="true"></canvas>
+<div class="veu" aria-hidden="true"></div>
+
+<header class="topo">
+  <a class="marca" href="#" data-ir="0" aria-label="Orvel, voltar ao início">
+    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M2 4h16L10 17z"/><path d="M5.5 8.5h9"/></svg>
+    Orvel
+  </a>
+  <ul class="menu">
+    <li><button type="button" data-ir="0">Origem</button></li>
+    <li><button type="button" data-ir="0.5">Ofício</button></li>
+    <li><button type="button" data-ir="0.74">Profundeza</button></li>
+    <li><button type="button" data-ir="1">Reservar</button></li>
+  </ul>
+</header>
+
+<div class="medidor" aria-hidden="true">
+  <span>PROF.</span>
+  <div class="regua"><span class="ponto" id="ponto"></span></div>
+  <span class="valor" id="prof">000<small>m</small></span>
+</div>
+
+<section class="cena" data-de="0" data-ate="0.1" id="origem">
+  <p class="sobre">Maison Orvel · Abysse 300</p>
+  <h1>Abysse</h1>
+  <p>Um relógio de mergulho feito para o silêncio que existe abaixo da superfície.</p>
+  <p class="dica">Role para mergulhar</p>
+</section>
+
+<section class="cena" data-de="0.13" data-ate="0.25">
+  <p class="sobre">I · A queda</p>
+  <h2>Quarenta e um milímetros de <em>aço</em>.</h2>
+  <p>Caixa em aço 904L, polida e escovada à mão. Bisel canelado e cristal de safira abobadado.</p>
+</section>
+
+<section class="cena" data-de="0.29" data-ate="0.43">
+  <p class="sobre">II · A superfície</p>
+  <h2>Cada peça desce a 300 metros antes de sair.</h2>
+  <p>Coroa com vedação tripla. Todos os relógios passam pela câmara de pressão, um por um, na oficina.</p>
+</section>
+
+<section class="cena" data-de="0.47" data-ate="0.61" id="oficio">
+  <p class="sobre">III · O ofício</p>
+  <h2>Calibre O-31. <em>Setenta e duas</em> horas.</h2>
+  <p>Movimento automático com reserva de marcha de três dias, ajustado em cinco posições e certificado como cronômetro.</p>
+</section>
+
+<section class="cena" data-de="0.65" data-ate="0.8" id="profundeza">
+  <p class="sobre">IV · A profundeza</p>
+  <h2>Onde a luz do sol não chega.</h2>
+  <p>Abaixo de 200 metros o mar fica escuro. Os ponteiros continuam legíveis com três camadas de material luminescente.</p>
+</section>
+
+<section class="cena" data-de="0.88" data-ate="1.01" id="reservar">
+  <p class="sobre">Edição de 300 peças</p>
+  <h2>Onde a luz termina, <em>o tempo continua</em>.</h2>
+  <dl class="ficha">
+    <dt>Caixa</dt><dd>41 mm · aço 904L</dd>
+    <dt>Vedação</dt><dd>300 m · 1000 ft</dd>
+    <dt>Calibre</dt><dd>O-31 automático · 72 h</dd>
+    <dt>Preço</dt><dd>R$ 68.400</dd>
+  </dl>
+  <button type="button" class="cta" id="cta">Agendar visita privada <span aria-hidden="true">→</span></button>
+  <p class="aviso-cta" id="aviso-cta" hidden>Pedido de visita registrado nesta demonstração.</p>
+  <p class="nota">Orvel é uma marca fictícia, criada como demonstração pela BN Digital.</p>
+</section>
+
+<div class="trilha" aria-hidden="true"></div>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
+
+/* ---------- linha do tempo (progresso da rolagem 0 → 1) ---------- */
+const P_QUEDA = 0.12, P_AGUA = 0.2, P_FUNDO = 0.86;
+const Y_INICIO = 2.1, LEITO = -46, Y_FUNDO = LEITO + 2.15;
+const reduz = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const celular = matchMedia('(max-width: 760px)').matches;
+
+const canvas = document.getElementById('palco');
+let renderer;
+try {
+  renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
+} catch (e) {
+  document.body.insertAdjacentHTML('afterbegin', '<div class="semgl"></div>');
+  throw e;
+}
+renderer.setPixelRatio(Math.min(devicePixelRatio, celular ? 1.5 : 2));
+renderer.setSize(innerWidth, innerHeight);
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.0;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(32, innerWidth / innerHeight, 0.05, 400);
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(renderer), 0.04).texture;
+scene.fog = new THREE.FogExp2(0x07090b, 0.012);
+
+const SOL = new THREE.Vector3(-0.35, 0.16, -1).normalize();
+
+/* ---------- céu / fundo (cúpula que acompanha a câmera) ---------- */
+const domoU = {
+  uUnder: { value: 0 }, uDepth: { value: 0 }, uSun: { value: SOL },
+};
+const GLSL_CEU = `
+  uniform vec3 uSun;
+  vec3 ceu(vec3 d){
+    float t = clamp(d.y, 0.0, 1.0);
+    vec3 horizonte = vec3(0.075, 0.058, 0.045);
+    vec3 zenite = vec3(0.012, 0.016, 0.022);
+    vec3 c = mix(horizonte, zenite, pow(t, 0.45));
+    float s = max(dot(d, uSun), 0.0);
+    c += vec3(1.0, 0.72, 0.42) * (pow(s, 600.0) * 2.5 + pow(s, 40.0) * 0.22 + pow(s, 4.0) * 0.05);
+    return c;
+  }`;
+const domo = new THREE.Mesh(
+  new THREE.SphereGeometry(300, 48, 24),
+  new THREE.ShaderMaterial({
+    uniforms: domoU, side: THREE.BackSide, depthWrite: false, fog: false,
+    vertexShader: `varying vec3 vDir; void main(){ vDir = normalize(position); gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`,
+    fragmentShader: GLSL_CEU + `
+      uniform float uUnder, uDepth; varying vec3 vDir;
+      void main(){
+        vec3 d = normalize(vDir);
+        vec3 acima = d.y > 0.0 ? ceu(d) : vec3(0.01, 0.014, 0.018);
+        vec3 topo = mix(vec3(0.10, 0.36, 0.40), vec3(0.004, 0.02, 0.03), uDepth);
+        vec3 fundo = mix(vec3(0.01, 0.08, 0.10), vec3(0.0, 0.006, 0.01), uDepth);
+        vec3 abaixo = mix(fundo, topo, smoothstep(-0.7, 1.0, d.y));
+        gl_FragColor = vec4(mix(acima, abaixo, uUnder), 1.0);
+        #include <tonemapping_fragment>
+        #include <colorspace_fragment>
+      }`,
+  })
+);
+domo.renderOrder = -10;
+scene.add(domo);
+
+/* ---------- superfície da água ---------- */
+const GLSL_ONDA = `
+  uniform float uTime, uSplash; uniform vec2 uSplashPos;
+  float altura(vec2 p){
+    float h = 0.0;
+    h += sin(p.x * 0.33 + uTime * 0.8) * 0.07;
+    h += sin(p.y * 0.47 - uTime * 1.05 + p.x * 0.21) * 0.055;
+    h += sin((p.x + p.y) * 1.27 + uTime * 1.6) * 0.022;
+    h += sin((p.x * 0.7 - p.y) * 2.3 - uTime * 2.2) * 0.011;
+    h += sin((p.x * 1.9 + p.y * 0.4) * 3.1 + uTime * 3.0) * 0.005;
+    if (uSplash > 0.0) {
+      float r = length(p - uSplashPos);
+      float frente = uSplash * 6.5;
+      float dentro = smoothstep(frente + 0.6, 0.0, r);
+      float anel = exp(-pow((r - frente) * 1.1, 2.0));
+      h += (sin(r * 5.5 - uSplash * 16.0) * 0.16 * dentro + anel * 0.14) * exp(-uSplash * 1.1) / (1.0 + r * 0.35);
+    }
+    return h;
+  }`;
+const aguaU = {
+  uTime: { value: 0 }, uSplash: { value: 0 }, uSplashPos: { value: new THREE.Vector2(0, 0) },
+  uSun: { value: SOL }, uFogCor: { value: new THREE.Color() }, uFogD: { value: 0.01 }, uDepth: { value: 0 },
+};
+const agua = new THREE.Mesh(
+  new THREE.PlaneGeometry(240, 240, 320, 320).rotateX(-Math.PI / 2),
+  new THREE.ShaderMaterial({
+    uniforms: aguaU, side: THREE.DoubleSide, transparent: true, fog: false,
+    vertexShader: GLSL_ONDA + `
+      varying vec3 vMundo;
+      void main(){
+        vec3 p = position;
+        p.y += altura(p.xz);
+        vec4 m = modelMatrix * vec4(p, 1.0);
+        vMundo = m.xyz;
+        gl_Position = projectionMatrix * viewMatrix * m;
+      }`,
+    fragmentShader: GLSL_ONDA + GLSL_CEU + `
+      uniform vec3 uFogCor; uniform float uFogD, uDepth;
+      varying vec3 vMundo;
+      void main(){
+        float e = 0.04;
+        vec2 q = vMundo.xz;
+        vec3 n = normalize(vec3(altura(q - vec2(e,0.0)) - altura(q + vec2(e,0.0)), 2.0 * e, altura(q - vec2(0.0,e)) - altura(q + vec2(0.0,e))));
+        vec3 raio = normalize(vMundo - cameraPosition);
+        float dist = length(vMundo - cameraPosition);
+        vec3 cor; float alfa = 1.0;
+        if (cameraPosition.y > vMundo.y) {
+          vec3 v = -raio;
+          float fres = 0.02 + 0.98 * pow(1.0 - max(dot(n, v), 0.0), 5.0);
+          vec3 refl = reflect(raio, n); refl.y = abs(refl.y);
+          vec3 profundo = vec3(0.004, 0.022, 0.028);
+          cor = mix(profundo, ceu(refl), fres);
+          alfa = mix(0.78, 1.0, fres);
+        } else {
+          vec3 nn = -n;
+          vec3 refr = refract(raio, nn, 1.33);
+          float janela = smoothstep(0.6, 0.74, raio.y);
+          vec3 fora = vec3(0.55, 0.82, 0.80) * (0.7 + 1.6 * pow(max(dot(normalize(refr + vec3(0.0,1e-4,0.0)), uSun), 0.0), 6.0));
+          vec3 reflexo = vec3(0.02, 0.13, 0.15) * (0.8 + 0.6 * n.x);
+          cor = mix(reflexo, fora, janela * step(0.001, dot(refr, refr)));
+          float brilho = pow(max(sin(q.x * 3.0 + n.x * 30.0) * sin(q.y * 3.0 + n.z * 30.0), 0.0), 6.0);
+          cor += brilho * 0.25 * janela;
+          cor *= 1.0 - uDepth * 0.6;
+        }
+        cor = mix(cor, uFogCor, 1.0 - exp(-pow(dist * uFogD, 2.0)));
+        gl_FragColor = vec4(cor, alfa);
+        #include <tonemapping_fragment>
+        #include <colorspace_fragment>
+      }`,
+  })
+);
+scene.add(agua);
+
+/* ---------- leito do mar ---------- */
+const leitoU = { uTime: { value: 0 }, uFogCor: aguaU.uFogCor, uFogD: aguaU.uFogD, uRelogio: { value: new THREE.Vector3() }, uLuz: { value: 1 } };
+const leitoGeo = new THREE.PlaneGeometry(260, 260, 200, 200).rotateX(-Math.PI / 2);
+{
+  const pos = leitoGeo.attributes.position;
+  for (let i = 0; i < pos.count; i++) {
+    const x = pos.getX(i), z = pos.getZ(i);
+    pos.setY(i, Math.sin(x * 0.18 + z * 0.07) * 0.35 + Math.sin(z * 0.31 - x * 0.05) * 0.2 + Math.sin(x * 0.9 + z * 1.3) * 0.04);
+  }
+  leitoGeo.computeVertexNormals();
+}
+const leito = new THREE.Mesh(leitoGeo, new THREE.ShaderMaterial({
+  uniforms: leitoU, fog: false,
+  vertexShader: `varying vec3 vMundo; varying vec3 vN; void main(){ vec4 m = modelMatrix * vec4(position,1.0); vMundo = m.xyz; vN = normal; gl_Position = projectionMatrix * viewMatrix * m; }`,
+  fragmentShader: `
+    uniform float uTime, uFogD, uLuz; uniform vec3 uFogCor, uRelogio;
+    varying vec3 vMundo; varying vec3 vN;
+    float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+    float ruido(vec2 p){ vec2 i = floor(p), f = fract(p); f = f*f*(3.0-2.0*f);
+      return mix(mix(hash(i), hash(i+vec2(1,0)), f.x), mix(hash(i+vec2(0,1)), hash(i+vec2(1,1)), f.x), f.y); }
+    float causticas(vec2 p, float t){
+      vec2 q = p;
+      for (int i = 0; i < 3; i++) q += vec2(sin(q.y * 1.3 + t * 0.9), cos(q.x * 1.1 - t * 0.7)) * 0.55;
+      float r = 1.0 - abs(sin(q.x * 1.6) + sin(q.y * 1.6)) * 0.5;
+      return pow(clamp(r, 0.0, 1.0), 7.0);
+    }
+    void main(){
+      float grao = ruido(vMundo.xz * 6.0) * 0.5 + ruido(vMundo.xz * 0.7) * 0.5;
+      vec3 areia = mix(vec3(0.20, 0.19, 0.16), vec3(0.34, 0.32, 0.27), grao);
+      float difusa = 0.45 + 0.55 * max(dot(normalize(vN), normalize(vec3(0.2, 1.0, 0.3))), 0.0);
+      float c = causticas(vMundo.xz * 0.9, uTime * 0.6);
+      float d = length(vMundo.xz - uRelogio.xz);
+      float foco = exp(-d * d / 60.0);
+      vec3 cor = areia * difusa * (0.05 + 0.35 * foco) * uLuz + vec3(0.35, 0.7, 0.75) * c * 0.09 * (0.25 + foco) * uLuz;
+      float dist = length(vMundo - cameraPosition);
+      cor = mix(cor, uFogCor, 1.0 - exp(-pow(dist * uFogD, 2.0)));
+      gl_FragColor = vec4(cor, 1.0);
+      #include <tonemapping_fragment>
+      #include <colorspace_fragment>
+    }`,
+}));
+leito.position.y = LEITO;
+scene.add(leito);
+
+// pedras para dar escala
+{
+  const matPedra = new THREE.MeshStandardMaterial({ color: 0x1d2022, roughness: 0.95, metalness: 0 });
+  const pedras = [[-9, -9, 2.2], [9, -14, 3.0], [-4, -18, 1.4], [14, 6, 1.2], [-13, 4, 1.6], [16, -4, 2.4]];
+  for (const [x, z, s] of pedras) {
+    const g = new THREE.IcosahedronGeometry(1, 2);
+    const p = g.attributes.position;
+    for (let i = 0; i < p.count; i++) {
+      const v = new THREE.Vector3().fromBufferAttribute(p, i);
+      v.multiplyScalar(1 + Math.sin(v.x * 3.1 + x) * 0.15 + Math.cos(v.y * 2.7 + z) * 0.12);
+      p.setXYZ(i, v.x, v.y * 0.6, v.z);
+    }
+    g.computeVertexNormals();
+    const m = new THREE.Mesh(g, matPedra);
+    m.scale.setScalar(s);
+    m.position.set(x, LEITO + s * 0.2, z);
+    m.rotation.set(x, z, 0);
+    scene.add(m);
+  }
+}
+
+/* ---------- o relógio ---------- */
+const relogio = new THREE.Group();
+const corpo = new THREE.Group();      // tudo, exceto ponteiros animados
+relogio.add(corpo);
+scene.add(relogio);
+
+const acoPolido = new THREE.MeshPhysicalMaterial({ color: 0xdfe3e6, metalness: 1, roughness: 0.13, clearcoat: 0.4, clearcoatRoughness: 0.1 });
+const acoEscovado = new THREE.MeshPhysicalMaterial({ color: 0xc9ced1, metalness: 1, roughness: 0.34 });
+const materiaisAco = [acoPolido, acoEscovado];
+
+function torno(perfil, segmentos = 160) {
+  // gira o perfil (r, z) em torno do eixo Z do relógio
+  const g = new THREE.LatheGeometry(perfil.map(([r, z]) => new THREE.Vector2(r, z)), segmentos);
+  g.rotateX(Math.PI / 2);
+  return g;
+}
+
+// caixa
+const caixa = new THREE.Mesh(torno([[0, -0.27], [0.78, -0.27], [0.9, -0.24], [0.99, -0.16], [1.02, -0.05], [1.01, 0.06], [0.97, 0.13], [0.9, 0.15]]), acoEscovado);
+corpo.add(caixa);
+
+// bisel canelado
+{
+  const g = torno([[0.86, 0.13], [0.93, 0.13], [1.0, 0.16], [1.025, 0.2], [1.015, 0.25], [0.97, 0.29], [0.9, 0.305], [0.86, 0.3]], 720);
+  const p = g.attributes.position;
+  for (let i = 0; i < p.count; i++) {
+    const x = p.getX(i), y = p.getY(i), z = p.getZ(i);
+    const r = Math.hypot(x, y);
+    if (r < 0.9) continue;
+    const a = Math.atan2(y, x);
+    const sulco = Math.abs(Math.cos(a * 36));
+    const peso = Math.sin(THREE.MathUtils.clamp((z - 0.13) / 0.175, 0, 1) * Math.PI);
+    const nr = r - 0.014 * (1 - sulco) * peso;
+    p.setXYZ(i, Math.cos(a) * nr, Math.sin(a) * nr, z);
+  }
+  g.computeVertexNormals();
+  corpo.add(new THREE.Mesh(g, acoPolido));
+}
+
+// alças
+for (const sx of [-1, 1]) for (const sy of [-1, 1]) {
+  const a = new THREE.Mesh(new RoundedBoxGeometry(0.24, 0.5, 0.17, 3, 0.05), acoPolido);
+  a.position.set(sx * 0.5, sy * 0.98, -0.1);
+  a.rotation.x = -sy * 0.42;
+  corpo.add(a);
+}
+
+// peças de ligação entre as alças e a pulseira
+for (const sy of [-1, 1]) {
+  const ponte = new THREE.Mesh(new RoundedBoxGeometry(0.78, 0.2, 0.14, 2, 0.04), acoEscovado);
+  ponte.position.set(0, sy * 1.12, -0.2);
+  ponte.rotation.x = -sy * 0.55;
+  corpo.add(ponte);
+}
+
+// coroa
+{
+  const g = new THREE.CylinderGeometry(0.12, 0.12, 0.17, 48, 1);
+  const p = g.attributes.position;
+  for (let i = 0; i < p.count; i++) {
+    const x = p.getX(i), z = p.getZ(i);
+    const a = Math.atan2(z, x), r = Math.hypot(x, z);
+    if (r < 0.1) continue;
+    const nr = r * (1 - 0.06 * (Math.cos(a * 24) > 0 ? 1 : 0));
+    p.setX(i, Math.cos(a) * nr); p.setZ(i, Math.sin(a) * nr);
+  }
+  g.computeVertexNormals();
+  const coroa = new THREE.Mesh(g, acoPolido);
+  coroa.rotation.z = Math.PI / 2;
+  coroa.position.set(1.09, 0, -0.04);
+  corpo.add(coroa);
+  const tubo = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.07, 0.08, 24), acoEscovado);
+  tubo.rotation.z = Math.PI / 2; tubo.position.set(1.0, 0, -0.04);
+  corpo.add(tubo);
+}
+
+// mostrador (textura desenhada em canvas, com mapa separado para o lume)
+function desenhaMostrador() {
+  const N = 1024, c = document.createElement('canvas'), l = document.createElement('canvas');
+  c.width = c.height = l.width = l.height = N;
+  const g = c.getContext('2d'), gl = l.getContext('2d');
+  const cx = N / 2, R = N / 2;
+  // raiado (sunburst) preto
+  const rad = g.createRadialGradient(cx, cx, 0, cx, cx, R);
+  rad.addColorStop(0, '#16191c'); rad.addColorStop(0.7, '#0b0d0f'); rad.addColorStop(1, '#050607');
+  g.fillStyle = rad; g.fillRect(0, 0, N, N);
+  g.save(); g.translate(cx, cx);
+  for (let i = 0; i < 720; i++) {
+    g.rotate(Math.PI * 2 / 720);
+    g.strokeStyle = `rgba(255,255,255,${0.012 + 0.018 * Math.abs(Math.sin(i * 0.0436))})`;
+    g.beginPath(); g.moveTo(0, 0); g.lineTo(0, -R); g.stroke();
+  }
+  // trilho de minutos
+  for (let i = 0; i < 60; i++) {
+    g.save(); g.rotate(i * Math.PI / 30);
+    g.fillStyle = 'rgba(235,238,240,.85)';
+    const grande = i % 5 === 0;
+    g.fillRect(grande ? -3 : -1.5, -R * 0.985, grande ? 6 : 3, grande ? 26 : 16);
+    g.restore();
+  }
+  g.restore();
+  // textos
+  g.fillStyle = '#e9ecee'; g.textAlign = 'center';
+  g.font = '500 52px "Bodoni Moda", Didot, Georgia, serif';
+  g.save(); g.translate(cx, cx - 175);
+  g.strokeStyle = '#c4a472'; g.lineWidth = 3;
+  g.beginPath(); g.moveTo(-17, -84); g.lineTo(17, -84); g.lineTo(0, -56); g.closePath(); g.stroke();
+  g.restore();
+  g.letterSpacing = '10px';
+  g.fillText('ORVEL', cx + 5, cx - 112);
+  g.font = '400 19px "IBM Plex Mono", monospace';
+  g.letterSpacing = '6px';
+  g.fillStyle = '#b9bfc3';
+  g.fillText('GENÈVE', cx + 3, cx - 82);
+  g.fillStyle = '#c4a472';
+  g.font = 'italic 400 36px "Bodoni Moda", Georgia, serif'; g.letterSpacing = '2px';
+  g.fillText('Abysse', cx, cx + 150);
+  g.fillStyle = '#b9bfc3';
+  g.font = '400 17px "IBM Plex Mono", monospace'; g.letterSpacing = '4px';
+  g.fillText('300 m · 1000 ft', cx, cx + 188);
+  g.fillText('CHRONOMÈTRE', cx, cx + 214);
+  // janela da data às 3h
+  g.fillStyle = '#f3f2ee'; g.fillRect(cx + 290, cx - 34, 86, 68);
+  g.strokeStyle = '#9aa0a4'; g.lineWidth = 3; g.strokeRect(cx + 290, cx - 34, 86, 68);
+  g.fillStyle = '#121416'; g.font = '600 46px "Manrope", Arial, sans-serif'; g.letterSpacing = '0px';
+  g.textBaseline = 'middle'; g.fillText(String(new Date().getDate()), cx + 333, cx + 3);
+  // lume dos pontos do trilho, no mapa de emissão
+  gl.fillStyle = '#000'; gl.fillRect(0, 0, N, N);
+  const t1 = new THREE.CanvasTexture(c), t2 = new THREE.CanvasTexture(l);
+  t1.colorSpace = THREE.SRGBColorSpace; t1.anisotropy = 8;
+  return [t1, t2];
+}
+const lumeMat = new THREE.MeshStandardMaterial({ color: 0xe9f2ea, roughness: 0.6, emissive: 0x9cf0cc, emissiveIntensity: 0.05 });
+let mostradorMat;
+function montaMostrador() {
+  const [mapa, emissao] = desenhaMostrador();
+  mostradorMat = new THREE.MeshStandardMaterial({ map: mapa, roughness: 0.42, metalness: 0.08, emissiveMap: emissao, emissive: 0x000000 });
+  return mostradorMat;
+}
+const mostrador = new THREE.Mesh(new THREE.CircleGeometry(0.87, 128), montaMostrador());
+mostrador.position.z = 0.135;
+corpo.add(mostrador);
+document.fonts?.ready.then(() => { const antigo = mostradorMat; mostrador.material = montaMostrador(); antigo.map.dispose(); antigo.dispose(); });
+
+// índices aplicados
+for (let i = 0; i < 12; i++) {
+  if (i === 3) continue;
+  const ang = i * Math.PI / 6;
+  const g = new THREE.Group();
+  const duplo = i === 0;
+  const larg = duplo ? 0.05 : 0.055, alt = 0.17;
+  for (const off of duplo ? [-0.04, 0.04] : [0]) {
+    const moldura = new THREE.Mesh(new RoundedBoxGeometry(larg, alt, 0.03, 2, 0.008), acoPolido);
+    moldura.position.x = off;
+    const lume = new THREE.Mesh(new THREE.BoxGeometry(larg * 0.5, alt * 0.8, 0.032), lumeMat);
+    lume.position.x = off;
+    g.add(moldura, lume);
+  }
+  g.position.set(Math.sin(ang) * 0.66, Math.cos(ang) * 0.66, 0.15);
+  g.rotation.z = -ang;
+  corpo.add(g);
+}
+
+// ponteiros
+function ponteiro(comp, larg, cauda, mat, lumeLarg) {
+  const piv = new THREE.Group();
+  const corpoP = new THREE.Mesh(new RoundedBoxGeometry(larg, comp + cauda, 0.012, 2, 0.004), mat);
+  corpoP.position.y = (comp - cauda) / 2;
+  piv.add(corpoP);
+  if (lumeLarg) {
+    const l = new THREE.Mesh(new THREE.BoxGeometry(lumeLarg, comp * 0.62, 0.014), lumeMat);
+    l.position.y = comp * 0.55;
+    piv.add(l);
+  }
+  return piv;
+}
+const pHora = ponteiro(0.42, 0.055, 0.08, acoPolido, 0.03); pHora.position.z = 0.17;
+const pMin = ponteiro(0.66, 0.042, 0.1, acoPolido, 0.022); pMin.position.z = 0.185;
+const latao = new THREE.MeshPhysicalMaterial({ color: 0xc4a472, metalness: 1, roughness: 0.25 });
+const pSeg = new THREE.Group();
+{
+  const haste = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.92, 0.008), latao);
+  haste.position.y = 0.3;
+  const ponto = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.012, 32).rotateX(Math.PI / 2), lumeMat);
+  ponto.position.y = 0.5;
+  const aro = new THREE.Mesh(new THREE.TorusGeometry(0.038, 0.008, 8, 32), latao);
+  aro.position.y = 0.5;
+  pSeg.add(haste, ponto, aro);
+}
+pSeg.position.z = 0.2;
+const eixo = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.08, 32).rotateX(Math.PI / 2), latao);
+eixo.position.z = 0.19;
+relogio.add(pHora, pMin, pSeg, eixo);
+
+// cristal de safira
+const cristal = new THREE.Mesh(
+  new THREE.SphereGeometry(2.4, 96, 16, 0, Math.PI * 2, 0, Math.asin(0.88 / 2.4)).rotateX(Math.PI / 2).translate(0, 0, 0.285 - 2.4),
+  new THREE.MeshPhysicalMaterial({ color: 0xffffff, metalness: 0, roughness: 0, transparent: true, opacity: 0.08, clearcoat: 1, envMapIntensity: 1.2, depthWrite: false })
+);
+corpo.add(cristal);
+
+// pulseira: elos em três peças seguindo uma curva fechada atrás da caixa
+{
+  const curva = new THREE.CatmullRomCurve3([
+    [1.2, -0.28], [1.4, -0.6], [1.5, -1.1], [1.42, -1.65], [1.08, -2.12], [0.5, -2.42], [0, -2.48],
+    [-0.5, -2.42], [-1.08, -2.12], [-1.42, -1.65], [-1.5, -1.1], [-1.4, -0.6], [-1.2, -0.28],
+  ].map(([y, z]) => new THREE.Vector3(0, y, z)), false, 'centripetal');
+  const comp = curva.getLength(), passo = 0.19, n = Math.floor(comp / passo);
+  const centro = new THREE.InstancedMesh(new RoundedBoxGeometry(0.25, 0.188, 0.07, 2, 0.018), acoPolido, n);
+  const lado = new THREE.InstancedMesh(new RoundedBoxGeometry(0.26, 0.188, 0.075, 2, 0.02), acoEscovado, n * 2);
+  const m = new THREE.Matrix4(), X = new THREE.Vector3(1, 0, 0), meio = new THREE.Vector3(0, 0, -1.35);
+  for (let i = 0; i < n; i++) {
+    const t = (i + 0.5) / n;
+    const p = curva.getPointAt(t), T = curva.getTangentAt(t);
+    const N = new THREE.Vector3().crossVectors(X, T).normalize();
+    if (N.dot(p.clone().sub(meio)) < 0) N.negate();
+    const largura = 1 - 0.12 * Math.sin(t * Math.PI); // afina perto do fecho
+    m.makeBasis(X, T, N).setPosition(p);
+    centro.setMatrixAt(i, m.clone().multiply(new THREE.Matrix4().makeScale(largura, 1, 1)));
+    for (const s of [-1, 1]) {
+      const q = p.clone().addScaledVector(X, s * (0.256 * largura));
+      lado.setMatrixAt(i * 2 + (s > 0 ? 1 : 0), new THREE.Matrix4().makeBasis(X, T, N).setPosition(q).multiply(new THREE.Matrix4().makeScale(largura, 1, 1)));
+    }
+  }
+  corpo.add(centro, lado);
+}
+
+/* ---------- luzes ---------- */
+const hemi = new THREE.HemisphereLight(0xf2e6d4, 0x0a0c0e, 0.35);
+const chave = new THREE.DirectionalLight(0xffe2bf, 2.6);
+chave.position.set(-4, 6, 5);
+const contra = new THREE.DirectionalLight(0x9fb8c8, 2.0);
+contra.position.set(5, 2, -6);
+const preenche = new THREE.PointLight(0xffffff, 0, 12, 2);
+scene.add(hemi, chave, contra, preenche, chave.target, contra.target);
+
+/* ---------- respingos ---------- */
+const NG = 360;
+const gotasGeo = new THREE.BufferGeometry();
+gotasGeo.setAttribute('position', new THREE.Float32BufferAttribute(new Float32Array(NG * 3), 3));
+const gotasDados = Array.from({ length: NG }, (_, i) => {
+  const a = Math.random() * Math.PI * 2, coroa = i < NG * 0.7;
+  const v = coroa ? 1.2 + Math.random() * 2.4 : Math.random() * 1.0;
+  return { a, vh: coroa ? 0.6 + Math.random() * 1.6 : v, vy: coroa ? 2 + Math.random() * 3.5 : 4.5 + Math.random() * 3.5, r0: coroa ? 0.5 + Math.random() * 0.4 : Math.random() * 0.3 };
+});
+const gotas = new THREE.Points(gotasGeo, new THREE.PointsMaterial({ color: 0xdaf2f0, size: 0.05, transparent: true, opacity: 0.85, depthWrite: false, sizeAttenuation: true }));
+scene.add(gotas);
+
+/* ---------- bolhas ---------- */
+const NB = celular ? 160 : 260;
+const bolhaMat = new THREE.MeshStandardMaterial({ color: 0xe8fbff, metalness: 1, roughness: 0.04, transparent: true, opacity: 0.55, envMapIntensity: 1.6 });
+const bolhas = new THREE.InstancedMesh(new THREE.SphereGeometry(1, 14, 10), bolhaMat, NB);
+bolhas.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+const bolhaDados = Array.from({ length: NB }, (_, i) => {
+  const rajada = i < NB * 0.38;
+  return {
+    p0: rajada ? P_AGUA + Math.random() * 0.012 : P_AGUA + 0.01 + Math.pow(Math.random(), 1.6) * (P_FUNDO - P_AGUA - 0.02),
+    off: new THREE.Vector3((Math.random() - 0.5) * (rajada ? 1.6 : 0.5), (Math.random() - 0.5) * 0.4, (Math.random() - 0.5) * (rajada ? 1.2 : 0.5)),
+    sobe: rajada ? 20 + Math.random() * 40 : 22 + Math.random() * 26,
+    tam: rajada ? 0.02 + Math.pow(Math.random(), 2) * 0.12 : 0.012 + Math.pow(Math.random(), 2.5) * 0.06,
+    fase: Math.random() * 6.28,
+  };
+});
+scene.add(bolhas);
+
+/* ---------- partículas em suspensão ---------- */
+const NN = celular ? 1400 : 2600;
+const neveGeo = new THREE.BufferGeometry();
+{
+  const p = new Float32Array(NN * 3), s = new Float32Array(NN);
+  for (let i = 0; i < NN; i++) { p[i * 3] = Math.random() * 40; p[i * 3 + 1] = Math.random() * 40; p[i * 3 + 2] = Math.random() * 40; s[i] = Math.random(); }
+  neveGeo.setAttribute('position', new THREE.BufferAttribute(p, 3));
+  neveGeo.setAttribute('aSeed', new THREE.BufferAttribute(s, 1));
+}
+const neveU = { uCam: { value: new THREE.Vector3() }, uOpac: { value: 0 }, uTime: { value: 0 }, uPx: { value: renderer.getPixelRatio() } };
+const neve = new THREE.Points(neveGeo, new THREE.ShaderMaterial({
+  uniforms: neveU, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+  vertexShader: `
+    uniform vec3 uCam; uniform float uTime, uPx; attribute float aSeed; varying float vA;
+    void main(){
+      vec3 p = position + vec3(sin(uTime * 0.2 + aSeed * 20.0) * 0.3, -uTime * (0.05 + aSeed * 0.06), 0.0);
+      p = mod(p - uCam + 20.0, 40.0) - 20.0 + uCam;
+      vec4 mv = modelViewMatrix * vec4(p, 1.0);
+      gl_PointSize = uPx * (1.2 + aSeed * 2.4) * 9.0 / -mv.z;
+      vA = step(p.y, -0.3) * smoothstep(30.0, 4.0, -mv.z) * smoothstep(0.3, 1.5, -mv.z);
+      gl_Position = projectionMatrix * mv;
+    }`,
+  fragmentShader: `
+    uniform float uOpac; varying float vA;
+    void main(){ float d = length(gl_PointCoord - 0.5); float a = smoothstep(0.5, 0.0, d) * vA * uOpac; gl_FragColor = vec4(vec3(0.7, 0.88, 0.9) * a, a); }`,
+}));
+neve.frustumCulled = false;
+scene.add(neve);
+
+/* ---------- raios de luz (god rays) ---------- */
+const raiosU = { uTime: { value: 0 }, uForca: { value: 0 } };
+const raioMat = new THREE.ShaderMaterial({
+  uniforms: raiosU, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide, fog: false,
+  vertexShader: `varying vec2 vUv; varying float vSeed; attribute float aSeed; void main(){ vUv = uv; vSeed = aSeed; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`,
+  fragmentShader: `
+    uniform float uTime, uForca; varying vec2 vUv; varying float vSeed;
+    void main(){
+      float lado = smoothstep(0.0, 0.5, vUv.x) * smoothstep(1.0, 0.5, vUv.x);
+      float queda = pow(vUv.y, 2.2);
+      float pisca = 0.55 + 0.45 * sin(uTime * (0.4 + vSeed) + vSeed * 30.0 + vUv.y * 3.0);
+      float a = lado * lado * queda * pisca * uForca * 0.11;
+      gl_FragColor = vec4(vec3(0.62, 0.9, 0.88) * a, a);
+    }`,
+});
+const raios = new THREE.Group();
+for (let i = 0; i < 16; i++) {
+  const larg = 1.2 + Math.random() * 3.5;
+  const g = new THREE.PlaneGeometry(larg, 70, 1, 1).translate(0, -35, 0);
+  g.setAttribute('aSeed', new THREE.Float32BufferAttribute([0, 0, 0, 0].map(() => i / 16), 1));
+  const m = new THREE.Mesh(g, raioMat);
+  m.position.set((Math.random() - 0.5) * 34, -0.2, -Math.random() * 26 + 4);
+  m.rotation.z = 0.22 + (Math.random() - 0.5) * 0.08;
+  m.userData.giro = Math.random();
+  raios.add(m);
+}
+scene.add(raios);
+
+/* ---------- pós-processamento ---------- */
+const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, camera));
+// trava valores inválidos ou exagerados antes do brilho (evita manchas no bloom)
+composer.addPass(new ShaderPass({
+  uniforms: { tDiffuse: { value: null } },
+  vertexShader: `varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`,
+  fragmentShader: `uniform sampler2D tDiffuse; varying vec2 vUv;
+    void main(){ vec4 c = texture2D(tDiffuse, vUv);
+      if (c.r != c.r || c.g != c.g || c.b != c.b) c = vec4(0.0, 0.0, 0.0, 1.0);
+      gl_FragColor = vec4(min(c.rgb, vec3(12.0)), c.a); }`,
+}));
+const bloom = new UnrealBloomPass(new THREE.Vector2(innerWidth / 2, innerHeight / 2), 0.3, 0.5, 1.05);
+composer.addPass(bloom);
+composer.addPass(new OutputPass());
+
+/* ---------- caminho do relógio e da câmera ---------- */
+const lerp = THREE.MathUtils.lerp, clamp = THREE.MathUtils.clamp, sst = THREE.MathUtils.smootherstep;
+function estadoRelogio(p, t) {
+  const pos = new THREE.Vector3(), rot = new THREE.Euler(0, 0, 0, 'YXZ');
+  const flutua = reduz ? 0 : 1;
+  if (p < P_QUEDA) {
+    pos.set(0, Y_INICIO + Math.sin(t * 0.9) * 0.06 * flutua, 0);
+    rot.set(-0.32 + Math.sin(t * 0.6) * 0.03 * flutua, -0.5 + p * 4 + Math.sin(t * 0.35) * 0.08 * flutua, 0.05);
+  } else if (p < P_AGUA) {
+    const f = (p - P_QUEDA) / (P_AGUA - P_QUEDA);
+    pos.set(0, lerp(Y_INICIO, -0.2, f * f), 0);
+    rot.set(lerp(-0.32, -1.05, f), lerp(-0.5 + P_QUEDA * 4, 0.6, f), lerp(0.05, 0.3, f));
+  } else if (p < P_FUNDO) {
+    const f = (p - P_AGUA) / (P_FUNDO - P_AGUA);
+    const desce = 1 - Math.pow(1 - f, 1.45);
+    pos.set(Math.sin(f * 6.2) * 1.1, lerp(-0.2, Y_FUNDO, desce), Math.cos(f * 4.6) * 0.8 - 0.8 - f * 1.5);
+    const assenta = sst(f, 0.82, 1);
+    rot.set(
+      lerp(-1.05 + Math.sin(f * 9.0) * 0.55, -1.25, assenta),
+      lerp(0.6 + f * 7.28, 7.95, assenta),
+      lerp(0.3 + Math.sin(f * 7 + 1) * 0.45, 0.12, assenta)
+    );
+  } else {
+    const f = (p - P_FUNDO) / (1 - P_FUNDO);
+    pos.set(Math.sin(6.2) * 1.1, Y_FUNDO, Math.cos(4.6) * 0.8 - 2.3);
+    rot.set(-1.25, 7.95 + f * 0.05, 0.12);
+  }
+  return { pos, rot };
+}
+function estadoCamera(p, alvo) {
+  // distância maior em telas estreitas para o relógio caber
+  const k = camera.aspect < 1 ? clamp(1.05 / camera.aspect, 1.2, 2.1) : 1;
+  const off = new THREE.Vector3();
+  if (p < P_QUEDA) {
+    off.set(0, 0.55, 7.4);
+  } else if (p < P_AGUA + 0.05) {
+    const f = sst(p, P_QUEDA, P_AGUA + 0.05);
+    off.set(lerp(0, 1.2, f), lerp(0.55, 0.9, f), lerp(7.4, 6.8, f));
+  } else if (p < P_FUNDO) {
+    const f = (p - P_AGUA - 0.05) / (P_FUNDO - P_AGUA - 0.05);
+    const a = lerp(0.18, 1.4, sst(f, 0, 1));
+    off.set(Math.sin(a) * lerp(6.8, 8.2, sst(f,0,0.3)), lerp(0.9, 2.6, f), Math.cos(a) * lerp(6.8, 8.2, sst(f,0,0.3)));
+  } else {
+    const f = sst(p, P_FUNDO, 1);
+    const a = 1.4 + f * 0.25;
+    off.set(Math.sin(a) * lerp(8.2, 6.4, f), lerp(2.6, 3.6, f), Math.cos(a) * lerp(8.2, 6.4, f));
+  }
+  off.multiplyScalar(k);
+  const pos = alvo.clone().add(off);
+  // entrada na água: a câmera desce junto, cruzando a linha d'água
+  if (p >= P_QUEDA && p < P_AGUA + 0.08) {
+    const f = sst(p, P_QUEDA + 0.03, P_AGUA + 0.08);
+    pos.y = lerp(Y_INICIO + 0.55 * k, alvo.y + 0.9 * k, f);
+  }
+  return pos;
+}
+
+/* ---------- rolagem ---------- */
+let alvoP = 0, atualP = 0;
+function lerRolagem() {
+  const max = document.documentElement.scrollHeight - innerHeight;
+  alvoP = max > 0 ? clamp(scrollY / max, 0, 1) : 0;
+}
+addEventListener('scroll', lerRolagem, { passive: true });
+lerRolagem(); atualP = alvoP;
+
+document.querySelectorAll('[data-ir]').forEach(b => b.addEventListener('click', ev => {
+  ev.preventDefault();
+  const max = document.documentElement.scrollHeight - innerHeight;
+  scrollTo({ top: parseFloat(b.dataset.ir) * max, behavior: reduz ? 'auto' : 'smooth' });
+}));
+document.getElementById('cta').addEventListener('click', () => { document.getElementById('aviso-cta').hidden = false; });
+
+const cenas = [...document.querySelectorAll('.cena')];
+const botoesMenu = [...document.querySelectorAll('.menu button')];
+const profEl = document.getElementById('prof'), pontoEl = document.getElementById('ponto');
+function atualizaTextos(p) {
+  for (const c of cenas) {
+    const de = +c.dataset.de, ate = +c.dataset.ate, borda = 0.025;
+    const o = de === 0 ? 1 - sst(p, ate - borda, ate) : sst(p, de, de + borda) * (1 - sst(p, ate - borda, ate));
+    c.style.opacity = o.toFixed(3);
+    c.style.transform = (celular ? '' : 'translateY(-50%) ') + `translateY(${((1 - o) * 18).toFixed(1)}px)`;
+    c.classList.toggle('ativa', o > 0.5);
+  }
+  const atual = p < 0.4 ? 0 : p < 0.66 ? 1 : p < 0.86 ? 2 : 3;
+  botoesMenu.forEach((b, i) => b.setAttribute('aria-current', i === atual ? 'true' : 'false'));
+}
+
+/* ---------- quadro a quadro ---------- */
+const relogioCam = new THREE.Vector3();
+const corFogAcima = new THREE.Color(0x07090b), corFogRaso = new THREE.Color(0x0d4049), corFogFundo = new THREE.Color(0x01080c);
+const fogCor = new THREE.Color();
+const tmpM = new THREE.Matrix4(), tmpQ = new THREE.Quaternion(), tmpS = new THREE.Vector3(), tmpV = new THREE.Vector3();
+const relogioInicial = new THREE.Vector3(0, Y_INICIO, 0);
+let ultimo = performance.now(), tempo = 0;
+
+function quadro(agora) {
+  const dt = Math.min((agora - ultimo) / 1000, 0.05); ultimo = agora; tempo += dt;
+  atualP += (alvoP - atualP) * (reduz ? 1 : 1 - Math.exp(-dt * 3.2));
+  const p = atualP;
+
+  const { pos, rot } = estadoRelogio(p, tempo);
+  relogio.position.copy(pos); relogio.rotation.order = 'YXZ'; relogio.rotation.copy(rot);
+
+  // ponteiros na hora real
+  const d = new Date();
+  const s = d.getSeconds() + d.getMilliseconds() / 1000, mi = d.getMinutes() + s / 60, h = (d.getHours() % 12) + mi / 60;
+  pSeg.rotation.z = -s / 60 * Math.PI * 2;
+  pMin.rotation.z = -mi / 60 * Math.PI * 2;
+  pHora.rotation.z = -h / 12 * Math.PI * 2;
+
+  // câmera
+  const camPos = estadoCamera(p, pos);
+  const alvo = pos.clone();
+  if (!celular) {
+    const frente = alvo.clone().sub(camPos).normalize();
+    const direita = new THREE.Vector3().crossVectors(frente, camera.up).normalize();
+    const desloc = camera.aspect > 1.2 ? -1.15 : -0.6;
+    camPos.addScaledVector(direita, desloc); alvo.addScaledVector(direita, desloc);
+  } else {
+    camPos.y -= 0.9; alvo.y -= 0.9;
+  }
+  camera.position.copy(camPos);
+  camera.lookAt(alvo);
+  domo.position.copy(camPos);
+
+  // ambiente acima / abaixo da água
+  const sob = clamp(0.5 - camPos.y / 0.25, 0, 1);
+  const fundura = clamp(-pos.y / -Y_FUNDO, 0, 1);       // 0 na superfície, 1 no fundo
+  const escuro = sst(fundura, 0.1, 0.95);
+  domoU.uUnder.value = sob; domoU.uDepth.value = escuro;
+  fogCor.copy(corFogRaso).lerp(corFogFundo, escuro);
+  fogCor.lerp(corFogAcima, 1 - sob);
+  scene.fog.color.copy(fogCor);
+  scene.fog.density = lerp(0.012, lerp(0.05, 0.07, escuro), sob);
+  aguaU.uFogCor.value.copy(fogCor); aguaU.uFogD.value = scene.fog.density; aguaU.uDepth.value = escuro;
+  aguaU.uTime.value = tempo; leitoU.uTime.value = tempo;
+  leitoU.uRelogio.value.copy(pos);
+  leitoU.uLuz.value = lerp(1.0, 2.4, sst(p, 0.8, 0.95));
+
+  // respingo e ondas na entrada
+  const sp = (p - P_AGUA) / 0.07;
+  aguaU.uSplash.value = sp > 0 ? sp : 0;
+  aguaU.uSplashPos.value.set(relogioInicial.x, relogioInicial.z);
+  const gp = gotasGeo.attributes.position;
+  for (let i = 0; i < NG; i++) {
+    const g = gotasDados[i];
+    const tt = sp * 0.9;
+    let y = g.vy * tt - 9.8 * 0.5 * tt * tt;
+    let visivel = sp > 0 && sp < 2.5 && y > -0.05;
+    const rr = g.r0 + g.vh * tt;
+    gp.setXYZ(i, visivel ? Math.cos(g.a) * rr : 0, visivel ? y : -999, visivel ? Math.sin(g.a) * rr : 0);
+  }
+  gp.needsUpdate = true;
+
+  // bolhas
+  for (let i = 0; i < NB; i++) {
+    const b = bolhaDados[i];
+    let esc = 0;
+    if (p > b.p0) {
+      const origem = estadoRelogio(b.p0, 0).pos;
+      const idade = p - b.p0;
+      tmpV.copy(origem).add(b.off);
+      tmpV.y += idade * b.sobe;
+      tmpV.x += Math.sin(idade * 60 + b.fase) * 0.06;
+      tmpV.z += Math.cos(idade * 50 + b.fase) * 0.05;
+      if (tmpV.y < -0.05) esc = b.tam * (1 + Math.min(idade * 8, 0.6));
+    }
+    tmpS.set(esc, esc * 0.85, esc);
+    tmpM.compose(tmpV, tmpQ, tmpS);
+    bolhas.setMatrixAt(i, tmpM);
+  }
+  bolhas.instanceMatrix.needsUpdate = true;
+  bolhaMat.envMapIntensity = lerp(1.6, 0.5, escuro);
+
+  // partículas e raios
+  neveU.uCam.value.copy(camPos); neveU.uTime.value = tempo; neveU.uOpac.value = sob * lerp(0.9, 0.5, escuro);
+  raiosU.uTime.value = tempo; raiosU.uForca.value = sob * (1 - sst(fundura, 0.05, 0.7));
+  for (const r of raios.children) r.rotation.y = Math.atan2(camPos.x - r.position.x, camPos.z - r.position.z);
+
+  // luz no relógio: estúdio quente acima, azul e cada vez mais escuro abaixo
+  const envK = lerp(1.0, lerp(0.55, 0.12, escuro), sob);
+  for (const m of materiaisAco) m.envMapIntensity = envK;
+  latao.envMapIntensity = envK;
+  if (mostradorMat) mostradorMat.envMapIntensity = envK;
+  chave.color.setHex(0xffe2bf).lerp(tmpCorAgua.setHex(0x7fc7d0), sob);
+  chave.intensity = lerp(2.6, lerp(2.0, 0.25, escuro), sob);
+  chave.position.copy(pos).add(tmpV.set(-4, 7, 5)); chave.target.position.copy(pos);
+  contra.position.copy(pos).add(tmpV.set(5, 2, -6)); contra.target.position.copy(pos);
+  contra.intensity = lerp(2.0, lerp(1.2, 0.15, escuro), sob);
+  hemi.intensity = lerp(0.35, lerp(0.6, 0.08, escuro), sob);
+  hemi.color.setHex(0xf2e6d4).lerp(tmpCorAgua.setHex(0x3a8f9a), sob);
+  // no fundo, uma luz suave de "lanterna" para o relógio continuar legível
+  preenche.position.copy(pos).add(tmpV.set(1.5, 3.2, 2.5));
+  preenche.color.setHex(0xbfe6ee);
+  preenche.intensity = sst(p, 0.72, 0.95) * 6;
+
+  // lume acende com a escuridão
+  lumeMat.emissiveIntensity = lerp(0.04, 3.2, sst(fundura, 0.45, 0.98));
+  bloom.strength = lerp(0.28, 0.9, escuro);
+
+  // interface
+  const metros = Math.round(fundura * 300);
+  profEl.firstChild.nodeValue = String(metros).padStart(3, '0');
+  pontoEl.style.top = `calc(${(fundura * 100).toFixed(2)}% - 3px)`;
+  atualizaTextos(p);
+
+  composer.render();
+  requestAnimationFrame(quadro);
+}
+const tmpCorAgua = new THREE.Color();
+requestAnimationFrame(quadro);
+
+addEventListener('resize', () => {
+  camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight); composer.setSize(innerWidth, innerHeight);
+  neveU.uPx.value = renderer.getPixelRatio();
+  lerRolagem();
+});
+</script>
+</body>
+</html>
