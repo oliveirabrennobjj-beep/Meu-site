@@ -18,7 +18,7 @@ Legenda: ✅ já instalada · ⭐ recomendo instalar · ➖ opcional/depois
 | accessibility | `web-design-guidelines` + `design:accessibility-review` | vercel-labs + plugin Design | ✅ |
 | animação e acabamento | `emil-design-eng` | emilkowalski/skills | ⭐ |
 | testar com dados ruins (nomes longos, lista vazia) | `break-ui` | emilkowalski/skills | ⭐ |
-| site "parecer app" no celular | `mobile-native` | emilkowalski/skills | ⭐ (os clientes acessam pelo celular) |
+| site "parecer app" no celular | `mobile-native` | emilkowalski/skills | ✅ |
 | "gosto" de agência premium | `design-taste-frontend` | leonxlnx/taste-skill | ➖ (pode brigar com o impeccable; escolha um) |
 | artes/pôsteres | `canvas-design` | anthropics/skills | ➖ (você já tem `banner-design`) |
 
@@ -36,7 +36,7 @@ Legenda: ✅ já instalada · ⭐ recomendo instalar · ➖ opcional/depois
 
 ✅ já tem: `copywriting`, `seo-audit`.
 
-⭐ instalar (servem direto para comércio local):
+✅ instaladas em 04/11 (servem direto para comércio local):
 - `social`: criar e programar posts.
 - `offers`: montar a oferta (bônus, garantia) para vender o site.
 - `marketing-psychology`: gatilhos de comportamento aplicados.
@@ -47,8 +47,8 @@ Legenda: ✅ já instalada · ⭐ recomendo instalar · ➖ opcional/depois
 
 ## 4. Vendas e negócios
 
-- ⭐ `sales-enablement` (marketingskills): proposta, apresentação e roteiro de demonstração.
-- ⭐ `pricing` (marketingskills): definir preço e pacotes dos sites.
+- ✅ `sales-enablement` (marketingskills): proposta, apresentação e roteiro de demonstração.
+- ✅ `pricing` (marketingskills): definir preço e pacotes dos sites.
 - ➖ `prospecting`, `cold-email`, `referrals` (programa de indicação), `customer-research`, `competitor-profiling` (marketingskills).
 - ➖ Pacote `sales-skills/sales` (comunidade, prospecção e propostas). Revise antes.
 
@@ -62,8 +62,8 @@ Não achei skill boa e confiável para "finanças de pequena agência". Melhor c
 ## 6. SEO e crescimento
 
 - ✅ `seo-audit`
-- ⭐ `schema` (marketingskills): dados estruturados LocalBusiness, que faz o comércio aparecer melhor no Google.
-- ⭐ `ai-seo` (marketingskills): aparecer nas respostas de IA (ChatGPT, Gemini).
+- ✅ `schema` (marketingskills): dados estruturados LocalBusiness, que faz o comércio aparecer melhor no Google.
+- ✅ `ai-seo` (marketingskills): aparecer nas respostas de IA (ChatGPT, Gemini).
 - ➖ `site-architecture`, `analytics`, `conversion-tracking`, `programmatic-seo`.
 - Google Business Profile: não há skill específica confiável; `schema` + `seo-audit` cobrem o site.
 
@@ -85,7 +85,7 @@ Não achei skill boa e confiável para "finanças de pequena agência". Melhor c
 
 Para criar, peça: "cria a skill BN Sales" e mande as informações acima. A `skill-creator` cuida do formato.
 
-## 9. Comandos para instalar os ⭐ (rodar no seu computador ou liberar nesta sessão)
+## 9. Comandos usados (já instaladas em 04/11; servem para reinstalar)
 
 ```bash
 # Marketing, vendas e SEO (9 skills)
