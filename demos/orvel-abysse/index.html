@@ -8,88 +8,96 @@
 <meta name="description" content="Orvel Abysse 300: relógio de mergulho fictício. Role a página e acompanhe o relógio afundando até o fundo do mar.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Manrope:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Instrument+Sans:wght@400;500&display=swap" rel="stylesheet">
 <style>
-/* Layout: palco 3D fixo em tela cheia; a rolagem é a linha do tempo do mergulho. Textos entram e saem por faixa de progresso. Visual único escuro, por escolha. */
+/* Layout: palco 3D fixo; a rolagem é o mergulho. Texto à esquerda, alinhado à esquerda, curto.
+   À direita, um profundímetro de verdade (escala de 0 a 300 m) é o único instrumento na tela.
+   Visual único escuro, por escolha: é o mar à noite. */
 :root{
-  --abismo:#04080b;      /* fundo */
-  --aco:#d6dcdf;         /* texto principal, tom de aço */
-  --nevoa:#8c9ca3;       /* texto secundário */
-  --latao:#c4a472;       /* acento: latão envelhecido */
-  --lume:#a8ecd0;        /* lume dos ponteiros */
-  --filete:rgba(214,220,223,.16);
+  --abismo:#03070a;      /* fundo: água sem luz */
+  --aco:#dde2e4;         /* texto principal, tom de aço polido */
+  --nevoa:#8e9ea4;       /* texto secundário, aço escovado sob a água */
+  --latao:#c2a26e;       /* único acento: latão envelhecido (ponteiro de segundos) */
+  --lume:#a8ecd0;        /* lume, só para confirmação */
+  --filete:rgba(221,226,228,.18);
   --display:"Bodoni Moda", "Didot", "Bodoni 72", Georgia, serif;
-  --texto:"Manrope", "Helvetica Neue", Arial, sans-serif;
-  --mono:"IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  --texto:"Instrument Sans", "Helvetica Neue", Arial, sans-serif;
   --gutter:clamp(20px, 6vw, 96px);
   color-scheme:dark;
 }
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--abismo);color:var(--aco)}
-body{font-family:var(--texto);font-weight:300;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;
+body{font-family:var(--texto);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;
   padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
 #palco{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0}
 .trilha{position:relative;height:900vh;z-index:1;pointer-events:none}
 
 /* cabeçalho */
-.topo{position:fixed;top:0;left:0;right:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:16px;
-  padding:calc(18px + env(safe-area-inset-top, 0px)) max(var(--gutter), env(safe-area-inset-right, 0px)) 18px max(var(--gutter), env(safe-area-inset-left, 0px));
-  background:linear-gradient(to bottom, rgba(4,8,11,.7), rgba(4,8,11,0))}
-.marca{display:flex;align-items:center;gap:10px;color:var(--aco);text-decoration:none;font-family:var(--display);font-size:20px;letter-spacing:.32em;text-transform:uppercase}
-.marca svg{width:18px;height:18px}
-.menu{display:flex;gap:clamp(14px,3vw,40px);list-style:none;margin:0;padding:0}
-.menu button{background:none;border:0;color:var(--nevoa);font:500 11px/1 var(--texto);letter-spacing:.28em;text-transform:uppercase;cursor:pointer;padding:8px 0}
-.menu button:hover,.menu button[aria-current="true"]{color:var(--aco)}
-.menu button:focus-visible,.cta:focus-visible{outline:1px solid var(--latao);outline-offset:6px}
+.topo{position:fixed;top:0;left:0;right:0;z-index:5;display:flex;align-items:baseline;justify-content:space-between;gap:16px;
+  padding:calc(22px + env(safe-area-inset-top, 0px)) max(var(--gutter), env(safe-area-inset-right, 0px)) 22px max(var(--gutter), env(safe-area-inset-left, 0px));
+  background:linear-gradient(to bottom, rgba(3,7,10,.75), rgba(3,7,10,0))}
+.marca{display:flex;align-items:center;gap:10px;color:var(--aco);text-decoration:none;font-family:var(--display);font-size:21px;letter-spacing:.3em;text-transform:uppercase}
+.marca svg{width:16px;height:16px;color:var(--latao)}
+.menu{display:flex;gap:clamp(18px,3vw,40px);list-style:none;margin:0;padding:0}
+.menu button{background:none;border:0;color:var(--nevoa);font:400 14px/1 var(--texto);cursor:pointer;padding:8px 0;border-bottom:1px solid transparent}
+.menu button:hover{color:var(--aco)}
+.menu button[aria-current="true"]{color:var(--aco);border-bottom-color:var(--latao)}
+.menu button:focus-visible,.cta:focus-visible,.marca:focus-visible{outline:1px solid var(--latao);outline-offset:6px}
 
-/* medidor de profundidade */
+/* profundímetro: escala de 0 a 300 m, com ponteiro de latão */
 .medidor{position:fixed;right:max(var(--gutter), env(safe-area-inset-right, 0px));top:50%;transform:translateY(-50%);z-index:4;
-  display:flex;flex-direction:column;align-items:flex-end;gap:10px;font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--nevoa)}
-.medidor .regua{position:relative;width:1px;height:32vh;background:var(--filete)}
-.medidor .ponto{position:absolute;right:-3px;top:0;width:7px;height:7px;border-radius:50%;background:var(--latao);box-shadow:0 0 12px var(--latao)}
-.medidor .valor{font-size:22px;color:var(--aco);font-variant-numeric:tabular-nums;letter-spacing:.04em}
-.medidor .valor small{font-size:11px;color:var(--nevoa);margin-left:4px}
+  }
+.escala{position:relative;width:34px;height:44vh;
+  background:repeating-linear-gradient(to bottom, var(--filete) 0 1px, transparent 1px calc(100% / 30)) right top / 10px 100% no-repeat}
+.escala::after{content:"";position:absolute;right:0;top:0;bottom:0;width:1px;background:var(--filete)}
+.escala span{position:absolute;right:16px;transform:translateY(-50%);font:400 11px/1 var(--texto);color:var(--nevoa);font-variant-numeric:tabular-nums}
+.escala span::after{content:"";position:absolute;left:calc(100% + 4px);top:50%;width:12px;height:1px;background:var(--nevoa)}
+.agulha{position:absolute;right:-6px;top:0;width:22px;height:1px;background:var(--latao);box-shadow:0 0 8px var(--latao)}
+.leitura{position:absolute;right:58px;top:0;transform:translateY(-50%);font-family:var(--display);font-weight:400;font-size:34px;line-height:1;
+  font-variant-numeric:tabular-nums lining-nums;color:var(--aco);white-space:nowrap}
+.leitura small{font-family:var(--texto);font-size:12px;color:var(--nevoa);margin-left:4px}
 
 /* textos da cena */
 .cena{position:fixed;z-index:3;left:max(var(--gutter), env(safe-area-inset-left, 0px));top:50%;transform:translateY(-50%);
-  width:min(440px, 40vw);opacity:0;transition:opacity .2s linear;pointer-events:none}
+  width:min(440px, 40vw);opacity:0;pointer-events:none}
 .cena.ativa{pointer-events:auto}
-.cena .sobre{font-family:var(--mono);font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--latao);margin:0 0 18px}
-.cena h1,.cena h2{font-family:var(--display);font-weight:400;line-height:.98;margin:0 0 20px;text-wrap:balance;letter-spacing:-.01em}
-.cena h1{font-size:clamp(64px, 9vw, 148px);letter-spacing:.02em}
-.cena h2{font-size:clamp(38px, 4.6vw, 72px)}
-.cena h2 em,.cena h1 em{font-style:italic;color:var(--latao)}
-.cena p{margin:0;color:var(--nevoa);font-size:16px;max-width:38ch}
-.cena .dica{margin-top:42px;font-family:var(--mono);font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--aco);display:flex;align-items:center;gap:14px}
-.cena .dica::before{content:"";width:1px;height:42px;background:linear-gradient(var(--aco),transparent);animation:desce 2.4s ease-in-out infinite}
+.cena .onde{font-family:var(--display);font-style:italic;font-size:19px;color:var(--latao);margin:0 0 14px}
+.cena h1,.cena h2{font-family:var(--display);font-weight:400;margin:0 0 22px;text-wrap:balance}
+.cena h1{font-size:clamp(72px, 10vw, 160px);line-height:.9;letter-spacing:-.015em}
+.cena h2{font-size:clamp(36px, 4.2vw, 64px);line-height:1.02;letter-spacing:-.01em}
+.cena p{margin:0;color:var(--nevoa);font-size:17px;max-width:36ch}
+.cena .dica{margin-top:44px;font-size:14px;color:var(--aco);display:flex;align-items:center;gap:14px}
+.cena .dica::before{content:"";width:1px;height:44px;background:linear-gradient(var(--latao),transparent);animation:desce 2.6s ease-in-out infinite}
 @keyframes desce{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
-.ficha{display:grid;grid-template-columns:auto 1fr;gap:8px 24px;margin:26px 0 30px;padding:18px 0;border-block:1px solid var(--filete);font-size:13px}
-.ficha dt{font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--nevoa);padding-top:3px}
+.ficha{display:grid;grid-template-columns:auto 1fr;gap:10px 28px;margin:4px 0 32px;padding:20px 0;border-block:1px solid var(--filete);font-size:15px}
+.ficha dt{color:var(--nevoa)}
 .ficha dd{margin:0;color:var(--aco);font-variant-numeric:tabular-nums}
-.cta{display:inline-flex;align-items:center;gap:14px;padding:16px 26px;border:1px solid var(--latao);color:var(--aco);background:rgba(196,164,114,.08);
-  font:500 11px/1 var(--texto);letter-spacing:.3em;text-transform:uppercase;text-decoration:none;cursor:pointer}
-.cta:hover{background:rgba(196,164,114,.2)}
-.nota{margin-top:22px !important;font-size:12px !important;color:rgba(140,156,163,.7) !important}
-.aviso-cta{margin-top:14px !important;font-size:13px !important;color:var(--lume) !important}
+.cta{display:inline-block;padding:17px 30px;border:1px solid var(--latao);color:var(--abismo);background:var(--latao);
+  font:500 15px/1 var(--texto);cursor:pointer;transition:background .25s, color .25s}
+.cta:hover{background:transparent;color:var(--aco)}
+.cena .nota{margin-top:24px;font-size:13px;color:rgba(142,158,164,.75)}
+.cena .aviso-cta{margin-top:14px;font-size:14px;color:var(--lume)}
 
 .veu{display:none}
-.semgl{position:fixed;inset:0;z-index:2;background:radial-gradient(ellipse at 50% 30%, #12303a 0%, #04080b 70%)}
+.semgl{position:fixed;inset:0;z-index:2;background:radial-gradient(ellipse at 50% 30%, #12303a 0%, #03070a 70%)}
 
 @media (max-width: 760px){
   .menu{display:none}
-  .cena{top:auto;bottom:calc(40px + env(safe-area-inset-bottom, 0px));transform:none;width:auto;right:max(var(--gutter), env(safe-area-inset-right, 0px));
-}
-  .veu{position:fixed;left:0;right:0;bottom:0;height:62vh;z-index:2;pointer-events:none;
-    background:linear-gradient(to bottom, rgba(4,8,11,0), rgba(4,8,11,.55) 45%, rgba(4,8,11,.85))}
-  .cena h1{font-size:64px}
-  .cena h2{font-size:38px;margin-bottom:12px}
-  .cena p{font-size:15px}
+  .cena{top:auto;bottom:calc(36px + env(safe-area-inset-bottom, 0px));transform:none;width:auto;right:max(var(--gutter), env(safe-area-inset-right, 0px))}
+  .veu{display:block;position:fixed;left:0;right:0;bottom:0;height:62vh;z-index:2;pointer-events:none;
+    background:linear-gradient(to bottom, rgba(3,7,10,0), rgba(3,7,10,.55) 45%, rgba(3,7,10,.88))}
+  .cena h1{font-size:76px}
+  .cena h2{font-size:36px;margin-bottom:12px}
+  .cena p{font-size:15.5px}
+  .cena .onde{font-size:17px;margin-bottom:8px}
   .cena .dica{margin-top:22px}
-  .medidor{top:calc(80px + env(safe-area-inset-top, 0px));transform:none}
-  .medidor .regua{height:16vh}
-  .ficha{margin:16px 0 18px;padding:12px 0}
+  .medidor{top:calc(86px + env(safe-area-inset-top, 0px));transform:none}
+  .escala{height:22vh}
+  .escala span:nth-of-type(even){display:none}
+  .leitura{font-size:26px}
+  .ficha{margin:0 0 20px;padding:14px 0;font-size:14px}
 }
-@media (prefers-reduced-motion: reduce){.cena .dica::before{animation:none}}
+@media (prefers-reduced-motion: reduce){.cena .dica::before{animation:none}.cta{transition:none}}
 </style>
 </head>
 <body>
@@ -98,64 +106,67 @@ body{font-family:var(--texto);font-weight:300;font-size:16px;line-height:1.6;-we
 
 <header class="topo">
   <a class="marca" href="#" data-ir="0" aria-label="Orvel, voltar ao início">
-    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M2 4h16L10 17z"/><path d="M5.5 8.5h9"/></svg>
+    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M2 4h16L10 17z"/><path d="M5.5 8.5h9"/></svg>
     Orvel
   </a>
   <ul class="menu">
-    <li><button type="button" data-ir="0">Origem</button></li>
-    <li><button type="button" data-ir="0.5">Ofício</button></li>
-    <li><button type="button" data-ir="0.74">Profundeza</button></li>
-    <li><button type="button" data-ir="1">Reservar</button></li>
+    <li><button type="button" data-ir="0">O relógio</button></li>
+    <li><button type="button" data-ir="0.54">O calibre</button></li>
+    <li><button type="button" data-ir="0.72">O lume</button></li>
+    <li><button type="button" data-ir="1">Agendar visita</button></li>
   </ul>
 </header>
 
 <div class="medidor" aria-hidden="true">
-  <span>PROF.</span>
-  <div class="regua"><span class="ponto" id="ponto"></span></div>
-  <span class="valor" id="prof">000<small>m</small></span>
+  <div class="escala">
+    <b class="leitura" id="prof">0<small>m</small></b>
+    <span style="top:0%">0</span><span style="top:16.667%">50</span><span style="top:33.333%">100</span><span style="top:50%">150</span>
+    <span style="top:66.667%">200</span><span style="top:83.333%">250</span><span style="top:100%">300</span>
+    <i class="agulha" id="ponto"></i>
+  </div>
 </div>
 
 <section class="cena" data-de="0" data-ate="0.1" id="origem">
-  <p class="sobre">Maison Orvel · Abysse 300</p>
   <h1>Abysse</h1>
   <p>Um relógio de mergulho feito para o silêncio que existe abaixo da superfície.</p>
-  <p class="dica">Role para mergulhar</p>
+  <p class="dica">Role a página para descer com ele</p>
 </section>
 
 <section class="cena" data-de="0.13" data-ate="0.25">
-  <p class="sobre">I · A queda</p>
-  <h2>Quarenta e um milímetros de <em>aço</em>.</h2>
-  <p>Caixa em aço 904L, polida e escovada à mão. Bisel canelado e cristal de safira abobadado.</p>
+  <p class="onde">Acima da água</p>
+  <h2>Quarenta e um milímetros de aço polido à mão.</h2>
+  <p>Caixa em aço 904L, o mesmo que resiste à água salgada em instrumentos de navio. Bisel canelado e cristal de safira abobadado.</p>
 </section>
 
 <section class="cena" data-de="0.29" data-ate="0.43">
-  <p class="sobre">II · A superfície</p>
-  <h2>Cada peça desce a 300 metros antes de sair.</h2>
-  <p>Coroa com vedação tripla. Todos os relógios passam pela câmara de pressão, um por um, na oficina.</p>
+  <p class="onde">A 100 metros</p>
+  <h2>Cada peça desce a 300 metros antes de sair da oficina.</h2>
+  <p>Coroa com vedação tripla. Todos os relógios passam pela câmara de pressão, um por um.</p>
 </section>
 
 <section class="cena" data-de="0.47" data-ate="0.61" id="oficio">
-  <p class="sobre">III · O ofício</p>
-  <h2>Calibre O-31. <em>Setenta e duas</em> horas.</h2>
-  <p>Movimento automático com reserva de marcha de três dias, ajustado em cinco posições e certificado como cronômetro.</p>
+  <p class="onde">A 190 metros</p>
+  <h2>Calibre O-31, com três dias de corda.</h2>
+  <p>Movimento automático com 72 horas de reserva de marcha, ajustado em cinco posições e certificado como cronômetro.</p>
 </section>
 
 <section class="cena" data-de="0.65" data-ate="0.8" id="profundeza">
-  <p class="sobre">IV · A profundeza</p>
-  <h2>Onde a luz do sol não chega.</h2>
-  <p>Abaixo de 200 metros o mar fica escuro. Os ponteiros continuam legíveis com três camadas de material luminescente.</p>
+  <p class="onde">A 270 metros</p>
+  <h2>Aqui a luz do sol já não chega.</h2>
+  <p>Índices e ponteiros levam três camadas de material luminescente. Eles guardam a luz da superfície e a devolvem no escuro.</p>
 </section>
 
 <section class="cena" data-de="0.88" data-ate="1.01" id="reservar">
-  <p class="sobre">Edição de 300 peças</p>
-  <h2>Onde a luz termina, <em>o tempo continua</em>.</h2>
+  <p class="onde">300 metros, no fundo</p>
+  <h2>Onde a luz termina, o tempo continua.</h2>
   <dl class="ficha">
-    <dt>Caixa</dt><dd>41 mm · aço 904L</dd>
-    <dt>Vedação</dt><dd>300 m · 1000 ft</dd>
-    <dt>Calibre</dt><dd>O-31 automático · 72 h</dd>
+    <dt>Caixa</dt><dd>41 mm, aço 904L</dd>
+    <dt>Vedação</dt><dd>300 m (1000 ft)</dd>
+    <dt>Calibre</dt><dd>O-31 automático, 72 h</dd>
+    <dt>Série</dt><dd>300 peças numeradas</dd>
     <dt>Preço</dt><dd>R$ 68.400</dd>
   </dl>
-  <button type="button" class="cta" id="cta">Agendar visita privada <span aria-hidden="true">→</span></button>
+  <button type="button" class="cta" id="cta">Agendar visita privada</button>
   <p class="aviso-cta" id="aviso-cta" hidden>Pedido de visita registrado nesta demonstração.</p>
   <p class="nota">Orvel é uma marca fictícia, criada como demonstração pela BN Digital.</p>
 </section>
@@ -387,7 +398,7 @@ const corpo = new THREE.Group();      // tudo, exceto ponteiros animados
 relogio.add(corpo);
 scene.add(relogio);
 
-const acoPolido = new THREE.MeshPhysicalMaterial({ color: 0xdfe3e6, metalness: 1, roughness: 0.13, clearcoat: 0.4, clearcoatRoughness: 0.1 });
+const acoPolido = new THREE.MeshPhysicalMaterial({ color: 0xd9dee1, metalness: 1, roughness: 0.16 });
 const acoEscovado = new THREE.MeshPhysicalMaterial({ color: 0xc9ced1, metalness: 1, roughness: 0.34 });
 const materiaisAco = [acoPolido, acoEscovado];
 
@@ -713,7 +724,7 @@ composer.addPass(new ShaderPass({
   fragmentShader: `uniform sampler2D tDiffuse; varying vec2 vUv;
     void main(){ vec4 c = texture2D(tDiffuse, vUv);
       if (c.r != c.r || c.g != c.g || c.b != c.b) c = vec4(0.0, 0.0, 0.0, 1.0);
-      gl_FragColor = vec4(min(c.rgb, vec3(12.0)), c.a); }`,
+      gl_FragColor = vec4(min(c.rgb, vec3(5.0)), c.a); }`,
 }));
 const bloom = new UnrealBloomPass(new THREE.Vector2(innerWidth / 2, innerHeight / 2), 0.3, 0.5, 1.05);
 composer.addPass(bloom);
@@ -803,7 +814,7 @@ function atualizaTextos(p) {
     c.style.transform = (celular ? '' : 'translateY(-50%) ') + `translateY(${((1 - o) * 18).toFixed(1)}px)`;
     c.classList.toggle('ativa', o > 0.5);
   }
-  const atual = p < 0.4 ? 0 : p < 0.66 ? 1 : p < 0.86 ? 2 : 3;
+  const atual = p < 0.47 ? 0 : p < 0.65 ? 1 : p < 0.86 ? 2 : 3;
   botoesMenu.forEach((b, i) => b.setAttribute('aria-current', i === atual ? 'true' : 'false'));
 }
 
@@ -905,7 +916,7 @@ function quadro(agora) {
   latao.envMapIntensity = envK;
   if (mostradorMat) mostradorMat.envMapIntensity = envK;
   chave.color.setHex(0xffe2bf).lerp(tmpCorAgua.setHex(0x7fc7d0), sob);
-  chave.intensity = lerp(2.6, lerp(2.0, 0.25, escuro), sob);
+  chave.intensity = lerp(2.4, lerp(1.3, 0.2, escuro), sob);
   chave.position.copy(pos).add(tmpV.set(-4, 7, 5)); chave.target.position.copy(pos);
   contra.position.copy(pos).add(tmpV.set(5, 2, -6)); contra.target.position.copy(pos);
   contra.intensity = lerp(2.0, lerp(1.2, 0.15, escuro), sob);
@@ -922,8 +933,9 @@ function quadro(agora) {
 
   // interface
   const metros = Math.round(fundura * 300);
-  profEl.firstChild.nodeValue = String(metros).padStart(3, '0');
-  pontoEl.style.top = `calc(${(fundura * 100).toFixed(2)}% - 3px)`;
+  profEl.firstChild.nodeValue = String(metros);
+  pontoEl.style.top = `${(fundura * 100).toFixed(2)}%`;
+  profEl.style.top = pontoEl.style.top;
   atualizaTextos(p);
 
   composer.render();
