@@ -103,6 +103,12 @@
       "skillPath": "skills/caveman-stats/SKILL.md",
       "computedHash": "cc9fcd21f2a30cff5596b3cbb197fe0f4b1b30b58084a864350853c217ad301a"
     },
+    "claude-automation-recommender": {
+      "source": "anthropics/claude-plugins-official",
+      "sourceType": "github",
+      "skillPath": "plugins/claude-code-setup/skills/claude-automation-recommender/SKILL.md",
+      "computedHash": "d8d53f9b67da49216256ed79ed38057ef1ee760bd499cf413107ae7504aedafd"
+    },
     "copywriting": {
       "source": "coreyhaines31/marketingskills",
       "sourceType": "github",
