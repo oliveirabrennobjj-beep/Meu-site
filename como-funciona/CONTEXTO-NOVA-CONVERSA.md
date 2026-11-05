@@ -1,4 +1,20 @@
-# Contexto para uma conversa nova, atualizado em 02/11/2026
+# Contexto para uma conversa nova, atualizado em 05/11/2026
+
+## Atualização de 05/11 (leia primeiro)
+
+- Os 3 vídeos de 02/11 ganharam tela final "link na bio" com voz (`compartilhado/FimBio.tsx`, copiado em `src/FimBio.tsx` de cada projeto; composição `<Nome>Bio`). Áudio: `public/fim-bio.mp3`.
+- 3 vídeos novos (voz Kokoro `pm_alex` 1.1, já com tela final):
+
+| Perfil | Vídeo | Projeto | Roteiro |
+|---|---|---|---|
+| Raio-X | ar-condicionado | `video-arcondicionado/` (2D, copiado do micro-ondas) | `roteiros/14-arcondicionado.md` |
+| E Se Você Fizesse | diferencial | `video-diferencial-3d/` (copiado do câmbio) | `roteiros/15-diferencial.md` |
+| Engenheirinho | túnel | `video-tunel-3d/` (copiado do prédio, morro em corte) | `roteiros/E05-tunel.md` |
+
+- Renderizar: `npx remotion render <Nome>Bio out/<nome>-bio.mp4 --codec=h264 --crf=24` (crf 24 = arquivo leve pro celular).
+- Voz: "empurram o ar" soou como palavrão no conferidor; trocado por "jogam o ar". Conferir sempre com `ferramentas/ouvir.py`.
+- Túnel em corte: cilindros com `thetaStart PI/2, thetaLength PI` (só a metade de trás) pra ver dentro.
+- Próximos: Raio-X (telhado, geladeira já foi), E Se (suspensão, radiador), Engenheirinho (avião). Ideia nova: série com personagens fixos no formato "E se você voltasse 500 mil anos?" (vídeo do canal LABS).
 
 ## Atualização de 02/11 (leia primeiro)
 
