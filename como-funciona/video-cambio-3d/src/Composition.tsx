@@ -1,3 +1,4 @@
+import { ComFim, FIM_S } from "./FimBio";
 import React from "react";
 import { AbsoluteFill, Composition, Still, staticFile, useCurrentFrame, getStaticFiles } from "remotion";
 import { Audio } from "@remotion/media";
@@ -255,5 +256,6 @@ export const MyComposition = () => (
   <>
     <Composition id="Cambio" component={Cambio} durationInFrames={Math.round(DURATION_S * FPS)} fps={FPS} width={W} height={H} />
     <Still id="Capa-Cambio" component={Cover} width={W} height={H} />
-  </>
+  <Composition id="CambioBio" component={() => <ComFim Video={Cambio} duracao={DURATION_S} cor={"#FFD60A"} fundo={"#05040c"} perfil="@e.se.voce.fizesse" />} durationInFrames={Math.round((DURATION_S + FIM_S) * FPS)} fps={FPS} width={W} height={H} />
+    </>
 );

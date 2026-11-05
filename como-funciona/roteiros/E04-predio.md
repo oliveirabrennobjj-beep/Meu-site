@@ -18,6 +18,8 @@ Repara: a água sobe com bomba, mas desce sozinha 👀
 
 Comenta aí: em que andar você teria coragem de morar? 👇
 
+Quer aprender a fazer vídeos assim, só com IA? Link na bio 🔗
+
 #engenharia #comofunciona #predio #construcao #curiosidades #animacao3d
 ```
 

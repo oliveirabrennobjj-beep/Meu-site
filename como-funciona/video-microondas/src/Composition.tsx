@@ -1,3 +1,4 @@
+import { ComFim, FIM_S } from "./FimBio";
 import React from "react";
 import {
   AbsoluteFill,
@@ -451,6 +452,7 @@ export const MyComposition = () => {
       width={1080}
       height={1920}
     />
+    <Composition id="MicroondasBio" component={() => <ComFim Video={MicroondasVideo} duracao={DURATION_S} cor={C.lime} fundo={C.bg} perfil="@raiox.dascoisas" />} durationInFrames={Math.round((DURATION_S + FIM_S) * FPS)} fps={FPS} width={1080} height={1920} />
     </>
   );
 };

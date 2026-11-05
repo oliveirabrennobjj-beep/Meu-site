@@ -17,6 +17,8 @@ Repara: a ré é só uma engrenagem a mais no meio 👀
 
 Comenta aí: você prefere carro manual ou automático? 👇
 
+Quer aprender a fazer vídeos assim, só com IA? Link na bio 🔗
+
 #esevocefizesse #comofunciona #cambio #carros #curiosidades #animacao3d
 ```
 

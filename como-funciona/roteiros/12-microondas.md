@@ -17,6 +17,8 @@ E foi um chocolate derretido no bolso que deu a ideia 🍫
 
 Já sabia? Comenta "pipoca". Não sabia? Comenta "chocolate" 👇
 
+Quer aprender a fazer vídeos assim, só com IA? Link na bio 🔗
+
 #raiox #comofunciona #microondas #curiosidades #vocesabia #ciencia
 ```
 
