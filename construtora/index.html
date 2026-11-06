@@ -108,6 +108,67 @@
           <video class="hero__video" muted playsinline preload="none" aria-hidden="true" tabindex="-1"
                  data-src="assets/video/hero.mp4"></video>
         </div>
+        <!-- Desenho da obra: a casa é construída conforme a rolagem (funciona sem vídeo).
+             Cada elemento tem --s (quando começa) e --k (velocidade). O main.js só muda --p. -->
+        <svg class="desenho" viewBox="0 0 1000 580" aria-hidden="true" focusable="false">
+          <defs>
+            <linearGradient id="luz-janela" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#F6D7A0"/>
+              <stop offset="1" stop-color="#D9934C"/>
+            </linearGradient>
+            <filter id="brilho" x="-20%" y="-40%" width="140%" height="180%">
+              <feGaussianBlur stdDeviation="14"/>
+            </filter>
+          </defs>
+
+          <!-- 1. Terreno -->
+          <line class="e l" pathLength="1" x1="0" y1="500" x2="1000" y2="500" style="--s:0;--k:8"/>
+          <path class="e l" pathLength="1" d="M110 500V466M890 500V466" style="--s:.04;--k:10"/>
+          <path class="e f" d="M110 466l16 6-16 6zM890 466l16 6-16 6z" fill="#A7864F" style="--s:.06;--k:10"/>
+          <path class="e l cota-d" pathLength="1" d="M110 556H890M110 548v16M890 548v16" style="--s:.05;--k:10"/>
+          <text class="e f cota-t" x="500" y="576" text-anchor="middle" style="--s:.09;--k:12">24,00 m</text>
+
+          <!-- 2. Fundação -->
+          <rect class="e f" x="100" y="486" width="800" height="14" fill="#8F8A83" style="--s:.2;--k:10"/>
+          <rect class="e l" pathLength="1" x="100" y="486" width="800" height="14" style="--s:.14;--k:8"/>
+
+          <!-- 3. Estrutura: pilares, laje e cobertura -->
+          <path class="e f" d="M165 330h10v156h-10zM345 330h10v156h-10zM525 330h10v156h-10zM705 330h10v156h-10zM855 330h10v156h-10z" fill="#9B968E" style="--s:.33;--k:10"/>
+          <path class="e l" pathLength="1" d="M165 486V330h10v156M345 486V330h10v156M525 486V330h10v156M705 486V330h10v156M855 486V330h10v156" style="--s:.28;--k:10"/>
+          <rect class="e f" x="80" y="312" width="860" height="18" fill="#A39E96" style="--s:.4;--k:10"/>
+          <rect class="e l" pathLength="1" x="80" y="312" width="860" height="18" style="--s:.36;--k:12"/>
+          <path class="e f" d="M235 170h10v142h-10zM455 170h10v142h-10zM675 170h10v142h-10zM935 170h10v142h-10z" fill="#9B968E" style="--s:.46;--k:10"/>
+          <path class="e l" pathLength="1" d="M235 312V170h10v142M455 312V170h10v142M675 312V170h10v142M935 312V170h10v142" style="--s:.42;--k:12"/>
+          <rect class="e f" x="160" y="150" width="830" height="20" fill="#A39E96" style="--s:.5;--k:10"/>
+          <rect class="e l" pathLength="1" x="160" y="150" width="830" height="20" style="--s:.46;--k:12"/>
+
+          <!-- 4. Alvenaria: parede de pedra e painel superior -->
+          <rect class="e f" x="715" y="330" width="140" height="156" fill="#B3A999" style="--s:.52;--k:8"/>
+          <path class="e l junta" pathLength="1" d="M715 362h140M715 394h140M715 426h140M715 458h140M770 330v32M810 362v32M760 394v32M820 426v32M780 458v28" style="--s:.55;--k:8"/>
+          <rect class="e f" x="245" y="170" width="55" height="142" fill="#A9A39A" style="--s:.56;--k:8"/>
+          <path class="e l" pathLength="1" d="M80 312V288H235" style="--s:.6;--k:12"/>
+
+          <!-- 5. Acabamento: vidros, madeira e guarda-corpo -->
+          <rect class="e f" x="175" y="336" width="530" height="150" fill="#26333F" style="--s:.66;--k:8"/>
+          <rect class="e f" x="300" y="176" width="635" height="136" fill="#26333F" style="--s:.69;--k:8"/>
+          <path class="e l caixilho" pathLength="1" d="M265 336v150M355 336v150M445 336v150M535 336v150M615 336v150M385 176v136M475 176v136M565 176v136M655 176v136M760 176v136M850 176v136" style="--s:.68;--k:7"/>
+          <rect class="e f" x="160" y="170" width="830" height="6" fill="#8A5A3B" style="--s:.74;--k:8"/>
+          <rect class="e f" x="80" y="330" width="860" height="6" fill="#8A5A3B" style="--s:.76;--k:8"/>
+          <rect class="e f" x="80" y="288" width="155" height="24" fill="#9FB4C0" fill-opacity=".25" style="--s:.76;--k:8"/>
+
+          <!-- 6. Entrega: luzes acesas, piscina e paisagismo -->
+          <g class="e f" style="--s:.84;--k:7">
+            <rect x="175" y="336" width="530" height="150" fill="url(#luz-janela)" filter="url(#brilho)" opacity=".55"/>
+            <rect x="300" y="176" width="635" height="136" fill="url(#luz-janela)" filter="url(#brilho)" opacity=".55"/>
+          </g>
+          <rect class="e f" x="175" y="336" width="530" height="150" fill="url(#luz-janela)" style="--s:.82;--k:9"/>
+          <rect class="e f" x="300" y="176" width="635" height="136" fill="url(#luz-janela)" style="--s:.85;--k:9"/>
+          <path class="e l caixilho-escuro" pathLength="1" d="M265 336v150M355 336v150M445 336v150M535 336v150M615 336v150M385 176v136M475 176v136M565 176v136M655 176v136M760 176v136M850 176v136" style="--s:.84;--k:8"/>
+          <rect class="e f" x="50" y="504" width="600" height="30" fill="#2F5A6B" style="--s:.84;--k:8"/>
+          <path class="e l reflexo" pathLength="1" d="M200 514h120M380 520h170M240 527h90M440 513h80" style="--s:.9;--k:10"/>
+          <path class="e l" pathLength="1" d="M962 500c-3-50 2-92 12-132M974 368c-22-6-40 2-52 16M974 368c18-14 38-14 52-4M974 368c-6-20-2-36 8-46M974 368c-16 14-22 30-20 46" style="--s:.86;--k:9"/>
+          <path class="e f" d="M20 500a30 22 0 0 1 60 0zM640 500a26 18 0 0 1 52 0z" fill="#3E4A3A" style="--s:.88;--k:10"/>
+        </svg>
         <div class="hero__veu" aria-hidden="true"></div>
 
         <div class="hero__texto">

@@ -209,6 +209,52 @@ figure { margin: 0; }
 }
 .hero__texto .botao { margin-top: 2rem; }
 
+/* ---------- Desenho da obra (efeito sem vídeo) ----------
+   O main.js define --p (0 a 1) no .hero conforme a rolagem.
+   Cada elemento .e calcula o próprio avanço --t a partir de --s (início) e --k (velocidade). */
+.desenho { display: none; }
+.hero.is-desenho { height: 260vh; }
+.hero.is-final { height: 100vh; height: 100svh; --p: 1; }
+.hero.is-desenho .hero__fixo, .hero.is-final .hero__fixo {
+  background: linear-gradient(180deg, #141920 0%, #212932 42%, #353637 72%, #54412F 100%);
+}
+.hero.is-desenho .desenho, .hero.is-final .desenho {
+  display: block; position: absolute; top: 13vh; right: 5vw;
+  width: min(60vw, 74vh); height: auto; overflow: visible;
+  opacity: calc(1 - var(--foto, 0));
+}
+/* A foto da casa pronta aparece no fim da rolagem, por cima do desenho */
+.hero.is-desenho, .hero.is-final { --foto: clamp(0, calc((var(--p, 0) - .9) * 10), 1); }
+.hero.sem-foto { --foto: 0; }
+.hero.is-desenho .hero__poster, .hero.is-final .hero__poster { opacity: var(--foto); }
+.hero.is-desenho .hero__veu, .hero.is-final .hero__veu { opacity: max(.35, var(--foto)); }
+.hero.sem-foto .hero__poster { display: none; }
+.hero.sem-foto .desenho { opacity: 1; }
+
+.desenho .e { --t: clamp(0, calc((var(--p, 0) - var(--s)) * var(--k)), 1); }
+.desenho .l {
+  fill: none; stroke: rgba(244, 242, 238, .78); stroke-width: 1.4;
+  vector-effect: non-scaling-stroke; stroke-linecap: round;
+  stroke-dasharray: 1; stroke-dashoffset: calc(1 - var(--t));
+}
+.desenho .f { opacity: var(--t); }
+.desenho .cota-d { stroke: rgba(242, 201, 138, .7); }
+.desenho .cota-t { fill: #F2C98A; font: 500 15px var(--fonte); font-stretch: var(--media); letter-spacing: .04em; }
+.desenho .junta { stroke: rgba(30, 33, 36, .35); }
+.desenho .caixilho { stroke: rgba(160, 170, 178, .55); }
+.desenho .caixilho-escuro { stroke: rgba(70, 48, 30, .55); }
+.desenho .reflexo { stroke: #F2C98A; stroke-width: 2; }
+
+@media (min-width: 761px) {
+  /* No computador o desenho fica no alto, à direita, e o título desce um pouco para não encostar */
+  .hero.is-desenho .desenho, .hero.is-final .desenho { top: 11vh; width: min(56vw, 66vh); }
+  .hero.is-desenho .hero__titulo, .hero.is-final .hero__titulo { font-size: clamp(2.6rem, 1rem + 4.4vw, 5.5rem); }
+  .hero.is-desenho .hero__texto, .hero.is-final .hero__texto { bottom: clamp(6.5rem, 12vh, 8rem); }
+}
+@media (max-width: 760px) {
+  .hero.is-desenho .desenho, .hero.is-final .desenho { top: 13svh; left: 4vw; right: 4vw; width: 92vw; }
+}
+
 /* Régua de cota: a assinatura do site */
 .cota {
   position: absolute; left: 0; right: 0; bottom: clamp(1.75rem, 4vh, 2.75rem);
@@ -576,4 +622,13 @@ figure { margin: 0; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+}
+
+/* Foto que não carregou: some e deixa a malha de planta no lugar */
+img.img-falhou { opacity: 0; }
+.sem-imagem {
+  background:
+    linear-gradient(rgba(167,134,79,.18) 1px, transparent 1px) 0 0 / 28px 28px,
+    linear-gradient(90deg, rgba(167,134,79,.18) 1px, transparent 1px) 0 0 / 28px 28px,
+    #2A2E33;
 }
