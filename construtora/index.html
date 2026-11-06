@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- SEO local: troque [CIDADE/UF] pelo nome real da cidade antes de publicar -->
+  <title>Prumo Construtora | Construtora de alto padrão em [CIDADE/UF]</title>
+  <meta name="description" content="Prumo Construtora: casas de alto padrão, obras comerciais e reformas em [CIDADE/UF]. Projeto, execução e acompanhamento com fotos semanais. Peça seu orçamento.">
+  <meta name="theme-color" content="#1E2124">
+
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:title" content="Prumo Construtora | Do alicerce à última luz acesa">
+  <meta property="og:description" content="Casas de alto padrão, obras comerciais e reformas em [CIDADE/UF].">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1757356657991-c3fd6e2e812e?auto=format&fit=crop&w=1200&h=630&q=75&fm=jpg">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://images.unsplash.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,300..800&display=swap">
+
+  <!-- Foto do topo carrega primeiro (é o poster do vídeo) -->
+  <link rel="preload" as="image"
+        href="https://images.unsplash.com/photo-1757356657991-c3fd6e2e812e?auto=format&fit=crop&w=1920&q=72"
+        imagesrcset="https://images.unsplash.com/photo-1757356657991-c3fd6e2e812e?auto=format&fit=crop&w=900&q=72 900w, https://images.unsplash.com/photo-1757356657991-c3fd6e2e812e?auto=format&fit=crop&w=1920&q=72 1920w"
+        imagesizes="100vw">
+
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Dados estruturados (schema.org). Preencha telefone e endereço reais. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "GeneralContractor",
+    "name": "Prumo Construtora",
+    "description": "Casas de alto padrão, obras comerciais, reformas, projetos e gerenciamento de obra.",
+    "telephone": "[PREENCHER]",
+    "image": "https://images.unsplash.com/photo-1757356657991-c3fd6e2e812e?auto=format&fit=crop&w=1200&q=75&fm=jpg",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "[PREENCHER]",
+      "addressLocality": "[PREENCHER]",
+      "addressRegion": "[UF]",
+      "addressCountry": "BR"
+    },
+    "areaServed": "[CIDADE/UF]"
+  }
+  </script>
+</head>
+<body>
+  <a class="pular" href="#conteudo">Pular para o conteúdo</a>
+
+  <!-- ============ CABEÇALHO ============ -->
+  <header class="topo" data-topo>
+    <div class="topo__barra">
+      <a class="marca" href="#inicio" aria-label="Prumo Construtora, voltar ao início">
+        <svg class="marca__icone" viewBox="0 0 24 32" aria-hidden="true">
+          <line x1="12" y1="0" x2="12" y2="14" />
+          <path d="M5 14h14l-7 16z" />
+        </svg>
+        <span class="marca__nome" data-c="empresa.nome">Prumo Construtora</span>
+      </a>
+
+      <nav class="menu" aria-label="Principal">
+        <a href="#obras">Obras</a>
+        <a href="#servicos">Serviços</a>
+        <a href="#processo">Processo</a>
+        <a href="#sobre">Sobre</a>
+        <a href="#contato">Contato</a>
+      </nav>
+
+      <a class="botao botao--madeira topo__cta" href="#contato">Pedir orçamento</a>
+
+      <button class="topo__abrir" type="button" aria-expanded="false" aria-controls="menu-celular" data-abrir-menu>
+        <span class="sr">Abrir menu</span>
+        <span class="hamburguer" aria-hidden="true"></span>
+      </button>
+    </div>
+
+    <!-- Menu em tela cheia (celular) -->
+    <div class="menu-cheio" id="menu-celular" hidden data-menu-cheio>
+      <nav aria-label="Menu do celular">
+        <a href="#obras">Obras</a>
+        <a href="#servicos">Serviços</a>
+        <a href="#processo">Processo</a>
+        <a href="#sobre">Sobre</a>
+        <a href="#contato">Contato</a>
+      </nav>
+      <a class="botao botao--madeira" href="#contato">Pedir orçamento</a>
+    </div>
+  </header>
+
+  <main id="conteudo">
+
+    <!-- ============ HERO: vídeo da obra que avança com a rolagem ============ -->
+    <section class="hero" id="inicio" data-hero aria-label="Apresentação">
+      <div class="hero__fixo">
+        <div class="hero__midia">
+          <img class="hero__poster"
+               src="https://images.unsplash.com/photo-1757356657991-c3fd6e2e812e?auto=format&fit=crop&w=1920&q=72"
+               srcset="https://images.unsplash.com/photo-1757356657991-c3fd6e2e812e?auto=format&fit=crop&w=900&q=72 900w, https://images.unsplash.com/photo-1757356657991-c3fd6e2e812e?auto=format&fit=crop&w=1920&q=72 1920w"
+               sizes="100vw" width="1920" height="1280" fetchpriority="high"
+               alt="Casa moderna de dois pavimentos com piscina, iluminada ao entardecer">
+          <!-- O main.js só coloca o vídeo se o arquivo existir e o visitante não pediu menos movimento -->
+          <video class="hero__video" muted playsinline preload="none" aria-hidden="true" tabindex="-1"
+                 data-src="assets/video/hero.mp4"></video>
+        </div>
+        <div class="hero__veu" aria-hidden="true"></div>
+
+        <div class="hero__texto">
+          <h1 class="hero__titulo">Do alicerce à<br>última luz acesa.</h1>
+          <p class="hero__sub">
+            Casas de alto padrão, obras comerciais e reformas em
+            <span data-c="empresa.cidade">[CIDADE/UF]</span>.
+            Equipe própria e fotos da obra toda semana.
+          </p>
+          <a class="botao botao--madeira botao--grande" href="#contato">Pedir orçamento</a>
+        </div>
+
+        <!-- Régua de etapas: linha de cota que avança junto com o vídeo -->
+        <div class="cota" data-cota aria-hidden="true">
+          <div class="cota__linha"><span class="cota__fill" data-cota-fill></span></div>
+          <ol class="cota__etapas">
+            <li>Terreno</li>
+            <li>Fundação</li>
+            <li>Estrutura</li>
+            <li>Alvenaria</li>
+            <li>Acabamento</li>
+            <li>Entrega</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ APRESENTAÇÃO ============ -->
+    <section class="sobre claro" id="sobre" aria-labelledby="sobre-titulo">
+      <div class="sobre__grade envelope">
+        <div class="sobre__texto">
+          <h2 id="sobre-titulo" class="titulo-secao">Obra é promessa com prazo.</h2>
+          <p class="sobre__lead">
+            Há <span data-c="empresa.anos">[X]</span> anos construímos casas, lojas e escritórios em
+            <span data-c="empresa.cidade">[CIDADE/UF]</span> com equipe própria, do primeiro furo de sondagem
+            à vistoria final. Você recebe fotos da obra toda semana e sabe, a qualquer momento,
+            em que etapa está e quanto falta.
+          </p>
+          <dl class="numeros">
+            <div>
+              <dt>obras entregues</dt>
+              <dd data-c="empresa.obrasEntregues">[PREENCHER]</dd>
+            </div>
+            <div>
+              <dt>m² construídos</dt>
+              <dd data-c="empresa.m2Construidos">[PREENCHER]</dd>
+            </div>
+            <div>
+              <dt>anos de mercado</dt>
+              <dd data-c="empresa.anos">[PREENCHER]</dd>
+            </div>
+          </dl>
+        </div>
+        <figure class="sobre__foto">
+          <img src="https://images.unsplash.com/photo-1774516534068-77422d9226e6?auto=format&fit=crop&w=1400&q=72"
+               srcset="https://images.unsplash.com/photo-1774516534068-77422d9226e6?auto=format&fit=crop&w=800&q=72 800w, https://images.unsplash.com/photo-1774516534068-77422d9226e6?auto=format&fit=crop&w=1400&q=72 1400w"
+               sizes="(min-width: 900px) 55vw, 100vw"
+               width="1400" height="1050" loading="lazy"
+               alt="Interior de concreto aparente com janelas amplas voltadas para a paisagem">
+          <figcaption>Obra entregue, sala principal. <span class="nota">[trocar por foto real]</span></figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ============ OBRAS (portfólio) ============ -->
+    <section class="obras escuro" id="obras" aria-labelledby="obras-titulo">
+      <div class="envelope">
+        <div class="obras__cabeca">
+          <h2 id="obras-titulo" class="titulo-secao">Obras entregues</h2>
+          <div class="filtro" role="group" aria-label="Filtrar obras por tipo" data-filtro>
+            <button type="button" aria-pressed="true" data-cat="todas">Todas</button>
+            <button type="button" aria-pressed="false" data-cat="residencial">Residencial</button>
+            <button type="button" aria-pressed="false" data-cat="comercial">Comercial</button>
+            <button type="button" aria-pressed="false" data-cat="reforma">Reforma</button>
+          </div>
+        </div>
+        <ul class="galeria" data-galeria>
+          <!-- preenchido pelo main.js a partir de config.js -->
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============ ANTES E DEPOIS ============ -->
+    <section class="antes escuro" aria-labelledby="antes-titulo">
+      <div class="envelope antes__grade">
+        <div class="antes__texto">
+          <h2 id="antes-titulo" class="titulo-secao">Arraste e veja a obra mudar.</h2>
+          <p>À esquerda, o canteiro. À direita, o mesmo lugar no dia da entrega das chaves.</p>
+        </div>
+        <div class="comparador" data-comparador style="--pos: 50%">
+          <img class="comparador__img" src="https://images.unsplash.com/photo-1787672358196-0fa7d142bef0?auto=format&fit=crop&w=1600&q=72"
+               width="1600" height="1000" loading="lazy" alt="Antes: casa em construção, com estrutura e telhado sem acabamento">
+          <img class="comparador__img comparador__depois" src="https://images.unsplash.com/photo-1757359056339-22968344cce6?auto=format&fit=crop&w=1600&q=72"
+               width="1600" height="1000" loading="lazy" alt="Depois: casa pronta, com janelas iluminadas ao anoitecer">
+          <span class="comparador__rotulo comparador__rotulo--antes" aria-hidden="true">Canteiro</span>
+          <span class="comparador__rotulo comparador__rotulo--depois" aria-hidden="true">Entrega</span>
+          <span class="comparador__linha" aria-hidden="true"><span class="comparador__pega"></span></span>
+          <label class="sr" for="comparador-range">Comparar antes e depois</label>
+          <input id="comparador-range" class="comparador__range" type="range" min="0" max="100" value="50" data-comparador-range>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SERVIÇOS (lista editorial) ============ -->
+    <section class="servicos claro" id="servicos" aria-labelledby="servicos-titulo">
+      <div class="envelope servicos__grade">
+        <div class="servicos__lista">
+          <h2 id="servicos-titulo" class="titulo-secao">O que construímos</h2>
+          <ul data-servicos>
+            <li class="servico" data-foto="https://images.unsplash.com/photo-1757356657991-c3fd6e2e812e?auto=format&fit=crop&w=1200&q=72">
+              <h3>Casas de alto padrão</h3>
+              <p>Da fundação ao paisagismo, com projeto executivo, compatibilização e acabamento fino.</p>
+              <img class="servico__foto" src="https://images.unsplash.com/photo-1757356657991-c3fd6e2e812e?auto=format&fit=crop&w=900&q=72" width="900" height="600" loading="lazy" alt="Casa de alto padrão com piscina ao entardecer">
+            </li>
+            <li class="servico" data-foto="https://images.unsplash.com/photo-1776941251083-caddb016c90f?auto=format&fit=crop&w=1200&q=72">
+              <h3>Obras comerciais</h3>
+              <p>Lojas, clínicas, escritórios e galpões, com cronograma que respeita a data de inauguração.</p>
+              <img class="servico__foto" src="https://images.unsplash.com/photo-1776941251083-caddb016c90f?auto=format&fit=crop&w=900&q=72" width="900" height="600" loading="lazy" alt="Prédio comercial com fachada de vidro iluminada">
+            </li>
+            <li class="servico" data-foto="https://images.unsplash.com/photo-1755316388093-faff473ffdfb?auto=format&fit=crop&w=1200&q=72">
+              <h3>Reformas</h3>
+              <p>Cozinhas, banheiros e apartamentos inteiros, com a casa protegida e a sujeira contida.</p>
+              <img class="servico__foto" src="https://images.unsplash.com/photo-1755316388093-faff473ffdfb?auto=format&fit=crop&w=900&q=72" width="900" height="600" loading="lazy" alt="Cozinha reformada com ilha de mármore">
+            </li>
+            <li class="servico" data-foto="https://images.unsplash.com/photo-1761479135364-4240520b5793?auto=format&fit=crop&w=1200&q=72">
+              <h3>Projeto e gerenciamento de obra</h3>
+              <p>Orçamento detalhado, compras, contratação e fiscalização, com relatório semanal para você.</p>
+              <img class="servico__foto" src="https://images.unsplash.com/photo-1761479135364-4240520b5793?auto=format&fit=crop&w=900&q=72" width="900" height="600" loading="lazy" alt="Casas em construção com estrutura aparente">
+            </li>
+          </ul>
+        </div>
+        <div class="servicos__vitrine" aria-hidden="true">
+          <img data-vitrine src="https://images.unsplash.com/photo-1757356657991-c3fd6e2e812e?auto=format&fit=crop&w=1200&q=72" width="1200" height="1500" loading="lazy" alt="">
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PROCESSO (sequência real, por isso numerada) ============ -->
+    <section class="processo concreto" id="processo" aria-labelledby="processo-titulo">
+      <div class="envelope">
+        <h2 id="processo-titulo" class="titulo-secao">Como a sua obra anda</h2>
+        <ol class="linha-tempo">
+          <li>
+            <span class="linha-tempo__n">1</span>
+            <h3>Visita técnica</h3>
+            <p>Vamos ao terreno ou imóvel, medimos e entendemos o que você precisa.</p>
+          </li>
+          <li>
+            <span class="linha-tempo__n">2</span>
+            <h3>Projeto e orçamento</h3>
+            <p>Você recebe o projeto e um orçamento aberto, item por item.</p>
+          </li>
+          <li>
+            <span class="linha-tempo__n">3</span>
+            <h3>Aprovação</h3>
+            <p>Contrato com cronograma, prefeitura e documentação resolvidos.</p>
+          </li>
+          <li>
+            <span class="linha-tempo__n">4</span>
+            <h3>Execução com acompanhamento</h3>
+            <p>Equipe própria no canteiro e fotos da obra toda semana.</p>
+          </li>
+          <li>
+            <span class="linha-tempo__n">5</span>
+            <h3>Entrega das chaves</h3>
+            <p>Vistoria junto com você, manual da obra e garantia por escrito.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ============ DEPOIMENTOS ============ -->
+    <section class="depoimentos escuro" aria-labelledby="depoimentos-titulo">
+      <div class="envelope">
+        <h2 id="depoimentos-titulo" class="titulo-secao">Quem já mora numa obra nossa</h2>
+        <ul class="depoimentos__lista" data-depoimentos>
+          <!-- preenchido pelo main.js a partir de config.js -->
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============ CONTATO / ORÇAMENTO ============ -->
+    <section class="contato claro" id="contato" aria-labelledby="contato-titulo">
+      <div class="envelope contato__grade">
+        <div class="contato__form">
+          <h2 id="contato-titulo" class="titulo-secao">Peça seu orçamento</h2>
+          <p class="contato__lead">Preencha e o WhatsApp abre com a mensagem pronta. Respondemos em horário comercial.</p>
+
+          <form class="form" data-form novalidate>
+            <div class="campo">
+              <label for="f-nome">Nome</label>
+              <input id="f-nome" name="nome" type="text" autocomplete="name" required>
+            </div>
+            <div class="campo">
+              <label for="f-tel">Telefone</label>
+              <input id="f-tel" name="telefone" type="tel" autocomplete="tel" inputmode="tel" required>
+            </div>
+            <div class="campo">
+              <label for="f-tipo">Tipo de obra</label>
+              <select id="f-tipo" name="tipo" required>
+                <option value="">Escolha</option>
+                <option>Casa nova</option>
+                <option>Obra comercial</option>
+                <option>Reforma</option>
+                <option>Projeto e gerenciamento</option>
+              </select>
+            </div>
+            <div class="campo">
+              <label for="f-cidade">Cidade</label>
+              <input id="f-cidade" name="cidade" type="text" autocomplete="address-level2" required>
+            </div>
+            <div class="campo campo--cheio">
+              <label for="f-msg">Conte sobre a obra <span class="opcional">(opcional)</span></label>
+              <textarea id="f-msg" name="mensagem" rows="4" placeholder="Tamanho do terreno, prazo que você imagina, o que já tem pronto…"></textarea>
+            </div>
+            <p class="form__erro" role="alert" data-form-erro hidden></p>
+            <button class="botao botao--madeira botao--grande" type="submit">Enviar pelo WhatsApp</button>
+          </form>
+        </div>
+
+        <aside class="contato__info" aria-label="Endereço e redes">
+          <dl class="dados">
+            <div><dt>Endereço</dt><dd data-c="contato.endereco">[PREENCHER]</dd></div>
+            <div><dt>Horário</dt><dd data-c="contato.horario">[PREENCHER]</dd></div>
+            <div><dt>E-mail</dt><dd data-link="email">[PREENCHER]</dd></div>
+            <div><dt>Instagram</dt><dd data-link="instagram">[PREENCHER]</dd></div>
+          </dl>
+          <div class="mapa" data-mapa>
+            <p>O mapa aparece aqui quando o endereço for preenchido em <code>js/config.js</code>.</p>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ RODAPÉ ============ -->
+  <footer class="rodape escuro">
+    <div class="envelope rodape__grade">
+      <div>
+        <p class="marca marca--rodape">
+          <svg class="marca__icone" viewBox="0 0 24 32" aria-hidden="true">
+            <line x1="12" y1="0" x2="12" y2="14" />
+            <path d="M5 14h14l-7 16z" />
+          </svg>
+          <span data-c="empresa.nome">Prumo Construtora</span>
+        </p>
+        <p class="rodape__frase">Construtora em <span data-c="empresa.cidade">[CIDADE/UF]</span>.</p>
+      </div>
+      <nav aria-label="Rodapé" class="rodape__links">
+        <a href="#obras">Obras</a>
+        <a href="#servicos">Serviços</a>
+        <a href="#processo">Processo</a>
+        <a href="#sobre">Sobre</a>
+        <a href="#contato">Contato</a>
+      </nav>
+      <div class="rodape__contato">
+        <p data-link="whatsapp-texto">WhatsApp [PREENCHER]</p>
+        <p data-link="email">[PREENCHER]</p>
+        <p data-link="instagram">[PREENCHER]</p>
+      </div>
+    </div>
+    <div class="envelope rodape__base">
+      <p>© <span data-ano></span> <span data-c="empresa.nome">Prumo Construtora</span>. CNPJ <span data-c="empresa.cnpj">[PREENCHER]</span></p>
+      <p>Site feito por <a href="https://oliveirabrennobjj-beep.github.io/Meu-site/">BN Digital</a></p>
+    </div>
+  </footer>
+
+  <!-- Botão flutuante do WhatsApp -->
+  <a class="zap" href="#contato" data-zap aria-label="Falar no WhatsApp">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3a.5.5 0 0 0 0-.4l-.8-1.9c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.3c0-.1-.2-.2-.4-.3Z"/></svg>
+  </a>
+
+  <!-- Lightbox das obras -->
+  <dialog class="caixa" data-caixa aria-labelledby="caixa-titulo">
+    <div class="caixa__corpo">
+      <div class="caixa__midia">
+        <img data-caixa-img src="" alt="">
+        <button class="caixa__seta caixa__seta--ant" type="button" data-caixa-ant><span class="sr">Foto anterior</span></button>
+        <button class="caixa__seta caixa__seta--prox" type="button" data-caixa-prox><span class="sr">Próxima foto</span></button>
+      </div>
+      <div class="caixa__info">
+        <h2 id="caixa-titulo" data-caixa-titulo></h2>
+        <dl>
+          <div><dt>Local</dt><dd data-caixa-local></dd></div>
+          <div><dt>Área</dt><dd data-caixa-area></dd></div>
+          <div><dt>Prazo</dt><dd data-caixa-prazo></dd></div>
+        </dl>
+        <p class="caixa__contador" data-caixa-contador></p>
+      </div>
+      <button class="caixa__fechar" type="button" data-caixa-fechar>Fechar</button>
+    </div>
+  </dialog>
+
+  <script src="js/config.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
