@@ -1,0 +1,296 @@
+<title>Guia Casimiro</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: barra fixa com grupos e nichos no topo, lista de cartões em uma coluna (duas no computador). */
+:root {
+  --bg: #f3f6f2;
+  --surface: #ffffff;
+  --ink: #15281f;
+  --muted: #5b6b62;
+  --line: #dbe4dd;
+  --accent: #0f5c43;
+  --accent-soft: #dcefe5;
+  --gold: #c98a06;
+  --warn-bg: #fff3d6;
+  --warn-fg: #7a5200;
+  --display: "Bricolage Grotesque", "Arial Narrow", system-ui, sans-serif;
+  --body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1713; --surface: #16231d; --ink: #e6efe9; --muted: #9db0a5; --line: #26372e;
+    --accent: #5fd0a2; --accent-soft: #1d3a2e; --gold: #f2b62f; --warn-bg: #3a2e10; --warn-fg: #f3d58a;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1713; --surface: #16231d; --ink: #e6efe9; --muted: #9db0a5; --line: #26372e;
+  --accent: #5fd0a2; --accent-soft: #1d3a2e; --gold: #f2b62f; --warn-bg: #3a2e10; --warn-fg: #f3d58a;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 15px; line-height: 1.45; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.wrap { max-width: 980px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+header.top { padding-block: 22px 10px; }
+h1 { font-family: var(--display); font-weight: 800; font-size: clamp(30px, 8vw, 44px); line-height: 1; margin: 0; letter-spacing: -0.02em; text-wrap: balance; }
+h1 span { color: var(--accent); }
+.sub { color: var(--muted); margin: 8px 0 0; max-width: 60ch; }
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line); padding-block: 8px 10px; }
+.groups, .niches { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+.groups::-webkit-scrollbar, .niches::-webkit-scrollbar { display: none; }
+.niches { margin-top: 8px; }
+button { font: inherit; color: inherit; cursor: pointer; }
+.g { flex: none; border: 0; background: transparent; padding: 8px 12px; border-radius: 10px; font-weight: 600; color: var(--muted); white-space: nowrap; }
+.g[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.chip { flex: none; border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 7px 13px; font-weight: 600; font-size: 14px; white-space: nowrap; display: inline-flex; gap: 6px; align-items: center; }
+.chip b { font-weight: 700; font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.chip[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+.chip[aria-pressed="true"] b { color: var(--accent); }
+.chip.empty { opacity: .55; }
+.tools { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+.tools label { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); font-weight: 600; }
+select, input[type="search"] { font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; }
+input[type="search"] { flex: 1 1 180px; min-width: 0; }
+select:focus-visible, input:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+main { padding-block: 14px 40px; }
+.head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+.head h2 { font-family: var(--display); font-weight: 600; font-size: 22px; margin: 0; }
+.head p { margin: 0; color: var(--muted); font-size: 13px; }
+.list { display: grid; gap: 10px; grid-template-columns: 1fr; }
+@media (min-width: 760px) { .list { grid-template-columns: 1fr 1fr; } }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px; display: grid; gap: 8px; min-width: 0; }
+.row1 { display: flex; gap: 10px; align-items: flex-start; }
+.pos { flex: none; width: 28px; height: 28px; border-radius: 8px; background: var(--accent-soft); color: var(--accent); font-weight: 700; display: grid; place-items: center; font-size: 13px; font-variant-numeric: tabular-nums; }
+.name { font-weight: 700; font-size: 16px; line-height: 1.25; min-width: 0; overflow-wrap: anywhere; flex: 1; }
+.fav { flex: none; border: 1px solid var(--line); background: transparent; border-radius: 999px; padding: 4px 10px; font-size: 13px; font-weight: 600; color: var(--muted); }
+.fav[aria-pressed="true"] { background: var(--gold); border-color: var(--gold); color: #1c1400; }
+.rate { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 14px; }
+.stars { color: var(--gold); letter-spacing: 1px; }
+.score { font-weight: 700; font-variant-numeric: tabular-nums; }
+.count { color: var(--muted); }
+.tag { font-size: 12px; font-weight: 600; color: var(--muted); border: 1px solid var(--line); padding: 1px 8px; border-radius: 999px; }
+.warn { background: var(--warn-bg); color: var(--warn-fg); border-color: transparent; }
+.meta { color: var(--muted); font-size: 14px; display: grid; gap: 2px; overflow-wrap: anywhere; }
+.meta .ph { color: var(--ink); font-variant-numeric: tabular-nums; user-select: all; }
+.acts { display: flex; gap: 8px; flex-wrap: wrap; }
+.acts a { text-decoration: none; font-weight: 600; font-size: 14px; padding: 7px 12px; border-radius: 10px; border: 1px solid var(--line); color: var(--ink); }
+.acts a.main { background: var(--accent); border-color: var(--accent); color: var(--surface); }
+.none { background: var(--surface); border: 1px dashed var(--line); border-radius: 14px; padding: 22px; color: var(--muted); text-align: center; }
+footer { color: var(--muted); font-size: 12px; padding-block: 0 30px; }
+</style>
+
+<header class="top wrap">
+  <h1>Guia <span>Casimiro</span></h1>
+  <p class="sub">Lojas e lugares de Casimiro de Abreu (RJ), separados por nicho. Escolha o nicho, ordene pela nota e marque os que você quer visitar hoje.</p>
+</header>
+
+<div class="bar">
+  <div class="wrap">
+    <nav class="groups" id="groups" aria-label="Grupos"></nav>
+    <div class="niches" id="niches" aria-label="Nichos"></div>
+    <div class="tools">
+      <label for="sort">Ordenar por
+        <select id="sort">
+          <option value="rec">Mais recomendado</option>
+          <option value="nota">Maior nota</option>
+          <option value="aval">Mais avaliações</option>
+          <option value="az">Nome (A–Z)</option>
+        </select>
+      </label>
+      <input type="search" id="q" placeholder="Buscar nome ou bairro" aria-label="Buscar">
+    </div>
+  </div>
+</div>
+
+<main class="wrap">
+  <div class="head"><h2 id="title"></h2><p id="info"></p></div>
+  <div class="list" id="list"></div>
+</main>
+
+<footer class="wrap">
+  <p>Notas e número de avaliações do Google Maps, coletados em 06/11/2026. Itens marcados "a confirmar" vieram de guias online, sem nota ainda: confira no Maps antes de ir. "Mais recomendado" pesa a nota junto com a quantidade de avaliações, para um 5,0 com 2 avaliações não passar na frente de um 4,8 com 60.</p>
+</footer>
+
+<script>
+const GROUPS = [
+  { id: "comer", nome: "Comer e beber", nichos: [
+    ["restaurante", "Restaurantes"], ["churrascaria", "Churrascarias"], ["pizzaria", "Pizzarias"],
+    ["lanchonete", "Lanchonetes e hambúrguer"], ["acai", "Açaí"], ["sorveteria", "Sorveterias"],
+    ["padaria", "Padarias"], ["bar", "Bares"], ["cafe", "Café e doceria"], ["japonesa", "Comida japonesa"] ] },
+  { id: "beleza", nome: "Beleza", nichos: [
+    ["salao", "Salões de beleza"], ["barbearia", "Barbearias"], ["estetica", "Estética, unhas e sobrancelha"] ] },
+  { id: "compras", nome: "Compras", nichos: [
+    ["mercado", "Supermercados"], ["roupas", "Roupas e calçados"], ["cosmeticos", "Cosméticos e perfumaria"],
+    ["eletronicos", "Celular e eletrônicos"], ["farmacia", "Farmácias"], ["petshop", "Pet shops"], ["construcao", "Material de construção"] ] },
+  { id: "servicos", nome: "Serviços e lazer", nichos: [
+    ["academia", "Academias"], ["hotel", "Hotéis e pousadas"], ["posto", "Postos de gasolina"], ["oficina", "Oficinas e lava-jato"] ] }
+];
+
+// n nome | c nicho | r nota | v avaliações | a endereço | t telefone | pid id do Google | tipo | ok=false: veio de guia online, sem nota
+const PLACES = [
+  { n: "Espaço Silvania Novaes", c: "salao", r: 5, v: 75, a: "R. Pastor Luiz Laurentino, 1073 · Santa Ely", t: "(22) 99808-3134", pid: "ChIJQauZhhu9lwARSiSLY1L6nMA" },
+  { n: "Studio Alane Barbara Beleza e Imagem", c: "salao", r: 4.9, v: 64, a: "R. Padre José Maria Yanes Garcia, 396 · Vila Mataruna", t: "(22) 97404-8823", pid: "ChIJkwSnlJW9lwARnG03gxHQiRQ" },
+  { n: "Gold Hair", c: "salao", r: 4.6, v: 65, a: "R. Cabo Frio (Miguel Jorge), 66 · Centro", t: "(22) 2778-3270", pid: "ChIJN1wb9mK8lwAR0XLlqzHAWNs" },
+  { n: "Salão Fraga", c: "salao", r: 4.7, v: 39, a: "R. Pastor Luís Laurentino da Silva, 473, Lj 03 · Vila Mataruna", t: "(22) 99817-1060", pid: "ChIJ63qpZQS9lwARSRdetR1S1oU" },
+  { n: "Claudete Grativol Espaço de Beleza", c: "salao", r: 5, v: 21, a: "R. Padre Francisco Maria Tales, 272 · Centro", t: "(22) 99801-5910", pid: "ChIJYVGzygW9lwARjZY7jPKDpYY" },
+  { n: "Salão Visual", c: "salao", r: 4.6, v: 15, a: "Tv. Izaltino A. da Silva, 05 · Vila Mataruna", t: "(22) 99914-6798", pid: "ChIJgZR3gwO9lwARvS52LWfVNsw" },
+  { n: "Paulinho Salão Unisex", c: "salao", r: 4.8, v: 14, a: "R. Pastor Luís Laurentino da Silva, 110 · Lot. Irmãos Ribeiro", t: "(22) 2778-1030", pid: "ChIJ94rV6Qa9lwARAWZHiPLl9dg" },
+  { n: "Rose Cabeleireira", c: "salao", r: 4.5, v: 11, a: "R. Rodolfo Motta, 675 · Vila Mataruna", t: "(22) 99903-3779", pid: "ChIJQwcLxRy9lwAR0Uk3o3mSm_U" },
+  { n: "Andressa Hair Stylist", c: "salao", r: 4.8, v: 10, a: "R. Arthur Azevedo Werneck · Vila Mataruna", t: "(22) 98827-4120", pid: "ChIJ-zWN-YS9lwAR3OWm66eWIm8" },
+  { n: "Salão Playboy", c: "salao", r: 4.9, v: 10, a: "R. Silas Gaspar, 287 · Célio Sardedos", t: "(22) 2778-3499", pid: "ChIJY1hBSRy9lwARtdwJSeTHrSI" },
+  { n: "Arrazus Concept", c: "salao", r: 4.8, v: 5, a: "R. Salomão Ginsburg, 138 · Centro", t: "(22) 98148-0604", pid: "ChIJ85DDRwe9lwARsC0QPy4qEMk" },
+  { n: "Cantinho da Beleza", c: "salao", r: 4.8, v: 5, a: "R. Joaquim Nunes da Rosa · Vila Mataruna", t: "(22) 99613-2267", pid: "ChIJKSS5H_S9lwARmxqGFoNBjq0" },
+  { n: "Juliany Beauty Studio", c: "salao", r: null, v: 0, a: "R. Arthur Azevedo Werneck · Vila Mataruna", t: "(22) 98810-9630", pid: "ChIJBRLNCwC9lwARe5P-jTZi4Dc" },
+  { n: "Divã da Beleza Mega Hair", c: "salao", r: null, v: 0, a: "R. Pastor Luís Laurentino / R. Rodolfo Motta", t: "(22) 99831-5140", pid: "ChIJX8bgDgC9lwARk15ObqIvi_I" },
+  { n: "Barber Club", c: "barbearia", r: 4.9, v: 34, a: "R. Pastor Luiz Laurentino da Silva / R. Rodolfo Motta", t: "(31) 99780-3143", pid: "ChIJl9BprtW9lwARANCwS1WsrF4" },
+  { n: "Harmonize Clínica Médica e Estética", c: "estetica", tipo: "Clínica de estética", r: 4.7, v: 43, a: "R. Pref. José Bicudo Jardim, lote 4, qd. B · Mirante do Poeta", t: "(22) 99865-1919", pid: "ChIJ63TqaX-9lwAR54P6R83ozCA" },
+  { n: "Cantinho da Rafa", c: "estetica", tipo: "Manicure", r: 4.9, v: 15, a: "R. Pastor Luiz Laurentino, 1161, casa 2", t: "(22) 99618-3782", pid: "ChIJZzgUaqu9lwARYkUnmCjSgS0" },
+  { n: "Studio Juliana Blenda", c: "estetica", tipo: "Sobrancelha", r: 4.9, v: 12, a: "R. Padre Anchieta, 556 · Centro", t: "(22) 99614-4880", pid: "ChIJ-ZJyaqi9lwARwirkK6Drp2c" },
+  { n: "Mr. Beauty Centro de Saúde e Estética", c: "estetica", tipo: "Estética e podologia", r: 5, v: 11, a: "R. Waldemir Heringer da Silva, 89 · Centro", t: "(22) 99801-3232", pid: "ChIJXyTwdEG9lwAR-t8ROyiYXUo" },
+  { n: "Studio Vitória Ramos", c: "estetica", tipo: "Maquiagem", r: null, v: 0, a: "R. Francisco Xavier da Motta", t: "(22) 99618-0822", pid: "ChIJ4ec07Xe9lwARVkHXoJRGinE" },
+
+  { n: "R. D. Possa Restaurante e Pizzaria", c: "restaurante", ok: false, a: "R. Pastor Luís Laurentino da Silva, 192, Lj 03 · Pessoinha" },
+  { n: "Mama Jo Restaurante", c: "restaurante", ok: false },
+  { n: "Restaurante Sabor Caseiro", c: "restaurante", ok: false },
+  { n: "Restaurante Ferreira II", c: "restaurante", ok: false },
+  { n: "Vital Restaurante", c: "restaurante", ok: false },
+  { n: "Churraskos Bar e Restaurante", c: "churrascaria", ok: false },
+  { n: "Churrascaria e Lanchonete Nelore", c: "churrascaria", ok: false },
+  { n: "Sabor Retrô Pizzaria e Restaurante", c: "pizzaria", ok: false, a: "BR-101" },
+  { n: "Nação das Pizzas", c: "pizzaria", ok: false, a: "Rod. Amaral Peixoto" },
+  { n: "Pastelaria e Pizzaria Barra de São João", c: "pizzaria", ok: false, a: "RJ-106 · Barra de São João" },
+  { n: "Deu Fome Pizzas", c: "pizzaria", ok: false },
+  { n: "Pizzaria Laiane Barra", c: "pizzaria", ok: false, a: "Barra de São João" },
+  { n: "Pizzaria Rio Sul", c: "pizzaria", ok: false },
+  { n: "Pizzaria Chicano", c: "pizzaria", ok: false },
+  { n: "Pizzaria Don Leal", c: "pizzaria", ok: false },
+  { n: "Rios Lanche e Pizzaria", c: "pizzaria", ok: false },
+  { n: "Ragnar Burg", c: "lanchonete", ok: false },
+  { n: "Mega Burguer Barra", c: "lanchonete", ok: false, a: "Rod. Amaral Peixoto · Barra de São João" },
+  { n: "Gadita Lanches", c: "lanchonete", ok: false },
+  { n: "Tropical Lanches", c: "lanchonete", ok: false },
+  { n: "Mister Coxito", c: "lanchonete", ok: false },
+  { n: "Lanchonete Patropi", c: "lanchonete", ok: false },
+  { n: "Lanchonete Água na Boca", c: "lanchonete", ok: false },
+  { n: "Esquina do Açaí", c: "acai", ok: false },
+  { n: "Bar do Cafuncho", c: "bar", ok: false }
+];
+
+const NICHE = {};
+GROUPS.forEach(g => g.nichos.forEach(([id, nome]) => NICHE[id] = { id, nome, g: g.id }));
+PLACES.forEach((p, i) => { p.id = i; if (p.ok === undefined) p.ok = true; });
+
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+};
+let favs = new Set(store.get("gc-favs", []));
+const state = Object.assign({ g: "beleza", c: "salao", sort: "rec" }, store.get("gc-state", {}));
+if (state.g !== "fav" && !GROUPS.some(g => g.id === state.g)) { state.g = "comer"; state.c = "restaurante"; }
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]));
+const fmt = r => r.toFixed(1).replace(".", ",");
+// Nota ponderada: puxa notas com poucas avaliações para perto da média (4,5).
+const rec = p => p.r == null ? -1 : (p.v * p.r + 10 * 4.5) / (p.v + 10);
+const stars = r => { const f = Math.round(r); return "★".repeat(f) + "☆".repeat(5 - f); };
+const mapsUrl = p => p.pid
+  ? "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(p.n + " " + (p.a || "") + " Casimiro de Abreu") + "&query_place_id=" + p.pid
+  : "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(p.n + " Casimiro de Abreu RJ");
+const waUrl = t => { const d = (t || "").replace(/\D/g, ""); return d.length === 11 && d[2] === "9" ? "https://wa.me/55" + d : null; };
+
+function save() { store.set("gc-state", { g: state.g, c: state.c, sort: state.sort }); }
+
+function renderGroups() {
+  const all = [...GROUPS.map(g => [g.id, g.nome]), ["fav", "Quero ir (" + favs.size + ")"]];
+  $("groups").innerHTML = all.map(([id, nome]) =>
+    `<button class="g" aria-pressed="${state.g === id}" data-g="${id}">${esc(nome)}</button>`).join("");
+}
+
+function renderNiches() {
+  const box = $("niches");
+  if (state.g === "fav") { box.hidden = true; return; }
+  box.hidden = false;
+  const g = GROUPS.find(x => x.id === state.g);
+  box.innerHTML = g.nichos.map(([id, nome]) => {
+    const n = PLACES.filter(p => p.c === id).length;
+    return `<button class="chip${n ? "" : " empty"}" aria-pressed="${state.c === id}" data-c="${id}">${esc(nome)} <b>${n}</b></button>`;
+  }).join("");
+}
+
+function sorted(list) {
+  const by = {
+    rec: (a, b) => rec(b) - rec(a) || b.v - a.v,
+    nota: (a, b) => (b.r ?? -1) - (a.r ?? -1) || (b.v || 0) - (a.v || 0),
+    aval: (a, b) => (b.v || 0) - (a.v || 0) || (b.r ?? -1) - (a.r ?? -1),
+    az: (a, b) => a.n.localeCompare(b.n, "pt-BR")
+  }[state.sort];
+  return list.slice().sort((a, b) => (b.ok - a.ok) || by(a, b));
+}
+
+function card(p, i) {
+  const fav = favs.has(p.n);
+  const wa = waUrl(p.t);
+  const rate = p.r != null
+    ? `<span class="stars" aria-hidden="true">${stars(p.r)}</span><span class="score">${fmt(p.r)}</span><span class="count">${p.v} avaliações</span>`
+    : p.ok ? `<span class="count">Ainda sem avaliações no Google</span>` : "";
+  const tags = [
+    state.g === "fav" ? `<span class="tag">${esc(NICHE[p.c].nome)}</span>` : "",
+    p.tipo ? `<span class="tag">${esc(p.tipo)}</span>` : "",
+    p.ok ? "" : `<span class="tag warn">a confirmar</span>`
+  ].join("");
+  return `<article class="card">
+    <div class="row1"><span class="pos">${i + 1}</span><div class="name">${esc(p.n)}</div>
+      <button class="fav" data-fav="${esc(p.n)}" aria-pressed="${fav}">${fav ? "★ Vou" : "☆ Quero ir"}</button></div>
+    <div class="rate">${rate}${tags}</div>
+    <div class="meta">${p.a ? `<span>${esc(p.a)}</span>` : ""}${p.t ? `<span class="ph">${esc(p.t)}</span>` : ""}</div>
+    <div class="acts"><a class="main" href="${mapsUrl(p)}" target="_blank" rel="noopener">${p.ok ? "Ver no Maps" : "Procurar no Maps"}</a>
+      ${wa ? `<a href="${wa}" target="_blank" rel="noopener">WhatsApp</a>` : ""}</div>
+  </article>`;
+}
+
+function renderList() {
+  const q = $("q").value.trim().toLowerCase();
+  let list = state.g === "fav" ? PLACES.filter(p => favs.has(p.n)) : PLACES.filter(p => p.c === state.c);
+  if (q) list = PLACES.filter(p => (p.n + " " + (p.a || "")).toLowerCase().includes(q) && (state.g === "fav" ? favs.has(p.n) : true));
+  list = sorted(list);
+  $("title").textContent = q ? `Busca: "${$("q").value.trim()}"` : state.g === "fav" ? "Quero ir hoje" : NICHE[state.c].nome;
+  const com = list.filter(p => p.r != null).length;
+  $("info").textContent = list.length ? `${list.length} lugares · ${com} com nota` : "";
+  if (!list.length) {
+    $("list").innerHTML = `<div class="none">${state.g === "fav" && !q
+      ? "Nenhum marcado ainda. Toque em \"☆ Quero ir\" nos lugares que te interessam."
+      : q ? "Nada encontrado com essa busca."
+      : "Ainda sem lugares neste nicho. A lista é completada na próxima atualização."}</div>`;
+    return;
+  }
+  $("list").innerHTML = list.map(card).join("");
+}
+
+function render() { renderGroups(); renderNiches(); renderList(); }
+
+$("groups").addEventListener("click", e => {
+  const b = e.target.closest("[data-g]"); if (!b) return;
+  state.g = b.dataset.g;
+  if (state.g !== "fav") state.c = GROUPS.find(g => g.id === state.g).nichos[0][0];
+  save(); render();
+});
+$("niches").addEventListener("click", e => {
+  const b = e.target.closest("[data-c]"); if (!b) return;
+  state.c = b.dataset.c; save(); render();
+});
+$("list").addEventListener("click", e => {
+  const b = e.target.closest("[data-fav]"); if (!b) return;
+  const n = b.dataset.fav;
+  favs.has(n) ? favs.delete(n) : favs.add(n);
+  store.set("gc-favs", [...favs]); render();
+});
+$("sort").value = state.sort;
+$("sort").addEventListener("change", e => { state.sort = e.target.value; save(); renderList(); });
+$("q").addEventListener("input", renderList);
+render();
+</script>
