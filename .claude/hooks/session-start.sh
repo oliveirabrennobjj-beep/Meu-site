@@ -28,7 +28,10 @@ if [ -n "${CLAUDE_ENV_FILE:-}" ]; then
   echo "export PATH=\"$VENV/bin:\$PATH\"" >> "$CLAUDE_ENV_FILE"
 fi
 
-# Graphify (skill /graphify): CLI do pacote graphifyy no mesmo venv.
+# Graphify (skill /graphify) e yt-dlp (plugin watch): no mesmo venv.
+if ! "$VENV/bin/python" -c "import yt_dlp" 2>/dev/null; then
+  "$VENV/bin/pip" install --quiet --disable-pip-version-check yt-dlp || echo "Aviso: não deu pra instalar o yt-dlp." >&2
+fi
 if ! "$VENV/bin/python" -c "import graphify" 2>/dev/null; then
   "$VENV/bin/pip" install --quiet --disable-pip-version-check graphifyy || echo "Aviso: não deu pra instalar o graphifyy." >&2
 fi

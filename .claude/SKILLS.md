@@ -142,3 +142,14 @@ Adicionado em 2026-11-06, a pedido do Brenno (vai editar vídeo até o fim do an
 editor de vídeo de desktop com servidor MCP (`concat --mcp`). A skill ensina como ligá-lo no computador e o fluxo
 de edição de um Reel. As duas skills que vêm no repositório do Concat são para quem programa o próprio Concat: não
 foram copiadas.
+
+## Watch (`bradautomates/claude-video`)
+
+Adicionado em 2026-11-06. Plugin `watch@claude-video`: `/watch <link ou arquivo>` tira quadros com ffmpeg e a
+legenda/transcrição, para o Claude "assistir" o vídeo. Na nuvem a rede bloqueia o YouTube, então só arquivos
+enviados funcionam. O `yt-dlp` é instalado no `.venv/` pelo hook de início.
+
+## Lista do computador
+
+`PARA-O-COMPUTADOR.md` (raiz do repositório) guarda tudo que o Brenno pediu e que só funciona inteiro num computador.
+Toda skill nova nessa situação entra lá, e o Claude avisa o Brenno quando ela entrar.

@@ -47,6 +47,12 @@
         "source": "github",
         "repo": "JuliusBrussee/caveman"
       }
+    },
+    "claude-video": {
+      "source": {
+        "source": "github",
+        "repo": "bradautomates/claude-video"
+      }
     }
   },
   "enabledPlugins": {
@@ -55,6 +61,7 @@
     "i-have-adhd@i-have-adhd": true,
     "octo@nyldn-plugins": true,
     "ponytail@ponytail": true,
-    "caveman@caveman": true
+    "caveman@caveman": true,
+    "watch@claude-video": true
   }
 }
