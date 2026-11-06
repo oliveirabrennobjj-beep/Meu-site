@@ -112,91 +112,336 @@ footer { color: var(--muted); font-size: 12px; padding-block: 0 30px; }
 </main>
 
 <footer class="wrap">
-  <p>Notas e número de avaliações do Google Maps, coletados em 06/11/2026. Itens marcados "a confirmar" vieram de guias online, sem nota ainda: confira no Maps antes de ir. "Mais recomendado" pesa a nota junto com a quantidade de avaliações, para um 5,0 com 2 avaliações não passar na frente de um 4,8 com 60.</p>
+  <p>Pesquisa feita em 06/11/2026 no Google Maps, Restaurant Guru, Tripadvisor, Booking, Instagram, Facebook e guias de empresas. Cada nota mostra de onde veio. Lugares sem nota aparecem depois dos que têm nota: confira horário no Maps antes de ir. "Mais recomendado" pesa a nota junto com a quantidade de avaliações, para um 5,0 com 3 avaliações não passar na frente de um 4,8 com 500.</p>
 </footer>
 
 <script>
 const GROUPS = [
   { id: "comer", nome: "Comer e beber", nichos: [
-    ["restaurante", "Restaurantes"], ["churrascaria", "Churrascarias"], ["pizzaria", "Pizzarias"],
-    ["lanchonete", "Lanchonetes e hambúrguer"], ["acai", "Açaí"], ["sorveteria", "Sorveterias"],
-    ["padaria", "Padarias"], ["bar", "Bares"], ["cafe", "Café e doceria"], ["japonesa", "Comida japonesa"] ] },
+    ["restaurante", "Restaurantes e almoço"], ["frutosdomar", "Frutos do mar"], ["churrascaria", "Churrascarias"],
+    ["pizzaria", "Pizzarias"], ["hamburgueria", "Hamburguerias"], ["lanchonete", "Lanchonetes e salgados"],
+    ["japonesa", "Comida japonesa"], ["marmita", "Quentinhas e marmitas"], ["acai", "Açaí"], ["sorveteria", "Sorveterias"],
+    ["padaria", "Padarias"], ["doces", "Doces e bolos"], ["bar", "Bares e petiscarias"] ] },
   { id: "beleza", nome: "Beleza", nichos: [
-    ["salao", "Salões de beleza"], ["barbearia", "Barbearias"], ["estetica", "Estética, unhas e sobrancelha"] ] },
+    ["barbearia", "Barbearias (homem)"], ["salao", "Salões de beleza"], ["unhas", "Unhas e esmalteria"],
+    ["estetica", "Estética, sobrancelha e cílios"], ["maquiagem", "Maquiadoras"] ] },
+  { id: "moda", nome: "Moda", nichos: [
+    ["feminina", "Roupa feminina"], ["masculina", "Roupa masculina"], ["infantil", "Roupa infantil"],
+    ["multimarcas", "Lojas de roupa (várias)"], ["calcados", "Calçados"], ["perfumaria", "Perfumaria e cosméticos"] ] },
   { id: "compras", nome: "Compras", nichos: [
-    ["mercado", "Supermercados"], ["roupas", "Roupas e calçados"], ["cosmeticos", "Cosméticos e perfumaria"],
-    ["eletronicos", "Celular e eletrônicos"], ["farmacia", "Farmácias"], ["petshop", "Pet shops"], ["construcao", "Material de construção"] ] },
-  { id: "servicos", nome: "Serviços e lazer", nichos: [
+    ["mercado", "Supermercados"], ["hortifruti", "Hortifruti"], ["acougue", "Açougues"], ["farmacia", "Farmácias"],
+    ["construcao", "Material de construção"], ["moveis", "Móveis e decoração"], ["presentes", "Presentes e variedades"],
+    ["papelaria", "Papelaria"], ["otica", "Óticas"], ["celular", "Celular e assistência"], ["pet", "Pet shop e agropecuária"] ] },
+  { id: "servicos", nome: "Serviços", nichos: [
     ["academia", "Academias"], ["hotel", "Hotéis e pousadas"], ["posto", "Postos de gasolina"], ["oficina", "Oficinas e lava-jato"] ] }
 ];
 
-// n nome | c nicho | r nota | v avaliações | a endereço | t telefone | pid id do Google | tipo | ok=false: veio de guia online, sem nota
+// n nome | c nicho | r nota (0-5) | v avaliações | s fonte da nota | a endereço | t telefone | tipo
+// pid = id do Google Maps | ig = Instagram | fb = Facebook | obs = aviso curto
 const PLACES = [
-  { n: "Espaço Silvania Novaes", c: "salao", r: 5, v: 75, a: "R. Pastor Luiz Laurentino, 1073 · Santa Ely", t: "(22) 99808-3134", pid: "ChIJQauZhhu9lwARSiSLY1L6nMA" },
-  { n: "Studio Alane Barbara Beleza e Imagem", c: "salao", r: 4.9, v: 64, a: "R. Padre José Maria Yanes Garcia, 396 · Vila Mataruna", t: "(22) 97404-8823", pid: "ChIJkwSnlJW9lwARnG03gxHQiRQ" },
-  { n: "Gold Hair", c: "salao", r: 4.6, v: 65, a: "R. Cabo Frio (Miguel Jorge), 66 · Centro", t: "(22) 2778-3270", pid: "ChIJN1wb9mK8lwAR0XLlqzHAWNs" },
-  { n: "Salão Fraga", c: "salao", r: 4.7, v: 39, a: "R. Pastor Luís Laurentino da Silva, 473, Lj 03 · Vila Mataruna", t: "(22) 99817-1060", pid: "ChIJ63qpZQS9lwARSRdetR1S1oU" },
-  { n: "Claudete Grativol Espaço de Beleza", c: "salao", r: 5, v: 21, a: "R. Padre Francisco Maria Tales, 272 · Centro", t: "(22) 99801-5910", pid: "ChIJYVGzygW9lwARjZY7jPKDpYY" },
-  { n: "Salão Visual", c: "salao", r: 4.6, v: 15, a: "Tv. Izaltino A. da Silva, 05 · Vila Mataruna", t: "(22) 99914-6798", pid: "ChIJgZR3gwO9lwARvS52LWfVNsw" },
-  { n: "Paulinho Salão Unisex", c: "salao", r: 4.8, v: 14, a: "R. Pastor Luís Laurentino da Silva, 110 · Lot. Irmãos Ribeiro", t: "(22) 2778-1030", pid: "ChIJ94rV6Qa9lwARAWZHiPLl9dg" },
-  { n: "Rose Cabeleireira", c: "salao", r: 4.5, v: 11, a: "R. Rodolfo Motta, 675 · Vila Mataruna", t: "(22) 99903-3779", pid: "ChIJQwcLxRy9lwAR0Uk3o3mSm_U" },
-  { n: "Andressa Hair Stylist", c: "salao", r: 4.8, v: 10, a: "R. Arthur Azevedo Werneck · Vila Mataruna", t: "(22) 98827-4120", pid: "ChIJ-zWN-YS9lwAR3OWm66eWIm8" },
-  { n: "Salão Playboy", c: "salao", r: 4.9, v: 10, a: "R. Silas Gaspar, 287 · Célio Sardedos", t: "(22) 2778-3499", pid: "ChIJY1hBSRy9lwARtdwJSeTHrSI" },
-  { n: "Arrazus Concept", c: "salao", r: 4.8, v: 5, a: "R. Salomão Ginsburg, 138 · Centro", t: "(22) 98148-0604", pid: "ChIJ85DDRwe9lwARsC0QPy4qEMk" },
-  { n: "Cantinho da Beleza", c: "salao", r: 4.8, v: 5, a: "R. Joaquim Nunes da Rosa · Vila Mataruna", t: "(22) 99613-2267", pid: "ChIJKSS5H_S9lwARmxqGFoNBjq0" },
-  { n: "Juliany Beauty Studio", c: "salao", r: null, v: 0, a: "R. Arthur Azevedo Werneck · Vila Mataruna", t: "(22) 98810-9630", pid: "ChIJBRLNCwC9lwARe5P-jTZi4Dc" },
-  { n: "Divã da Beleza Mega Hair", c: "salao", r: null, v: 0, a: "R. Pastor Luís Laurentino / R. Rodolfo Motta", t: "(22) 99831-5140", pid: "ChIJX8bgDgC9lwARk15ObqIvi_I" },
-  { n: "Barber Club", c: "barbearia", r: 4.9, v: 34, a: "R. Pastor Luiz Laurentino da Silva / R. Rodolfo Motta", t: "(31) 99780-3143", pid: "ChIJl9BprtW9lwARANCwS1WsrF4" },
-  { n: "Harmonize Clínica Médica e Estética", c: "estetica", tipo: "Clínica de estética", r: 4.7, v: 43, a: "R. Pref. José Bicudo Jardim, lote 4, qd. B · Mirante do Poeta", t: "(22) 99865-1919", pid: "ChIJ63TqaX-9lwAR54P6R83ozCA" },
-  { n: "Cantinho da Rafa", c: "estetica", tipo: "Manicure", r: 4.9, v: 15, a: "R. Pastor Luiz Laurentino, 1161, casa 2", t: "(22) 99618-3782", pid: "ChIJZzgUaqu9lwARYkUnmCjSgS0" },
-  { n: "Studio Juliana Blenda", c: "estetica", tipo: "Sobrancelha", r: 4.9, v: 12, a: "R. Padre Anchieta, 556 · Centro", t: "(22) 99614-4880", pid: "ChIJ-ZJyaqi9lwARwirkK6Drp2c" },
-  { n: "Mr. Beauty Centro de Saúde e Estética", c: "estetica", tipo: "Estética e podologia", r: 5, v: 11, a: "R. Waldemir Heringer da Silva, 89 · Centro", t: "(22) 99801-3232", pid: "ChIJXyTwdEG9lwAR-t8ROyiYXUo" },
-  { n: "Studio Vitória Ramos", c: "estetica", tipo: "Maquiagem", r: null, v: 0, a: "R. Francisco Xavier da Motta", t: "(22) 99618-0822", pid: "ChIJ4ec07Xe9lwARVkHXoJRGinE" },
+  // ---------- Beleza: barbearias ----------
+  { n: "Barber Club", c: "barbearia", r: 4.9, v: 34, s: "Google", a: "R. Pastor Luiz Laurentino da Silva / R. Rodolfo Motta", t: "(31) 99780-3143", pid: "ChIJl9BprtW9lwARANCwS1WsrF4" },
+  { n: "Zé Bigode Barbearia", c: "barbearia", tipo: "Barba, cabelo e cerveja", a: "R. Rodolfo Motta, 718", t: "(22) 99944-0539", fb: "barbeariazebigode" },
+  { n: "Barbearia do Pirulito", c: "barbearia", tipo: "Seg a sáb, 9h às 20h", a: "Em frente ao fórum, perto da ciclovia", ig: "pirulito_da_barbearia" },
+  { n: "Barbearia Abreu Oficial", c: "barbearia", tipo: "Ter a sáb 9h–19h · dom 9h–12h", a: "Av. Gov. Luís Rocha, 1630", ig: "_barbeariaabreuoficial" },
+  { n: "Barbearia do Marinho", c: "barbearia", tipo: "Mais de 1.800 check-ins no Facebook", fb: "barbeariadomarinho2" },
+  { n: "Barbearia J. Estarnek", c: "barbearia", a: "R. Pastor Luís Laurentino da Silva, 473, lj 03 · Mataruna", fb: "people/Barbearia-JEstarnek/100054448361081" },
+  { n: "Barbearia Tesoura de Ouro", c: "barbearia", a: "Estrada Velha Rio Dourado · Rio Dourado", fb: "BabershopTesouraDeOuro" },
+  { n: "Barbearia do Vila", c: "barbearia", fb: "barbeariadodouglas" },
+  { n: "Barbearia Costa", c: "barbearia", a: "Mataruna", t: "(22) 99956-3749" },
+  { n: "Two Brothers Barber Shop", c: "barbearia", ig: "barber_shop_twobrothers" },
+  { n: "Barber Simas", c: "barbearia", a: "Rod. Amaral Peixoto, 27 · Barra de São João" },
+  { n: "Barbearia Touche", c: "barbearia", a: "R. Segredo, 156 · Barra de São João" },
+  { n: "Sony Barbearia", c: "barbearia", a: "R. Saulo Ramos, 1112" },
+  { n: "Barbearia Pinheiro", c: "barbearia" },
+  { n: "Barbearia Maya", c: "barbearia" },
+  { n: "Barbearia do Nenem", c: "barbearia", a: "Estrada Velha Rio Dourado · Rio Dourado" },
+  { n: "Barbearia do Denilson", c: "barbearia", a: "Estrada Velha Rio Dourado · Rio Dourado" },
+  { n: "Wagner Barbeiro", c: "barbearia", ig: "wagnerbarbearia186", obs: "endereço não confirmado" },
 
-  { n: "R. D. Possa Restaurante e Pizzaria", c: "restaurante", ok: false, a: "R. Pastor Luís Laurentino da Silva, 192, Lj 03 · Pessoinha" },
-  { n: "Mama Jo Restaurante", c: "restaurante", ok: false },
-  { n: "Restaurante Sabor Caseiro", c: "restaurante", ok: false },
-  { n: "Restaurante Ferreira II", c: "restaurante", ok: false },
-  { n: "Vital Restaurante", c: "restaurante", ok: false },
-  { n: "Churraskos Bar e Restaurante", c: "churrascaria", ok: false },
-  { n: "Churrascaria e Lanchonete Nelore", c: "churrascaria", ok: false },
-  { n: "Sabor Retrô Pizzaria e Restaurante", c: "pizzaria", ok: false, a: "BR-101" },
-  { n: "Nação das Pizzas", c: "pizzaria", ok: false, a: "Rod. Amaral Peixoto" },
-  { n: "Pastelaria e Pizzaria Barra de São João", c: "pizzaria", ok: false, a: "RJ-106 · Barra de São João" },
-  { n: "Deu Fome Pizzas", c: "pizzaria", ok: false },
-  { n: "Pizzaria Laiane Barra", c: "pizzaria", ok: false, a: "Barra de São João" },
-  { n: "Pizzaria Rio Sul", c: "pizzaria", ok: false },
-  { n: "Pizzaria Chicano", c: "pizzaria", ok: false },
-  { n: "Pizzaria Don Leal", c: "pizzaria", ok: false },
-  { n: "Rios Lanche e Pizzaria", c: "pizzaria", ok: false },
-  { n: "Ragnar Burg", c: "lanchonete", ok: false },
-  { n: "Mega Burguer Barra", c: "lanchonete", ok: false, a: "Rod. Amaral Peixoto · Barra de São João" },
-  { n: "Gadita Lanches", c: "lanchonete", ok: false },
-  { n: "Tropical Lanches", c: "lanchonete", ok: false },
-  { n: "Mister Coxito", c: "lanchonete", ok: false },
-  { n: "Lanchonete Patropi", c: "lanchonete", ok: false },
-  { n: "Lanchonete Água na Boca", c: "lanchonete", ok: false },
-  { n: "Esquina do Açaí", c: "acai", ok: false },
-  { n: "Bar do Cafuncho", c: "bar", ok: false }
+  // ---------- Beleza: salões ----------
+  { n: "Espaço Silvania Novaes", c: "salao", r: 5, v: 75, s: "Google", a: "R. Pastor Luiz Laurentino, 1073 · Santa Ely", t: "(22) 99808-3134", pid: "ChIJQauZhhu9lwARSiSLY1L6nMA" },
+  { n: "Studio Alane Barbara Beleza e Imagem", c: "salao", r: 4.9, v: 64, s: "Google", a: "R. Padre José Maria Yanes Garcia, 396 · Vila Mataruna", t: "(22) 97404-8823", pid: "ChIJkwSnlJW9lwARnG03gxHQiRQ" },
+  { n: "Gold Hair Centro de Beleza", c: "salao", r: 4.6, v: 65, s: "Google", a: "R. Cabo Frio (Miguel Jorge), 66 · Centro", t: "(22) 2778-3270", pid: "ChIJN1wb9mK8lwAR0XLlqzHAWNs" },
+  { n: "Salão Fraga", c: "salao", r: 4.7, v: 39, s: "Google", a: "R. Pastor Luís Laurentino da Silva, 473, lj 03 · Vila Mataruna", t: "(22) 99817-1060", pid: "ChIJ63qpZQS9lwARSRdetR1S1oU" },
+  { n: "Claudete Grativol Espaço de Beleza", c: "salao", r: 5, v: 21, s: "Google", a: "R. Padre Francisco Maria Tales, 272 · Centro", t: "(22) 99801-5910", pid: "ChIJYVGzygW9lwARjZY7jPKDpYY" },
+  { n: "Salão Visual", c: "salao", r: 4.6, v: 15, s: "Google", tipo: "Cabelo e unhas", a: "Tv. Izaltino A. da Silva, 05 · Vila Mataruna", t: "(22) 99914-6798", pid: "ChIJgZR3gwO9lwARvS52LWfVNsw" },
+  { n: "Paulinho Salão Unissex", c: "salao", r: 4.8, v: 14, s: "Google", a: "R. Pastor Luís Laurentino da Silva, 110 · Lot. Irmãos Ribeiro", t: "(22) 2778-1030", pid: "ChIJ94rV6Qa9lwARAWZHiPLl9dg" },
+  { n: "Rose Cabeleireira", c: "salao", r: 4.5, v: 11, s: "Google", a: "R. Rodolfo Motta, 675 · Vila Mataruna", t: "(22) 99903-3779", pid: "ChIJQwcLxRy9lwAR0Uk3o3mSm_U" },
+  { n: "Andressa Hair Stylist", c: "salao", r: 4.8, v: 10, s: "Google", a: "R. Arthur Azevedo Werneck · Vila Mataruna", t: "(22) 98827-4120", pid: "ChIJ-zWN-YS9lwAR3OWm66eWIm8" },
+  { n: "Salão Playboy", c: "salao", r: 4.9, v: 10, s: "Google", a: "R. Silas Gaspar, 287 · Célio Sardedos", t: "(22) 2778-3499", pid: "ChIJY1hBSRy9lwARtdwJSeTHrSI" },
+  { n: "Arrazus Concept", c: "salao", r: 4.8, v: 5, s: "Google", a: "R. Salomão Ginsburg, 138 · Centro", t: "(22) 98148-0604", pid: "ChIJ85DDRwe9lwARsC0QPy4qEMk" },
+  { n: "Cantinho da Beleza", c: "salao", r: 4.8, v: 5, s: "Google", a: "R. Joaquim Nunes da Rosa · Vila Mataruna", t: "(22) 99613-2267", pid: "ChIJKSS5H_S9lwARmxqGFoNBjq0" },
+  { n: "Juliany Beauty Studio", c: "salao", s: "Google", a: "R. Arthur Azevedo Werneck · Vila Mataruna", t: "(22) 98810-9630", pid: "ChIJBRLNCwC9lwARe5P-jTZi4Dc" },
+  { n: "Divã da Beleza Mega Hair", c: "salao", s: "Google", tipo: "Mega hair e progressiva", a: "R. Pastor Luís Laurentino / R. Rodolfo Motta", t: "(22) 99831-5140", pid: "ChIJX8bgDgC9lwARk15ObqIvi_I" },
+  { n: "Luana Rocha Studio", c: "salao", tipo: "Cabelo, unha e depilação", fb: "luanarochastudio" },
+  { n: "Femme Fatale Salão de Beleza", c: "salao", tipo: "Cabelo, unha e depilação", fb: "Nanda.Martins123" },
+  { n: "Studio da Beleza Carmen Honorato", c: "salao", tipo: "Cabelo, manicure e cílios", fb: "p/Studio-da-Beleza-Carmen-Honorato%EF%B8%8F-100063637624785" },
+  { n: "Pâmela Coiffeur", c: "salao", fb: "Coiffeurpamela" },
+  { n: "Salão Kátia Cabeleireira", c: "salao", fb: "www.katiafranco.com.br" },
+
+  // ---------- Beleza: unhas ----------
+  { n: "Cantinho da Rafa", c: "unhas", r: 4.9, v: 15, s: "Google", tipo: "Manicure", a: "R. Pastor Luiz Laurentino, 1161, casa 2", t: "(22) 99618-3782", pid: "ChIJZzgUaqu9lwARYkUnmCjSgS0" },
+  { n: "Esmalteria Tais Vieira Nail Designer", c: "unhas", tipo: "Alongamento e nail art", a: "R. Isaura Ribeiro Linhares, 48 · Santa Inês", t: "(22) 99236-7040" },
+  { n: "Studio Jéssica de Paula", c: "unhas", tipo: "Unhas e sobrancelha", a: "Av. Presidente Vargas, 633 · Centro", ig: "jessicadepaulastudio" },
+  { n: "Ranyra Ramalho Nails", c: "unhas", tipo: "Alongamento e cutilagem russa", a: "Centro", ig: "ranyramalhonails" },
+  { n: "Jana Manhães Nail Designer", c: "unhas", a: "R. Princesa Leopoldina" },
+  { n: "Unhas Suelem", c: "unhas", a: "Rod. Amaral Peixoto" },
+  { n: "Susu Nails", c: "unhas" },
+  { n: "Camila Athelien das Unhas", c: "unhas" },
+
+  // ---------- Beleza: estética ----------
+  { n: "Harmonize Clínica Médica e Estética", c: "estetica", r: 4.7, v: 43, s: "Google", a: "R. Pref. José Bicudo Jardim, lote 4, qd. B · Mirante do Poeta", t: "(22) 99865-1919", pid: "ChIJ63TqaX-9lwAR54P6R83ozCA", ig: "harmonizecasimiro" },
+  { n: "Studio Juliana Blenda", c: "estetica", r: 4.9, v: 12, s: "Google", tipo: "Sobrancelha", a: "R. Padre Anchieta, 556 · Centro", t: "(22) 99614-4880", pid: "ChIJ-ZJyaqi9lwARwirkK6Drp2c" },
+  { n: "Mr. Beauty Saúde e Estética", c: "estetica", r: 5, v: 11, s: "Google", tipo: "Estética e podologia", a: "R. Waldemir Heringer da Silva, 89 · Centro", t: "(22) 99801-3232", pid: "ChIJXyTwdEG9lwAR-t8ROyiYXUo" },
+  { n: "Studio Fernanda Furtado", c: "estetica", tipo: "Cílios, sobrancelha e depilação", fb: "studiofernandafurtado" },
+  { n: "Preta Rocha Beleza e Bem Estar", c: "estetica", tipo: "Tratamento facial e corporal", fb: "pretarochaBelezaeBemEstar" },
+  { n: "Bellizzima Estética e Eventos", c: "estetica", a: "Av. Marcílio Dias, 499 · Centro", t: "(22) 2774-0705" },
+  { n: "Hidrofisio TJ", c: "estetica", tipo: "Fisioterapia, pilates e estética" },
+
+  // ---------- Beleza: maquiagem ----------
+  { n: "Studio Vitória Ramos", c: "maquiagem", s: "Google", a: "R. Francisco Xavier da Motta", t: "(22) 99618-0822", pid: "ChIJ4ec07Xe9lwARVkHXoJRGinE" },
+  { n: "Lana Ribeiro MakeUp", c: "maquiagem", fb: "lanaribeiro8" },
+
+  // ---------- Comer: restaurantes ----------
+  { n: "Prosa Mineira", c: "restaurante", r: 4.8, v: 1048, s: "Restaurant Guru", tipo: "Comida mineira", a: "Barra de São João" },
+  { n: "Sabor da BR101", c: "restaurante", r: 4.5, v: 88, s: "Google", tipo: "Self-service", a: "BR-101" },
+  { n: "Oasis Casimiro", c: "restaurante", r: 4.1, v: 12718, s: "Restaurant Guru", tipo: "Buffet na BR-101, ao lado do posto", a: "BR-101" },
+  { n: "Bar e Restaurante Pôr do Sol", c: "restaurante", r: 4.5, v: 17, s: "Tripadvisor", a: "Barra de São João" },
+  { n: "Fit & Fat Restaurante", c: "restaurante", tipo: "Self-service · seg a sáb, 11h às 15h", t: "(22) 2778-4380", ig: "fitefat.oficial" },
+  { n: "Sabores do Poeta Restaurante", c: "restaurante", fb: "saboresdopoetarestaurante" },
+  { n: "Delicado Restaurante", c: "restaurante" },
+  { n: "Degui Restaurante e Café", c: "restaurante" },
+  { n: "Restaurante Bambu", c: "restaurante" },
+  { n: "Restaurante Serve Bem", c: "restaurante", tipo: "Entrega pelo iFood", a: "Vila Mataruna" },
+  { n: "Da Cheff Lanchonete e Restaurante", c: "restaurante", tipo: "Entrega pelo iFood", a: "Centro · Barra de São João" },
+  { n: "R. D. Possa Restaurante e Pizzaria", c: "restaurante", a: "R. Pastor Luís Laurentino da Silva, 192, lj 03 · Pessoinha" },
+  { n: "Mama Jo Restaurante", c: "restaurante" },
+  { n: "Restaurante Sabor Caseiro", c: "restaurante" },
+  { n: "Restaurante Ferreira II", c: "restaurante", tipo: "Barato" },
+  { n: "Vital Restaurante", c: "restaurante" },
+  { n: "SmS Frango Assado", c: "restaurante", tipo: "Frango assado" },
+  { n: "Tiete Mendonça Culinária Artesanal", c: "restaurante", tipo: "Entrega pelo iFood" },
+
+  // ---------- Comer: frutos do mar ----------
+  { n: "Point da Baiana", c: "frutosdomar", r: 4.8, v: 585, s: "Restaurant Guru", a: "Barra de São João" },
+  { n: "Armazém Beira Rio", c: "frutosdomar", r: 4.8, v: 268, s: "Restaurant Guru", tipo: "R$ 100 a 120 por pessoa", a: "Barra de São João" },
+  { n: "Capri Cucina Costiera", c: "frutosdomar", tipo: "Italiano e frutos do mar", a: "Barra de São João" },
+
+  // ---------- Comer: churrascarias ----------
+  { n: "Churrascaria e Hotel Patropi", c: "churrascaria", r: 4.2, v: 69, s: "Tripadvisor", tipo: "Churrasco self-service e comida japonesa", a: "BR-101, km 206, nº 602", t: "(22) 2778-2061" },
+  { n: "La Panza Piena Grill", c: "churrascaria", a: "BR-101, km 206" },
+  { n: "Churraskos Bar e Restaurante", c: "churrascaria" },
+
+  // ---------- Comer: pizzarias ----------
+  { n: "Tia Aretha", c: "pizzaria", r: 4.6, v: 506, s: "Restaurant Guru", tipo: "Pizza e comida caseira" },
+  { n: "Pizzaria Rio Sul", c: "pizzaria", r: 4.6, v: 454, s: "Restaurant Guru" },
+  { n: "Vermelho Tomate Casa de Massas", c: "pizzaria", r: 4.6, v: 680, s: "Cardápio.menu", tipo: "Pizza e massas", a: "Barra de São João" },
+  { n: "Pizzaria Laiane Barra", c: "pizzaria", r: 4.3, v: 191, s: "Restaurant Guru", tipo: "Pedido mínimo R$ 40 no iFood", a: "Centro · Barra de São João" },
+  { n: "Pizzaria Chicano", c: "pizzaria", r: 4.8, v: 19, s: "Tripadvisor", a: "Barra de São João" },
+  { n: "Gordinho Lanches & Pizzas", c: "pizzaria", r: 4.6, v: 74, s: "Restaurant Guru", obs: "pode ter fechado" },
+  { n: "Pizzaria Italianinha", c: "pizzaria", tipo: "Também faz hambúrguer artesanal", a: "Barra de São João" },
+  { n: "Barra Pizza", c: "pizzaria", tipo: "Pizza e esfiha", a: "Peixe Dourado" },
+  { n: "Sabor Retrô Pizzaria e Restaurante", c: "pizzaria", a: "BR-101" },
+  { n: "Nação das Pizzas", c: "pizzaria", a: "Rod. Amaral Peixoto" },
+  { n: "Pastelaria e Pizzaria Barra de São João", c: "pizzaria", a: "RJ-106 · Barra de São João" },
+  { n: "Deu Fome Pizzas", c: "pizzaria" },
+  { n: "Pizzaria Don Leal", c: "pizzaria" },
+  { n: "Rios Lanche e Pizzaria", c: "pizzaria" },
+
+  // ---------- Comer: hamburguerias ----------
+  { n: "Garagem Hamburgueria Artesanal (Garage 48)", c: "hamburgueria", a: "R. Dr. Sá Pinto · Barra de São João", fb: "garagemhamburgueriaartesana" },
+  { n: "Vai de Bike Burgers", c: "hamburgueria", tipo: "Artesanal" },
+  { n: "Goodburger", c: "hamburgueria", tipo: "Artesanal com entrega", a: "Barra de São João" },
+  { n: "BB Burger House", c: "hamburgueria" },
+  { n: "Ragnar Burg", c: "hamburgueria" },
+  { n: "Mega Burguer Barra", c: "hamburgueria", a: "Rod. Amaral Peixoto · Barra de São João" },
+  { n: "Vesúvio Hamburgueria Artesanal", c: "hamburgueria", r: 1.1, v: 53, s: "Restaurant Guru" },
+
+  // ---------- Comer: lanchonetes ----------
+  { n: "Lanchonete Route 206", c: "lanchonete", r: 4.4, v: 1847, s: "Restaurant Guru", tipo: "Pão de queijo famoso", a: "BR-101" },
+  { n: "Lanchonete Patropi", c: "lanchonete", r: 4.3, v: 3482, s: "Restaurant Guru", tipo: "Pão de queijo e café", a: "BR-101, km 207" },
+  { n: "Lanchonete e Bar do Betinho", c: "lanchonete", r: 4.6, v: 33, s: "Restaurant Guru", tipo: "Café da manhã" },
+  { n: "R & L Lanchonete", c: "lanchonete", r: 5, v: 3, s: "Restaurant Guru", a: "R. Nilton Carvalho Macabu" },
+  { n: "BBC Casimiro de Abreu", c: "lanchonete", ig: "bbcvia101" },
+  { n: "Spazzio Açaí e Lanches Prensados", c: "lanchonete", a: "Lot. Irmãos Ribeiro" },
+  { n: "Desafio do Lanche", c: "lanchonete", a: "Peixe Dourado" },
+  { n: "Ramiros Lanchonete", c: "lanchonete" },
+  { n: "Lanchonete Rio Macaé", c: "lanchonete" },
+  { n: "Húngara Lanches", c: "lanchonete" },
+  { n: "Lanchonete da Família", c: "lanchonete" },
+  { n: "Gadita Lanches", c: "lanchonete" },
+  { n: "Tropical Lanches", c: "lanchonete" },
+  { n: "Mister Coxito", c: "lanchonete" },
+  { n: "Lanchonete Água na Boca", c: "lanchonete" },
+
+  // ---------- Comer: japonesa ----------
+  { n: "Oguro Sushi-house", c: "japonesa", tipo: "Delivery · 18h30 às 23h40" },
+  { n: "Sushitake Sushi House", c: "japonesa", a: "Rodovia, 598 · Barra de São João", fb: "Sushitakesushihouse" },
+  { n: "Don Pacheco Steak House e Sushi Bar", c: "japonesa", tipo: "Sushi e carnes", fb: "DonPachecoSteakHouse" },
+
+  // ---------- Comer: quentinhas ----------
+  { n: "Disk Quentinha", c: "marmita", a: "R. Princesa Leopoldina, 801 · Centro", t: "(22) 2778-5070" },
+  { n: "Cozinha de Mãe", c: "marmita", tipo: "Entrega das 11h às 14h", a: "Centro", t: "(22) 98808-4452" },
+  { n: "Quentinha da Neta", c: "marmita", a: "R. Maria Batista Abreu, 13 · Village do Poeta" },
+  { n: "Marivalda Quentinhas", c: "marmita", a: "Barra de São João" },
+  { n: "Quentinhas da Helo", c: "marmita", a: "Campo Alegre" },
+
+  // ---------- Comer: açaí ----------
+  { n: "Esquina do Açaí", c: "acai", tipo: "Nota máxima no Tripadvisor · 14h à meia-noite", a: "R. Pastor Luís Laurentino, 1000 · perto do hospital", t: "(22) 98827-5387" },
+  { n: "Curtindo a Fruta Açaiteria e Sorveteria", c: "acai", tipo: "Você monta o copo", fb: "recantodoacaicasimiro" },
+  { n: "Açaí da Pri", c: "acai", tipo: "Entrega por perto", a: "Barra de São João", fb: "priscilamaia123" },
+  { n: "Açaí Tropical da Barra", c: "acai", a: "Em frente ao batalhão · Barra de São João", fb: "acaitropicaldabarra" },
+
+  // ---------- Comer: sorveterias ----------
+  { n: "Eskimó Sorvetes Casimiro", c: "sorveteria", a: "R. Alpheu Marchon, 200", fb: "eskimosorvetecasimiro18" },
+  { n: "Ravis Sorvetes", c: "sorveteria", a: "Barra de São João" },
+
+  // ---------- Comer: padarias ----------
+  { n: "Padaria e Confeitaria Macedo", c: "padaria", r: 4.3, v: 95, s: "Restaurant Guru", a: "R. Paulino Quintino Lira, 210" },
+  { n: "Padaria e Confeitaria BNH (Galvão)", c: "padaria", a: "R. 1, nº 430 · Santa Ely" },
+  { n: "Padaria Ouro de Minas", c: "padaria", a: "Rod. Amaral Peixoto · Centro e Barra de São João" },
+  { n: "Padaria e Confeitaria Italvense", c: "padaria", a: "Estrada Velha Rio Dourado" },
+  { n: "Padaria de Jesus", c: "padaria", fb: "people/Padaria-De-JESUS/100080984063976" },
+  { n: "Padaria do Assis", c: "padaria" },
+  { n: "Pão.com", c: "padaria" },
+  { n: "Nonna Cafeteria", c: "padaria", tipo: "Cafeteria" },
+
+  // ---------- Comer: doces ----------
+  { n: "Bolos e Cia", c: "doces", tipo: "Encomendas · taça da felicidade", a: "Praça Prof. Souza · Centro", t: "(22) 99819-2348", fb: "BoloseCia.EstefaneOliveira" },
+  { n: "Doçuras da Lu", c: "doces", tipo: "Bolos, doces e tortas", a: "R. Princesa Leopoldina, 315 · Centro" },
+  { n: "Colheradas Bolo no Pote", c: "doces", a: "Rod. Amaral Peixoto, 219 · Barra de São João" },
+  { n: "Doce Sabor Vanuza", c: "doces", tipo: "Bolo artesanal", fb: "docesaborvanuza" },
+  { n: "M/R Salgados e Bolos", c: "doces" },
+
+  // ---------- Comer: bares ----------
+  { n: "Rústico Bar & Petiscaria", c: "bar", r: 3.5, v: 72, s: "Restaurant Guru", a: "Rod. Amaral Peixoto, 803 · Barra de São João" },
+  { n: "Rota 106 Bar e Petiscaria", c: "bar" },
+  { n: "Tô no Zap Bar Petiscaria", c: "bar" },
+  { n: "Mariazinha Restaurante e Petiscaria", c: "bar" },
+  { n: "Bar da Bola", c: "bar", fb: "bardabola10" },
+  { n: "Bar do Cafuncho", c: "bar" },
+
+  // ---------- Moda ----------
+  { n: "Loja Melina", c: "feminina", tipo: "Online, com entrega ou retirada", ig: "loja.melina" },
+  { n: "Pega a Mania", c: "feminina", a: "R. Leôncio Capivari da Silva, lj 92", t: "(22) 99902-7345", fb: "lojapegaamania" },
+  { n: "Segredo da Moda", c: "feminina", a: "Rod. Amaral Peixoto · Barra de São João" },
+  { n: "N.G. Modas", c: "feminina", a: "Rod. Amaral Peixoto · Barra de São João" },
+  { n: "Rosamar Boutique", c: "masculina", tipo: "Masculina, feminina e infantil", fb: "rosamarboutique" },
+  { n: "Menta Rio", c: "masculina", tipo: "Roupa e calçado masculino e feminino", fb: "MentaRioCasimiro" },
+  { n: "Meninos e Meninas BSJ", c: "infantil", a: "Barra de São João", fb: "meninosemeninasbsj" },
+  { n: "Raffus", c: "multimarcas", a: "R. Alpheu Marchon, 47 · Centro", t: "(22) 2778-1420" },
+  { n: "Outlet Casimiro de Abreu", c: "multimarcas", tipo: "Feira de ponta de estoque no pavilhão do Centro", ig: "outletcasimirodeabreu" },
+  { n: "Brechó da Jo", c: "multimarcas", tipo: "Brechó", a: "R. Princesa Leopoldina, 267 · Centro", t: "(22) 99941-5708" },
+  { n: "J J Esportes", c: "calcados", tipo: "Calçados e esporte", a: "R. Pastor Luís Laurentino da Silva, 1300 · Santa Ely" },
+
+  // ---------- Moda: perfumaria ----------
+  { n: "Persona Perfumaria e Cosméticos", c: "perfumaria", a: "R. Alpheu Marchon, 47", t: "(22) 2778-4008" },
+  { n: "Essence Perfumaria e Cosméticos", c: "perfumaria", tipo: "Natura, Avon, Boticário e Eudora", fb: "essenceperfumariaecosmeticos" },
+  { n: "Charmozi Perfumaria", c: "perfumaria", tipo: "Lojas no Centro, Mirante do Poeta e Barra", fb: "charmozi.perfumaria" },
+  { n: "O Boticário", c: "perfumaria" },
+  { n: "Loja das Essências", c: "perfumaria" },
+  { n: "Cherosa Artigos de Perfumaria", c: "perfumaria" },
+  { n: "Cosméticos Produtos em Geral", c: "perfumaria", a: "R. Princesa Leopoldina, 104" },
+  { n: "Joelma Mendes Cosméticos", c: "perfumaria", a: "Rod. Amaral Peixoto · Barra de São João", t: "(22) 2764-6806" },
+
+  // ---------- Compras ----------
+  { n: "Supermercado Tinoco", c: "mercado", a: "R. Alfeu Marchon, 125 · Centro", fb: "tinococasimiro" },
+  { n: "Supermercado Pôr do Sol", c: "mercado", fb: "pordosolcasimiro" },
+  { n: "Expresso Supermercado", c: "mercado", tipo: "Seg a sáb, 9h às 20h", a: "Praça Feliciano Sodré, 60 · Centro" },
+  { n: "Princesa Supermercados", c: "mercado", a: "RJ-106, 903 · Barra de São João" },
+  { n: "Mercado Paladar", c: "mercado", tipo: "Mercado e açougue", a: "R. Princesa Leopoldina, 438" },
+  { n: "Americanas", c: "presentes", tipo: "Loja de departamento" },
+  { n: "Hortifruti Capixaba", c: "hortifruti", a: "R. Leôncio Capivari da Silva, 171 e R. Pastor Luiz Laurentino" },
+  { n: "Sabores do Poeta Hortifruti", c: "hortifruti", tipo: "Faz entrega", a: "R. Leôncio Capivari, 38 · Centro", ig: "saboreshortifruti" },
+  { n: "Hortifruti Cantinho da Roça", c: "hortifruti" },
+  { n: "Hortifruti Leia Dias", c: "hortifruti" },
+  { n: "Açougue Bandeirantes", c: "acougue", a: "Av. dos Bandeirantes, 165" },
+  { n: "PL.JM Mercado e Açougue", c: "acougue", a: "Estrada Velha Rio Dourado, 627" },
+  { n: "Mercearia e Açougue Félix", c: "acougue" },
+  { n: "Casa do Frango", c: "acougue", a: "Centro" },
+  { n: "Drogaria Dimarcio", c: "farmacia", tipo: "Entrega no mesmo dia", a: "Av. Bandeirantes, 60 · Centro", t: "(22) 2778-1418" },
+  { n: "Drogasil", c: "farmacia", a: "R. Pastor Luís Laurentino da Silva · Pessoinha" },
+  { n: "Drogaria Casimiro", c: "farmacia", a: "R. Rodolfo Motta, 227 · Santa Ely" },
+  { n: "Farmácia Casimiro", c: "farmacia", a: "R. Pastor Luiz Laurentino da Silva, 1371" },
+  { n: "Farmácia do Trevo", c: "farmacia", a: "R. Alcides Lino Pimentel, 159 · Rio Dourado", t: "(22) 2759-8774" },
+  { n: "Farmácia Municipal Central", c: "farmacia", tipo: "Pública · dias úteis, 9h às 17h", a: "R. Franklin José dos Santos, 271 · Centro" },
+  { n: "Constrular", c: "construcao", tipo: "Elétrica, hidráulica, tintas e ferragens", a: "R. Pastor Luiz Laurentino da Silva", t: "(22) 99772-2453" },
+  { n: "Constrofreire", c: "construcao", a: "R. Pref. Alpheu Marchon, 191 · Centro", t: "(22) 2778-1807" },
+  { n: "Gouveia Material de Construção", c: "construcao", a: "R. Pastor Luís Laurentino, 1372", t: "(22) 99745-4171", ig: "gouveiamaterialdeconstrucao" },
+  { n: "Construcenter", c: "construcao", tipo: "Obra, acabamento e móveis", a: "Rod. Amaral Peixoto, 1760 · Barra de São João", fb: "construcenterbsj" },
+  { n: "F.S. Máquinas (STIHL)", c: "construcao", a: "R. Anézio Gaspar, 140 · Centro" },
+  { n: "Antomar", c: "construcao" },
+  { n: "L.A Material de Construção", c: "construcao" },
+  { n: "Madeireira Milsan", c: "construcao" },
+  { n: "Rio Dourado Decor", c: "moveis", tipo: "Móveis rústicos e planejados", a: "R. Leopoldo Sales · Rio Dourado", t: "(22) 99887-3348", fb: "riodourado.decor" },
+  { n: "Pará Móveis", c: "moveis", tipo: "Planejados em madeira e MDF", fb: "AFCOSTAMOVEIS" },
+  { n: "Rota do Sol", c: "presentes", tipo: "Decoração e artesanato · 8h às 18h", ig: "lojarotadosol1" },
+  { n: "Peres & Borges Presentes e Utilidades", c: "presentes", a: "R. Valdenir Heringer, 601 · Centro" },
+  { n: "Cem Papelaria", c: "papelaria", tipo: "Papelaria, informática e presentes", t: "(22) 98851-3160", ig: "cempapelariacasimiro" },
+  { n: "Ótica Nova", c: "otica", a: "R. Padre Anchieta, 105 · Centro", t: "(22) 2778-1800" },
+  { n: "Ótica Ximenes", c: "otica", a: "R. Pastor Luís Laurentino da Silva, 1074, lj 03", t: "(22) 99916-1074" },
+  { n: "Focus Ótica", c: "otica", a: "R. Mário Costa, 128, lj 01 · Centro" },
+  { n: "Top Cell", c: "celular", a: "R. Princesa Leopoldina, 1683 · Centro" },
+  { n: "Lorelay Assistência Técnica", c: "celular" },
+  { n: "UTI Celular", c: "celular" },
+  { n: "EP Cell", c: "celular" },
+  { n: "Casa da Ração", c: "pet", a: "R. Luiz Laurentino da Silva, 999, lj 2 · Mataruna" },
+  { n: "Bionicão Pet Shop", c: "pet", a: "R. Waldenir Heringer da Silva, 206" },
+  { n: "LM Petshop e Agropecuária", c: "pet", fb: "LMPetshopAgro" },
+  { n: "Casa do Campo Agropecuária", c: "pet", fb: "p/Casa-do-Campo-Agropecu%C3%A1ria-100063915163270" },
+  { n: "AgroRações", c: "pet", a: "Santa Ely" },
+  { n: "Adla Agropecuária", c: "pet", a: "Vista Alegre" },
+  { n: "Agropecuária Schuindt", c: "pet" },
+  { n: "Verdes Campos Agropecuária", c: "pet" },
+  { n: "Pet Shop Mimos & Amores", c: "pet" },
+  { n: "Pet Shop Barra de São João", c: "pet", a: "Barra de São João" },
+
+  // ---------- Serviços ----------
+  { n: "Studio Fitness Academia", c: "academia", tipo: "Musculação e zumba · 5h às 23h · desde R$ 69,99", a: "Vila Mataruna", fb: "studiofitnessacademiacasimiro" },
+  { n: "Academia Point Fitness", c: "academia", tipo: "Musculação, spinning e zumba · 6h às 22h", a: "Barra de São João" },
+  { n: "Barra Cross Training", c: "academia", tipo: "Cross training · desde R$ 149,99", a: "Barra de São João", t: "(22) 99731-3870" },
+  { n: "CT Casamata", c: "academia", tipo: "Cross training", a: "Barra de São João" },
+  { n: "Magnus Academia", c: "academia", fb: "magnus.academia.mh" },
+  { n: "Tayana Azevedo Academia", c: "academia" },
+  { n: "Corpore Academia", c: "academia" },
+  { n: "Body Steel", c: "academia", tipo: "Musculação e funcional" },
+  { n: "Pousada Cascata", c: "hotel", r: 4.65, v: 62, s: "Booking", disp: "9,3/10" },
+  { n: "Pousada Córrego da Luz", c: "hotel", r: 4.9, v: 10, s: "Google", obs: "fora do Centro" },
+  { n: "Pousada Baixo Sana", c: "hotel", r: 4.25, v: 12, s: "Booking", disp: "8,5/10" },
+  { n: "Pousada Stutz's", c: "hotel", r: 4, v: 41, s: "Tripadvisor", tipo: "Perto da rodoviária" },
+  { n: "Hotel Ximenes", c: "hotel", r: 3.9, v: 14, s: "Tripadvisor" },
+  { n: "Pousada Vidal", c: "hotel", r: 3.6, v: 8, s: "Tripadvisor" },
+  { n: "Hotel Patropi", c: "hotel", a: "BR-101, km 206" },
+  { n: "Posto Bragal", c: "posto", a: "BR-101, km 206 · Centro", t: "(22) 2778-2010" },
+  { n: "Posto do Poeta (Shell)", c: "posto", a: "R. Geni Cruz Leite, 355 · Mataruna", t: "(22) 2778-4720" },
+  { n: "Posto Barra de São João", c: "posto", a: "Rod. Amaral Peixoto · Barra de São João" },
+  { n: "Posto GNV", c: "posto", a: "BR-101, 1000 · Lot. Pedro Ratts" },
+  { n: "Auto Posto Irmãos Mucelin", c: "posto" },
+  { n: "Auto Center São Cristóvão", c: "oficina", tipo: "Mecânica, elétrica e injeção", a: "Av. Indaiaçu, 25", t: "(22) 2778-5050" },
+  { n: "Oficina Darcy Junior (Darcy Auto Center)", c: "oficina", a: "R. Jerônimo Gonçalves, 1532 · Barra de São João" },
+  { n: "J Salgado Auto Peças e Oficina", c: "oficina", a: "Av. Araribóia, 43 · Centro" },
+  { n: "Oficina Paulo Diesel", c: "oficina", tipo: "Caminhões", a: "BR-101 · Parque Industrial", t: "(22) 99839-7019" },
+  { n: "VS Car Auto Mecânica", c: "oficina" },
+  { n: "Lava Jato do Marcelinho", c: "oficina", tipo: "Lava-jato", a: "R. Jorge Silva, 109 · Praia Santa Irene, Barra de São João" }
 ];
-
 const NICHE = {};
 GROUPS.forEach(g => g.nichos.forEach(([id, nome]) => NICHE[id] = { id, nome, g: g.id }));
-PLACES.forEach((p, i) => { p.id = i; if (p.ok === undefined) p.ok = true; });
+PLACES.forEach((p, i) => { p.id = i; p.v = p.v || 0; });
 
 const store = {
   get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
 };
 let favs = new Set(store.get("gc-favs", []));
-const state = Object.assign({ g: "beleza", c: "salao", sort: "rec" }, store.get("gc-state", {}));
+const state = Object.assign({ g: "comer", c: "restaurante", sort: "rec" }, store.get("gc-state", {}));
 if (state.g !== "fav" && !GROUPS.some(g => g.id === state.g)) { state.g = "comer"; state.c = "restaurante"; }
 
 const $ = id => document.getElementById(id);
 const esc = s => String(s).replace(/[&<>"]/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]));
 const fmt = r => r.toFixed(1).replace(".", ",");
-// Nota ponderada: puxa notas com poucas avaliações para perto da média (4,5).
-const rec = p => p.r == null ? -1 : (p.v * p.r + 10 * 4.5) / (p.v + 10);
+// Nota ponderada: puxa notas com poucas avaliações para perto da média (4,4).
+const rec = p => p.r == null ? -1 : (p.v * p.r + 10 * 4.4) / (p.v + 10);
 const stars = r => { const f = Math.round(r); return "★".repeat(f) + "☆".repeat(5 - f); };
 const mapsUrl = p => p.pid
   ? "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(p.n + " " + (p.a || "") + " Casimiro de Abreu") + "&query_place_id=" + p.pid
@@ -229,26 +474,28 @@ function sorted(list) {
     aval: (a, b) => (b.v || 0) - (a.v || 0) || (b.r ?? -1) - (a.r ?? -1),
     az: (a, b) => a.n.localeCompare(b.n, "pt-BR")
   }[state.sort];
-  return list.slice().sort((a, b) => (b.ok - a.ok) || by(a, b));
+  return list.slice().sort((a, b) => state.sort === "az" ? by(a, b) : ((b.r != null) - (a.r != null)) || by(a, b));
 }
 
 function card(p, i) {
   const fav = favs.has(p.n);
   const wa = waUrl(p.t);
   const rate = p.r != null
-    ? `<span class="stars" aria-hidden="true">${stars(p.r)}</span><span class="score">${fmt(p.r)}</span><span class="count">${p.v} avaliações</span>`
-    : p.ok ? `<span class="count">Ainda sem avaliações no Google</span>` : "";
+    ? `<span class="stars" aria-hidden="true">${stars(p.r)}</span><span class="score">${p.disp || fmt(p.r)}</span><span class="count">${p.v.toLocaleString("pt-BR")} avaliações · ${esc(p.s)}</span>`
+    : `<span class="count">Sem nota ainda</span>`;
   const tags = [
     state.g === "fav" ? `<span class="tag">${esc(NICHE[p.c].nome)}</span>` : "",
     p.tipo ? `<span class="tag">${esc(p.tipo)}</span>` : "",
-    p.ok ? "" : `<span class="tag warn">a confirmar</span>`
+    p.obs ? `<span class="tag warn">${esc(p.obs)}</span>` : ""
   ].join("");
   return `<article class="card">
     <div class="row1"><span class="pos">${i + 1}</span><div class="name">${esc(p.n)}</div>
       <button class="fav" data-fav="${esc(p.n)}" aria-pressed="${fav}">${fav ? "★ Vou" : "☆ Quero ir"}</button></div>
     <div class="rate">${rate}${tags}</div>
     <div class="meta">${p.a ? `<span>${esc(p.a)}</span>` : ""}${p.t ? `<span class="ph">${esc(p.t)}</span>` : ""}</div>
-    <div class="acts"><a class="main" href="${mapsUrl(p)}" target="_blank" rel="noopener">${p.ok ? "Ver no Maps" : "Procurar no Maps"}</a>
+    <div class="acts"><a class="main" href="${mapsUrl(p)}" target="_blank" rel="noopener">Ver no Maps</a>
+      ${p.ig ? `<a href="https://www.instagram.com/${esc(p.ig)}/" target="_blank" rel="noopener">Instagram</a>` : ""}
+      ${p.fb ? `<a href="https://www.facebook.com/${esc(p.fb)}/" target="_blank" rel="noopener">Facebook</a>` : ""}
       ${wa ? `<a href="${wa}" target="_blank" rel="noopener">WhatsApp</a>` : ""}</div>
   </article>`;
 }
