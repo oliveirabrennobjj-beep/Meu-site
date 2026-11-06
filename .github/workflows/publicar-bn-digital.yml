@@ -52,7 +52,7 @@ jobs:
           rm -f _site/raiox/README.md
           mkdir -p _site/construtora
           cp -r construtora/. _site/construtora/
-          rm -f _site/construtora/README.md
+          rm -f _site/construtora/README.md _site/construtora/assets/video/LEIA.md
           mkdir -p _site/prospeccao
           cp bn-digital/prospeccao/index.html _site/prospeccao/
       - uses: actions/upload-pages-artifact@v3
