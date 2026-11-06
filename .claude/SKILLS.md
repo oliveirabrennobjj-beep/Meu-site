@@ -135,3 +135,10 @@ mapa (grafo) para o Claude consultar em vez de abrir arquivo por arquivo. O coma
 
 O `soumatheusgomes/vibe-coding-toolkit` (5º do mesmo vídeo) não é skill: é um kit de modelos (AGENTS.md, ESLint, Next.js)
 para começar projeto novo. Não foi instalado aqui.
+
+## Concat (`.claude/skills/concat-video/`)
+
+Adicionado em 2026-11-06, a pedido do Brenno (vai editar vídeo até o fim do ano). O Concat (`jub0t/Concat`) é um
+editor de vídeo de desktop com servidor MCP (`concat --mcp`). A skill ensina como ligá-lo no computador e o fluxo
+de edição de um Reel. As duas skills que vêm no repositório do Concat são para quem programa o próprio Concat: não
+foram copiadas.
