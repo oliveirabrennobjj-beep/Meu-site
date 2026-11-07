@@ -349,6 +349,12 @@
       "skillPath": "skills/verify-and-stop/SKILL.md",
       "computedHash": "3d67de16a2b3c48b643bc511ebc4cb86e6c7105215d8428b6140cbcb73aba4e6"
     },
+    "watch": {
+      "source": "bradautomates/claude-video",
+      "sourceType": "github",
+      "skillPath": "skills/watch/SKILL.md",
+      "computedHash": "cbdb39fea0f90a361e72307a189dab8b1c0bbd7cc2225bb33784ac882b32953c"
+    },
     "web-design-guidelines": {
       "source": "vercel-labs/agent-skills",
       "sourceType": "github",
