@@ -6,6 +6,19 @@
   "use strict";
 
   var SITE = window.SITE || {};
+
+  /* Foto que não carregou: esconde o ícone quebrado e mostra uma malha de planta */
+  function marcaFalha(img) {
+    if (img.closest(".hero")) return;
+    img.classList.add("img-falhou");
+    if (img.parentElement) img.parentElement.classList.add("sem-imagem");
+  }
+  document.addEventListener("error", function (e) {
+    if (e.target && e.target.tagName === "IMG") marcaFalha(e.target);
+  }, true);
+  Array.prototype.forEach.call(document.images, function (img) {
+    if (img.complete && img.getAttribute("src") && !img.naturalWidth) marcaFalha(img);
+  });
   var $ = function (s, el) { return (el || document).querySelector(s); };
   var $$ = function (s, el) { return Array.prototype.slice.call((el || document).querySelectorAll(s)); };
   var menosMovimento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -108,84 +121,96 @@
     if (e.key === "Escape" && !menuCheio.hidden) { fechaMenu(); botaoMenu.focus(); }
   });
 
-  /* ---------- 3. Hero: vídeo que avança com a rolagem ---------- */
+  /* ---------- 3. Hero: a casa se constrói conforme a rolagem ----------
+     Três modos:
+     - "desenho" (padrão): o desenho técnico da casa vai sendo construído com a rolagem
+       e termina na foto da casa pronta. Funciona sem vídeo, no computador e no celular.
+     - "video-scrub" (computador com assets/video/hero.mp4): o vídeo avança com a rolagem.
+     - "video-auto" (celular com o vídeo): vídeo em loop, mudo, sem scrub.
+     Com "reduzir movimento" ativado: só o resultado final, sem animação. */
   var hero = $("[data-hero]");
   var video = $(".hero__video", hero);
+  var poster = $(".hero__poster", hero);
   var cota = $("[data-cota]", hero);
   var etapas = $$(".cota__etapas li", hero);
   var podeScrub = window.matchMedia("(min-width: 900px) and (pointer: fine)").matches;
+  var modo = "desenho";
 
   function mostraProgresso(p) {
     p = Math.max(0, Math.min(1, p));
     cota.style.setProperty("--p", p.toFixed(4));
-    var feitas = Math.round(p * (etapas.length - 1));
+    var feitas = Math.floor(p * (etapas.length - 1) + 0.02);
     etapas.forEach(function (li, i) { li.classList.toggle("is-feita", i <= feitas); });
   }
 
-  /* Sem vídeo: a régua se completa uma vez ao abrir a página */
-  function reguaSemVideo() {
-    if (menosMovimento) { mostraProgresso(1); return; }
-    var inicio = null, duracao = 2600;
-    function passo(t) {
-      if (!inicio) inicio = t;
-      var x = Math.min(1, (t - inicio) / duracao);
-      mostraProgresso(1 - Math.pow(1 - x, 3));
-      if (x < 1) requestAnimationFrame(passo);
-    }
-    setTimeout(function () { requestAnimationFrame(passo); }, 500);
+  /* Se a foto do topo não carregar, o desenho fica como imagem final */
+  function semFoto() { hero.classList.add("sem-foto"); }
+  if (poster.complete && !poster.naturalWidth) semFoto();
+  poster.addEventListener("error", semFoto);
+
+  /* Rolagem suavizada: um único laço que serve ao desenho e ao vídeo */
+  var alvo = 0, atual = 0, rodando = false;
+  function progressoRolagem() {
+    var total = hero.offsetHeight - window.innerHeight;
+    return total > 0 ? (window.scrollY - hero.offsetTop) / total : 1;
+  }
+  function aplica(p) {
+    hero.style.setProperty("--p", p.toFixed(4));
+    mostraProgresso(p);
+    if (modo === "video-scrub" && video.duration) video.currentTime = p * (video.duration - 0.05);
+  }
+  function quadro() {
+    atual += (alvo - atual) * 0.16;
+    if (Math.abs(alvo - atual) < 0.0005) atual = alvo;
+    aplica(atual);
+    if (atual !== alvo) requestAnimationFrame(quadro); else rodando = false;
+  }
+  function aoRolarHero() {
+    if (modo === "video-auto") return;
+    alvo = Math.max(0, Math.min(1, progressoRolagem()));
+    if (!rodando) { rodando = true; requestAnimationFrame(quadro); }
   }
 
-  function ligaScrub() {
-    hero.classList.add("is-scrub", "has-video");
-    video.pause();
-    var alvo = 0, atual = 0, rodando = false;
-
-    function progressoRolagem() {
-      var total = hero.offsetHeight - window.innerHeight;
-      return total > 0 ? (window.scrollY - hero.offsetTop) / total : 0;
-    }
-    function quadro() {
-      atual += (alvo - atual) * 0.14;
-      if (Math.abs(alvo - atual) < 0.0005) atual = alvo;
-      if (video.duration) video.currentTime = atual * (video.duration - 0.05);
-      mostraProgresso(atual);
-      if (atual !== alvo) requestAnimationFrame(quadro); else rodando = false;
-    }
-    function aoRolar() {
-      alvo = Math.max(0, Math.min(1, progressoRolagem()));
-      if (!rodando) { rodando = true; requestAnimationFrame(quadro); }
-    }
-    window.addEventListener("scroll", aoRolar, { passive: true });
-    window.addEventListener("resize", aoRolar);
-    aoRolar();
-  }
-
-  function ligaAutoplay() {
-    video.loop = true;
-    video.autoplay = true;
-    video.addEventListener("timeupdate", function () {
-      if (video.duration) mostraProgresso(video.currentTime / video.duration);
-    });
-    var tocar = video.play();
-    if (tocar && tocar.then) {
-      tocar.then(function () { hero.classList.add("has-video"); }).catch(reguaSemVideo);
-    } else {
-      hero.classList.add("has-video");
-    }
-  }
-
-  if (!menosMovimento && video && video.dataset.src) {
-    var falhou = false;
-    video.addEventListener("error", function () { falhou = true; reguaSemVideo(); }, { once: true });
-    video.addEventListener("loadedmetadata", function () {
-      if (falhou) return;
-      if (podeScrub) ligaScrub(); else ligaAutoplay();
-    }, { once: true });
-    video.preload = podeScrub ? "auto" : "metadata";
-    video.src = video.dataset.src;
-    video.load();
+  if (menosMovimento) {
+    hero.classList.add("is-final");
+    aplica(1);
   } else {
-    reguaSemVideo();
+    hero.classList.add("is-desenho");
+    window.addEventListener("scroll", aoRolarHero, { passive: true });
+    window.addEventListener("resize", aoRolarHero);
+    aoRolarHero();
+
+    /* Se o vídeo existir, ele assume o lugar do desenho */
+    if (video && video.dataset.src) {
+      video.addEventListener("loadedmetadata", function () {
+        hero.classList.remove("is-desenho");
+        if (podeScrub) {
+          modo = "video-scrub";
+          hero.classList.add("is-scrub", "has-video");
+          video.pause();
+          aoRolarHero();
+        } else {
+          modo = "video-auto";
+          video.loop = true;
+          video.addEventListener("timeupdate", function () {
+            if (video.duration) mostraProgresso(video.currentTime / video.duration);
+          });
+          var tocar = video.play();
+          if (tocar && tocar.then) {
+            tocar.then(function () { hero.classList.add("has-video"); }).catch(function () {
+              modo = "desenho";
+              hero.classList.add("is-desenho");
+              aoRolarHero();
+            });
+          } else {
+            hero.classList.add("has-video");
+          }
+        }
+      }, { once: true });
+      video.preload = podeScrub ? "auto" : "metadata";
+      video.src = video.dataset.src;
+      video.load();
+    }
   }
 
   /* ---------- 4. Obras: galeria, filtro e lightbox ---------- */
@@ -328,17 +353,34 @@
   /* ---------- 8. Formulário que abre o WhatsApp ---------- */
   var form = $("[data-form]");
   var erro = $("[data-form-erro]");
+  var ok = $("[data-form-ok]");
+  var mensagensErro = {
+    "f-nome": "Escreva seu nome.",
+    "f-tel": "Escreva um telefone com DDD.",
+    "f-tipo": "Escolha o tipo de obra.",
+    "f-cidade": "Escreva a cidade da obra."
+  };
+
+  /* Mostra ou limpa o erro logo abaixo do campo */
+  function marcaCampo(campo) {
+    var vazio = !campo.value.trim();
+    var aviso = document.getElementById(campo.id + "-erro");
+    campo.setAttribute("aria-invalid", String(vazio));
+    if (aviso) {
+      aviso.textContent = vazio ? mensagensErro[campo.id] : "";
+      aviso.hidden = !vazio;
+    }
+    return vazio;
+  }
+
   form.addEventListener("submit", function (e) {
     e.preventDefault();
-    var faltando = [];
-    $$("[required]", form).forEach(function (campo) {
-      var vazio = !campo.value.trim();
-      campo.setAttribute("aria-invalid", String(vazio));
-      if (vazio) faltando.push(campo);
-    });
+    ok.hidden = true;
+    var faltando = $$("[required]", form).filter(marcaCampo);
     if (faltando.length) {
-      var nomes = faltando.map(function (c) { return $('label[for="' + c.id + '"]').textContent.trim(); });
-      erro.textContent = "Preencha: " + nomes.join(", ") + ".";
+      erro.textContent = faltando.length === 1
+        ? "Falta 1 campo. Ele está marcado em vermelho."
+        : "Faltam " + faltando.length + " campos. Eles estão marcados em vermelho.";
       erro.hidden = false;
       faltando[0].focus();
       return;
@@ -349,12 +391,33 @@
       return texto(dados.get(k));
     }).trim();
     window.open(linkZap(msg), "_blank", "noopener");
+    ok.textContent = "Abrimos o WhatsApp com a sua mensagem. Confira e toque em enviar.";
+    ok.hidden = false;
   });
   $$("[required]", form).forEach(function (campo) {
-    campo.addEventListener("input", function () {
-      if (campo.value.trim()) campo.setAttribute("aria-invalid", "false");
-    });
+    /* Só revalida depois que o campo já mostrou erro, para não brigar com quem está digitando */
+    function revalida() { if (campo.getAttribute("aria-invalid") === "true") marcaCampo(campo); }
+    campo.addEventListener("input", revalida);
+    campo.addEventListener("change", revalida);
   });
+
+  /* ---------- 8b. Menu: marca a seção que está na tela ---------- */
+  var linksMenu = $$(".menu a");
+  if ("IntersectionObserver" in window) {
+    var observador = new IntersectionObserver(function (entradas) {
+      entradas.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        linksMenu.forEach(function (a) {
+          var ativo = a.getAttribute("href") === "#" + en.target.id;
+          if (ativo) a.setAttribute("aria-current", "true"); else a.removeAttribute("aria-current");
+        });
+      });
+    }, { rootMargin: "-45% 0px -50% 0px" });
+    linksMenu.forEach(function (a) {
+      var alvo = document.querySelector(a.getAttribute("href"));
+      if (alvo) observador.observe(alvo);
+    });
+  }
 
   /* ---------- 9. Rolagem: cabeçalho e botão flutuante ---------- */
   function aoRolarPagina() {
