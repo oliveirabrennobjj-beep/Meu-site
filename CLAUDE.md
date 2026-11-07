@@ -10,13 +10,12 @@
 
 # Skills obrigatórias por tipo de pedido
 
-O Brenno instalou estas skills para serem usadas. Antes de começar, carregue (Skill tool) as da linha que bate com o pedido. Não pule por achar que já sabe fazer.
+O Brenno instalou estas skills para serem usadas. Antes de começar, carregue (Skill tool) as da linha que bate com o pedido. Não pule por achar que já sabe fazer. Não pergunte se pode usar: use. Em site e design, a regra "não carregue skills que não servem" não vale: carregue todas as de design e diga no fim quais foram usadas.
 
 | Pedido | Carregar |
 |---|---|
 | Qualquer resposta | `caveman` |
-| Site novo para cliente | `site-bn-digital`, `brainstorming`, `frontend-design` (ou `impeccable`), `copywriting` |
-| Mexer no visual de site existente | `impeccable` (ou `frontend-design`), `web-design-guidelines` |
+| Site, página, layout ou qualquer coisa visual (novo ou existente) | TODAS: `site-bn-digital` (se for cliente), `brainstorming`, `frontend-design`, `impeccable`, `ui-ux-pro-max`, `web-design-guidelines`, `ui-styling`, `design`, `brand`, `copywriting` |
 | Logo, marca, banner, post | `brand`, `design`, `banner-design` |
 | Textos de venda, títulos | `copywriting` |
 | SEO, aparecer no Google | `seo-audit` |

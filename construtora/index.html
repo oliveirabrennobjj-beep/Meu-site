@@ -61,7 +61,7 @@
           <line x1="12" y1="0" x2="12" y2="14" />
           <path d="M5 14h14l-7 16z" />
         </svg>
-        <span class="marca__nome" data-c="empresa.nome">Prumo Construtora</span>
+        <span class="marca__nome" data-c="empresa.nome" translate="no">Prumo Construtora</span>
       </a>
 
       <nav class="menu" aria-label="Principal">
@@ -355,36 +355,41 @@
       <div class="envelope contato__grade">
         <div class="contato__form">
           <h2 id="contato-titulo" class="titulo-secao">Peça seu orçamento</h2>
-          <p class="contato__lead">Preencha e o WhatsApp abre com a mensagem pronta. Respondemos em horário comercial.</p>
+          <p class="contato__lead">Preencha os campos e o WhatsApp abre com a mensagem pronta. É só tocar em enviar.</p>
 
           <form class="form" data-form novalidate>
             <div class="campo">
               <label for="f-nome">Nome</label>
-              <input id="f-nome" name="nome" type="text" autocomplete="name" required>
+              <input id="f-nome" name="nome" type="text" autocomplete="name" aria-describedby="f-nome-erro" required>
+              <span class="campo__erro" id="f-nome-erro" hidden></span>
             </div>
             <div class="campo">
               <label for="f-tel">Telefone</label>
-              <input id="f-tel" name="telefone" type="tel" autocomplete="tel" inputmode="tel" required>
+              <input id="f-tel" name="telefone" type="tel" autocomplete="tel" inputmode="tel" aria-describedby="f-tel-erro" required>
+              <span class="campo__erro" id="f-tel-erro" hidden></span>
             </div>
             <div class="campo">
               <label for="f-tipo">Tipo de obra</label>
-              <select id="f-tipo" name="tipo" required>
+              <select id="f-tipo" name="tipo" aria-describedby="f-tipo-erro" required>
                 <option value="">Escolha</option>
                 <option>Casa nova</option>
                 <option>Obra comercial</option>
                 <option>Reforma</option>
                 <option>Projeto e gerenciamento</option>
               </select>
+              <span class="campo__erro" id="f-tipo-erro" hidden></span>
             </div>
             <div class="campo">
               <label for="f-cidade">Cidade</label>
-              <input id="f-cidade" name="cidade" type="text" autocomplete="address-level2" required>
+              <input id="f-cidade" name="cidade" type="text" autocomplete="address-level2" aria-describedby="f-cidade-erro" required>
+              <span class="campo__erro" id="f-cidade-erro" hidden></span>
             </div>
             <div class="campo campo--cheio">
               <label for="f-msg">Conte sobre a obra <span class="opcional">(opcional)</span></label>
               <textarea id="f-msg" name="mensagem" rows="4" placeholder="Tamanho do terreno, prazo que você imagina, o que já tem pronto…"></textarea>
             </div>
             <p class="form__erro" role="alert" data-form-erro hidden></p>
+            <p class="form__ok" role="status" data-form-ok hidden></p>
             <button class="botao botao--madeira botao--grande" type="submit">Enviar pelo WhatsApp</button>
           </form>
         </div>
@@ -445,7 +450,7 @@
   <dialog class="caixa" data-caixa aria-labelledby="caixa-titulo">
     <div class="caixa__corpo">
       <div class="caixa__midia">
-        <img data-caixa-img src="" alt="">
+        <img data-caixa-img alt="">
         <button class="caixa__seta caixa__seta--ant" type="button" data-caixa-ant><span class="sr">Foto anterior</span></button>
         <button class="caixa__seta caixa__seta--prox" type="button" data-caixa-prox><span class="sr">Próxima foto</span></button>
       </div>
