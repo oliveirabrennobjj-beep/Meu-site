@@ -19,6 +19,19 @@ if ! "$VENV/bin/python" -c "import playwright, importlib.metadata as m; assert m
   "$VENV/bin/pip" install --quiet --disable-pip-version-check "playwright==$PLAYWRIGHT_VERSION"
 fi
 
+# Economia de token: Graphify (mapa do código) e SkillSpector (segurança de skills), no mesmo venv.
+GRAPHIFY_VERSION="0.9.103"
+if ! "$VENV/bin/python" -c "import importlib.metadata as m; assert m.version('graphifyy') == '$GRAPHIFY_VERSION'" 2>/dev/null; then
+  "$VENV/bin/pip" install --quiet --disable-pip-version-check "graphifyy==$GRAPHIFY_VERSION" || true
+fi
+if [ ! -x "$VENV/bin/skillspector" ]; then
+  "$VENV/bin/pip" install --quiet --disable-pip-version-check "git+https://github.com/NVIDIA/skillspector.git" || true
+fi
+# Refaz o mapa do código em segundo plano (sem IA, só leitura do código), para não atrasar o início.
+if [ -x "$VENV/bin/graphify" ]; then
+  (cd "$CLAUDE_PROJECT_DIR" && nohup "$VENV/bin/graphify" update . >/dev/null 2>&1 &)
+fi
+
 if [ -n "${PLAYWRIGHT_BROWSERS_PATH:-}" ] && [ ! -d "$PLAYWRIGHT_BROWSERS_PATH/chromium-1194" ]; then
   echo "Aviso: chromium-1194 não encontrado em $PLAYWRIGHT_BROWSERS_PATH; ajuste PLAYWRIGHT_VERSION (ver .claude/SKILLS.md)." >&2
 fi

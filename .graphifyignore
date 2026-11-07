@@ -1,0 +1,10 @@
+.claude/
+.agents/
+.venv/
+node_modules/
+docs/capturas/
+awesome-design-md/
+*.png
+*.jpg
+*.webp
+*.mp4

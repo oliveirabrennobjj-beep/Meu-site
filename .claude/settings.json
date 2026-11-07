@@ -25,6 +25,16 @@
             "timeout": 45
           }
         ]
+      },
+      {
+        "matcher": "compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "G=\"$CLAUDE_PROJECT_DIR/.venv/bin/graphify\"; [ -x \"$G\" ] || exit 0; exec \"$G\" hook-guard compact",
+            "timeout": 10
+          }
+        ]
       }
     ],
     "UserPromptSubmit": [
@@ -57,6 +67,28 @@
             "type": "command",
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/cerebro.sh stop",
             "timeout": 45
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash|Grep",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "G=\"$CLAUDE_PROJECT_DIR/.venv/bin/graphify\"; [ -x \"$G\" ] || exit 0; exec \"$G\" hook-guard search",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "Read|Glob",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "G=\"$CLAUDE_PROJECT_DIR/.venv/bin/graphify\"; [ -x \"$G\" ] || exit 0; exec \"$G\" hook-guard read",
+            "timeout": 10
           }
         ]
       }

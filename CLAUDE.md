@@ -17,7 +17,7 @@ O Brenno instalou as skills para serem usadas em toda conversa. Regras:
 
 | Pedido | Carregar |
 |---|---|
-| Toda conversa (economia de token) | `caveman`, `context-optimization`; buscas com `caveman-explore` ou `cavecrew` |
+| Toda conversa (economia de token) | `caveman`, `context-optimization`; dúvidas sobre o código: `graphify` (consultar `graphify-out/` antes de abrir arquivos); buscas com `caveman-explore` ou `cavecrew` |
 | Site, página, layout, qualquer coisa visual | `site-bn-digital` (se for cliente), `brainstorming`, `frontend-design`, `impeccable`, `design-taste-frontend` (Taste Skill), `ui-ux-pro-max`, `web-design-guidelines`, `ui-styling`, `design`, `design-system`, `brand`, `copywriting`, `emil-design-eng` |
 | Animação, movimento, efeito na rolagem | `emil-design-eng`, `animate`, `choreograph`, `animation-vocabulary`, `review-animations`, `improve-animations`, `find-animation-opportunities`, `animation-performance` |
 | Logo, marca, banner, post, arte | `brand`, `design`, `banner-design`, `ui-styling` |
@@ -31,8 +31,19 @@ O Brenno instalou as skills para serem usadas em toda conversa. Regras:
 | Mexer em código existente | `surgical-patch` ou `safe-refactor` |
 | Testar site no navegador | `webapp-testing` |
 | Word, PDF, Excel | `docx`, `pdf`, `xlsx` |
-| Instalar skill ou plugin | `find-skills`; ler o código antes de instalar |
+| Instalar skill ou plugin | `find-skills`; antes de instalar, `skillspector scan <pasta-ou-url> --no-llm` e ler o código |
 | Commit | `caveman-commit` |
 | Antes de dizer "pronto" | `verification-before-completion` |
 
 Quando o Brenno mandar print de skill ou plugin: instalar em `.claude/skills/` com `npx skills add <dono/repo>`, revisar o código e acrescentar nesta tabela.
+
+## graphify
+
+This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.
+
+Rules:
+- When graphify-out/graph.json exists, run `graphify query "<question>"` before your first grep, search or source-file read for a codebase question, and put this rule in every subagent prompt that explores code. Read raw files only for lines the graph or an earlier read already located. Use `graphify path "<A>" "<B>"` for relationships and `graphify explain "<concept>"` for focused concepts. These return a scoped subgraph, usually much smaller than GRAPH_REPORT.md or raw grep output.
+- If graphify-out/wiki/index.md exists, use it for broad navigation instead of raw source browsing.
+- Read graphify-out/GRAPH_REPORT.md only for broad architecture review or when query/path/explain do not surface enough context.
+- After modifying code, run `graphify update .` to keep the graph current (AST-only, no API cost).
+- A committed graphify-out/graph.json is rewritten whole on every build, so a large diff to it in a pull request is expected. Do not flag it as churn or suggest skipping the graph rebuild or its hooks.

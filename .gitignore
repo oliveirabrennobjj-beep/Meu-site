@@ -28,3 +28,6 @@ como-funciona/*/out/
 
 # Rodadas do /arena (skill arena): arquivos de trabalho, não versionar
 .arena/
+
+# Mapa do código (Graphify), refeito a cada conversa
+graphify-out/
