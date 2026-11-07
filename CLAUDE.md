@@ -18,7 +18,8 @@ O Brenno instalou as skills para serem usadas em toda conversa. Regras:
 | Pedido | Carregar |
 |---|---|
 | Toda conversa (economia de token) | `caveman`, `context-optimization`; buscas com `caveman-explore` ou `cavecrew` |
-| Site, página, layout, qualquer coisa visual | `site-bn-digital` (se for cliente), `brainstorming`, `frontend-design`, `impeccable`, `ui-ux-pro-max`, `web-design-guidelines`, `ui-styling`, `design`, `design-system`, `brand`, `copywriting` |
+| Site, página, layout, qualquer coisa visual | `site-bn-digital` (se for cliente), `brainstorming`, `frontend-design`, `impeccable`, `design-taste-frontend` (Taste Skill), `ui-ux-pro-max`, `web-design-guidelines`, `ui-styling`, `design`, `design-system`, `brand`, `copywriting`, `emil-design-eng` |
+| Animação, movimento, efeito na rolagem | `emil-design-eng`, `animate`, `choreograph`, `animation-vocabulary`, `review-animations`, `improve-animations`, `find-animation-opportunities`, `animation-performance` |
 | Logo, marca, banner, post, arte | `brand`, `design`, `banner-design`, `ui-styling` |
 | Vídeo (editar, criar, legenda, divulgar) | `remotion-best-practices` + as `remotion-*` do caso (`remotion-create`, `remotion-markup`, `remotion-captions`, `remotion-multimedia`, `remotion-render`), `brag-slim` (vídeo de lançamento), `copywriting` (roteiro); conectores Higgsfield, HyperFrames, ElevenLabs (voz) e vidIQ quando servirem |
 | Assistir vídeo | `watch` |
