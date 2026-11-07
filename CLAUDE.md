@@ -4,28 +4,35 @@
 - Sem introdução, sem repetir o pedido, sem resumo no fim.
 - Diga só: o que foi feito, o link ou arquivo, e o que falta ou precisa da decisão dele.
 - Listas curtas em vez de parágrafos. Nada de explicar código que ele não pediu.
-- Não carregue skills que não servem para a tarefa. Teste uma vez, não em loop.
-- Sempre use a skill `caveman` (modo curto) desde a primeira resposta, em português.
-- Use as skills do Superpowers quando servirem: `brainstorming` antes de criar algo novo, `systematic-debugging` em bugs, `verification-before-completion` antes de dizer que terminou.
+- Teste uma vez, não em loop.
 
-# Skills obrigatórias por tipo de pedido
+# Skills: usar SEMPRE, sem perguntar
 
-O Brenno instalou estas skills para serem usadas. Antes de começar, carregue (Skill tool) as da linha que bate com o pedido. Não pule por achar que já sabe fazer. Não pergunte se pode usar: use. Em site e design, a regra "não carregue skills que não servem" não vale: carregue todas as de design e diga no fim quais foram usadas.
+O Brenno instalou as skills para serem usadas em toda conversa. Regras:
+
+1. **Primeira ação de toda conversa:** carregar `caveman` (economia de token) e responder em português curto até o fim.
+2. **Antes de começar qualquer pedido:** carregar (Skill tool) TODAS as skills da linha que bate. Se o pedido cair em mais de uma linha, carregar as de todas. Não pular por achar que já sabe. Não perguntar se pode.
+3. **Plugins e conectores** (Higgsfield, Canva, Figma, HyperFrames, ElevenLabs, vidIQ etc.): usar quando ajudarem no pedido. Avisar antes só se gastar crédito pago.
+4. **No fim:** uma linha "Skills usadas: …".
 
 | Pedido | Carregar |
 |---|---|
-| Qualquer resposta | `caveman` |
-| Site, página, layout ou qualquer coisa visual (novo ou existente) | TODAS: `site-bn-digital` (se for cliente), `brainstorming`, `frontend-design`, `impeccable`, `ui-ux-pro-max`, `web-design-guidelines`, `ui-styling`, `design`, `brand`, `copywriting` |
-| Logo, marca, banner, post | `brand`, `design`, `banner-design` |
-| Textos de venda, títulos | `copywriting` |
+| Toda conversa | `caveman`; em conversa longa, também `context-optimization` |
+| Procurar coisa no código | `caveman-explore` ou `cavecrew` (economizam token) |
+| Site, página, layout, qualquer coisa visual | `site-bn-digital` (se for cliente), `brainstorming`, `frontend-design`, `impeccable`, `ui-ux-pro-max`, `web-design-guidelines`, `ui-styling`, `design`, `design-system`, `brand`, `copywriting` |
+| Logo, marca, banner, post, arte | `brand`, `design`, `banner-design`, `ui-styling` |
+| Vídeo (editar, criar, legenda, divulgar) | `remotion-best-practices` + as `remotion-*` do caso (`remotion-create`, `remotion-markup`, `remotion-captions`, `remotion-multimedia`, `remotion-render`), `brag-slim` (vídeo de lançamento), `copywriting` (roteiro); conectores Higgsfield, HyperFrames, ElevenLabs (voz) e vidIQ quando servirem |
+| Assistir vídeo | `watch` |
+| Apresentação | `slides` ou `pptx`, mais `design` |
+| Textos de venda, títulos, legendas | `copywriting` |
 | SEO, aparecer no Google | `seo-audit` |
-| Erro, bug, algo quebrado | `systematic-debugging` (ou `investigate-first`) |
-| Mudança grande em código | `writing-plans`, depois `executing-plans` |
-| Vídeo do projeto para divulgar | `brag` ou `brag-slim`; vídeo programado: `remotion-best-practices` |
-| Assistir vídeo (YouTube etc.) | `watch` |
-| Word, PDF, PowerPoint, Excel | `docx`, `pdf`, `pptx`, `xlsx` |
+| Erro, bug, algo quebrado | `systematic-debugging`, `investigate-first` |
+| Mudança grande em código | `writing-plans`, `executing-plans`, `lean-build` |
+| Mexer em código existente | `surgical-patch` ou `safe-refactor` |
+| Testar site no navegador | `webapp-testing` |
+| Word, PDF, Excel | `docx`, `pdf`, `xlsx` |
 | Instalar skill ou plugin | `find-skills`; ler o código antes de instalar |
 | Commit | `caveman-commit` |
 | Antes de dizer "pronto" | `verification-before-completion` |
 
-Quando o Brenno mandar print de uma skill ou plugin para instalar: instale em `.claude/skills/` com `npx skills add <dono/repo>`, revise o código e acrescente a skill nesta tabela.
+Quando o Brenno mandar print de skill ou plugin: instalar em `.claude/skills/` com `npx skills add <dono/repo>`, revisar o código e acrescentar nesta tabela.
