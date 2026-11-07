@@ -6,7 +6,7 @@ Lista dos 42 add-ons do post do @ai.byarsh e das skills que o Brenno mandou. Atu
 
 Superpowers, Graphify, Caveman, Ponytail, find-skills, ui-ux-pro-max, impeccable, Remotion, ffmpeg, Python, Node.js,
 Playwright (navegador), HyperFrames, Higgsfield, ElevenLabs, Firecrawl, Metricool, Notion, Gmail, Google Calendar,
-Google Drive, Vercel, GitHub, Watch (vídeo enviado como arquivo).
+Google Drive, Vercel, GitHub, Watch (vídeo enviado como arquivo), Gemini (chave salva em 06/11) e Nano Banana (pelo Higgsfield).
 
 ## 2. Dá para instalar na nuvem (esperando a sua aprovação)
 
@@ -20,7 +20,7 @@ Google Drive, Vercel, GitHub, Watch (vídeo enviado como arquivo).
 
 ## 3. Precisa de conta ou chave paga
 
-Codex e GPT Image (OpenAI), Nano Banana e Gemini (Google), Perplexity, Apify, Zapier, Slack (conexão falhando),
+Codex e GPT Image (OpenAI), Perplexity, Apify, Zapier, Slack (conexão falhando),
 Figma (conexão falhando), Granola.
 
 ## 4. Só no computador
