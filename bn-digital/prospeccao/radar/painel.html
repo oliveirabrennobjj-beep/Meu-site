@@ -1,0 +1,253 @@
+<title>Painel BN Digital</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@500;600;700&display=swap">
+<style>
+/* Layout: barra fixa com abas; resumo em funil (novo > enviado > respondeu > fechou); lista de lojas em linhas que abrem a mensagem. */
+:root{
+  --bg:#fbfbfd; --surface:#ffffff; --sunk:#f2f3f6; --fg:#0a0a0f; --soft:#5b5c68; --line:#e2e3e9;
+  --blue:#0a66e8; --blue-soft:#e8f0fd; --zap:#1fa855; --zap-soft:#e4f6ea; --warn:#b26a00; --warn-soft:#fdf2df; --mute:#8b8c97;
+  --display:"Playfair Display",Georgia,"Times New Roman",serif;
+  --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --r:14px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0c0d11; --surface:#15161c; --sunk:#1c1d24; --fg:#f1f1f4; --soft:#a2a3b0; --line:#2a2b33;
+  --blue:#5b9bff; --blue-soft:#16233a; --zap:#3ccf72; --zap-soft:#132a1d; --warn:#f0a63a; --warn-soft:#2e2312; --mute:#767784; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0c0d11; --surface:#15161c; --sunk:#1c1d24; --fg:#f1f1f4; --soft:#a2a3b0; --line:#2a2b33;
+  --blue:#5b9bff; --blue-soft:#16233a; --zap:#3ccf72; --zap-soft:#132a1d; --warn:#f0a63a; --warn-soft:#2e2312; --mute:#767784; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font:15px/1.5 var(--sans);-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:980px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:14px}
+.brand{font:600 1.35rem/1 var(--display);letter-spacing:-.01em}
+.brand span{color:var(--blue)}
+nav{display:flex;gap:4px;background:var(--sunk);padding:4px;border-radius:999px}
+nav button{border:0;background:none;color:var(--soft);font:500 .9rem var(--sans);padding:7px 14px;border-radius:999px;cursor:pointer}
+nav button[aria-selected="true"]{background:var(--surface);color:var(--fg);box-shadow:0 1px 2px rgb(0 0 0/.08)}
+nav button:focus-visible,button:focus-visible,a:focus-visible,select:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+main{padding-block:28px 64px}
+h1{font:600 clamp(1.7rem,4.5vw,2.4rem)/1.12 var(--display);letter-spacing:-.015em;margin:0 0 8px;text-wrap:balance}
+.lede{color:var(--soft);margin:0 0 24px;max-width:62ch}
+
+/* Funil */
+.funil{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);border-radius:var(--r);background:var(--surface);overflow:hidden;margin-bottom:28px}
+.etapa{padding:14px 16px;border-left:1px solid var(--line);min-width:0}
+.etapa:first-child{border-left:0}
+.etapa b{display:block;font:600 1.9rem/1.1 var(--display);font-variant-numeric:tabular-nums}
+.etapa small{color:var(--soft);font-size:.82rem}
+.etapa.fechou b{color:var(--zap)}
+@media (max-width:560px){.funil{grid-template-columns:repeat(2,1fr)}.etapa:nth-child(3){border-left:0}.etapa:nth-child(n+3){border-top:1px solid var(--line)}}
+
+/* Filtros */
+.filtros{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.chip{border:1px solid var(--line);background:var(--surface);color:var(--soft);font:500 .85rem var(--sans);padding:6px 12px;border-radius:999px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--fg);border-color:var(--fg);color:var(--bg)}
+.chip em{font-style:normal;opacity:.6;margin-left:4px;font-variant-numeric:tabular-nums}
+.sep{width:1px;background:var(--line);margin-inline:4px}
+
+/* Lista */
+.lista{border-top:1px solid var(--line)}
+.loja{border-bottom:1px solid var(--line)}
+.linha{display:grid;grid-template-columns:64px 1fr auto;gap:14px;align-items:center;width:100%;padding:14px 4px;background:none;border:0;color:inherit;text-align:left;cursor:pointer;font:inherit}
+.linha:hover .nome{color:var(--blue)}
+.aval{text-align:center;line-height:1}
+.aval b{display:block;font:600 1.6rem var(--display);font-variant-numeric:tabular-nums;color:var(--blue)}
+.aval small{font-size:.7rem;color:var(--soft)}
+.info{min-width:0}
+.nome{font-weight:600;font-size:1rem;overflow-wrap:anywhere}
+.meta{color:var(--soft);font-size:.85rem}
+.pill{font-size:.75rem;font-weight:600;padding:4px 10px;border-radius:999px;white-space:nowrap;background:var(--sunk);color:var(--soft)}
+.pill.enviado{background:var(--blue-soft);color:var(--blue)}
+.pill.respondeu{background:var(--warn-soft);color:var(--warn)}
+.pill.fechou{background:var(--zap-soft);color:var(--zap)}
+.pill.descartado{background:transparent;color:var(--mute);text-decoration:line-through}
+.loja.descartado .nome,.loja.descartado .aval b{color:var(--mute)}
+.abre{padding:4px 4px 20px 82px;display:grid;gap:14px}
+@media (max-width:560px){.abre{padding-left:4px}.linha{grid-template-columns:52px 1fr auto;gap:10px}}
+.msg{background:var(--sunk);border-radius:var(--r);padding:14px 16px;font-size:.92rem;line-height:1.55;max-width:68ch;white-space:pre-wrap;overflow-wrap:anywhere}
+.acoes{display:flex;flex-wrap:wrap;gap:8px}
+.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);color:var(--fg);font:500 .88rem var(--sans);padding:9px 14px;border-radius:10px;cursor:pointer;text-decoration:none}
+.btn.zap{background:var(--zap);border-color:var(--zap);color:#fff}
+.btn svg{width:16px;height:16px;flex:none}
+.aviso{font-size:.85rem;color:var(--warn)}
+.status{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.status span{font-size:.85rem;color:var(--soft);margin-right:4px}
+.status button{border:1px solid var(--line);background:none;color:var(--soft);font:500 .82rem var(--sans);padding:5px 10px;border-radius:999px;cursor:pointer}
+.status button[aria-pressed="true"]{border-color:var(--fg);color:var(--fg);background:var(--sunk)}
+.end{color:var(--soft);font-size:.82rem}
+.vazio{padding:40px 8px;color:var(--soft);text-align:center}
+
+/* Pedidos */
+.fontes{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-bottom:32px}
+.fonte{display:block;border:1px solid var(--line);background:var(--surface);border-radius:var(--r);padding:16px;color:inherit;text-decoration:none}
+.fonte:hover{border-color:var(--blue)}
+.fonte strong{display:block;font:600 1.1rem var(--display);margin-bottom:4px}
+.fonte p{margin:0;color:var(--soft);font-size:.88rem}
+h2{font:600 1.35rem/1.2 var(--display);margin:0 0 8px}
+.passos{margin:0 0 28px;padding-left:20px;color:var(--soft);max-width:62ch}
+.passos li{margin-bottom:6px}
+.passos b{color:var(--fg);font-weight:600}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:10px 16px;border-radius:999px;font-size:.88rem;font-weight:500;z-index:20}
+@media (prefers-reduced-motion:no-preference){.abre{animation:abrir .18s ease-out}@keyframes abrir{from{opacity:0;transform:translateY(-4px)}}}
+</style>
+
+<header>
+  <div class="wrap top">
+    <div class="brand">Painel <span>BN</span></div>
+    <nav role="tablist" aria-label="Seções">
+      <button role="tab" id="tab-lojas" aria-selected="true" data-aba="lojas">Lojas da região</button>
+      <button role="tab" id="tab-pedidos" aria-selected="false" data-aba="pedidos">Pedidos de site</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section id="lojas">
+    <h1>Lojas sem site e com poucas avaliações</h1>
+    <p class="lede" id="lede">Comércios de Casimiro de Abreu, Barra de São João e Rio das Ostras que não têm site e têm menos de 20 avaliações no Google. Cada um já tem a mensagem pronta: site + plaquinha NFC.</p>
+
+    <div class="funil" aria-label="Andamento">
+      <div class="etapa"><b id="n-novo">0</b><small>para mandar</small></div>
+      <div class="etapa"><b id="n-enviado">0</b><small>mensagem enviada</small></div>
+      <div class="etapa"><b id="n-respondeu">0</b><small>responderam</small></div>
+      <div class="etapa fechou"><b id="n-fechou">0</b><small>fecharam</small></div>
+    </div>
+
+    <div class="filtros" id="f-grupo" aria-label="Filtrar por ramo"></div>
+    <div class="filtros" id="f-status" aria-label="Filtrar por andamento"></div>
+
+    <div class="lista" id="lista"><p class="vazio" id="carregando">Carregando a lista de lojas…</p></div>
+  </section>
+
+  <section id="pedidos" hidden>
+    <h1>Gente que já está pedindo site</h1>
+    <p class="lede">Nesses lugares a pessoa já escreveu que quer um site. Abra, escolha um pedido de hoje e responda com o texto abaixo. Aqui não entra a plaquinha: é só o site, pro Brasil todo.</p>
+
+    <div class="fontes">
+      <a class="fonte" href="https://www.99freelas.com.br/projects?q=site" target="_blank" rel="noopener"><strong>99Freelas</strong><p>Pedidos de site e landing page. Conta grátis responde depois de 24 h; o plano pago responde na hora.</p></a>
+      <a class="fonte" href="https://www.workana.com/jobs?language=pt&query=site" target="_blank" rel="noopener"><strong>Workana</strong><p>Mais pedidos de empresa. Conta grátis manda algumas propostas por semana.</p></a>
+      <a class="fonte" href="https://www.getninjas.com.br/" target="_blank" rel="noopener"><strong>GetNinjas</strong><p>Pedidos de gente comum e comércio. Você paga moedas pra ver o contato.</p></a>
+      <a class="fonte" href="https://www.facebook.com/search/posts/?q=algu%C3%A9m%20indica%20quem%20faz%20site" target="_blank" rel="noopener"><strong>Grupos do Facebook</strong><p>Posts de "alguém indica quem faz site?". Responda no comentário e chame no privado.</p></a>
+    </div>
+
+    <h2>Como responder pra ganhar</h2>
+    <ol class="passos">
+      <li><b>Responda rápido.</b> Os primeiros a responder fecham mais.</li>
+      <li><b>Cite o pedido.</b> Mostre que leu: o nome do negócio e o que a pessoa quer.</li>
+      <li><b>Ofereça a prévia.</b> Montar a página inicial antes de fechar tira o medo de quem não te conhece.</li>
+    </ol>
+
+    <h2>Resposta pronta</h2>
+    <p class="lede">Troque o que está entre colchetes antes de mandar.</p>
+    <div class="msg" id="resposta">Olá, [nome]! Li seu pedido e consigo fazer o site de [negócio]. Faço sites bonitos no celular, rápidos e com botão que leva direto pro seu WhatsApp.
+
+Um exemplo que fiz: https://oliveirabrennobjj-beep.github.io/Meu-site/brteam/
+
+Como funciona: você me manda textos, fotos e logo, e em até 7 dias o site está no ar. Antes de fechar, eu monto a página inicial pra você ver se gosta do estilo, sem compromisso.
+
+Pra eu já começar a prévia: [pergunta sobre o pedido, ex.: você quer que o cliente faça pedido, agende ou só veja os serviços?]</div>
+    <div class="acoes" style="margin-top:12px"><button class="btn" id="copiar-resposta" type="button">Copiar resposta</button></div>
+  </section>
+</main>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+const GRUPOS={comida:"Comida",beleza:"Beleza",pet:"Pet",oficina:"Oficina",loja:"Loja de roupa",pousada:"Pousada",outros:"Outros"};
+const STATUS=[["novo","Para mandar"],["enviado","Enviada"],["respondeu","Respondeu"],["fechou","Fechou"],["descartado","Não quis"]];
+const ROTULO=Object.fromEntries(STATUS);
+const ICON_ZAP='<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-3.3-.8-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.3.5-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1.1c.2-.3.4-.2.7-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.1Z"/></svg>';
+let lojas=[], aberta=null, fGrupo="todos", fStatus="ativos", dbRef=null;
+
+const $=s=>document.querySelector(s);
+function toast(t){const el=$("#toast");el.textContent=t;el.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>el.hidden=true,2200)}
+async function copiar(texto,el){
+  try{await navigator.clipboard.writeText(texto);toast("Mensagem copiada")}
+  catch(e){if(el){const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r)}toast("Texto selecionado: copie com o dedo")}
+}
+
+document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>{
+  document.querySelectorAll("nav button").forEach(x=>x.setAttribute("aria-selected",x===b));
+  $("#lojas").hidden=b.dataset.aba!=="lojas"; $("#pedidos").hidden=b.dataset.aba!=="pedidos";
+  try{localStorage.setItem("aba",b.dataset.aba)}catch(e){}
+}));
+try{const a=localStorage.getItem("aba");if(a==="pedidos")document.querySelector('[data-aba="pedidos"]').click()}catch(e){}
+$("#copiar-resposta").addEventListener("click",()=>copiar($("#resposta").textContent,$("#resposta")));
+
+function chips(){
+  const cont={};lojas.forEach(l=>cont[l.grupo]=(cont[l.grupo]||0)+1);
+  const g=[["todos","Todos",lojas.length],...Object.keys(GRUPOS).filter(k=>cont[k]).map(k=>[k,GRUPOS[k],cont[k]])];
+  $("#f-grupo").innerHTML=g.map(([k,t,n])=>`<button class="chip" type="button" data-g="${k}" aria-pressed="${fGrupo===k}">${t}<em>${n}</em></button>`).join("");
+  const s=[["ativos","Em aberto"],...STATUS];
+  $("#f-status").innerHTML=s.map(([k,t])=>`<button class="chip" type="button" data-s="${k}" aria-pressed="${fStatus===k}">${t}</button>`).join("");
+}
+$("#f-grupo").addEventListener("click",e=>{const b=e.target.closest("[data-g]");if(!b)return;fGrupo=b.dataset.g;render()});
+$("#f-status").addEventListener("click",e=>{const b=e.target.closest("[data-s]");if(!b)return;fStatus=b.dataset.s;render()});
+
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+
+function render(){
+  const n={novo:0,enviado:0,respondeu:0,fechou:0};
+  lojas.forEach(l=>{if(n[l.status]!==undefined)n[l.status]++});
+  for(const k in n)$("#n-"+k).textContent=n[k];
+  chips();
+  const vis=lojas.filter(l=>(fGrupo==="todos"||l.grupo===fGrupo)&&(fStatus==="ativos"?l.status!=="descartado"&&l.status!=="fechou":l.status===fStatus));
+  if(!vis.length){$("#lista").innerHTML=`<p class="vazio">Nenhuma loja aqui. Troque o filtro acima.</p>`;return}
+  $("#lista").innerHTML=vis.map(l=>{
+    const open=aberta===l.id;
+    const zap=l.whatsapp?`https://wa.me/${l.whatsapp}?text=${encodeURIComponent(l.mensagem)}`:"";
+    return `<article class="loja ${esc(l.status)}">
+      <button class="linha" type="button" data-id="${esc(l.id)}" aria-expanded="${open}">
+        <span class="aval"><b>${l.avaliacoes}</b><small>${l.avaliacoes===1?"avaliação":"avaliações"}</small></span>
+        <span class="info"><span class="nome">${esc(l.nome)}</span><br><span class="meta">${esc(l.categoria)} em ${esc(l.cidade)}${l.nota?`, nota ${String(l.nota).replace(".",",")}`:""}</span></span>
+        <span class="pill ${esc(l.status)}">${ROTULO[l.status]||"Para mandar"}</span>
+      </button>
+      ${open?`<div class="abre">
+        <div class="msg" id="msg-${esc(l.id)}">${esc(l.mensagem)}</div>
+        ${l.fixo?`<p class="aviso">O telefone ${esc(l.telefone)} é fixo, então talvez não tenha WhatsApp. Ligue ou mande pelo Instagram.</p>`:""}
+        <div class="acoes">
+          ${zap?`<a class="btn zap" href="${zap}" target="_blank" rel="noopener" data-enviar="${esc(l.id)}">${ICON_ZAP}Abrir no WhatsApp</a>`:""}
+          <button class="btn" type="button" data-copiar="${esc(l.id)}">Copiar mensagem</button>
+          <a class="btn" href="${esc(l.maps)}" target="_blank" rel="noopener">Ver no Google Maps</a>
+          ${l.redesocial?`<a class="btn" href="${esc(l.redesocial)}" target="_blank" rel="noopener">Ver Instagram</a>`:""}
+        </div>
+        <div class="status" role="group" aria-label="Andamento"><span>Andamento:</span>${STATUS.map(([k,t])=>`<button type="button" data-st="${k}" data-id="${esc(l.id)}" aria-pressed="${l.status===k}">${t}</button>`).join("")}</div>
+        <p class="end">${esc(l.telefone)}${l.endereco?`. ${esc(l.endereco)}`:""}</p>
+      </div>`:""}
+    </article>`}).join("");
+}
+
+$("#lista").addEventListener("click",async e=>{
+  const linha=e.target.closest(".linha");
+  if(linha){aberta=aberta===linha.dataset.id?null:linha.dataset.id;render();return}
+  const c=e.target.closest("[data-copiar]");
+  if(c){const l=lojas.find(x=>x.id===c.dataset.copiar);copiar(l.mensagem,$("#msg-"+l.id));return}
+  const env=e.target.closest("[data-enviar]");
+  if(env){const l=lojas.find(x=>x.id===env.dataset.enviar);if(l&&l.status==="novo")setTimeout(()=>mudar(l,"enviado"),400);return}
+  const st=e.target.closest("[data-st]");
+  if(st){const l=lojas.find(x=>x.id===st.dataset.id);if(l&&l.status!==st.dataset.st)mudar(l,st.dataset.st)}
+});
+
+async function mudar(l,status){
+  const antes=l.status;l.status=status;render();
+  if(!dbRef){toast("Sem conexão com o painel: o andamento não foi salvo");return}
+  try{await dbRef.doc(l.id).update({status,atualizado:new Date().toISOString()});toast("Marcada como "+ROTULO[status].toLowerCase())}
+  catch(err){l.status=antes;render();toast("Não deu pra salvar. Abra o painel logado no Claude.")}
+}
+
+(async()=>{
+  const timer=setTimeout(()=>{if(!lojas.length)$("#lista").innerHTML=`<p class="vazio">A lista não carregou. Abra o painel pelo claude.ai, logado na sua conta.</p>`},10000);
+  const db=window.claude?.use?await window.claude.use("db"):null;
+  if(!db){clearTimeout(timer);$("#lista").innerHTML=`<p class="vazio">A lista só aparece com o painel aberto pelo claude.ai, logado na sua conta.</p>`;return}
+  dbRef=db.collection("lojas");
+  dbRef.onSnapshot(snap=>{
+    clearTimeout(timer);
+    lojas=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(a.fixo-b.fixo)||(a.avaliacoes-b.avaliacoes));
+    if(!lojas.length){$("#lista").innerHTML=`<p class="vazio">Nenhuma loja no radar ainda. Peça ao Claude: "roda o radar de clientes".</p>`;return}
+    render();
+  },err=>{clearTimeout(timer);$("#lista").innerHTML=`<p class="vazio">Não deu pra abrir a lista agora. Recarregue a página.</p>`});
+})();
+</script>

@@ -18,6 +18,7 @@ O Brenno instalou as skills para serem usadas em toda conversa. Regras:
 | Pedido | Carregar |
 |---|---|
 | Toda conversa | `caveman`; em conversa longa, também `context-optimization` |
+| Achar clientes, radar, lojas sem site | `radar-clientes` |
 | Procurar coisa no código | `caveman-explore` ou `cavecrew` (economizam token) |
 | Site, página, layout, qualquer coisa visual | `site-bn-digital` (se for cliente), `brainstorming`, `frontend-design`, `impeccable`, `ui-ux-pro-max`, `web-design-guidelines`, `ui-styling`, `design`, `design-system`, `brand`, `copywriting` |
 | Logo, marca, banner, post, arte | `brand`, `design`, `banner-design`, `ui-styling` |
