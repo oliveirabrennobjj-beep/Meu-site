@@ -28,8 +28,8 @@ O Brenno instalou as skills para serem usadas em toda conversa. Regras:
 | Textos de venda, títulos, legendas | `copywriting` |
 | SEO, aparecer no Google | `seo-audit` |
 | Erro, bug, algo quebrado | `systematic-debugging`, `investigate-first` |
-| Mudança grande em código | `writing-plans`, `executing-plans`, `lean-build` |
-| Mexer em código existente | `surgical-patch` ou `safe-refactor` |
+| Mudança grande em código | `karpathy-guidelines`, `writing-plans`, `executing-plans`, `lean-build` |
+| Mexer em código existente | `karpathy-guidelines`, `surgical-patch` ou `safe-refactor` |
 | Testar site no navegador | `webapp-testing` |
 | Word, PDF, Excel | `docx`, `pdf`, `xlsx` |
 | Instalar skill ou plugin | `find-skills`; ler o código antes de instalar |

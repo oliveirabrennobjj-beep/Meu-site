@@ -19,6 +19,7 @@ Arquivos: `bn-digital/prospeccao/radar/` (`filtro.py`, `seed.py`, `painel.html`,
    - Na região (Casimiro, Barra, Rio das Ostras): mensagem oferece site + plaquinha NFC. Cidade de fora: trocar o texto para só site.
 3. **Conferir** no painel quais `doc_id` já existem (`ArtifactData list` em `lojas`) e não regravar loja que já tem andamento.
 4. **Gravar** as novas com `ArtifactData batch` (até 50 por vez, `op: set`, `file_path` de cada doc).
+   - Loja com 0 avaliação e sem Instagram costuma ter número velho (caso Juliany, 08/11). O painel joga essas pro fim e mostra aviso. Status `numero_errado` existe pra marcar.
 5. Salvar a lista em `bn-digital/prospeccao/radar/lojas-<data>.json`, commitar e mandar o link do painel.
 
 ## Aba "Pedidos de site"

@@ -1,253 +1,296 @@
 <title>Painel BN Digital</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
 <style>
-/* Layout: barra fixa com abas; resumo em funil (novo > enviado > respondeu > fechou); lista de lojas em linhas que abrem a mensagem. */
+/* Layout: app escuro de uma coluna (máx. 600px), cartão-resumo no topo, lista de lojas em cartões, barra de abas fixa embaixo. Só tema escuro, de propósito. */
 :root{
-  --bg:#fbfbfd; --surface:#ffffff; --sunk:#f2f3f6; --fg:#0a0a0f; --soft:#5b5c68; --line:#e2e3e9;
-  --blue:#0a66e8; --blue-soft:#e8f0fd; --zap:#1fa855; --zap-soft:#e4f6ea; --warn:#b26a00; --warn-soft:#fdf2df; --mute:#8b8c97;
-  --display:"Playfair Display",Georgia,"Times New Roman",serif;
-  --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-  --r:14px;
+  color-scheme:dark;
+  --bg:#0a0c11; --surface:#131720; --surface-2:#1a1f2b; --line:#262c3a;
+  --fg:#eef1f7; --soft:#9aa3b6; --mute:#6b7387;
+  --blue:#3d8bff; --blue-glow:rgba(61,139,255,.18);
+  --zap:#25d366; --zap-ink:#04210f; --warn:#ffb547; --warn-bg:rgba(255,181,71,.12); --red:#ff7a7a;
+  --sans:"Plus Jakarta Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --r-lg:22px; --r-md:14px; --tabbar:68px;
 }
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#0c0d11; --surface:#15161c; --sunk:#1c1d24; --fg:#f1f1f4; --soft:#a2a3b0; --line:#2a2b33;
-  --blue:#5b9bff; --blue-soft:#16233a; --zap:#3ccf72; --zap-soft:#132a1d; --warn:#f0a63a; --warn-soft:#2e2312; --mute:#767784; color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#0c0d11; --surface:#15161c; --sunk:#1c1d24; --fg:#f1f1f4; --soft:#a2a3b0; --line:#2a2b33;
-  --blue:#5b9bff; --blue-soft:#16233a; --zap:#3ccf72; --zap-soft:#132a1d; --warn:#f0a63a; --warn-soft:#2e2312; --mute:#767784; color-scheme:dark}
 *{box-sizing:border-box}
-body{background:var(--bg);color:var(--fg);font:15px/1.5 var(--sans);-webkit-font-smoothing:antialiased}
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
-.wrap{max-width:980px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
-.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:14px}
-.brand{font:600 1.35rem/1 var(--display);letter-spacing:-.01em}
-.brand span{color:var(--blue)}
-nav{display:flex;gap:4px;background:var(--sunk);padding:4px;border-radius:999px}
-nav button{border:0;background:none;color:var(--soft);font:500 .9rem var(--sans);padding:7px 14px;border-radius:999px;cursor:pointer}
-nav button[aria-selected="true"]{background:var(--surface);color:var(--fg);box-shadow:0 1px 2px rgb(0 0 0/.08)}
-nav button:focus-visible,button:focus-visible,a:focus-visible,select:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
-main{padding-block:28px 64px}
-h1{font:600 clamp(1.7rem,4.5vw,2.4rem)/1.12 var(--display);letter-spacing:-.015em;margin:0 0 8px;text-wrap:balance}
-.lede{color:var(--soft);margin:0 0 24px;max-width:62ch}
+html,body{background:var(--bg)}
+body{color:var(--fg);font:15px/1.5 var(--sans);-webkit-font-smoothing:antialiased;touch-action:manipulation}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--bg)}
+.app{max-width:600px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px calc(var(--tabbar) + 32px + env(safe-area-inset-bottom,0px))}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:8px}
 
-/* Funil */
-.funil{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);border-radius:var(--r);background:var(--surface);overflow:hidden;margin-bottom:28px}
-.etapa{padding:14px 16px;border-left:1px solid var(--line);min-width:0}
-.etapa:first-child{border-left:0}
-.etapa b{display:block;font:600 1.9rem/1.1 var(--display);font-variant-numeric:tabular-nums}
-.etapa small{color:var(--soft);font-size:.82rem}
-.etapa.fechou b{color:var(--zap)}
-@media (max-width:560px){.funil{grid-template-columns:repeat(2,1fr)}.etapa:nth-child(3){border-left:0}.etapa:nth-child(n+3){border-top:1px solid var(--line)}}
+/* Topo */
+.topo{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.marca{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--blue);color:#fff;font-weight:800;font-size:.95rem;letter-spacing:-.02em;box-shadow:0 6px 20px var(--blue-glow)}
+.topo h1{margin:0;font-size:1.15rem;font-weight:700;letter-spacing:-.01em;line-height:1.2}
+.topo p{margin:0;color:var(--soft);font-size:.85rem}
+
+/* Cartão de resumo */
+.resumo{position:relative;overflow:hidden;background:linear-gradient(160deg,#16213a 0%,var(--surface) 60%);border:1px solid var(--line);border-radius:var(--r-lg);padding:20px;margin-bottom:22px}
+.resumo::after{content:"";position:absolute;right:-60px;top:-60px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,var(--blue-glow),transparent 70%);pointer-events:none}
+.grande{display:flex;align-items:baseline;gap:10px}
+.grande b{font-size:3.2rem;font-weight:800;line-height:1;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.grande span{color:var(--soft);font-weight:500}
+.barra{display:flex;height:8px;border-radius:99px;background:var(--surface-2);overflow:hidden;margin:18px 0 14px;gap:2px}
+.barra i{display:block;height:100%;transition:flex-grow .4s ease}
+.barra .b-env{background:var(--blue)}.barra .b-resp{background:var(--warn)}.barra .b-fech{background:var(--zap)}
+.legenda{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.legenda div{min-width:0}
+.legenda b{display:block;font-size:1.2rem;font-weight:700;font-variant-numeric:tabular-nums}
+.legenda small{display:flex;align-items:center;gap:6px;color:var(--soft);font-size:.78rem}
+.legenda small::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--c)}
 
 /* Filtros */
-.filtros{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
-.chip{border:1px solid var(--line);background:var(--surface);color:var(--soft);font:500 .85rem var(--sans);padding:6px 12px;border-radius:999px;cursor:pointer}
+.filtros{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 calc(-1 * max(16px,env(safe-area-inset-left,0px))) 16px;padding:2px max(16px,env(safe-area-inset-left,0px))}
+.filtros::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1px solid var(--line);background:var(--surface);color:var(--soft);font-size:.85rem;font-weight:600;padding:9px 14px;border-radius:99px;cursor:pointer;min-height:40px}
 .chip[aria-pressed="true"]{background:var(--fg);border-color:var(--fg);color:var(--bg)}
-.chip em{font-style:normal;opacity:.6;margin-left:4px;font-variant-numeric:tabular-nums}
-.sep{width:1px;background:var(--line);margin-inline:4px}
+.chip em{font-style:normal;opacity:.55;margin-left:5px;font-variant-numeric:tabular-nums}
+.titulo-lista{display:flex;justify-content:space-between;align-items:baseline;margin:6px 2px 10px}
+.titulo-lista h2{margin:0;font-size:1rem;font-weight:700}
+.titulo-lista span{color:var(--mute);font-size:.82rem}
 
-/* Lista */
-.lista{border-top:1px solid var(--line)}
-.loja{border-bottom:1px solid var(--line)}
-.linha{display:grid;grid-template-columns:64px 1fr auto;gap:14px;align-items:center;width:100%;padding:14px 4px;background:none;border:0;color:inherit;text-align:left;cursor:pointer;font:inherit}
-.linha:hover .nome{color:var(--blue)}
-.aval{text-align:center;line-height:1}
-.aval b{display:block;font:600 1.6rem var(--display);font-variant-numeric:tabular-nums;color:var(--blue)}
-.aval small{font-size:.7rem;color:var(--soft)}
-.info{min-width:0}
-.nome{font-weight:600;font-size:1rem;overflow-wrap:anywhere}
-.meta{color:var(--soft);font-size:.85rem}
-.pill{font-size:.75rem;font-weight:600;padding:4px 10px;border-radius:999px;white-space:nowrap;background:var(--sunk);color:var(--soft)}
-.pill.enviado{background:var(--blue-soft);color:var(--blue)}
-.pill.respondeu{background:var(--warn-soft);color:var(--warn)}
-.pill.fechou{background:var(--zap-soft);color:var(--zap)}
-.pill.descartado{background:transparent;color:var(--mute);text-decoration:line-through}
-.loja.descartado .nome,.loja.descartado .aval b{color:var(--mute)}
-.abre{padding:4px 4px 20px 82px;display:grid;gap:14px}
-@media (max-width:560px){.abre{padding-left:4px}.linha{grid-template-columns:52px 1fr auto;gap:10px}}
-.msg{background:var(--sunk);border-radius:var(--r);padding:14px 16px;font-size:.92rem;line-height:1.55;max-width:68ch;white-space:pre-wrap;overflow-wrap:anywhere}
-.acoes{display:flex;flex-wrap:wrap;gap:8px}
-.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);color:var(--fg);font:500 .88rem var(--sans);padding:9px 14px;border-radius:10px;cursor:pointer;text-decoration:none}
-.btn.zap{background:var(--zap);border-color:var(--zap);color:#fff}
-.btn svg{width:16px;height:16px;flex:none}
-.aviso{font-size:.85rem;color:var(--warn)}
-.status{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-.status span{font-size:.85rem;color:var(--soft);margin-right:4px}
-.status button{border:1px solid var(--line);background:none;color:var(--soft);font:500 .82rem var(--sans);padding:5px 10px;border-radius:999px;cursor:pointer}
-.status button[aria-pressed="true"]{border-color:var(--fg);color:var(--fg);background:var(--sunk)}
-.end{color:var(--soft);font-size:.82rem}
-.vazio{padding:40px 8px;color:var(--soft);text-align:center}
+/* Cartão de loja */
+.lista{display:grid;gap:10px}
+.loja{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden}
+.loja.fora{opacity:.55}
+.cab{display:grid;grid-template-columns:46px 1fr auto;gap:12px;align-items:center;width:100%;padding:14px 14px 14px 14px;background:none;border:0;text-align:left;cursor:pointer}
+.avatar{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;font-weight:700;font-size:.95rem;background:var(--av,#2a3142);color:#fff}
+.dados{min-width:0}
+.nome{font-weight:700;font-size:.98rem;line-height:1.3;overflow-wrap:anywhere}
+.sub{color:var(--soft);font-size:.82rem;margin-top:2px}
+.lado{display:grid;justify-items:end;gap:6px}
+.nota{display:flex;align-items:center;gap:4px;font-size:.82rem;font-weight:700;font-variant-numeric:tabular-nums;color:var(--fg)}
+.nota svg{width:13px;height:13px;color:var(--warn)}
+.pill{font-size:.72rem;font-weight:700;padding:4px 9px;border-radius:99px;white-space:nowrap;background:var(--surface-2);color:var(--soft)}
+.pill.enviado{background:var(--blue-glow);color:var(--blue)}
+.pill.respondeu{background:var(--warn-bg);color:var(--warn)}
+.pill.fechou{background:rgba(37,211,102,.14);color:var(--zap)}
+.pill.descartado,.pill.numero_errado{color:var(--mute)}
+.alerta{display:flex;gap:8px;align-items:flex-start;margin:0 14px 12px;padding:10px 12px;border-radius:var(--r-md);background:var(--warn-bg);color:var(--warn);font-size:.82rem;line-height:1.45}
+.alerta svg{flex:none;width:16px;height:16px;margin-top:1px}
+.corpo{padding:0 14px 16px;display:grid;gap:12px}
+.msg{background:var(--surface-2);border-radius:var(--r-md);padding:14px;font-size:.9rem;line-height:1.6;color:#d6dbe6;white-space:pre-wrap;overflow-wrap:anywhere}
+.zap{display:flex;align-items:center;justify-content:center;gap:10px;min-height:52px;border-radius:16px;background:var(--zap);color:var(--zap-ink);font-weight:800;font-size:1rem;text-decoration:none;border:0;cursor:pointer}
+.zap svg{width:22px;height:22px}
+.zap:active{transform:scale(.98)}
+.icones{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));gap:8px}
+.ic{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 4px;min-height:60px;border-radius:var(--r-md);background:var(--surface-2);border:0;color:var(--soft);font-size:.74rem;font-weight:600;text-decoration:none;cursor:pointer;text-align:center}
+.ic svg{width:20px;height:20px;color:var(--fg)}
+.etapas{display:grid;gap:8px}
+.etapas p{margin:0;color:var(--soft);font-size:.8rem;font-weight:600}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{border:1px solid var(--line);background:none;color:var(--soft);font-size:.8rem;font-weight:600;padding:8px 12px;min-height:38px;border-radius:99px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--blue);border-color:var(--blue);color:#fff}
+.seg button[data-st="numero_errado"][aria-pressed="true"],.seg button[data-st="descartado"][aria-pressed="true"]{background:var(--surface-2);border-color:var(--mute);color:var(--fg)}
+.fone{color:var(--mute);font-size:.78rem;margin:0}
+.vazio{text-align:center;color:var(--soft);padding:48px 16px;border:1px dashed var(--line);border-radius:var(--r-lg)}
+.esqueleto{height:74px;border-radius:var(--r-lg);background:linear-gradient(90deg,var(--surface) 0%,var(--surface-2) 50%,var(--surface) 100%);background-size:200% 100%;animation:brilho 1.2s linear infinite}
+@keyframes brilho{to{background-position:-200% 0}}
 
 /* Pedidos */
-.fontes{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-bottom:32px}
-.fonte{display:block;border:1px solid var(--line);background:var(--surface);border-radius:var(--r);padding:16px;color:inherit;text-decoration:none}
-.fonte:hover{border-color:var(--blue)}
-.fonte strong{display:block;font:600 1.1rem var(--display);margin-bottom:4px}
-.fonte p{margin:0;color:var(--soft);font-size:.88rem}
-h2{font:600 1.35rem/1.2 var(--display);margin:0 0 8px}
-.passos{margin:0 0 28px;padding-left:20px;color:var(--soft);max-width:62ch}
-.passos li{margin-bottom:6px}
-.passos b{color:var(--fg);font-weight:600}
-.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:10px 16px;border-radius:999px;font-size:.88rem;font-weight:500;z-index:20}
-@media (prefers-reduced-motion:no-preference){.abre{animation:abrir .18s ease-out}@keyframes abrir{from{opacity:0;transform:translateY(-4px)}}}
+.secao-txt{color:var(--soft);margin:0 0 18px}
+.fontes{display:grid;gap:10px;margin-bottom:26px}
+.fonte{display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:center;padding:14px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);color:inherit;text-decoration:none}
+.fonte .avatar{width:44px;height:44px}
+.fonte strong{display:block;font-size:.98rem}
+.fonte span{color:var(--soft);font-size:.82rem}
+.fonte > svg{width:18px;height:18px;color:var(--mute)}
+.dicas{display:grid;gap:8px;margin:0 0 26px;padding:0;list-style:none}
+.dicas li{display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:start;color:var(--soft);font-size:.9rem}
+.dicas b{color:var(--fg)}
+.dicas .n{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--surface-2);color:var(--blue);font-weight:800;font-size:.8rem}
+h2.sec{font-size:1.05rem;font-weight:700;margin:0 0 10px}
+.copiar{display:flex;align-items:center;justify-content:center;gap:8px;min-height:48px;border-radius:16px;background:var(--blue);color:#fff;font-weight:700;border:0;cursor:pointer;width:100%;margin-top:10px}
+.copiar svg{width:18px;height:18px}
+
+/* Barra de abas */
+.abas{position:fixed;left:0;right:0;bottom:0;z-index:20;background:rgba(10,12,17,.9);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
+.abas div{max-width:600px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;height:var(--tabbar)}
+.abas button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border:0;background:none;color:var(--mute);font-size:.75rem;font-weight:700;cursor:pointer}
+.abas button svg{width:22px;height:22px}
+.abas button[aria-selected="true"]{color:var(--blue)}
+.toast{position:fixed;left:50%;bottom:calc(var(--tabbar) + 16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:10px 18px;border-radius:99px;font-size:.88rem;font-weight:700;z-index:40;white-space:nowrap}
+@media (prefers-reduced-motion:no-preference){.corpo,.alerta{animation:abrir .2s ease-out}@keyframes abrir{from{opacity:0;transform:translateY(-6px)}}}
+@media (prefers-reduced-motion:reduce){.esqueleto{animation:none}.barra i{transition:none}}
 </style>
 
-<header>
-  <div class="wrap top">
-    <div class="brand">Painel <span>BN</span></div>
-    <nav role="tablist" aria-label="Seções">
-      <button role="tab" id="tab-lojas" aria-selected="true" data-aba="lojas">Lojas da região</button>
-      <button role="tab" id="tab-pedidos" aria-selected="false" data-aba="pedidos">Pedidos de site</button>
-    </nav>
-  </div>
-</header>
+<div class="app">
+  <header class="topo">
+    <div class="marca" aria-hidden="true">BN</div>
+    <div><h1 id="saudacao">Oi, Brenno</h1><p id="data-hoje">Painel BN Digital</p></div>
+  </header>
 
-<main class="wrap">
-  <section id="lojas">
-    <h1>Lojas sem site e com poucas avaliações</h1>
-    <p class="lede" id="lede">Comércios de Casimiro de Abreu, Barra de São João e Rio das Ostras que não têm site e têm menos de 20 avaliações no Google. Cada um já tem a mensagem pronta: site + plaquinha NFC.</p>
+  <main>
+    <section id="lojas" role="tabpanel" aria-labelledby="aba-lojas">
+      <div class="resumo" aria-label="Andamento">
+        <div class="grande"><b id="n-novo">–</b><span>lojas pra mandar mensagem</span></div>
+        <div class="barra" aria-hidden="true"><i class="b-env" id="b-env"></i><i class="b-resp" id="b-resp"></i><i class="b-fech" id="b-fech"></i><i id="b-resto" style="flex-grow:1"></i></div>
+        <div class="legenda">
+          <div style="--c:var(--blue)"><b id="n-enviado">0</b><small>enviadas</small></div>
+          <div style="--c:var(--warn)"><b id="n-respondeu">0</b><small>responderam</small></div>
+          <div style="--c:var(--zap)"><b id="n-fechou">0</b><small>fecharam</small></div>
+        </div>
+      </div>
 
-    <div class="funil" aria-label="Andamento">
-      <div class="etapa"><b id="n-novo">0</b><small>para mandar</small></div>
-      <div class="etapa"><b id="n-enviado">0</b><small>mensagem enviada</small></div>
-      <div class="etapa"><b id="n-respondeu">0</b><small>responderam</small></div>
-      <div class="etapa fechou"><b id="n-fechou">0</b><small>fecharam</small></div>
-    </div>
+      <div class="filtros" id="f-status" aria-label="Filtrar por andamento"></div>
+      <div class="filtros" id="f-grupo" aria-label="Filtrar por ramo"></div>
 
-    <div class="filtros" id="f-grupo" aria-label="Filtrar por ramo"></div>
-    <div class="filtros" id="f-status" aria-label="Filtrar por andamento"></div>
+      <div class="titulo-lista"><h2 id="titulo-lista">Lojas</h2><span>sem site, menos de 20 avaliações</span></div>
+      <div class="lista" id="lista" aria-live="polite"><div class="esqueleto"></div><div class="esqueleto"></div><div class="esqueleto"></div></div>
+    </section>
 
-    <div class="lista" id="lista"><p class="vazio" id="carregando">Carregando a lista de lojas…</p></div>
-  </section>
+    <section id="pedidos" role="tabpanel" aria-labelledby="aba-pedidos" hidden>
+      <div class="resumo">
+        <div class="grande"><b style="font-size:1.6rem;letter-spacing:-.02em">Gente pedindo site</b></div>
+        <p class="secao-txt" style="margin:10px 0 0">Aqui a pessoa já escreveu que quer um site. Abra um dos lugares, ache um pedido de hoje e responda com o texto pronto. É só o site, pro Brasil todo.</p>
+      </div>
 
-  <section id="pedidos" hidden>
-    <h1>Gente que já está pedindo site</h1>
-    <p class="lede">Nesses lugares a pessoa já escreveu que quer um site. Abra, escolha um pedido de hoje e responda com o texto abaixo. Aqui não entra a plaquinha: é só o site, pro Brasil todo.</p>
+      <div class="fontes">
+        <a class="fonte" href="https://www.99freelas.com.br/projects?q=site" target="_blank" rel="noopener"><div class="avatar" style="--av:#1f6feb">99</div><div><strong>99Freelas</strong><span>Conta grátis responde 24 h depois do pedido</span></div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+        <a class="fonte" href="https://www.workana.com/jobs?language=pt&query=site" target="_blank" rel="noopener"><div class="avatar" style="--av:#e8496a">W</div><div><strong>Workana</strong><span>Mais pedidos de empresa</span></div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+        <a class="fonte" href="https://www.getninjas.com.br/" target="_blank" rel="noopener"><div class="avatar" style="--av:#7a3cff">GN</div><div><strong>GetNinjas</strong><span>Comércio e gente comum; paga pra ver o contato</span></div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+        <a class="fonte" href="https://www.facebook.com/search/posts/?q=algu%C3%A9m%20indica%20quem%20faz%20site" target="_blank" rel="noopener"><div class="avatar" style="--av:#1877f2">f</div><div><strong>Grupos do Facebook</strong><span>Posts de "alguém indica quem faz site?"</span></div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+      </div>
 
-    <div class="fontes">
-      <a class="fonte" href="https://www.99freelas.com.br/projects?q=site" target="_blank" rel="noopener"><strong>99Freelas</strong><p>Pedidos de site e landing page. Conta grátis responde depois de 24 h; o plano pago responde na hora.</p></a>
-      <a class="fonte" href="https://www.workana.com/jobs?language=pt&query=site" target="_blank" rel="noopener"><strong>Workana</strong><p>Mais pedidos de empresa. Conta grátis manda algumas propostas por semana.</p></a>
-      <a class="fonte" href="https://www.getninjas.com.br/" target="_blank" rel="noopener"><strong>GetNinjas</strong><p>Pedidos de gente comum e comércio. Você paga moedas pra ver o contato.</p></a>
-      <a class="fonte" href="https://www.facebook.com/search/posts/?q=algu%C3%A9m%20indica%20quem%20faz%20site" target="_blank" rel="noopener"><strong>Grupos do Facebook</strong><p>Posts de "alguém indica quem faz site?". Responda no comentário e chame no privado.</p></a>
-    </div>
+      <h2 class="sec">Pra ganhar o pedido</h2>
+      <ol class="dicas">
+        <li><span class="n">1</span><span><b>Responda rápido.</b> Quem responde primeiro fecha mais.</span></li>
+        <li><span class="n">2</span><span><b>Cite o pedido.</b> Fale o nome do negócio e o que a pessoa quer.</span></li>
+        <li><span class="n">3</span><span><b>Ofereça a prévia.</b> Montar a página inicial antes tira o medo de quem não te conhece.</span></li>
+      </ol>
 
-    <h2>Como responder pra ganhar</h2>
-    <ol class="passos">
-      <li><b>Responda rápido.</b> Os primeiros a responder fecham mais.</li>
-      <li><b>Cite o pedido.</b> Mostre que leu: o nome do negócio e o que a pessoa quer.</li>
-      <li><b>Ofereça a prévia.</b> Montar a página inicial antes de fechar tira o medo de quem não te conhece.</li>
-    </ol>
-
-    <h2>Resposta pronta</h2>
-    <p class="lede">Troque o que está entre colchetes antes de mandar.</p>
-    <div class="msg" id="resposta">Olá, [nome]! Li seu pedido e consigo fazer o site de [negócio]. Faço sites bonitos no celular, rápidos e com botão que leva direto pro seu WhatsApp.
+      <h2 class="sec">Resposta pronta</h2>
+      <div class="msg" id="resposta">Olá, [nome]! Li seu pedido e consigo fazer o site de [negócio]. Faço sites bonitos no celular, rápidos e com botão que leva direto pro seu WhatsApp.
 
 Um exemplo que fiz: https://oliveirabrennobjj-beep.github.io/Meu-site/brteam/
 
-Como funciona: você me manda textos, fotos e logo, e em até 7 dias o site está no ar. Antes de fechar, eu monto a página inicial pra você ver se gosta do estilo, sem compromisso.
+Você me manda textos, fotos e logo, e em até 7 dias o site está no ar. Antes de fechar, eu monto a página inicial pra você ver se gosta do estilo, sem compromisso.
 
-Pra eu já começar a prévia: [pergunta sobre o pedido, ex.: você quer que o cliente faça pedido, agende ou só veja os serviços?]</div>
-    <div class="acoes" style="margin-top:12px"><button class="btn" id="copiar-resposta" type="button">Copiar resposta</button></div>
-  </section>
-</main>
-<div class="toast" id="toast" hidden></div>
+Pra eu já começar a prévia: [pergunta sobre o pedido]</div>
+      <button class="copiar" id="copiar-resposta" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>Copiar resposta</button>
+    </section>
+  </main>
+</div>
+
+<nav class="abas" aria-label="Seções"><div role="tablist">
+  <button role="tab" id="aba-lojas" aria-selected="true" aria-controls="lojas" data-aba="lojas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l1.5-5h15L21 9"/><path d="M4 9v11h16V9"/><path d="M3 9a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0"/><path d="M10 20v-6h4v6"/></svg>Lojas da região</button>
+  <button role="tab" id="aba-pedidos" aria-selected="false" aria-controls="pedidos" data-aba="pedidos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 9h8M8 13h5"/></svg>Pedidos de site</button>
+</div></nav>
+<div class="toast" id="toast" role="status" hidden></div>
 
 <script>
-const GRUPOS={comida:"Comida",beleza:"Beleza",pet:"Pet",oficina:"Oficina",loja:"Loja de roupa",pousada:"Pousada",outros:"Outros"};
-const STATUS=[["novo","Para mandar"],["enviado","Enviada"],["respondeu","Respondeu"],["fechou","Fechou"],["descartado","Não quis"]];
+const GRUPOS={comida:["Comida","#e2583e"],beleza:["Beleza","#d64f97"],pet:["Pet","#2fa37a"],oficina:["Oficina","#5b6b8c"],loja:["Roupa","#8a5cf6"],pousada:["Pousada","#1e9bd7"],outros:["Outros","#56607a"]};
+const STATUS=[["novo","Pra mandar"],["enviado","Enviada"],["respondeu","Respondeu"],["fechou","Fechou"],["descartado","Não quis"],["numero_errado","Número errado"]];
 const ROTULO=Object.fromEntries(STATUS);
-const ICON_ZAP='<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-3.3-.8-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.3.5-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1.1c.2-.3.4-.2.7-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.1Z"/></svg>';
-let lojas=[], aberta=null, fGrupo="todos", fStatus="ativos", dbRef=null;
-
+const FORA=new Set(["descartado","numero_errado"]);
+const I={
+  zap:'<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-3.3-.8-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.3.5-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1.1c.2-.3.4-.2.7-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.1Z"/></svg>',
+  copiar:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>',
+  mapa:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>',
+  insta:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>',
+  tel:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2Z"/></svg>',
+  estrela:'<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></svg>',
+  alerta:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4M12 17h.01"/></svg>'
+};
+let lojas=[],aberta=null,fGrupo="todos",fStatus="pra_fazer",dbRef=null;
 const $=s=>document.querySelector(s);
-function toast(t){const el=$("#toast");el.textContent=t;el.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>el.hidden=true,2200)}
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const iniciais=n=>n.replace(/[^\p{L}\p{N} ]/gu,"").trim().split(/\s+/).slice(0,2).map(p=>p[0]).join("").toUpperCase()||"?";
+const duvidosa=l=>!l.avaliacoes&&!l.redesocial;
+function toast(t){const el=$("#toast");el.textContent=t;el.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>el.hidden=true,2400)}
 async function copiar(texto,el){
   try{await navigator.clipboard.writeText(texto);toast("Mensagem copiada")}
-  catch(e){if(el){const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r)}toast("Texto selecionado: copie com o dedo")}
+  catch(e){if(el){const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r)}toast("Texto selecionado, é só copiar")}
 }
+(()=>{const h=new Date().getHours();$("#saudacao").textContent=h<12?"Bom dia, Brenno":h<18?"Boa tarde, Brenno":"Boa noite, Brenno";
+  $("#data-hoje").textContent=new Date().toLocaleDateString("pt-BR",{weekday:"long",day:"numeric",month:"long"}).replace(/^./,c=>c.toUpperCase())})();
 
-document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>{
-  document.querySelectorAll("nav button").forEach(x=>x.setAttribute("aria-selected",x===b));
-  $("#lojas").hidden=b.dataset.aba!=="lojas"; $("#pedidos").hidden=b.dataset.aba!=="pedidos";
-  try{localStorage.setItem("aba",b.dataset.aba)}catch(e){}
-}));
-try{const a=localStorage.getItem("aba");if(a==="pedidos")document.querySelector('[data-aba="pedidos"]').click()}catch(e){}
+function abrirAba(nome){
+  document.querySelectorAll("[data-aba]").forEach(b=>b.setAttribute("aria-selected",b.dataset.aba===nome));
+  $("#lojas").hidden=nome!=="lojas";$("#pedidos").hidden=nome!=="pedidos";scrollTo(0,0);
+  try{localStorage.setItem("aba",nome)}catch(e){}
+}
+document.querySelectorAll("[data-aba]").forEach(b=>b.addEventListener("click",()=>abrirAba(b.dataset.aba)));
+try{if(localStorage.getItem("aba")==="pedidos")abrirAba("pedidos")}catch(e){}
 $("#copiar-resposta").addEventListener("click",()=>copiar($("#resposta").textContent,$("#resposta")));
 
-function chips(){
-  const cont={};lojas.forEach(l=>cont[l.grupo]=(cont[l.grupo]||0)+1);
-  const g=[["todos","Todos",lojas.length],...Object.keys(GRUPOS).filter(k=>cont[k]).map(k=>[k,GRUPOS[k],cont[k]])];
-  $("#f-grupo").innerHTML=g.map(([k,t,n])=>`<button class="chip" type="button" data-g="${k}" aria-pressed="${fGrupo===k}">${t}<em>${n}</em></button>`).join("");
-  const s=[["ativos","Em aberto"],...STATUS];
-  $("#f-status").innerHTML=s.map(([k,t])=>`<button class="chip" type="button" data-s="${k}" aria-pressed="${fStatus===k}">${t}</button>`).join("");
+function filtrosHTML(){
+  const st=[["pra_fazer","Pra fazer"],["enviado","Enviadas"],["respondeu","Responderam"],["fechou","Fecharam"],["fora","Descartadas"]];
+  const conta=k=>lojas.filter(l=>k==="pra_fazer"?l.status==="novo":k==="fora"?FORA.has(l.status):l.status===k).length;
+  $("#f-status").innerHTML=st.map(([k,t])=>`<button class="chip" type="button" data-s="${k}" aria-pressed="${fStatus===k}">${t}<em>${conta(k)}</em></button>`).join("");
+  const c={};lojas.forEach(l=>c[l.grupo]=(c[l.grupo]||0)+1);
+  $("#f-grupo").innerHTML=[`<button class="chip" type="button" data-g="todos" aria-pressed="${fGrupo==="todos"}">Todos os ramos</button>`,...Object.keys(GRUPOS).filter(k=>c[k]).map(k=>`<button class="chip" type="button" data-g="${k}" aria-pressed="${fGrupo===k}">${GRUPOS[k][0]}<em>${c[k]}</em></button>`)].join("");
 }
-$("#f-grupo").addEventListener("click",e=>{const b=e.target.closest("[data-g]");if(!b)return;fGrupo=b.dataset.g;render()});
-$("#f-status").addEventListener("click",e=>{const b=e.target.closest("[data-s]");if(!b)return;fStatus=b.dataset.s;render()});
+$("#f-grupo").addEventListener("click",e=>{const b=e.target.closest("[data-g]");if(b){fGrupo=b.dataset.g;aberta=null;render()}});
+$("#f-status").addEventListener("click",e=>{const b=e.target.closest("[data-s]");if(b){fStatus=b.dataset.s;aberta=null;render()}});
 
-function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function cartao(l){
+  const open=aberta===l.id, g=GRUPOS[l.grupo]||GRUPOS.outros;
+  const zap=l.whatsapp?`https://wa.me/${l.whatsapp}?text=${encodeURIComponent(l.mensagem)}`:"";
+  const av=l.avaliacoes?`<span class="nota">${I.estrela}${String(l.nota).replace(".",",")} · ${l.avaliacoes} aval.</span>`:`<span class="nota" style="color:var(--mute)">sem avaliação</span>`;
+  const alerta=duvidosa(l)?`Sem avaliação e sem Instagram: o número pode estar desatualizado. Confira no Google Maps antes de mandar.`:l.fixo?`Telefone fixo (${esc(l.telefone)}): talvez não tenha WhatsApp. Ligue ou chame pelo Instagram.`:"";
+  return `<article class="loja ${FORA.has(l.status)?"fora":""}">
+    <button class="cab" type="button" data-id="${esc(l.id)}" aria-expanded="${open}">
+      <span class="avatar" style="--av:${g[1]}" aria-hidden="true">${esc(iniciais(l.nome))}</span>
+      <span class="dados"><span class="nome">${esc(l.nome)}</span><span class="sub" style="display:block">${esc(l.categoria)} · ${esc(l.cidade)}</span></span>
+      <span class="lado">${av}<span class="pill ${esc(l.status)}">${ROTULO[l.status]||"Pra mandar"}</span></span>
+    </button>
+    ${open&&alerta?`<p class="alerta">${I.alerta}<span>${alerta}</span></p>`:""}
+    ${open?`<div class="corpo">
+      <div class="msg" id="msg-${esc(l.id)}">${esc(l.mensagem)}</div>
+      ${zap?`<a class="zap" href="${zap}" target="_blank" rel="noopener" data-enviar="${esc(l.id)}">${I.zap}Mandar no WhatsApp</a>`:""}
+      <div class="icones">
+        <button class="ic" type="button" data-copiar="${esc(l.id)}">${I.copiar}Copiar</button>
+        <a class="ic" href="${esc(l.maps)}" target="_blank" rel="noopener">${I.mapa}Google Maps</a>
+        ${l.redesocial?`<a class="ic" href="${esc(l.redesocial)}" target="_blank" rel="noopener">${I.insta}Instagram</a>`:""}
+      </div>
+      <div class="etapas"><p>Em que pé está?</p><div class="seg" role="group" aria-label="Andamento">${STATUS.map(([k,t])=>`<button type="button" data-st="${k}" data-id="${esc(l.id)}" aria-pressed="${l.status===k}">${t}</button>`).join("")}</div></div>
+      <p class="fone">${esc(l.telefone)}${l.endereco?` · ${esc(l.endereco)}`:""}</p>
+    </div>`:""}
+  </article>`;
+}
 
 function render(){
-  const n={novo:0,enviado:0,respondeu:0,fechou:0};
-  lojas.forEach(l=>{if(n[l.status]!==undefined)n[l.status]++});
+  const n={novo:0,enviado:0,respondeu:0,fechou:0};lojas.forEach(l=>{if(n[l.status]!==undefined)n[l.status]++});
   for(const k in n)$("#n-"+k).textContent=n[k];
-  chips();
-  const vis=lojas.filter(l=>(fGrupo==="todos"||l.grupo===fGrupo)&&(fStatus==="ativos"?l.status!=="descartado"&&l.status!=="fechou":l.status===fStatus));
-  if(!vis.length){$("#lista").innerHTML=`<p class="vazio">Nenhuma loja aqui. Troque o filtro acima.</p>`;return}
-  $("#lista").innerHTML=vis.map(l=>{
-    const open=aberta===l.id;
-    const zap=l.whatsapp?`https://wa.me/${l.whatsapp}?text=${encodeURIComponent(l.mensagem)}`:"";
-    return `<article class="loja ${esc(l.status)}">
-      <button class="linha" type="button" data-id="${esc(l.id)}" aria-expanded="${open}">
-        <span class="aval"><b>${l.avaliacoes}</b><small>${l.avaliacoes===1?"avaliação":"avaliações"}</small></span>
-        <span class="info"><span class="nome">${esc(l.nome)}</span><br><span class="meta">${esc(l.categoria)} em ${esc(l.cidade)}${l.nota?`, nota ${String(l.nota).replace(".",",")}`:""}</span></span>
-        <span class="pill ${esc(l.status)}">${ROTULO[l.status]||"Para mandar"}</span>
-      </button>
-      ${open?`<div class="abre">
-        <div class="msg" id="msg-${esc(l.id)}">${esc(l.mensagem)}</div>
-        ${l.fixo?`<p class="aviso">O telefone ${esc(l.telefone)} é fixo, então talvez não tenha WhatsApp. Ligue ou mande pelo Instagram.</p>`:""}
-        <div class="acoes">
-          ${zap?`<a class="btn zap" href="${zap}" target="_blank" rel="noopener" data-enviar="${esc(l.id)}">${ICON_ZAP}Abrir no WhatsApp</a>`:""}
-          <button class="btn" type="button" data-copiar="${esc(l.id)}">Copiar mensagem</button>
-          <a class="btn" href="${esc(l.maps)}" target="_blank" rel="noopener">Ver no Google Maps</a>
-          ${l.redesocial?`<a class="btn" href="${esc(l.redesocial)}" target="_blank" rel="noopener">Ver Instagram</a>`:""}
-        </div>
-        <div class="status" role="group" aria-label="Andamento"><span>Andamento:</span>${STATUS.map(([k,t])=>`<button type="button" data-st="${k}" data-id="${esc(l.id)}" aria-pressed="${l.status===k}">${t}</button>`).join("")}</div>
-        <p class="end">${esc(l.telefone)}${l.endereco?`. ${esc(l.endereco)}`:""}</p>
-      </div>`:""}
-    </article>`}).join("");
+  const ativos=lojas.filter(l=>!FORA.has(l.status)).length||1;
+  $("#b-env").style.flexGrow=n.enviado/ativos;$("#b-resp").style.flexGrow=n.respondeu/ativos;$("#b-fech").style.flexGrow=n.fechou/ativos;$("#b-resto").style.flexGrow=n.novo/ativos;
+  filtrosHTML();
+  const vis=lojas.filter(l=>(fGrupo==="todos"||l.grupo===fGrupo)&&(fStatus==="pra_fazer"?l.status==="novo":fStatus==="fora"?FORA.has(l.status):l.status===fStatus));
+  const titulos={pra_fazer:"Pra mandar hoje",enviado:"Esperando resposta",respondeu:"Responderam",fechou:"Clientes fechados",fora:"Descartadas"};
+  $("#titulo-lista").textContent=titulos[fStatus];
+  $("#lista").innerHTML=vis.length?vis.map(cartao).join(""):`<p class="vazio">Nenhuma loja aqui ainda.<br>Troque o filtro acima.</p>`;
 }
 
-$("#lista").addEventListener("click",async e=>{
-  const linha=e.target.closest(".linha");
-  if(linha){aberta=aberta===linha.dataset.id?null:linha.dataset.id;render();return}
-  const c=e.target.closest("[data-copiar]");
-  if(c){const l=lojas.find(x=>x.id===c.dataset.copiar);copiar(l.mensagem,$("#msg-"+l.id));return}
-  const env=e.target.closest("[data-enviar]");
-  if(env){const l=lojas.find(x=>x.id===env.dataset.enviar);if(l&&l.status==="novo")setTimeout(()=>mudar(l,"enviado"),400);return}
-  const st=e.target.closest("[data-st]");
-  if(st){const l=lojas.find(x=>x.id===st.dataset.id);if(l&&l.status!==st.dataset.st)mudar(l,st.dataset.st)}
+$("#lista").addEventListener("click",e=>{
+  const cab=e.target.closest(".cab");if(cab){aberta=aberta===cab.dataset.id?null:cab.dataset.id;render();return}
+  const c=e.target.closest("[data-copiar]");if(c){const l=lojas.find(x=>x.id===c.dataset.copiar);copiar(l.mensagem,$("#msg-"+l.id));return}
+  const env=e.target.closest("[data-enviar]");if(env){const l=lojas.find(x=>x.id===env.dataset.enviar);if(l&&l.status==="novo")setTimeout(()=>mudar(l,"enviado"),500);return}
+  const st=e.target.closest("[data-st]");if(st){const l=lojas.find(x=>x.id===st.dataset.id);if(l&&l.status!==st.dataset.st)mudar(l,st.dataset.st)}
 });
 
 async function mudar(l,status){
   const antes=l.status;l.status=status;render();
-  if(!dbRef){toast("Sem conexão com o painel: o andamento não foi salvo");return}
-  try{await dbRef.doc(l.id).update({status,atualizado:new Date().toISOString()});toast("Marcada como "+ROTULO[status].toLowerCase())}
-  catch(err){l.status=antes;render();toast("Não deu pra salvar. Abra o painel logado no Claude.")}
+  if(!dbRef){toast("Sem conexão: o andamento não foi salvo");return}
+  try{await dbRef.doc(l.id).update({status,atualizado:new Date().toISOString()});toast(`${l.nome.split(" ")[0]}: ${ROTULO[status].toLowerCase()}`)}
+  catch(err){l.status=antes;render();toast("Não salvou. Abra o painel logado no Claude.")}
 }
 
+const ordem=l=>(duvidosa(l)?2:0)+(l.fixo?1:0);
 (async()=>{
-  const timer=setTimeout(()=>{if(!lojas.length)$("#lista").innerHTML=`<p class="vazio">A lista não carregou. Abra o painel pelo claude.ai, logado na sua conta.</p>`},10000);
+  const vazio=t=>{$("#lista").innerHTML=`<p class="vazio">${t}</p>`;$("#n-novo").textContent="0"};
+  const timer=setTimeout(()=>{if(!lojas.length)vazio("A lista não carregou. Abra o painel pelo claude.ai, logado na sua conta.")},10000);
   const db=window.claude?.use?await window.claude.use("db"):null;
-  if(!db){clearTimeout(timer);$("#lista").innerHTML=`<p class="vazio">A lista só aparece com o painel aberto pelo claude.ai, logado na sua conta.</p>`;return}
+  if(!db){clearTimeout(timer);vazio("A lista só aparece com o painel aberto pelo claude.ai, logado na sua conta.");return}
   dbRef=db.collection("lojas");
   dbRef.onSnapshot(snap=>{
     clearTimeout(timer);
-    lojas=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(a.fixo-b.fixo)||(a.avaliacoes-b.avaliacoes));
-    if(!lojas.length){$("#lista").innerHTML=`<p class="vazio">Nenhuma loja no radar ainda. Peça ao Claude: "roda o radar de clientes".</p>`;return}
+    lojas=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>ordem(a)-ordem(b)||(b.avaliacoes-a.avaliacoes));
+    if(!lojas.length){vazio('Nenhuma loja no radar ainda. Peça ao Claude: "roda o radar de clientes".');return}
     render();
-  },err=>{clearTimeout(timer);$("#lista").innerHTML=`<p class="vazio">Não deu pra abrir a lista agora. Recarregue a página.</p>`});
+  },()=>{clearTimeout(timer);vazio("Não deu pra abrir a lista agora. Recarregue a página.")});
 })();
 </script>
