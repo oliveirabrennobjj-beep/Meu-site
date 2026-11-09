@@ -20,3 +20,4 @@ Para fechar: troque `[ ]` por `[x]`.
 - [x] Skills de design e Instagram instaladas.
 - [ ] Ver com o pai a Evolution API (~R$ 30/mês): deixa o WhatsApp mandar e responder sozinho.
 - [ ] Cérebro no celular: GitSync + abrir `cerebro-obsidian/cofre` no Obsidian (passos em `automacao/PLANO.md`, 3b).
+- [ ] Fazer merge do branch `ccr-7f62ce87-u7zw6f` na main: publica o modelo de barbearia. Depois me avise para eu ligar o botão "Mandar exemplo" de barbearia/salão nele.
