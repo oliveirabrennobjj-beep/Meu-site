@@ -10,6 +10,8 @@ Pesquisa de 09/11/2026. A tarefa diária atualiza este plano em `automacao/pesqu
   com os lembretes abertos.
 - **Pesquisa profunda (02:43):** um tema por noite, lê páginas e READMEs, grava `AAAA-MM-DD-profunda.md`.
   A das 06:17 resume as duas no aviso.
+- **Vídeos da semana (domingo 19:23):** o robô escreve 3 roteiros, renderiza e deixa os MP4 + legendas em
+  `fabrica-video/prontos/` (branch `pesquisa-diaria`), com aviso no celular.
 - **Fábrica de vídeo:** `fabrica-video/`. Roteiro JSON → MP4 vertical em ~1 min, na nuvem, sem o PC.
 - **Lembretes:** `automacao/LEMBRETES.md`. Diga "me lembra de …" e o Claude adiciona.
 
