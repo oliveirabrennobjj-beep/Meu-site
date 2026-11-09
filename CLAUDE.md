@@ -36,3 +36,9 @@ O Brenno instalou as skills para serem usadas em toda conversa. Regras:
 | Antes de dizer "pronto" | `verification-before-completion` |
 
 Quando o Brenno mandar print de skill ou plugin: instalar em `.claude/skills/` com `npx skills add <dono/repo>`, revisar o código e acrescentar nesta tabela.
+
+# Automação e lembretes
+
+- "Me lembra de …" → adicionar em `automacao/LEMBRETES.md` (commit + push).
+- Plano de automação (WhatsApp, vídeo, celular→PC, token, design): `automacao/PLANO.md`.
+- Pesquisa diária 06:17 (Brasília) grava em `automacao/pesquisas/` no branch `pesquisa-diaria`.
