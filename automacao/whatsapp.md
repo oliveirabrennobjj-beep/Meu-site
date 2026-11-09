@@ -21,6 +21,13 @@ App **WhatsApp Business** → Ferramentas comerciais:
 
 Os `___` são seus preços e prazos. Não invento esses valores.
 
+## Nível 1,5: resposta com IA só no celular (grátis/barato, sem servidor)
+App **AutoResponder for WA** (Android, Play Store): lê as notificações do WhatsApp Business e responde sozinho.
+- Regras grátis: palavra "preço" → texto `/preco`; "site" → `/exemplo`; qualquer outra → saudação.
+- Versão paga do app liga uma IA nas respostas. Funciona com MacroDroid/Tasker.
+- Risco: é app de terceiros e não é API oficial. Use no WhatsApp **Business**, com respostas curtas e sem disparo em massa.
+- Celular precisa ficar ligado e com internet (pode ser um aparelho velho num chip só da BN Digital).
+
 ## Nível 2: Claude respondendo (precisa de conta Meta)
 Ver `automacao/PLANO.md`, seção 1. Recomendado: API oficial da Meta + Make (já conectado ao Claude).
 Passos quando decidir:
