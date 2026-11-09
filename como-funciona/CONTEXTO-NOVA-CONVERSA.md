@@ -1,4 +1,11 @@
-# Contexto para uma conversa nova, atualizado em 02/11/2026
+# Contexto para uma conversa nova, atualizado em 09/11/2026
+
+## Atualização de 09/11
+
+- Raio-X **ar-condicionado**: `video-arcondicionado/` (2D, copiado do micro-ondas), roteiro `roteiros/14-ar-condicionado.md`, capa em `entregas/2026-11-09/`.
+- Voz grátis Kokoro de novo. Nome estrangeiro sai errado (Willis Carrier): deixar só na etiqueta, fora da narração.
+- Numa sessão nova: `pip install kokoro-onnx soundfile sherpa-onnx`, baixar os modelos (links em `ferramentas/falar.py` e `ouvir.py`) e `npm install` no `video-motor-3d/`.
+- Próximos: Engenheirinho (avião, túnel), Raio-X (telhado), E Se (diferencial, suspensão, radiador).
 
 ## Atualização de 02/11 (leia primeiro)
 
