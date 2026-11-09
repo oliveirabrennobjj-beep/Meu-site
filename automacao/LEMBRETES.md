@@ -12,7 +12,8 @@ Para fechar: troque `[ ]` por `[x]`.
 ## Pendentes (decisão do Brenno)
 - [ ] Conectar Instagram/TikTok no Metricool (link em `automacao/PLANO.md`, seção 2).
 - [ ] Configurar saudação, ausência e respostas rápidas no WhatsApp Business (textos prontos em `automacao/whatsapp.md`, só preencher preço e prazo).
-- [ ] Escolher o caminho do WhatsApp (ver `automacao/PLANO.md`, seção 1).
+- [x] Escolher o caminho do WhatsApp: API oficial + Make.
+- [ ] Criar conta em business.facebook.com e app WhatsApp em developers.facebook.com (passos em `automacao/whatsapp.md`, nível 2). Depois me avisar para eu pedir o token.
 - [ ] Liberar acesso ao repositório `C-rebro-` nesta conta do Claude (o segundo cérebro).
 - [ ] Ligar o PC e ativar Remote Control / Dispatch (ver `automacao/PLANO.md`, seção 3).
-- [ ] Aprovar instalação das skills sugeridas (ver `automacao/PLANO.md`, seção 5).
+- [x] Skills de design e Instagram instaladas.

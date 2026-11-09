@@ -24,6 +24,7 @@ Três caminhos. Todos precisam de uma ação sua (conta, número ou servidor).
 | **B. Evolution API (não oficial, popular no Brasil)** | Servidor com Evolution API conectado ao seu número via QR. MCP: `aiteks-ltda/mcp-evolution-whatsapp-api`. Alternativa paga BR: Z-API. | Usa seu número atual. Lê e responde conversas. | Risco de bloqueio do número. Precisa de servidor ligado (VPS ~R$ 30/mês ou o PC). |
 | **C. Make (já conectado ao Claude)** | Cenário no Make: mensagem chega no WhatsApp Business → Claude/IA responde → salva lead. | Sem código, roda 24 h. | Também exige WhatsApp Business API (caminho A) por baixo. |
 
+**Decisão (09/11):** Brenno escolheu **A + Make**.
 **Recomendação:** começar pelo **A + Make** para atendimento de clientes da BN Digital (seguro);
 usar **B** só num número secundário se quiser ler/responder conversas pelo Claude.
 **Falta:** você criar a conta Meta Business e me passar o acesso (o Claude pede a chave num formulário seguro).
@@ -54,7 +55,11 @@ Docs: https://code.claude.com/docs/en/remote-control
 - Uma tarefa por conversa. Pedidos com arquivo/linha exatos gastam menos que "procura aí".
 - Pesquisas pesadas: tarefa agendada de madrugada (sessão nova, sem histórico).
 
-## 5. Sites mais bonitos: skills sugeridas (aguardando sua aprovação para instalar)
+## 5. Sites mais bonitos: skills
+Instaladas em 09/11 (aprovadas): `design-taste-frontend`, `apple-design`, `hyperframes`, `instagram-marketing`.
+O skill `gsap` saiu do repo da HeyGen; o conhecimento de GSAP agora vem dentro de `hyperframes`.
+
+### Histórico da sugestão
 Já instaladas: `frontend-design`, `impeccable`, `ui-ux-pro-max`, `web-design-guidelines`, `design`.
 Faltam (mais citadas em 2026):
 - `npx skills add leonxlnx/taste-skill --skill design-taste-frontend`: regras de "bom gosto", evita cara de IA.

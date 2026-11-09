@@ -19,12 +19,13 @@ O Brenno instalou as skills para serem usadas em toda conversa. Regras:
 |---|---|
 | Toda conversa | `caveman`; em conversa longa, também `context-optimization` |
 | Procurar coisa no código | `caveman-explore` ou `cavecrew` (economizam token) |
-| Site, página, layout, qualquer coisa visual | `site-bn-digital` (se for cliente), `brainstorming`, `frontend-design`, `impeccable`, `ui-ux-pro-max`, `web-design-guidelines`, `ui-styling`, `design`, `design-system`, `brand`, `copywriting` |
+| Site, página, layout, qualquer coisa visual | `site-bn-digital` (se for cliente), `brainstorming`, `frontend-design`, `impeccable`, `ui-ux-pro-max`, `web-design-guidelines`, `ui-styling`, `design`, `design-system`, `brand`, `copywriting`, `design-taste-frontend` (anti cara de IA), `apple-design` (movimento e tipografia) |
 | Logo, marca, banner, post, arte | `brand`, `design`, `banner-design`, `ui-styling` |
-| Vídeo (editar, criar, legenda, divulgar) | `remotion-best-practices` + as `remotion-*` do caso (`remotion-create`, `remotion-markup`, `remotion-captions`, `remotion-multimedia`, `remotion-render`), `brag-slim` (vídeo de lançamento), `copywriting` (roteiro); conectores Higgsfield, HyperFrames, ElevenLabs (voz) e vidIQ quando servirem. Método: `cerebro-obsidian/cofre/02 Padrões/Motion graphics com Claude Code em 5 passos.md` |
+| Vídeo (editar, criar, legenda, divulgar) | `remotion-best-practices` + as `remotion-*` do caso (`remotion-create`, `remotion-markup`, `remotion-captions`, `remotion-multimedia`, `remotion-render`), `brag-slim` (vídeo de lançamento), `hyperframes` (vídeo em HTML), `copywriting` (roteiro); conectores Higgsfield, HyperFrames, ElevenLabs (voz) e vidIQ quando servirem. Método: `cerebro-obsidian/cofre/02 Padrões/Motion graphics com Claude Code em 5 passos.md` |
 | Assistir vídeo | `watch` |
 | Apresentação | `slides` ou `pptx`, mais `design` |
 | Textos de venda, títulos, legendas | `copywriting` |
+| Instagram (legenda, carrossel, hashtag, plano de Reels) | `instagram-marketing`, `copywriting` |
 | SEO, aparecer no Google | `seo-audit` |
 | Erro, bug, algo quebrado | `systematic-debugging`, `investigate-first` |
 | Mudança grande em código | `writing-plans`, `executing-plans`, `lean-build` |

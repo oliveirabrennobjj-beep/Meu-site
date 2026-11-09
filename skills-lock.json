@@ -1,6 +1,12 @@
 {
   "version": 1,
   "skills": {
+    "apple-design": {
+      "source": "emilkowalski/skills",
+      "sourceType": "github",
+      "skillPath": "skills/apple-design/SKILL.md",
+      "computedHash": "0190417d092a0df447b000154e39733ea6d97efad6d3bec8a6ce3845aeb88914"
+    },
     "brag": {
       "source": "latent-spaces/brag",
       "sourceType": "github",
@@ -115,6 +121,12 @@
       "skillPath": "skills/copywriting/SKILL.md",
       "computedHash": "34095dc1ba236967c7515c62568591008f8ec795e1a5fd4b018f2b127a36b32c"
     },
+    "design-taste-frontend": {
+      "source": "leonxlnx/taste-skill",
+      "sourceType": "github",
+      "skillPath": "skills/taste-skill/SKILL.md",
+      "computedHash": "acda6bf83f200405aa200eb245448fdc11cfce43d97bc2d9b8bf13a27f362d95"
+    },
     "diagnosing-superpowers": {
       "source": "obra/superpowers",
       "sourceType": "github",
@@ -156,6 +168,18 @@
       "sourceType": "github",
       "skillPath": "skills/frontend-design/SKILL.md",
       "computedHash": "89496d5dd00f4810205f351759594fc2742bf8eea85a2f2b2d1de59f4bd91576"
+    },
+    "hyperframes": {
+      "source": "heygen-com/hyperframes",
+      "sourceType": "github",
+      "skillPath": "skills/hyperframes/SKILL.md",
+      "computedHash": "5a9536420b4e7cdeafba0e69a14a60b26c1d6f074759c3947ed4286b9e07abe6"
+    },
+    "instagram-marketing": {
+      "source": "sergebulaev/instagram-skills",
+      "sourceType": "github",
+      "skillPath": "SKILL.md",
+      "computedHash": "9afcf986d796bf35ceeea57ba94b864d7cde3527fc077b1d52ff0b53518b5433"
     },
     "investigate-first": {
       "source": "JuliusBrussee/caveman",
