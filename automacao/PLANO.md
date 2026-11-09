@@ -3,17 +3,16 @@
 Pesquisa de 09/11/2026. A tarefa diária atualiza este plano em `automacao/pesquisas/`.
 
 ## 0. O que já roda sozinho
-- **Robô de pesquisa:** sessão "Robô de pesquisa diária (não apagar)" no app Claude → Code.
-  Recebe 2 tarefas por dia e salva no branch `pesquisa-diaria`.
-- **Resumo (06:17, Brasília):** skills novas do tema do dia (vídeo, Instagram, design, token,
-  WhatsApp, PC pelo celular), grava `automacao/pesquisas/AAAA-MM-DD.md` e manda aviso no celular
-  com os lembretes abertos.
-- **Pesquisa profunda (02:43):** um tema por noite, lê páginas e READMEs, grava `AAAA-MM-DD-profunda.md`.
-  A das 06:17 resume as duas no aviso.
-- **Vídeos da semana (domingo 19:23):** o robô escreve 3 roteiros, renderiza e deixa os MP4 + legendas em
-  `fabrica-video/prontos/` (branch `pesquisa-diaria`), com aviso no celular.
+Tarefas agendadas (horário de Brasília). Cada uma abre uma sessão nova do Claude e manda aviso no celular.
+O resultado fica salvo na própria sessão (app Claude → Code).
+- **02:43 Pesquisa profunda:** um tema por noite (vídeo, Instagram, design, token, WhatsApp, PC pelo celular,
+  novidades do Claude Code). Até 5 achados com link, uso e risco.
+- **06:17 Resumo + lembretes:** 3 skills novas do tema do dia, 1 dica de token, ação do dia e seus lembretes abertos.
+- **Domingo 19:23 Roteiros da semana:** 3 roteiros prontos para a fábrica de vídeo + legendas e hashtags.
 - **Fábrica de vídeo:** `fabrica-video/`. Roteiro JSON → MP4 vertical em ~1 min, na nuvem, sem o PC.
 - **Lembretes:** `automacao/LEMBRETES.md`. Diga "me lembra de …" e o Claude adiciona.
+Limite: as sessões agendadas leem o repositório (público), mas não salvam nele.
+Para salvar sozinhas, crie as tarefas pelo site (claude.ai/code → Routines) escolhendo o repositório Meu-site.
 
 ## 1. WhatsApp
 Três caminhos. Todos precisam de uma ação sua (conta, número ou servidor).
