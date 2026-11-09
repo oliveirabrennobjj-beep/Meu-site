@@ -28,3 +28,15 @@ Passos quando decidir:
 2. developers.facebook.com → app → WhatsApp → adicionar número (pode ser um chip novo).
 3. Me avisar: eu peço o token num formulário seguro e monto o cenário no Make
    (mensagem chega → Claude classifica: orçamento / dúvida / cliente → responde ou te avisa).
+
+### Cenário do Make (já mapeado, conta Make do Brenno conectada ao Claude, fuso São Paulo)
+Módulos conferidos no catálogo do Make em 09/11/2026:
+1. **WhatsApp Business Cloud → Watch Events** (`whatsapp-business-cloud` / `watchEvents2`): dispara a cada mensagem recebida.
+2. **Anthropic Claude → Make an API Call** (`anthropic-claude` / `makeAnApiCall`): POST `/v1/messages`, prompt:
+   "Você atende a BN Digital (sites, vídeos e Instagram para comércio local). Use só as respostas de
+   `automacao/whatsapp.md`. Se pedirem preço/prazo, responda com o texto `/preco` ou `/prazo`. Se não souber, diga que
+   o Brenno responde em instantes e marque URGENTE."
+3. **Router**: se a resposta tiver URGENTE → **WhatsApp → Send a Message** para o número pessoal do Brenno com o resumo.
+   Senão → **WhatsApp Business Cloud → Send a Message** (`sendMessage`) para o cliente.
+4. (Opcional) **Google Sheets → Add a Row**: nome, número, mensagem, tipo (lead/cliente) para não esquecer ninguém.
+Precisa: conexão WhatsApp Business Cloud (token + Phone Number ID da Meta) e chave da API Anthropic no Make.
