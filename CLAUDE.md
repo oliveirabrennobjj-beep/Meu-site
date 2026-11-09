@@ -21,7 +21,7 @@ O Brenno instalou as skills para serem usadas em toda conversa. Regras:
 | Procurar coisa no código | `caveman-explore` ou `cavecrew` (economizam token) |
 | Site, página, layout, qualquer coisa visual | `site-bn-digital` (se for cliente), `brainstorming`, `frontend-design`, `impeccable`, `ui-ux-pro-max`, `web-design-guidelines`, `ui-styling`, `design`, `design-system`, `brand`, `copywriting` |
 | Logo, marca, banner, post, arte | `brand`, `design`, `banner-design`, `ui-styling` |
-| Vídeo (editar, criar, legenda, divulgar) | `remotion-best-practices` + as `remotion-*` do caso (`remotion-create`, `remotion-markup`, `remotion-captions`, `remotion-multimedia`, `remotion-render`), `brag-slim` (vídeo de lançamento), `copywriting` (roteiro); conectores Higgsfield, HyperFrames, ElevenLabs (voz) e vidIQ quando servirem |
+| Vídeo (editar, criar, legenda, divulgar) | `remotion-best-practices` + as `remotion-*` do caso (`remotion-create`, `remotion-markup`, `remotion-captions`, `remotion-multimedia`, `remotion-render`), `brag-slim` (vídeo de lançamento), `copywriting` (roteiro); conectores Higgsfield, HyperFrames, ElevenLabs (voz) e vidIQ quando servirem. Método: `cerebro-obsidian/cofre/02 Padrões/Motion graphics com Claude Code em 5 passos.md` |
 | Assistir vídeo | `watch` |
 | Apresentação | `slides` ou `pptx`, mais `design` |
 | Textos de venda, títulos, legendas | `copywriting` |
