@@ -6,6 +6,7 @@ Para fechar: troque `[ ]` por `[x]`.
 
 ## Todo dia
 - [ ] Ler o resumo da pesquisa diária (aviso no celular, de manhã).
+- [ ] Mandar 15 mensagens no painel de vendas (https://claude.ai/artifact/LMpGydYCibdZoLEf3eNBNo) e marcar respostas.
 - [ ] Postar 1 conteúdo no Instagram da BN Digital (reel ou carrossel).
 - [ ] Responder clientes no WhatsApp.
 
@@ -17,3 +18,5 @@ Para fechar: troque `[ ]` por `[x]`.
 - [ ] Liberar acesso ao repositório `C-rebro-` nesta conta do Claude (o segundo cérebro).
 - [ ] Ligar o PC e ativar Remote Control / Dispatch (ver `automacao/PLANO.md`, seção 3).
 - [x] Skills de design e Instagram instaladas.
+- [ ] Ver com o pai a Evolution API (~R$ 30/mês): deixa o WhatsApp mandar e responder sozinho.
+- [ ] Cérebro no celular: GitSync + abrir `cerebro-obsidian/cofre` no Obsidian (passos em `automacao/PLANO.md`, 3b).
