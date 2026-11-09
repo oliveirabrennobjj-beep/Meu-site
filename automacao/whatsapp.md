@@ -47,3 +47,11 @@ Módulos conferidos no catálogo do Make em 09/11/2026:
    Senão → **WhatsApp Business Cloud → Send a Message** (`sendMessage`) para o cliente.
 4. (Opcional) **Google Sheets → Add a Row**: nome, número, mensagem, tipo (lead/cliente) para não esquecer ninguém.
 Precisa: conexão WhatsApp Business Cloud (token + Phone Number ID da Meta) e chave da API Anthropic no Make.
+
+## Nível 3: o Claude manda e acompanha sozinho (script pronto)
+`automacao/whatsapp-envio/enviar.py`: manda a mensagem de prospecção para os comércios "a enviar",
+15 por dia, com 2 a 5 minutos entre uma e outra. Funciona com Evolution API ou Z-API. Testado em simulação em 09/11.
+Para ligar:
+1. Chip novo só da BN Digital no WhatsApp Business.
+2. Evolution API (servidor ~R$ 30/mês) ou Z-API: conectar o chip pelo QR code.
+3. Me avisar: eu peço a chave num formulário seguro, rodo o primeiro envio e agendo o envio diário + relatório da manhã.
