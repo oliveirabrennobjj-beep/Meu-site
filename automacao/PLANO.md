@@ -28,6 +28,22 @@ Três caminhos. Todos precisam de uma ação sua (conta, número ou servidor).
 usar **B** só num número secundário se quiser ler/responder conversas pelo Claude.
 **Falta:** você criar a conta Meta Business e me passar o acesso (o Claude pede a chave num formulário seguro).
 
+## 1b. Vendas no automático (prospecção)
+- **Painel de vendas:** https://claude.ai/artifact/LMpGydYCibdZoLEf3eNBNo (só você abre). Fonte: `automacao/painel/vendas.html`.
+  40 comércios reais da região sem site próprio (Google Maps, 09/11). Placar: a enviar, enviados, responderam,
+  fecharam, mais pra frente, não querem. Botão "Enviar no WhatsApp" abre a conversa com a mensagem pronta (1 toque).
+- **Todo dia 06:17:** o resumo lembra a meta (15 mensagens) e traz 10 comércios novos em JSON para "Importar".
+- **Por que não 100% sozinho ainda:** mandar mensagem fria em massa por número comum pode bloquear o número.
+  Mandar aos poucos (15/dia) pelo painel é seguro. Com a Evolution API (~R$ 30/mês, decisão com seu pai) o envio
+  e as respostas viram automáticos; com a API oficial da Meta, só com modelo de mensagem aprovado.
+- Mensagem padrão se apresenta, cita a avaliação no Google e deixa a pessoa dizer não. Editável no painel.
+
+## 3b. Segundo cérebro no celular
+O cofre fica em `cerebro-obsidian/cofre/` neste repositório. No Android, o Obsidian não lê pastas do GitHub sozinho:
+1. Instale o app **GitSync** (ou o plugin "Git" dentro do Obsidian).
+2. Clone `oliveirabrennobjj-beep/Meu-site` numa pasta do celular.
+3. No Obsidian: "Abrir pasta como cofre" e escolha `Meu-site/cerebro-obsidian/cofre`.
+
 ## 2. Vídeos
 Fluxo já possível hoje, todo pelo celular:
 1. Você manda a ideia por áudio/texto no app do Claude (Code).
