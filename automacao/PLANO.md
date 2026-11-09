@@ -6,6 +6,9 @@ Pesquisa de 09/11/2026. A tarefa diária atualiza este plano em `automacao/pesqu
 - **Pesquisa diária (06:17, horário de Brasília):** sessão nova do Claude procura skills novas
   (vídeo, marketing/Instagram, design de site, economia de token, automação), salva o resumo em
   `automacao/pesquisas/AAAA-MM-DD.md` e manda aviso no celular com os lembretes abertos.
+- **Pesquisa profunda (02:43):** um tema por noite, lê páginas e READMEs, grava `AAAA-MM-DD-profunda.md`.
+  A das 06:17 resume as duas no aviso.
+- **Fábrica de vídeo:** `fabrica-video/`. Roteiro JSON → MP4 vertical em ~1 min, na nuvem, sem o PC.
 - **Lembretes:** `automacao/LEMBRETES.md`. Diga "me lembra de …" e o Claude adiciona.
 
 ## 1. WhatsApp
@@ -29,7 +32,9 @@ Fluxo já possível hoje, todo pelo celular:
 3. Voz: ElevenLabs (conectado). Cenas geradas: Higgsfield (conectado, gasta crédito).
 4. Render em MP4 na nuvem (`npx remotion render`), versão vertical recomposta.
 5. Publicar: **Metricool** (conectado) agenda no Instagram/TikTok; vidIQ publica Reel.
-**Falta:** conectar as contas do Instagram/TikTok no Metricool e dizer o horário de postagem.
+**Falta:** o Metricool está ligado ao Claude, mas sem nenhuma rede social. Conectar Instagram/TikTok em
+https://app.metricool.com/brands/connections?blogId=7626128 e dizer o horário de postagem.
+Depois disso dá para agendar: tarefa semanal gera 3 vídeos da fábrica e agenda no Metricool.
 
 ## 3. Controlar o PC pelo celular
 Precisa do PC ligado uma vez para configurar:
