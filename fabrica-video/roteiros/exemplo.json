@@ -1,0 +1,13 @@
+{
+  "gancho": "Seu site está perdendo clientes.",
+  "titulo": "Recapitulando.",
+  "itens": [
+    { "titulo": "Abre rápido no celular", "sub": "fotos leves · WebP" },
+    { "titulo": "Botão do WhatsApp", "sub": "1 toque · sem formulário" },
+    { "titulo": "Aparece no Google", "sub": "título · descrição · mapa" },
+    { "titulo": "Fotos reais da loja", "sub": "nada de banco de imagem" }
+  ],
+  "cta": "Quer um site assim?",
+  "marca": "BN Digital",
+  "cor": "#8b6cff"
+}

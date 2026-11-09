@@ -42,3 +42,4 @@ Quando o Brenno mandar print de skill ou plugin: instalar em `.claude/skills/` c
 - "Me lembra de …" → adicionar em `automacao/LEMBRETES.md` (commit + push).
 - Plano de automação (WhatsApp, vídeo, celular→PC, token, design): `automacao/PLANO.md`.
 - Pesquisa diária 06:17 (Brasília) grava em `automacao/pesquisas/` no branch `pesquisa-diaria`.
+- Vídeo rápido de lista/dicas: `fabrica-video/` (roteiro JSON → `./gerar.sh` → MP4 vertical).
