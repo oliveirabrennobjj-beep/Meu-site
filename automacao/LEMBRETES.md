@@ -11,6 +11,7 @@ Para fechar: troque `[ ]` por `[x]`.
 
 ## Pendentes (decisão do Brenno)
 - [ ] Conectar Instagram/TikTok no Metricool (link em `automacao/PLANO.md`, seção 2).
+- [ ] Configurar saudação, ausência e respostas rápidas no WhatsApp Business (textos prontos em `automacao/whatsapp.md`, só preencher preço e prazo).
 - [ ] Escolher o caminho do WhatsApp (ver `automacao/PLANO.md`, seção 1).
 - [ ] Liberar acesso ao repositório `C-rebro-` nesta conta do Claude (o segundo cérebro).
 - [ ] Ligar o PC e ativar Remote Control / Dispatch (ver `automacao/PLANO.md`, seção 3).
