@@ -30,7 +30,7 @@ usar **B** só num número secundário se quiser ler/responder conversas pelo Cl
 
 ## 1b. Vendas no automático (prospecção)
 - **Painel de vendas:** https://claude.ai/artifact/LMpGydYCibdZoLEf3eNBNo (só você abre). Fonte: `automacao/painel/vendas.html`.
-  40 comércios reais da região sem site próprio (Google Maps, 09/11). Placar: a enviar, enviados, responderam,
+  76 comércios reais da região sem site próprio (Google Maps, 09/11): pizzaria, barbearia, açaí, padaria, salão, lanchonete, pet shop. Placar: a enviar, enviados, responderam,
   fecharam, mais pra frente, não querem. Botão "Enviar no WhatsApp" abre a conversa com a mensagem pronta (1 toque).
 - **Todo dia 06:17:** o resumo lembra a meta (15 mensagens) e traz 10 comércios novos em JSON para "Importar".
 - **Por que não 100% sozinho ainda:** mandar mensagem fria em massa por número comum pode bloquear o número.

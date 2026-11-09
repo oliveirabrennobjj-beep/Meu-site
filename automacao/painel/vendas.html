@@ -110,6 +110,15 @@ const STATUS = [
   ["fechou", "Fechou"], ["depois", "Mais pra frente"], ["nao", "Não quer"]
 ];
 const LABEL = Object.fromEntries(STATUS);
+const BASE = "https://oliveirabrennobjj-beep.github.io/Meu-site/";
+function exemplo(tipo) {
+  const t = (tipo || "").toLowerCase();
+  if (/aça|sorvet/.test(t)) return BASE + "acai-do-rei/";
+  if (/padar|latic|café/.test(t)) return BASE + "padaria/";
+  if (/pizz|restaur|lanch|hamb/.test(t)) return BASE + "barraco-na-cozinha/";
+  if (/horti|merc|frut/.test(t)) return BASE + "hortifruti/";
+  return BASE + "bn-digital/";
+}
 const META_DIA = 15;
 const TPL_PADRAO = "Oi, tudo bem? Aqui é o Brenno, da BN Digital, da região.\nVi a {nome} no Google Maps ({avaliacoes} avaliações, parabéns!) e notei que vocês ainda não têm um site próprio.\nEu faço sites simples para comércio local: abre rápido no celular, tem botão direto para o WhatsApp e ajuda a aparecer no Google.\nPosso te mandar um exemplo de como ficaria o da {nome}? Se não fizer sentido agora, sem problema, é só me avisar.";
 let leads = [], filtro = "novo", tpl = TPL_PADRAO, db = null;
@@ -174,6 +183,12 @@ function cartao(l) {
   if (l.link) { const a = document.createElement("a"); a.className = "btn"; a.href = l.link; a.target = "_blank"; a.rel = "noopener"; a.textContent = "Ver Instagram/link"; acoes.append(a); }
   c.append(acoes);
 
+  if (st === "respondeu") {
+    const ex = document.createElement("a"); ex.className = "btn primary"; ex.target = "_blank"; ex.rel = "noopener";
+    ex.href = `https://wa.me/${l.whatsapp}?text=${encodeURIComponent("Olha um site que fiz para um negócio parecido: " + exemplo(l.tipo) + "\nO da " + l.nome + " fica nesse nível, com as fotos e o cardápio de vocês. Quer que eu monte uma prévia?")}`;
+    ex.textContent = "Mandar exemplo de site";
+    c.append(ex);
+  }
   if (st !== "novo") {
     const r = document.createElement("div"); r.className = "row";
     [["respondeu", "Respondeu"], ["fechou", "Fechou"], ["depois", "Mais pra frente"], ["nao", "Não quer"], ["enviado", "Sem resposta"]].forEach(([k, t]) => {
