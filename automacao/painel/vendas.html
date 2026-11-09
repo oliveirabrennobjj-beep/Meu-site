@@ -113,11 +113,9 @@ const LABEL = Object.fromEntries(STATUS);
 const BASE = "https://oliveirabrennobjj-beep.github.io/Meu-site/";
 function exemplo(tipo) {
   const t = (tipo || "").toLowerCase();
-  if (/aça|sorvet/.test(t)) return BASE + "acai-do-rei/";
-  if (/padar|latic|café/.test(t)) return BASE + "padaria/";
-  if (/pizz|restaur|lanch|hamb/.test(t)) return BASE + "barraco-na-cozinha/";
-  if (/horti|merc|frut/.test(t)) return BASE + "hortifruti/";
-  return BASE + "bn-digital/";
+  // Só sites já publicados no GitHub Pages (ver .github/workflows/publicar-bn-digital.yml).
+  if (/aça|sorvet|padar|latic|café|pizz|restaur|lanch|hamb|horti|merc|frut/.test(t)) return BASE + "acai-do-rei/";
+  return BASE;
 }
 const META_DIA = 15;
 const TPL_PADRAO = "Oi, tudo bem? Aqui é o Brenno, da BN Digital, da região.\nVi a {nome} no Google Maps ({avaliacoes} avaliações, parabéns!) e notei que vocês ainda não têm um site próprio.\nEu faço sites simples para comércio local: abre rápido no celular, tem botão direto para o WhatsApp e ajuda a aparecer no Google.\nPosso te mandar um exemplo de como ficaria o da {nome}? Se não fizer sentido agora, sem problema, é só me avisar.";
