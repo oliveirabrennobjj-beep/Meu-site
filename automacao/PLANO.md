@@ -3,9 +3,11 @@
 Pesquisa de 09/11/2026. A tarefa diária atualiza este plano em `automacao/pesquisas/`.
 
 ## 0. O que já roda sozinho
-- **Pesquisa diária (06:17, horário de Brasília):** sessão nova do Claude procura skills novas
-  (vídeo, marketing/Instagram, design de site, economia de token, automação), salva o resumo em
-  `automacao/pesquisas/AAAA-MM-DD.md` e manda aviso no celular com os lembretes abertos.
+- **Robô de pesquisa:** sessão "Robô de pesquisa diária (não apagar)" no app Claude → Code.
+  Recebe 2 tarefas por dia e salva no branch `pesquisa-diaria`.
+- **Resumo (06:17, Brasília):** skills novas do tema do dia (vídeo, Instagram, design, token,
+  WhatsApp, PC pelo celular), grava `automacao/pesquisas/AAAA-MM-DD.md` e manda aviso no celular
+  com os lembretes abertos.
 - **Pesquisa profunda (02:43):** um tema por noite, lê páginas e READMEs, grava `AAAA-MM-DD-profunda.md`.
   A das 06:17 resume as duas no aviso.
 - **Fábrica de vídeo:** `fabrica-video/`. Roteiro JSON → MP4 vertical em ~1 min, na nuvem, sem o PC.
