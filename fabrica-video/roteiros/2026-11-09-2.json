@@ -1,0 +1,13 @@
+{
+  "gancho": "Seu Google Maps está espantando cliente.",
+  "titulo": "Arrume em 10 minutos.",
+  "itens": [
+    { "titulo": "Horário atualizado", "sub": "feriado também" },
+    { "titulo": "Fotos de verdade", "sub": "fachada · produto · equipe" },
+    { "titulo": "Responda as avaliações", "sub": "boas e ruins" },
+    { "titulo": "Link do seu site", "sub": "não só o Instagram" }
+  ],
+  "cta": "Quer ajuda com isso?",
+  "marca": "BN Digital",
+  "cor": "#2fbf71"
+}

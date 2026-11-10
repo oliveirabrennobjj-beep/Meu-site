@@ -1,0 +1,12 @@
+{
+  "gancho": "Instagram não é site. E o algoritmo decide quem vê.",
+  "titulo": "Onde o cliente te acha.",
+  "itens": [
+    { "titulo": "Instagram", "sub": "só quem já te segue" },
+    { "titulo": "Google", "sub": "quem está com fome agora" },
+    { "titulo": "Site próprio", "sub": "seu, sem algoritmo" }
+  ],
+  "cta": "Bora montar o seu?",
+  "marca": "BN Digital",
+  "cor": "#ff7a45"
+}

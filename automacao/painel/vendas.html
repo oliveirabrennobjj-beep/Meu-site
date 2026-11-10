@@ -1,0 +1,249 @@
+<title>Prospecção BN Digital</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: uma coluna para o celular; placar no topo, funil em chips, cartões de empresa embaixo. */
+:root {
+  --bg: #f3f4f1; --surface: #ffffff; --ink: #18211d; --muted: #5d6b64; --line: #dde2dc;
+  --accent: #1f6f4a; --accent-ink: #ffffff; --accent-soft: #e2efe7;
+  --ok: #1f6f4a; --warn: #a45f00; --bad: #b3261e; --info: #2856a3;
+  --display: "Bricolage Grotesque", "Arial Narrow", system-ui, sans-serif;
+  --body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #111613; --surface: #19201c; --ink: #e8eee9; --muted: #9aa8a0; --line: #2a332e;
+  --accent: #4fbf87; --accent-ink: #0d1a13; --accent-soft: #1d3127;
+  --ok: #4fbf87; --warn: #e3a447; --bad: #f08079; --info: #86a9ee; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #111613; --surface: #19201c; --ink: #e8eee9; --muted: #9aa8a0; --line: #2a332e;
+  --accent: #4fbf87; --accent-ink: #0d1a13; --accent-soft: #1d3127;
+  --ok: #4fbf87; --warn: #e3a447; --bad: #f08079; --info: #86a9ee; color-scheme: dark }
+* { box-sizing: border-box }
+body { background: var(--bg); color: var(--ink); font: 15px/1.45 var(--body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 20px 48px }
+.wrap { max-width: 720px; margin: 0 auto; display: grid; gap: 18px }
+h1 { font: 800 clamp(28px, 7vw, 40px)/1 var(--display); letter-spacing: -.02em; margin: 0; text-wrap: balance }
+.sub { color: var(--muted); margin: 6px 0 0 }
+.score { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px }
+.tile { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px }
+.tile b { display: block; font: 600 26px/1.1 var(--mono); font-variant-numeric: tabular-nums }
+.tile span { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em }
+.tile.hot b { color: var(--accent) }
+.goal { display: grid; gap: 6px }
+.bar { height: 8px; background: var(--line); border-radius: 99px; overflow: hidden }
+.bar i { display: block; height: 100%; background: var(--accent); width: 0 }
+.goal small { color: var(--muted) }
+.chips { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px }
+.chip { border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 99px; padding: 7px 12px; font: 500 14px var(--body); white-space: nowrap; cursor: pointer }
+.chip[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink) }
+.list { display: grid; gap: 10px }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px; display: grid; gap: 10px; min-width: 0 }
+.top { display: flex; justify-content: space-between; gap: 10px; align-items: start }
+.name { font: 600 17px/1.2 var(--display); margin: 0 }
+.meta { color: var(--muted); font-size: 13px; margin-top: 3px }
+.pill { font: 600 11px var(--body); text-transform: uppercase; letter-spacing: .06em; padding: 4px 8px; border-radius: 99px; white-space: nowrap; border: 1px solid currentColor }
+.s-novo { color: var(--muted) } .s-enviado { color: var(--info) } .s-respondeu { color: var(--warn) }
+.s-fechou { color: var(--ok) } .s-depois { color: var(--warn) } .s-nao { color: var(--bad) }
+.msg { background: var(--bg); border-radius: 10px; padding: 10px; font-size: 14px; white-space: pre-wrap; overflow-wrap: anywhere }
+.row { display: flex; flex-wrap: wrap; gap: 6px }
+.btn { border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 10px; padding: 9px 12px; font: 600 14px var(--body); cursor: pointer; text-decoration: none; display: inline-flex; align-items: center }
+.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent) }
+.btn.small { padding: 6px 10px; font-size: 13px }
+.btn:focus-visible, .chip:focus-visible, textarea:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px }
+input.obs, textarea { width: 100%; border: 1px solid var(--line); background: var(--bg); color: var(--ink); border-radius: 10px; padding: 8px 10px; font: 14px var(--body) }
+details { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px }
+summary { font-weight: 600; cursor: pointer }
+details > div { display: grid; gap: 8px; margin-top: 10px }
+.empty, .note { color: var(--muted); text-align: center; padding: 28px 8px }
+.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); background: var(--ink); color: var(--bg); padding: 10px 14px; border-radius: 10px; font-weight: 600 }
+@media (prefers-reduced-motion: no-preference) { .bar i { transition: width .4s ease } }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Prospecção BN Digital</h1>
+    <p class="sub">Comércios de Macaé, Rio das Ostras e Casimiro de Abreu sem site próprio. Toque em <b>Enviar no WhatsApp</b>, mande, e marque a resposta depois.</p>
+  </header>
+
+  <section class="score" aria-label="Placar">
+    <div class="tile"><b id="n-novo">0</b><span>A enviar</span></div>
+    <div class="tile"><b id="n-enviado">0</b><span>Enviados</span></div>
+    <div class="tile"><b id="n-respondeu">0</b><span>Responderam</span></div>
+    <div class="tile hot"><b id="n-fechou">0</b><span>Fecharam</span></div>
+    <div class="tile"><b id="n-depois">0</b><span>Mais pra frente</span></div>
+    <div class="tile"><b id="n-nao">0</b><span>Não querem</span></div>
+  </section>
+
+  <section class="goal" aria-label="Meta do dia">
+    <div class="bar"><i id="goal-bar"></i></div>
+    <small id="goal-text">Meta do dia: 15 mensagens.</small>
+  </section>
+
+  <nav class="chips" id="chips" aria-label="Filtrar"></nav>
+
+  <section class="list" id="list"><p class="empty" id="empty">Carregando as empresas…</p></section>
+
+  <details id="tpl-box">
+    <summary>Mensagem padrão</summary>
+    <div>
+      <small class="sub">Use {nome} e {avaliacoes}. Vale para as próximas mensagens.</small>
+      <textarea id="tpl" rows="7"></textarea>
+      <div class="row"><button class="btn small" id="tpl-save" type="button">Salvar mensagem</button></div>
+    </div>
+  </details>
+
+  <details>
+    <summary>Importar empresas da pesquisa diária</summary>
+    <div>
+      <small class="sub">Cole aqui a lista JSON que o resumo diário manda.</small>
+      <textarea id="imp" rows="5" placeholder='[{"nome":"...","tipo":"Pizzaria","cidade":"Macaé","whatsapp":"5522999999999"}]'></textarea>
+      <div class="row"><button class="btn small" id="imp-go" type="button">Importar</button></div>
+    </div>
+  </details>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+const STATUS = [
+  ["novo", "A enviar"], ["enviado", "Enviado"], ["respondeu", "Respondeu"],
+  ["fechou", "Fechou"], ["depois", "Mais pra frente"], ["nao", "Não quer"]
+];
+const LABEL = Object.fromEntries(STATUS);
+const BASE = "https://oliveirabrennobjj-beep.github.io/Meu-site/";
+function exemplo(tipo) {
+  const t = (tipo || "").toLowerCase();
+  // Só sites já publicados no GitHub Pages (ver .github/workflows/publicar-bn-digital.yml).
+  if (/aça|sorvet|padar|latic|café|pizz|restaur|lanch|hamb|horti|merc|frut/.test(t)) return BASE + "acai-do-rei/";
+  return BASE;
+}
+const META_DIA = 15;
+const TPL_PADRAO = "Oi, tudo bem? Aqui é o Brenno, da BN Digital, da região.\nVi a {nome} no Google Maps ({avaliacoes} avaliações, parabéns!) e notei que vocês ainda não têm um site próprio.\nEu faço sites simples para comércio local: abre rápido no celular, tem botão direto para o WhatsApp e ajuda a aparecer no Google.\nPosso te mandar um exemplo de como ficaria o da {nome}? Se não fizer sentido agora, sem problema, é só me avisar.";
+let leads = [], filtro = "novo", tpl = TPL_PADRAO, db = null;
+const $ = (id) => document.getElementById(id);
+const hoje = () => new Date().toISOString().slice(0, 10);
+
+function toast(t) { const el = $("toast"); el.textContent = t; el.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => el.hidden = true, 1800); }
+function texto(l) { return tpl.replaceAll("{nome}", l.nome || "sua empresa").replaceAll("{avaliacoes}", l.avaliacoes ?? "várias"); }
+
+function render() {
+  const n = Object.fromEntries(STATUS.map(([k]) => [k, 0]));
+  leads.forEach(l => n[l.status || "novo"]++);
+  STATUS.forEach(([k]) => $("n-" + k).textContent = n[k]);
+  const feitosHoje = leads.filter(l => (l.enviadoEm || "").startsWith(hoje())).length;
+  $("goal-bar").style.width = Math.min(100, feitosHoje / META_DIA * 100) + "%";
+  $("goal-text").textContent = `Hoje: ${feitosHoje} de ${META_DIA} mensagens. Mandar aos poucos evita bloqueio do número.`;
+
+  const chips = $("chips"); chips.textContent = "";
+  [["todos", "Todos"], ...STATUS].forEach(([k, t]) => {
+    const b = document.createElement("button"); b.className = "chip"; b.type = "button";
+    b.textContent = `${t} ${k === "todos" ? leads.length : n[k]}`;
+    b.setAttribute("aria-pressed", String(filtro === k));
+    b.onclick = () => { filtro = k; render(); };
+    chips.append(b);
+  });
+
+  const list = $("list"); list.textContent = "";
+  const vis = leads.filter(l => filtro === "todos" || (l.status || "novo") === filtro)
+    .sort((a, b) => (b.avaliacoes || 0) - (a.avaliacoes || 0));
+  if (!vis.length) {
+    const p = document.createElement("p"); p.className = "empty";
+    p.textContent = leads.length ? "Nenhuma empresa nesse filtro." : "Nenhuma empresa ainda. Importe a lista da pesquisa diária logo abaixo.";
+    list.append(p); return;
+  }
+  vis.forEach(l => list.append(cartao(l)));
+}
+
+function cartao(l) {
+  const st = l.status || "novo";
+  const c = document.createElement("article"); c.className = "card";
+  const top = document.createElement("div"); top.className = "top";
+  const info = document.createElement("div"); info.style.minWidth = "0";
+  const h = document.createElement("h2"); h.className = "name"; h.textContent = l.nome;
+  const m = document.createElement("div"); m.className = "meta";
+  m.textContent = [l.tipo, l.cidade, l.nota ? `★ ${l.nota} (${l.avaliacoes ?? 0})` : null, l.telefone].filter(Boolean).join(" · ");
+  info.append(h, m);
+  const pill = document.createElement("span"); pill.className = "pill s-" + st; pill.textContent = LABEL[st];
+  top.append(info, pill); c.append(top);
+
+  if (st === "novo") {
+    const msg = document.createElement("div"); msg.className = "msg"; msg.textContent = texto(l); c.append(msg);
+  }
+  const acoes = document.createElement("div"); acoes.className = "row";
+  const wa = document.createElement("a"); wa.className = "btn" + (st === "novo" ? " primary" : "");
+  wa.href = `https://wa.me/${l.whatsapp}?text=${encodeURIComponent(st === "novo" ? texto(l) : "")}`;
+  wa.target = "_blank"; wa.rel = "noopener"; wa.textContent = st === "novo" ? "Enviar no WhatsApp" : "Abrir conversa";
+  wa.onclick = () => { if (st === "novo") salvar(l, { status: "enviado", enviadoEm: new Date().toISOString() }); };
+  acoes.append(wa);
+  const cp = document.createElement("button"); cp.className = "btn"; cp.type = "button"; cp.textContent = "Copiar mensagem";
+  cp.onclick = async () => { try { await navigator.clipboard.writeText(texto(l)); toast("Mensagem copiada"); } catch { toast("Não deu para copiar. Segure no texto e copie."); } };
+  if (st === "novo") acoes.append(cp);
+  if (l.link) { const a = document.createElement("a"); a.className = "btn"; a.href = l.link; a.target = "_blank"; a.rel = "noopener"; a.textContent = "Ver Instagram/link"; acoes.append(a); }
+  c.append(acoes);
+
+  if (st === "respondeu") {
+    const ex = document.createElement("a"); ex.className = "btn primary"; ex.target = "_blank"; ex.rel = "noopener";
+    ex.href = `https://wa.me/${l.whatsapp}?text=${encodeURIComponent("Olha um site que fiz para um negócio parecido: " + exemplo(l.tipo) + "\nO da " + l.nome + " fica nesse nível, com as fotos e o cardápio de vocês. Quer que eu monte uma prévia?")}`;
+    ex.textContent = "Mandar exemplo de site";
+    c.append(ex);
+  }
+  if (st !== "novo") {
+    const r = document.createElement("div"); r.className = "row";
+    [["respondeu", "Respondeu"], ["fechou", "Fechou"], ["depois", "Mais pra frente"], ["nao", "Não quer"], ["enviado", "Sem resposta"]].forEach(([k, t]) => {
+      if (k === st) return;
+      const b = document.createElement("button"); b.className = "btn small"; b.type = "button"; b.textContent = t;
+      b.onclick = () => salvar(l, { status: k });
+      r.append(b);
+    });
+    c.append(r);
+    const o = document.createElement("input"); o.className = "obs"; o.id = "obs-" + l.id; o.placeholder = "Anotação (ex.: volta a falar em janeiro)";
+    o.value = l.obs || "";
+    o.onchange = () => salvar(l, { obs: o.value.trim() });
+    c.append(o);
+  }
+  return c;
+}
+
+async function salvar(l, patch) {
+  Object.assign(l, patch, { atualizado: new Date().toISOString() });
+  render();
+  if (!db) { toast("Sem conexão com o painel: a mudança não foi salva."); return; }
+  try { await db.collection("leads").doc(l.id).update({ ...patch, atualizado: l.atualizado }); }
+  catch (e) { toast("Não salvou: " + (e.message || e.code || "erro")); }
+}
+
+$("tpl-save").onclick = async () => {
+  tpl = $("tpl").value.trim() || TPL_PADRAO; render();
+  if (db) { try { await db.doc("config/mensagem").set({ texto: tpl }); toast("Mensagem salva"); } catch (e) { toast("Não salvou a mensagem"); } }
+};
+
+$("imp-go").onclick = async () => {
+  let arr;
+  try { arr = JSON.parse($("imp").value); if (!Array.isArray(arr)) throw 0; } catch { toast("Cole uma lista JSON válida"); return; }
+  if (!db) { toast("Sem conexão com o painel"); return; }
+  const existentes = new Set(leads.map(l => l.whatsapp));
+  let novos = 0;
+  for (const x of arr) {
+    const w = String(x.whatsapp || "").replace(/\D/g, "");
+    if (!x.nome || w.length < 12 || existentes.has(w)) continue;
+    existentes.add(w);
+    await db.collection("leads").doc("w" + w).set({ nome: String(x.nome), tipo: x.tipo || "", cidade: x.cidade || "", whatsapp: w,
+      telefone: x.telefone || "", nota: x.nota ?? null, avaliacoes: x.avaliacoes ?? null, link: x.link || "", status: "novo", criado: new Date().toISOString() });
+    novos++;
+  }
+  $("imp").value = ""; toast(`${novos} empresas novas importadas`);
+};
+
+$("tpl").value = tpl;
+(async () => {
+  const timer = setTimeout(() => { if (!leads.length) $("empty").textContent = "O painel demorou para responder. Abra de novo em instantes."; }, 10000);
+  db = await window.claude?.use?.("db");
+  if (!db) { clearTimeout(timer); $("empty").textContent = "Entre na sua conta do Claude para ver e salvar as empresas."; return; }
+  db.doc("config/mensagem").onSnapshot(s => { if (s.exists && s.data().texto) { tpl = s.data().texto; $("tpl").value = tpl; render(); } });
+  db.collection("leads").onSnapshot(snap => {
+    clearTimeout(timer);
+    leads = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    render();
+  }, e => { clearTimeout(timer); $("empty").textContent = "Não consegui ler as empresas: " + (e.message || e.code); });
+})();
+</script>

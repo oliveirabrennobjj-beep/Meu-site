@@ -1,0 +1,93 @@
+/* Barbearia: preto, couro, dourado fosco e osso. Assinatura: poste de barbeiro em listras na lateral do topo. */
+:root {
+  --preto: #111111;
+  --carvao: #1b1917;
+  --couro: #7a4b2a;
+  --dourado: #c9a24a;
+  --osso: #efe9e1;
+  --cinza: #a39b90;
+  --titulo: "Oswald", "Arial Narrow", Impact, sans-serif;
+  --texto: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+* { box-sizing: border-box }
+html { scroll-behavior: smooth }
+body { margin: 0; background: var(--preto); color: var(--osso); font: 16px/1.6 var(--texto) }
+a { color: inherit }
+img { max-width: 100% }
+.wrap { max-width: 1040px; margin: 0 auto; padding-inline: max(20px, env(safe-area-inset-left, 0px)) }
+.pular { position: absolute; left: -999px; top: 8px; background: var(--dourado); color: var(--preto); padding: 10px 14px; z-index: 20 }
+.pular:focus { left: 8px }
+:focus-visible { outline: 2px solid var(--dourado); outline-offset: 3px }
+
+.aviso { margin: 0; padding: 10px 20px; background: var(--dourado); color: var(--preto); font-size: 14px; font-weight: 600; text-align: center }
+.aviso a { font-weight: 700 }
+
+/* Topo */
+.topo { position: relative; overflow: hidden; border-bottom: 1px solid #2a2622 }
+.poste { position: absolute; inset: 0 auto 0 0; width: 28px;
+  background: repeating-linear-gradient(-45deg, var(--osso) 0 14px, #8e1b1b 14px 28px, var(--osso) 28px 42px, #1d3f8f 42px 56px);
+  background-size: 100% 79px; opacity: .9 }
+@media (prefers-reduced-motion: no-preference) { .poste { animation: gira 6s linear infinite } }
+@keyframes gira { to { background-position: 0 79px } }
+.topo-in { position: relative; z-index: 1; max-width: 1040px; margin: 0 auto; padding: 72px max(20px, env(safe-area-inset-left, 0px)) 80px }
+.topo::after { content: attr(data-marca); position: absolute; right: -2vw; top: 50%; transform: translateY(-50%) rotate(90deg); transform-origin: center;
+  font: 700 clamp(80px, 13vw, 190px)/1 var(--titulo); text-transform: uppercase; color: transparent; -webkit-text-stroke: 1px #3a342d; white-space: nowrap; pointer-events: none }
+.marca { margin: 0; font: 700 15px/1 var(--titulo); letter-spacing: .28em; text-transform: uppercase; color: var(--dourado) }
+.cidade { margin: 8px 0 28px; color: var(--cinza); font-size: 14px; letter-spacing: .06em }
+h1 { margin: 0; font: 700 clamp(48px, 11vw, 112px)/.95 var(--titulo); text-transform: uppercase; letter-spacing: -.01em; max-width: 11ch; text-wrap: balance }
+.sub { max-width: 34ch; margin: 22px 0 32px; font-size: 18px; color: #d8d0c4 }
+.acoes { display: flex; flex-wrap: wrap; gap: 12px }
+
+.btn { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 22px; border-radius: 4px;
+  background: var(--dourado); color: var(--preto); font: 700 15px var(--texto); text-decoration: none; letter-spacing: .02em; border: 2px solid var(--dourado) }
+.btn:hover { background: #d8b45d }
+.btn.ghost { background: transparent; color: var(--osso); border-color: #4a443d }
+.btn.ghost:hover { border-color: var(--dourado) }
+
+h2 { margin: 0 0 28px; font: 700 clamp(32px, 6vw, 52px)/1 var(--titulo); text-transform: uppercase }
+
+/* Serviços: tabela de preços de balcão, com pontilhado até o preço */
+.servicos { padding: 80px 0; background: var(--carvao) }
+.lista { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; border-top: 1px solid #34302b }
+.lista li { display: grid; grid-template-columns: 44px 1fr auto; gap: 16px; align-items: baseline; padding: 20px 0; border-bottom: 1px solid #34302b }
+.lista .n { font: 500 14px var(--titulo); color: var(--dourado); letter-spacing: .1em }
+.lista h3 { margin: 0; font: 600 22px/1.2 var(--titulo); text-transform: uppercase; letter-spacing: .03em }
+.lista p { margin: 4px 0 0; color: var(--cinza); font-size: 15px }
+.lista .p { font: 600 15px var(--texto); color: var(--osso); white-space: nowrap }
+
+/* Diferenciais */
+.porque { padding: 80px 0 }
+.porque h2 span { color: var(--dourado) }
+.difs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px }
+.dif { padding-top: 18px; border-top: 3px solid var(--couro) }
+.dif h3 { margin: 0 0 8px; font: 600 22px/1.2 var(--titulo); text-transform: uppercase }
+.dif p { margin: 0; color: #cfc6ba }
+
+/* Onde fica */
+.onde { padding: 72px 0 96px; background: var(--osso); color: var(--preto) }
+.onde-in { display: grid; gap: 20px; justify-items: start }
+.onde h2 { margin: 0 }
+.onde-info p { margin: 0 0 12px; font-size: 18px }
+.onde-info dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 20px; margin: 12px 0 0 }
+.onde-info dt { font-weight: 700 }
+.onde-info dd { margin: 0 }
+.onde .btn.ghost { color: var(--preto); border-color: var(--preto) }
+
+.rodape { padding: 32px 0 96px; font-size: 14px; color: var(--cinza) }
+.rodape .wrap { display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between }
+.rodape p { margin: 0 }
+.rodape p:first-child { font: 700 15px var(--titulo); letter-spacing: .2em; text-transform: uppercase; color: var(--osso) }
+
+.flutua { position: fixed; right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  min-height: 52px; padding: 0 20px; display: none; align-items: center; border-radius: 99px; background: var(--dourado); color: var(--preto);
+  font-weight: 700; text-decoration: none; box-shadow: 0 6px 20px rgba(0,0,0,.45); z-index: 10 }
+
+@media (max-width: 720px) {
+  .topo-in { padding: 48px 20px 56px 52px }
+  .topo::after { display: none }
+  .poste { width: 20px }
+  .difs { grid-template-columns: 1fr }
+  .lista li { grid-template-columns: 34px 1fr; }
+  .lista .p { grid-column: 2 }
+  .flutua { display: inline-flex }
+}

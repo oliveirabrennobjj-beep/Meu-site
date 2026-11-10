@@ -1,0 +1,13 @@
+{
+  "gancho": "Cliente procurou você no Google e achou o concorrente.",
+  "titulo": "Por que ter site.",
+  "itens": [
+    { "titulo": "Aparece quando buscam", "sub": "pizzaria perto de mim" },
+    { "titulo": "Cardápio sempre certo", "sub": "preço e horário do dia" },
+    { "titulo": "Pedido direto no WhatsApp", "sub": "sem taxa de aplicativo" },
+    { "titulo": "Passa confiança", "sub": "fotos reais da sua loja" }
+  ],
+  "cta": "Quer o seu no ar?",
+  "marca": "BN Digital",
+  "cor": "#8b6cff"
+}
