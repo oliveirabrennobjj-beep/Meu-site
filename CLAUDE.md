@@ -26,6 +26,7 @@ O Brenno instalou as skills para serem usadas em toda conversa. Regras:
 | Apresentação | `slides` ou `pptx`, mais `design` |
 | Textos de venda, títulos, legendas | `copywriting` |
 | Instagram (legenda, carrossel, hashtag, plano de Reels) | `instagram-marketing`, `copywriting` |
+| Pauta de Reels, roteiros, ganchos, analisar referências | `pauta-reels`, `instagram-marketing`, `copywriting` |
 | SEO, aparecer no Google | `seo-audit` |
 | Erro, bug, algo quebrado | `systematic-debugging`, `investigate-first` |
 | Mudança grande em código | `writing-plans`, `executing-plans`, `lean-build` |
