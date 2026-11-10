@@ -3,7 +3,7 @@
 window.SITE = {
   nome: "Burgeria",
   cidade: "",
-  frase: { a: "O melhor", b: "burger", c: "da região" },
+  frase: { a: "O melhor burger", b: "da região" },
   lead: "Smash e artesanal, ao ponto ou malpassado, como você gosta.",
   whatsapp: "",        // ex.: "5513999999999" (DDI + DDD + número). Vazio = botões sem link
   mensagemWhatsapp: "Oi! Quero fazer um pedido.",

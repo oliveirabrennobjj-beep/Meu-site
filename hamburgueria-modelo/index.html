@@ -7,123 +7,93 @@
   <meta name="site-kind" content="other">
   <title>Burgeria | Hamburgueria artesanal</title>
   <meta name="description" content="Hamburgueria artesanal: smash e burger na brasa. Cardápio, pedidos e delivery pelo WhatsApp.">
-  <meta name="theme-color" content="#1b1410">
+  <meta name="theme-color" content="#120d0a">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat+Brush&family=DM+Sans:wght@400;500;700&family=Outfit:wght@700;800;900&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap">
   <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body>
+  <a class="skip" href="#conteudo">Pular para o conteúdo</a>
+
   <header class="top">
-    <div class="wrap nav-inner">
-      <a class="skip" href="#conteudo">Pular para o conteúdo</a>
-      <a class="marca" href="#topo" aria-label="Burgeria, início">
-        <span class="marca-ico" aria-hidden="true">🍔</span>
-        <span data-nome>Burgeria</span>
-      </a>
-      <nav class="menu" id="menu" aria-label="Principal">
-        <a href="#cardapio">Cardápio</a>
-        <a href="#sobre">Sobre</a>
-        <a href="#onde">Onde fica</a>
-      </nav>
-      <a class="pedir-topo" data-wa="pedido" href="#cardapio">Pedir agora</a>
-      <button class="abre-menu" type="button" aria-expanded="false" aria-controls="menu" aria-label="Abrir menu">
-        <span></span><span></span><span></span>
-      </button>
-    </div>
+    <a class="marca" href="#topo" aria-label="Burgeria, início">
+      <span class="marca-ico" aria-hidden="true">🍔</span>
+      <span data-nome>Burgeria</span>
+    </a>
+    <nav class="menu" id="menu" aria-label="Principal">
+      <a href="#cardapio">Cardápio</a>
+      <a href="#promocoes">Promoções</a>
+      <a href="#onde">Localização</a>
+      <a href="#onde" data-wa-link>WhatsApp</a>
+    </nav>
+    <a class="chamar" data-wa="pedido" href="#onde"><span class="ponto" aria-hidden="true"></span><span data-chamar>Chamar agora</span></a>
+    <button class="abre-menu" type="button" aria-expanded="false" aria-controls="menu" aria-label="Abrir menu">
+      <span></span><span></span><span></span>
+    </button>
   </header>
 
   <main id="conteudo">
-    <section class="hero screen" id="topo" data-enter>
-      <div class="wrap hero-grid">
-        <div class="hero-texto">
-          <p class="kicker" data-kicker>Artesanal · suculento · na brasa</p>
-          <h1><span data-frase-a>Hamburgueria</span> <span class="manuscrito" data-frase-b>artesanal</span> <span data-frase-c>da região</span></h1>
-          <p class="lead" data-lead>Smash e artesanal, ao ponto ou malpassado, como você gosta.</p>
-          <div class="acoes">
-            <a class="btn btn-amarelo" href="#cardapio">Ver cardápio</a>
-            <a class="btn btn-escuro" data-wa="pedido" href="#onde">Falar no WhatsApp</a>
-          </div>
-          <ul class="selos" aria-label="Destaques">
-            <li>Carne fresca moída no dia</li>
-            <li>Pronto em 15 minutos</li>
-            <li>Delivery e combo</li>
-          </ul>
-        </div>
-
-        <div class="hero-visual">
-          <!-- Ilustração provisória. Trocar por foto real do hambúrguer da loja. -->
-          <svg viewBox="0 0 520 460" role="img" aria-label="Hambúrguer artesanal com queijo, bacon, alface e tomate">
-            <ellipse cx="260" cy="430" rx="220" ry="18" fill="#000" opacity=".35"/>
-            <path d="M70 170 Q260 20 450 170 Z" fill="#c98a3e"/>
-            <path d="M70 170 Q260 20 450 170" fill="none" stroke="#a86b26" stroke-width="6"/>
-            <g fill="#fbf6ee"><ellipse cx="180" cy="110" rx="6" ry="3"/><ellipse cx="240" cy="75" rx="6" ry="3"/><ellipse cx="310" cy="88" rx="6" ry="3"/><ellipse cx="370" cy="120" rx="6" ry="3"/></g>
-            <path d="M60 190 Q90 170 120 190 Q150 170 180 190 Q210 170 240 190 Q270 170 300 190 Q330 170 360 190 Q390 170 420 190 Q450 170 470 190 L470 205 L60 205 Z" fill="#4f9a3a"/>
-            <path d="M60 205 Q260 228 470 205 L470 222 Q260 246 60 222 Z" fill="#e63946"/>
-            <path d="M60 222 L470 222 L455 250 L75 250 Z" fill="#f6b21a"/>
-            <path d="M80 250 Q260 228 455 250 L455 282 Q260 262 80 282 Z" fill="#6b3a1e"/>
-            <path d="M70 282 Q260 262 450 282 L440 302 Q260 292 80 302 Z" fill="#f6b21a"/>
-            <path d="M75 302 Q260 292 445 302 L440 330 Q260 322 80 330 Z" fill="#7a4220"/>
-            <path d="M40 330 L480 330 Q470 362 440 362 L80 362 Q50 362 40 330 Z" fill="#c98a3e"/>
-            <path d="M70 362 Q260 354 450 362 L440 372 Q260 364 80 372 Z" fill="#8b4c24"/>
-            <path d="M60 372 Q260 384 460 372 Q460 410 430 412 L90 412 Q60 410 60 372 Z" fill="#c98a3e"/>
-            <path d="M60 372 Q260 384 460 372" fill="none" stroke="#a86b26" stroke-width="5"/>
-          </svg>
+    <section class="hero" id="topo">
+      <div class="hero-texto">
+        <h1><span data-frase-a>O melhor burger</span> <span class="verde" data-frase-b>da região</span></h1>
+        <p class="lead" data-lead>Artesanal, smash, ao ponto ou malpassado, como você gosta.</p>
+        <div class="acoes">
+          <a class="btn btn-verde" href="#cardapio">Ver cardápio <span aria-hidden="true">→</span></a>
+          <a class="btn btn-contorno" data-wa="pedido" href="#onde"><span class="ponto" aria-hidden="true"></span><span data-falar>Falar no WhatsApp</span></a>
         </div>
       </div>
+      <figure class="hero-foto">
+        <img src="assets/img/hamburguer-hero.jpg" width="380" height="340" alt="Hambúrguer artesanal com bacon, cebola crispy, queijo e batata frita ao lado">
+      </figure>
     </section>
 
-    <section class="cardapio screen-2" id="cardapio" aria-labelledby="t-cardapio">
+    <ul class="faixa" aria-label="Destaques">
+      <li><span aria-hidden="true">🍔</span> Smash e artesanal</li>
+      <li><span aria-hidden="true">⚡</span> Pronto em 15 minutos</li>
+      <li><span aria-hidden="true">🛵</span> Delivery e combo</li>
+      <li class="faixa-acao"><a class="btn btn-verde" data-wa="pedido" href="#cardapio">Pedir burger</a></li>
+    </ul>
+
+    <section class="cardapio" id="cardapio" aria-labelledby="t-cardapio">
       <div class="wrap">
-        <header class="cabeca">
-          <p class="kicker-escuro">Mais pedidos</p>
-          <h2 id="t-cardapio">Cardápio de hambúrguer</h2>
-        </header>
+        <p class="kicker">Mais pedidos</p>
+        <h2 id="t-cardapio">Cardápio de hambúrguer</h2>
         <div class="grade" data-cardapio></div>
         <p class="nota">Preços de exemplo. Confirme os valores pelo WhatsApp.</p>
       </div>
     </section>
 
-    <section class="delivery screen" aria-labelledby="t-delivery">
+    <section class="promocoes" id="promocoes" aria-labelledby="t-promo">
       <div class="wrap">
-        <h2 id="t-delivery">Delivery: <span class="manuscrito">bateu a fome?</span></h2>
+        <h2 id="t-promo">Bateu a <span class="verde">fome?</span></h2>
         <p data-delivery-texto>A gente entrega! Peça pelo WhatsApp e receba quentinho.</p>
-        <a class="btn btn-amarelo" data-wa="pedido" href="#cardapio">Pedir delivery</a>
+        <a class="btn btn-verde" data-wa="pedido" href="#onde">Pedir delivery</a>
       </div>
     </section>
 
-    <section class="sobre screen" id="sobre" aria-labelledby="t-sobre">
-      <div class="wrap">
-        <h2 id="t-sobre">Feito na hora</h2>
-        <p>Carne moída no dia, pão tostado na chapa e molho da casa. Cada pedido sai na hora, sem pré-pronto.</p>
-      </div>
-    </section>
-
-    <section class="onde screen" id="onde" aria-labelledby="t-onde">
+    <section class="onde" id="onde" aria-labelledby="t-onde">
       <div class="wrap onde-grid">
         <div>
-          <h2 id="t-onde">Onde fica</h2>
+          <h2 id="t-onde">Localização</h2>
           <dl class="infos">
             <div><dt>Endereço</dt><dd data-endereco>Consulte pelo WhatsApp</dd></div>
             <div><dt>Horários</dt><dd data-horarios>Consulte pelo WhatsApp</dd></div>
           </dl>
           <p class="acoes" data-mapa-acao></p>
         </div>
-        <ul class="icones" aria-hidden="true">
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Endereço</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Horários</li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 6h16v10H8l-4 4z"/></svg>WhatsApp</li>
-        </ul>
       </div>
     </section>
   </main>
 
-  <footer class="rodape screen-half">
-    <div class="wrap">
+  <footer class="rodape">
+    <div class="wrap rodape-grid">
       <p class="marca-grande" data-nome-rodape>Burgeria</p>
       <p class="credito">Site feito por <a href="https://oliveirabrennobjj-beep.github.io/Meu-site/">BN Digital</a></p>
     </div>
   </footer>
+
+  <a class="barra-pedido" data-wa="pedido" href="#cardapio">Pedir burger</a>
 
   <script src="assets/js/config.js"></script>
   <script src="assets/js/main.js"></script>

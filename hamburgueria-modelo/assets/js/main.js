@@ -14,10 +14,12 @@
   // Nome, frase e textos
   $$("[data-nome], [data-nome-rodape]").forEach(function (el) { el.textContent = S.nome || ""; });
   if (S.frase) {
-    var a = $("[data-frase-a]"), b = $("[data-frase-b]"), c = $("[data-frase-c]");
+    var a = $("[data-frase-a]"), b = $("[data-frase-b]");
     if (a) a.textContent = S.frase.a;
     if (b) b.textContent = S.frase.b;
-    if (c) c.textContent = S.frase.c;
+  }
+  if (S.whatsapp) {
+    var chamar = $("[data-chamar]"); if (chamar) chamar.textContent = "Chamar agora";
   }
   if ($("[data-lead]") && S.lead) $("[data-lead]").textContent = S.lead;
   if ($("[data-delivery-texto]") && S.entrega) $("[data-delivery-texto]").textContent = S.entrega;
