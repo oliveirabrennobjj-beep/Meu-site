@@ -28,3 +28,6 @@ como-funciona/*/out/
 
 # Rodadas do /arena (skill arena): arquivos de trabalho, não versionar
 .arena/
+
+# Estado de trabalho do gate tasteskill (capturas e JSON locais), não versionar
+.taste-skill/
