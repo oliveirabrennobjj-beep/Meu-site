@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="pt-BR" data-type="place">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="page-type" content="place">
+  <meta name="site-kind" content="other">
+  <title>Burgeria | Hamburgueria artesanal</title>
+  <meta name="description" content="Hamburgueria artesanal: smash e burger na brasa. Cardápio, pedidos e delivery pelo WhatsApp.">
+  <meta name="theme-color" content="#120d0a">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+  <a class="skip" href="#conteudo">Pular para o conteúdo</a>
+
+  <header class="top">
+    <a class="marca" href="#topo" aria-label="Burgeria, início">
+      <span class="marca-ico" aria-hidden="true">🍔</span>
+      <span data-nome>Burgeria</span>
+    </a>
+    <nav class="menu" id="menu" aria-label="Principal">
+      <a href="#cardapio">Cardápio</a>
+      <a href="#promocoes">Promoções</a>
+      <a href="#onde">Localização</a>
+      <a href="#onde" data-wa-link>WhatsApp</a>
+    </nav>
+    <a class="chamar" data-wa="pedido" href="#onde"><span class="ponto" aria-hidden="true"></span><span data-chamar>Chamar agora</span></a>
+    <button class="abre-menu" type="button" aria-expanded="false" aria-controls="menu" aria-label="Abrir menu">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <main id="conteudo">
+    <section class="hero" id="topo">
+      <div class="hero-texto">
+        <h1><span data-frase-a>O melhor burger</span> <span class="verde" data-frase-b>da região</span></h1>
+        <p class="lead" data-lead>Artesanal, smash, ao ponto ou malpassado, como você gosta.</p>
+        <div class="acoes">
+          <a class="btn btn-verde" href="#cardapio">Ver cardápio <span aria-hidden="true">→</span></a>
+          <a class="btn btn-contorno" data-wa="pedido" href="#onde"><span class="ponto" aria-hidden="true"></span><span data-falar>Falar no WhatsApp</span></a>
+        </div>
+      </div>
+      <figure class="hero-foto">
+        <img src="assets/img/hamburguer-hero.jpg" width="380" height="340" alt="Hambúrguer artesanal com bacon, cebola crispy, queijo e batata frita ao lado">
+      </figure>
+    </section>
+
+    <ul class="faixa" aria-label="Destaques">
+      <li><span aria-hidden="true">🍔</span> Smash e artesanal</li>
+      <li><span aria-hidden="true">⚡</span> Pronto em 15 minutos</li>
+      <li><span aria-hidden="true">🛵</span> Delivery e combo</li>
+      <li class="faixa-acao"><a class="btn btn-verde" data-wa="pedido" href="#cardapio">Pedir burger</a></li>
+    </ul>
+
+    <section class="cardapio" id="cardapio" aria-labelledby="t-cardapio">
+      <div class="wrap">
+        <p class="kicker">Mais pedidos</p>
+        <h2 id="t-cardapio">Cardápio de hambúrguer</h2>
+        <div class="grade" data-cardapio></div>
+        <p class="nota">Preços de exemplo. Confirme os valores pelo WhatsApp.</p>
+      </div>
+    </section>
+
+    <section class="promocoes" id="promocoes" aria-labelledby="t-promo">
+      <div class="wrap">
+        <h2 id="t-promo">Bateu a <span class="verde">fome?</span></h2>
+        <p data-delivery-texto>A gente entrega! Peça pelo WhatsApp e receba quentinho.</p>
+        <a class="btn btn-verde" data-wa="pedido" href="#onde">Pedir delivery</a>
+      </div>
+    </section>
+
+    <section class="onde" id="onde" aria-labelledby="t-onde">
+      <div class="wrap onde-grid">
+        <div>
+          <h2 id="t-onde">Localização</h2>
+          <dl class="infos">
+            <div><dt>Endereço</dt><dd data-endereco>Consulte pelo WhatsApp</dd></div>
+            <div><dt>Horários</dt><dd data-horarios>Consulte pelo WhatsApp</dd></div>
+          </dl>
+          <p class="acoes" data-mapa-acao></p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="rodape">
+    <div class="wrap rodape-grid">
+      <p class="marca-grande" data-nome-rodape>Burgeria</p>
+      <p class="credito">Site feito por <a href="https://oliveirabrennobjj-beep.github.io/Meu-site/">BN Digital</a></p>
+    </div>
+  </footer>
+
+  <a class="barra-pedido" data-wa="pedido" href="#cardapio">Pedir burger</a>
+
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>

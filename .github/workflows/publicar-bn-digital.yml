@@ -18,6 +18,7 @@ on:
       - "raiox-das-coisas/**"
       - "construtora/**"
       - "barbearia-modelo/**"
+      - "barbearia-maya/**"
       - "bn-digital/prospeccao/index.html"
       - ".github/workflows/publicar-bn-digital.yml"
   workflow_dispatch:
@@ -54,6 +55,9 @@ jobs:
           mkdir -p _site/barbearia-modelo
           cp -r barbearia-modelo/. _site/barbearia-modelo/
           rm -f _site/barbearia-modelo/README.md
+          mkdir -p _site/barbearia-maya
+          cp -r barbearia-maya/. _site/barbearia-maya/
+          rm -f _site/barbearia-maya/README.md
           mkdir -p _site/construtora
           cp -r construtora/. _site/construtora/
           rm -f _site/construtora/README.md _site/construtora/assets/video/LEIA.md
