@@ -3,6 +3,8 @@
   var $ = function (sel, ctx) { return (ctx || document).querySelector(sel); };
   var $$ = function (sel, ctx) { return Array.prototype.slice.call((ctx || document).querySelectorAll(sel)); };
 
+  document.documentElement.classList.add("m-enter");
+
   function linkWa(texto) {
     if (!S.whatsapp) return "";
     var msg = encodeURIComponent(texto || S.mensagemWhatsapp || "");
@@ -21,17 +23,17 @@
   if ($("[data-delivery-texto]") && S.entrega) $("[data-delivery-texto]").textContent = S.entrega;
   document.title = (S.nome || "Hamburgueria") + (S.cidade ? " | " + S.cidade : "") + " | Hamburgueria artesanal";
 
-  // Botões de WhatsApp: sem número, viram texto de contato
+  // Botões de WhatsApp: sem número, ficam como "Consulte pelo WhatsApp" e levam ao cardápio
   $$("[data-wa]").forEach(function (el) {
     var href = linkWa();
-    if (el.tagName === "A") {
-      if (href) { el.href = href; el.target = "_blank"; el.rel = "noopener"; }
-      else { el.hidden = true; }
-    } else if (!href) {
-      el.disabled = true;
+    if (href) {
+      el.href = href; el.target = "_blank"; el.rel = "noopener";
+    } else if (el.classList.contains("btn") || el.classList.contains("pedir-topo")) {
+      el.classList.add("is-off");
       el.textContent = "Consulte pelo WhatsApp";
+      el.removeAttribute("href");
     } else {
-      el.addEventListener("click", function () { window.open(href, "_blank", "noopener"); });
+      el.href = "#cardapio";
     }
   });
 

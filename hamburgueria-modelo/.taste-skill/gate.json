@@ -1,0 +1,12 @@
+{
+ "history": [
+  {
+   "at": "2026-11-10T19:37:46.371Z",
+   "mode": "hook",
+   "host": "claude",
+   "decision": "block",
+   "reason": "hamburgueria-modelo/index.html is a tasteskill page with no build armed: told how to arm it",
+   "stopHookActive": false
+  }
+ ]
+}
