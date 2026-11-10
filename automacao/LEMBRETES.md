@@ -12,6 +12,7 @@ Para fechar: troque `[ ]` por `[x]`.
 
 ## Pendentes (decisão do Brenno)
 - [ ] Conectar Instagram/TikTok no Metricool (link em `automacao/PLANO.md`, seção 2).
+- [ ] Trocar a senha do Metricool (apareceu num print). Depois conectar a BN Digital (conta profissional) em https://app.metricool.com/brands/connections?blogId=7626128 e me avisar.
 - [ ] Configurar saudação, ausência e respostas rápidas no WhatsApp Business (textos prontos em `automacao/whatsapp.md`, só preencher preço e prazo).
 - [x] Escolher o caminho do WhatsApp: API oficial + Make.
 - [ ] Criar conta em business.facebook.com e app WhatsApp em developers.facebook.com (passos em `automacao/whatsapp.md`, nível 2). Depois me avisar para eu pedir o token.
