@@ -86,12 +86,33 @@
         "source": "github",
         "repo": "nyldn/plugins"
       }
+    },
+    "thedotmack": {
+      "source": {
+        "source": "github",
+        "repo": "thedotmack/claude-mem"
+      }
+    },
+    "claude-plugins-official": {
+      "source": {
+        "source": "github",
+        "repo": "anthropics/claude-plugins-official"
+      }
+    },
+    "egm": {
+      "source": {
+        "source": "github",
+        "repo": "google/elephant-goldfish-model"
+      }
     }
   },
   "enabledPlugins": {
     "superpowers@superpowers-marketplace": true,
     "andrej-karpathy-skills@karpathy-skills": true,
     "i-have-adhd@i-have-adhd": true,
-    "octo@nyldn-plugins": true
+    "octo@nyldn-plugins": true,
+    "claude-mem@thedotmack": true,
+    "claude-code-setup@claude-plugins-official": true,
+    "egm@egm": true
   }
 }
