@@ -196,6 +196,17 @@ try {
   assert.equal(escritas[0].dados.canal, "whatsapp");
   await p.screenshot({ path: path.join(saida, "celular-enviado.png") });
 
+  // A pessoa gostou: a mensagem oferece a demonstração do site, sem preço.
+  await ficha.getByRole("button", { name: "Respondeu" }).click();
+  const textoGostou = decodeURIComponent(
+    await ficha.getByRole("link", { name: "Oferecer demonstração do site" }).getAttribute("href"),
+  );
+  assert.match(textoGostou, /demonstração de design/);
+  assert.match(textoGostou, /hoje ou amanhã/);
+  assert.ok(textoGostou.includes(nome));
+  assert.doesNotMatch(textoGostou, /R\$|\{/);
+  await p.screenshot({ path: path.join(saida, "celular-gostou.png") });
+
   await ficha.getByRole("button", { name: "Fechar ficha" }).click();
   await p.getByRole("button", { name: "Abrir menu" }).click();
   await p.getByRole("dialog", { name: "Menu" }).getByText("Meta de hoje").waitFor();

@@ -36,7 +36,8 @@ usar **B** só num número secundário se quiser ler/responder conversas pelo Cl
   - "Nichos": todos os ramos, um por um; tocar em um filtra as tabelas. Botão "Mais/Menos avaliados" em cada tabela.
   - **Casimiro:** mensagem pede para passar lá e falar com o dono (placa para quem tem menos de 50 avaliações, senão site),
     botão "Falei pessoalmente" e roteiro curto. **Fora:** mensagem de site pelo WhatsApp. Nenhum texto cita preço.
-  - Os 3 textos são editáveis em "Mensagens". Depois de enviar aparece "Próximo" para seguir a lista.
+  - Quando a pessoa gosta (situação "Respondeu"), o botão manda a oferta de demonstração do site para hoje ou amanhã.
+  - Os 4 textos são editáveis em "Mensagens". Depois de enviar aparece "Próximo" para seguir a lista.
 - **Todo dia 06:17:** o resumo lembra a meta (15 mensagens) e traz 10 comércios novos em JSON para "Importar".
 - **Por que não 100% sozinho ainda:** mandar mensagem fria em massa por número comum pode bloquear o número.
   Mandar aos poucos (15/dia) pelo painel é seguro. Com a Evolution API (~R$ 30/mês, decisão com seu pai) o envio

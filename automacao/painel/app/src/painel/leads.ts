@@ -184,13 +184,14 @@ export function fraseNicho(lead: Lead, produto: Produto) {
 
 /* Mensagens ------------------------------------------------------------------------------------ */
 
-export type ChaveTexto = "fora" | "casimiroPlaca" | "casimiroSite";
+export type ChaveTexto = "fora" | "casimiroPlaca" | "casimiroSite" | "gostou";
 export type Textos = Record<ChaveTexto, string>;
 
 export const TEXTOS_INFO: Record<ChaveTexto, { curto: string; longo: string }> = {
-  fora: { curto: "FORA · SITE", longo: "Fora de Casimiro, oferta de site" },
-  casimiroPlaca: { curto: "CASIMIRO · PLACA", longo: "Casimiro, oferta de placa" },
-  casimiroSite: { curto: "CASIMIRO · SITE", longo: "Casimiro, oferta de site" },
+  fora: { curto: "FORA", longo: "Primeira mensagem para fora de Casimiro (site)" },
+  casimiroPlaca: { curto: "CAS. PLACA", longo: "Primeira mensagem em Casimiro (placa)" },
+  casimiroSite: { curto: "CAS. SITE", longo: "Primeira mensagem em Casimiro (site)" },
+  gostou: { curto: "GOSTOU", longo: "Quando a pessoa gostou: oferecer a demonstração" },
 };
 
 // Nenhum texto fala de preço: o Brenno só passa valor depois que a pessoa mostra interesse.
@@ -200,6 +201,8 @@ export const TEXTOS_PADRAO: Textos = {
     "Oi, tudo bem? Aqui é o Brenno, da BN Digital. Sou daqui de Casimiro mesmo.\nFaço uma plaquinha com chip para deixar no balcão. {nicho}\nMais avaliação é mais gente achando a {nome} quando procura por perto.\nPosso passar aí para mostrar funcionando? Leva 2 minutos. Se der, queria falar direto com o dono ou a dona. Qual o melhor horário?",
   casimiroSite:
     "Oi, tudo bem? Aqui é o Brenno, da BN Digital. Sou daqui de Casimiro mesmo.\nVi a {nome} no Google Maps{elogio} e notei que vocês ainda não têm um site próprio.\n{nicho}\nPosso passar aí para mostrar um exemplo no celular? Leva 2 minutos. Se der, queria falar direto com o dono ou a dona. Qual o melhor horário?",
+  gostou:
+    "Que bom que gostou! Consigo te fazer uma demonstração de design, de como vai ficar o site da {nome}, ainda hoje ou amanhã.\nPara você ter uma ideia, olha um que eu já fiz: {exemplo}\nPosso montar e te mandar por aqui?",
 };
 
 /** Em Casimiro, placa para quem ainda tem poucas avaliações (é quem mais ganha com ela); senão, site. */
@@ -208,7 +211,7 @@ export function produtoSugerido(lead: Lead): Produto {
   return lead.avaliacoes == null || lead.avaliacoes < 50 ? "placa" : "site";
 }
 
-export function chaveTexto(lead: Lead, produto: Produto): ChaveTexto {
+export function chaveTexto(lead: Lead, produto: Produto): Exclude<ChaveTexto, "gostou"> {
   if (!ehCasimiro(lead)) return "fora";
   return produto === "placa" ? "casimiroPlaca" : "casimiroSite";
 }
@@ -243,8 +246,11 @@ function exemploSite(tipo = "") {
     : SITES;
 }
 
-export function textoExemplo(lead: Lead) {
-  return `Olha um site que fiz para um negócio parecido: ${exemploSite(lead.tipo)}\nO da ${lead.nome} fica nesse nível, com as fotos e o cardápio de vocês. Quer que eu monte uma prévia?`;
+/** Mensagem para quem respondeu com interesse: oferece a demonstração do site dele. */
+export function textoGostou(textos: Textos, lead: Lead) {
+  return (textos.gostou?.trim() || TEXTOS_PADRAO.gostou)
+    .replaceAll("{nome}", lead.nome || "sua empresa")
+    .replaceAll("{exemplo}", exemploSite(lead.tipo));
 }
 
 export const linkSeguro = (url?: string) => (url && /^https?:\/\//i.test(url) ? url : null);

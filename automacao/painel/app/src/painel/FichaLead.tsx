@@ -30,7 +30,7 @@ import {
   linkWhatsApp,
   produtoSugerido,
   statusDe,
-  textoExemplo,
+  textoGostou,
   textoMensagem,
   tipoDe,
   type Lead,
@@ -268,13 +268,13 @@ function Conteudo({
             )}
             {status === "respondeu" && (
               <a
-                href={linkWhatsApp(lead, textoExemplo(lead))}
+                href={linkWhatsApp(lead, textoGostou(textos, lead))}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={buttonClass("primary", "lg", "w-full")}
               >
                 <Send aria-hidden="true" />
-                Mandar exemplo de site
+                Oferecer demonstração do site
               </a>
             )}
             <div className="flex flex-wrap gap-2">

@@ -11,6 +11,7 @@ import {
   TEXTOS_PADRAO,
   ehCasimiro,
   statusDe,
+  textoGostou,
   textoMensagem,
   type ChaveTexto,
   type Lead,
@@ -23,7 +24,7 @@ const ajuda = "mt-1.5 text-[12.5px] text-[color:var(--bjork-text-muted)]";
 const CHAVES = Object.keys(TEXTOS_INFO) as ChaveTexto[];
 const ABAS = CHAVES.map((id) => ({ id, label: TEXTOS_INFO[id].curto, long: TEXTOS_INFO[id].longo }));
 
-/** Edita os três textos de primeiro contato, com prévia em um comércio de verdade de cada caso. */
+/** Edita os textos de contato (três de abertura e um para quem gostou), com prévia em um comércio de verdade. */
 export function Mensagens({
   textos,
   leads,
@@ -39,7 +40,8 @@ export function Mensagens({
   // Acompanha os textos salvos quando eles chegam do banco depois de a tela abrir.
   useEffect(() => setRascunho(textos), [textos]);
 
-  const doLugar = leads.filter((l) => ehCasimiro(l) === (aba !== "fora"));
+  const doLugar =
+    aba === "gostou" ? leads : leads.filter((l) => ehCasimiro(l) === (aba !== "fora"));
   const exemplo = doLugar.find((l) => statusDe(l) === "novo") ?? doLugar[0] ?? null;
   const mudou = CHAVES.some((chave) => rascunho[chave].trim() !== textos[chave].trim());
 
@@ -58,9 +60,10 @@ export function Mensagens({
           className={cn(fieldClass, "py-2.5 leading-relaxed")}
         />
         <p className={ajuda}>
-          O painel troca sozinho: {"{nome}"}, {"{cidade}"}, {"{nicho}"} (a frase do ramo do
-          comércio) e {"{elogio}"} (cita as avaliações de quem tem 30 ou mais). Não coloque preço:
-          ele entra só na conversa.
+          {aba === "gostou"
+            ? "O painel troca sozinho: {nome} e {exemplo} (o link de um site seu parecido)."
+            : "O painel troca sozinho: {nome}, {cidade}, {nicho} (a frase do ramo do comércio) e {elogio} (cita as avaliações de quem tem 30 ou mais)."}{" "}
+          Não coloque preço: ele entra só na conversa.
         </p>
       </div>
       {exemplo && (
@@ -69,7 +72,9 @@ export function Mensagens({
             Como fica para {exemplo.nome}
           </h2>
           <p className="whitespace-pre-wrap rounded-[12px] border border-[color:var(--bjork-border)] bg-[var(--bjork-field-inset)] p-3 text-[13.5px] leading-relaxed text-[color:var(--bjork-text-medium)] [overflow-wrap:anywhere]">
-            {textoMensagem(rascunho, exemplo, aba === "casimiroPlaca" ? "placa" : "site")}
+            {aba === "gostou"
+              ? textoGostou(rascunho, exemplo)
+              : textoMensagem(rascunho, exemplo, aba === "casimiroPlaca" ? "placa" : "site")}
           </p>
         </div>
       )}
