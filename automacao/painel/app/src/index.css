@@ -1,0 +1,90 @@
+@import "tailwindcss" source(".");
+
+/* Layout: casca de painel (cabeçalho, 4 indicadores, gráfico, divisão por tipo, tabelas),
+   desenhada a 520px e encolhida para caber no celular, como na referência do Brenno. */
+@theme {
+  --font-sans: "Roboto", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, "Droid Sans Mono", "Roboto Mono", Menlo, Consolas, monospace;
+  --font-bjork-display: "Roboto", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+/* Visual único e escuro de propósito: o Brenno pediu igual à foto, em qualquer tema do aparelho. */
+:root {
+  color-scheme: dark;
+  --bjork-bg: #111111;
+  --bjork-surface: #121212;
+  --bjork-surface-hover: #161616;
+  --bjork-surface-active: #202020;
+  --bjork-panel: #0d0d0d;
+  --bjork-menu: rgba(18, 18, 18, 0.98);
+  --bjork-field: rgba(18, 18, 18, 0.95);
+  --bjork-field-inset: rgba(9, 9, 9, 0.75);
+  --bjork-text: #ededed;
+  --bjork-text-medium: rgba(237, 237, 237, 0.72);
+  --bjork-text-muted: rgba(237, 237, 237, 0.6);
+  --bjork-text-soft: rgba(237, 237, 237, 0.4);
+  --bjork-text-faint: rgba(237, 237, 237, 0.22);
+  --bjork-border: #232323;
+  --bjork-border-strong: #343434;
+  --bjork-accent: #ec5c13;
+  --bjork-accent-hover: #f07832;
+  --bjork-accent-soft: rgba(236, 92, 19, 0.12);
+  --bjork-shadow-surface: inset 0 7px 14px rgba(255, 255, 255, 0.03), inset 0 0.5px 0.5px rgba(255, 255, 255, 0.06), 0 14px 20px -6px rgba(0, 0, 0, 0.45);
+  --bjork-shadow-soft: inset 0 1px 0 rgba(255, 255, 255, 0.045);
+  --bjork-shadow-menu: inset 0 1px 0 rgba(255, 255, 255, 0.055), inset 0 12px 24px rgba(255, 255, 255, 0.018), inset 0 -18px 26px rgba(0, 0, 0, 0.24), 0 22px 42px -22px rgba(0, 0, 0, 0.9);
+  --bjork-shadow-inset: inset 0 1px 10px rgba(0, 0, 0, 0.45);
+  --bjork-ring-offset: #080808;
+  --blk-accent-ink: #f58a4e;
+  --blk-accent-fill: #ec5c13;
+  --blk-accent-fill-ink: #fff7f1;
+  --blk-success: #52c98c;
+  --blk-success-soft: rgba(82, 201, 140, 0.13);
+  --blk-warning: #e7b455;
+  --blk-warning-soft: rgba(231, 180, 85, 0.13);
+  --blk-error: #f2796b;
+  --blk-error-soft: rgba(242, 121, 107, 0.14);
+  --blk-chart-ghost: rgba(237, 237, 237, 0.42);
+  --blk-scrim: rgba(0, 0, 0, 0.62);
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  position: relative;
+  overflow: hidden;
+  background: var(--bjork-bg);
+  color: var(--bjork-text);
+  font-family: var(--font-sans);
+}
+
+@utility hide-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@keyframes blk-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes blk-slide-left {
+  from {
+    transform: translateX(-100%);
+  }
+}
+@keyframes blk-slide-up {
+  from {
+    transform: translateY(100%);
+  }
+}
+@keyframes blk-toast-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 8px);
+  }
+}

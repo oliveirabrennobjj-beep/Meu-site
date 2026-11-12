@@ -44,4 +44,4 @@ Quando o Brenno mandar print de skill ou plugin: instalar em `.claude/skills/` c
 - Plano de automação (WhatsApp, vídeo, celular→PC, token, design): `automacao/PLANO.md`.
 - Tarefas agendadas: 02:43 pesquisa profunda, 06:17 resumo + lembretes, domingo 19:23 roteiros de vídeo (aviso no celular).
 - Vídeo rápido de lista/dicas: `fabrica-video/` (roteiro JSON → `./gerar.sh` → MP4 vertical).
-- Painel de vendas (prospecção WhatsApp): https://claude.ai/artifact/LMpGydYCibdZoLEf3eNBNo, fonte `automacao/painel/vendas.html`, dados no db do artifact (coleção `leads`).
+- Painel de vendas (prospecção WhatsApp): https://claude.ai/artifact/LMpGydYCibdZoLEf3eNBNo, fonte `automacao/painel/app/` (React; `npm run build` gera `automacao/painel/vendas.html`, que é o que se publica), dados no db do artifact (coleção `leads`).

@@ -29,9 +29,11 @@ usar **B** só num número secundário se quiser ler/responder conversas pelo Cl
 **Falta:** você criar a conta Meta Business e me passar o acesso (o Claude pede a chave num formulário seguro).
 
 ## 1b. Vendas no automático (prospecção)
-- **Painel de vendas:** https://claude.ai/artifact/LMpGydYCibdZoLEf3eNBNo (só você abre). Fonte: `automacao/painel/vendas.html`.
-  76 comércios reais da região sem site próprio (Google Maps, 09/11): pizzaria, barbearia, açaí, padaria, salão, lanchonete, pet shop. Placar: a enviar, enviados, responderam,
-  fecharam, mais pra frente, não querem. Botão "Enviar no WhatsApp" abre a conversa com a mensagem pronta (1 toque).
+- **Painel de vendas:** https://claude.ai/artifact/LMpGydYCibdZoLEf3eNBNo (só você abre). Fonte: `automacao/painel/app/` (ver o README de lá).
+  76 comércios reais da região sem site próprio (Google Maps, 09/11): pizzaria, barbearia, açaí, padaria, salão, lanchonete, pet shop.
+  Desde 12/11 tem o visual escuro da referência do 21st.dev e separa **Casimiro de Abreu** de **fora de Casimiro**, com nota e
+  número de avaliações de cada comércio. Indicadores: a enviar, enviados, responderam, fecharam. Tocar no comércio abre a ficha
+  com a mensagem pronta e o botão "Enviar no WhatsApp"; depois aparece "Próximo" para seguir a lista.
 - **Todo dia 06:17:** o resumo lembra a meta (15 mensagens) e traz 10 comércios novos em JSON para "Importar".
 - **Por que não 100% sozinho ainda:** mandar mensagem fria em massa por número comum pode bloquear o número.
   Mandar aos poucos (15/dia) pelo painel é seguro. Com a Evolution API (~R$ 30/mês, decisão com seu pai) o envio

@@ -1,0 +1,191 @@
+// Abre o vendas.html montado, com um banco de mentira no lugar do banco do Artifact,
+// confere o fluxo principal e salva capturas de tela.
+//   node scripts/testar.mjs            → empresas fictícias
+//   LEADS_DIR=pasta node scripts/...   → um .json por empresa (ex.: exportado do banco)
+//   SAIDA=pasta                        → onde salvar as capturas (padrão: ./capturas)
+import assert from "node:assert/strict";
+import { mkdirSync, readdirSync, readFileSync } from "node:fs";
+import { createRequire } from "node:module";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const require = createRequire(import.meta.url);
+const { chromium } = require("playwright");
+
+const raiz = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const saida = process.env.SAIDA ?? path.join(raiz, "capturas");
+mkdirSync(saida, { recursive: true });
+
+function leadsFicticios() {
+  const tipos = ["Pizzaria", "Barbearia", "Padaria", "Pet Shop", "Sorveteria", "Lanchonete", "Salão de Beleza"];
+  const cidades = ["Casimiro de Abreu", "Macaé", "Rio das Ostras", "Macaé", "Rio das Ostras"];
+  return Array.from({ length: 34 }, (_, i) => {
+    const whatsapp = `55229900${String(10000 + i)}`;
+    return {
+      id: `w${whatsapp}`,
+      nome: `${tipos[i % tipos.length]} Exemplo ${i + 1}`,
+      tipo: tipos[i % tipos.length],
+      cidade: cidades[i % cidades.length],
+      whatsapp,
+      telefone: `(22) 99000-${String(1000 + i)}`,
+      nota: i % 11 === 0 ? null : 4 + ((i * 7) % 11) / 10,
+      avaliacoes: i % 11 === 0 ? null : 40 + ((i * 137) % 900),
+      link: i % 3 === 0 ? "https://www.instagram.com/exemplo/" : "",
+      status: "novo",
+    };
+  });
+}
+
+const leads = process.env.LEADS_DIR
+  ? readdirSync(process.env.LEADS_DIR)
+      .filter((f) => f.endsWith(".json"))
+      .map((f) => ({
+        ...JSON.parse(readFileSync(path.join(process.env.LEADS_DIR, f), "utf8")),
+        id: f.replace(/\.json$/, ""),
+      }))
+  : leadsFicticios();
+
+// Mesma moldura que a plataforma põe em volta da página publicada.
+const moldura = (corpo) => `<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+${corpo}
+</body></html>`;
+
+function bancoDeMentira(iniciais) {
+  const docs = new Map(iniciais.map(({ id, ...dados }) => [id, dados]));
+  const ouvintes = new Set();
+  window.__escritas = [];
+  const emitir = () => {
+    const snap = {
+      metadata: { fromCache: false },
+      docs: [...docs].map(([id, dados]) => ({ id, exists: true, data: () => dados })),
+    };
+    ouvintes.forEach((fn) => fn(snap));
+  };
+  const db = {
+    doc: () => ({
+      onSnapshot: (next) => (setTimeout(() => next({ exists: false, data: () => undefined }), 0), () => {}),
+      set: async (dados) => void window.__escritas.push({ op: "set", caminho: "config/mensagem", dados }),
+    }),
+    collection: () => ({
+      onSnapshot: (next) => (ouvintes.add(next), setTimeout(emitir, 30), () => ouvintes.delete(next)),
+      doc: (id) => ({
+        update: async (dados) => {
+          window.__escritas.push({ op: "update", id, dados });
+          docs.set(id, { ...docs.get(id), ...dados });
+          emitir();
+        },
+        set: async (dados) => {
+          window.__escritas.push({ op: "set", id, dados });
+          docs.set(id, dados);
+          emitir();
+        },
+      }),
+    }),
+  };
+  window.claude = { use: async (nome) => (nome === "db" ? db : null) };
+}
+
+const umd = (pacote, arquivo) =>
+  readFileSync(path.join(raiz, "node_modules", pacote, "umd", arquivo), "utf8");
+
+async function abrir(browser, opcoes) {
+  const contexto = await browser.newContext(opcoes);
+  const pagina = await contexto.newPage();
+  const erros = [];
+  pagina.on("pageerror", (e) => erros.push(String(e)));
+  pagina.on("console", (m) => m.type() === "error" && erros.push(m.text()));
+  await pagina.addInitScript(bancoDeMentira, leads);
+  await pagina.route("**/cdnjs.cloudflare.com/**", (rota) => {
+    const react = !rota.request().url().includes("react-dom");
+    return rota.fulfill({
+      contentType: "application/javascript",
+      body: react
+        ? umd("react", "react.production.min.js")
+        : umd("react-dom", "react-dom.production.min.js"),
+    });
+  });
+  await pagina.route("**/fonts.googleapis.com/**", (rota) =>
+    rota.fulfill({ contentType: "text/css", body: "" }),
+  );
+  await pagina.route("http://painel.teste/", (rota) =>
+    rota.fulfill({
+      contentType: "text/html",
+      body: moldura(readFileSync(path.join(raiz, "../vendas.html"), "utf8")),
+    }),
+  );
+  await pagina.goto("http://painel.teste/");
+  await pagina.getByRole("heading", { name: "Fora de Casimiro" }).waitFor();
+  await pagina.waitForTimeout(900);
+  return { contexto, pagina, erros };
+}
+
+const semTransbordo = (pagina) =>
+  pagina.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth);
+
+const browser = await chromium.launch();
+try {
+  const casimiro = leads.filter((l) => /casimiro/i.test(l.cidade ?? "")).length;
+
+  // Celular
+  const cel = await abrir(browser, {
+    viewport: { width: 412, height: 915 },
+    deviceScaleFactor: 2.625,
+    isMobile: true,
+    hasTouch: true,
+  });
+  const p = cel.pagina;
+  assert.equal(await p.getByRole("article").filter({ hasText: "A enviar" }).locator("p").first().innerText(), String(leads.length));
+  assert.equal(await p.getByRole("region", { name: "Casimiro de Abreu" }).locator("h2 + span").innerText(), String(casimiro));
+  assert.ok(await semTransbordo(p), "a página não pode rolar para o lado");
+  await p.screenshot({ path: path.join(saida, "celular-geral.png") });
+  await p.screenshot({ path: path.join(saida, "celular-inteiro.png"), fullPage: false });
+
+  await p.getByRole("radio", { name: "Só Casimiro de Abreu" }).click();
+  assert.equal(await p.getByRole("region", { name: "Fora de Casimiro" }).count(), 0);
+  await p.getByRole("region", { name: "Casimiro de Abreu" }).scrollIntoViewIfNeeded();
+  await p.waitForTimeout(300);
+  await p.screenshot({ path: path.join(saida, "celular-casimiro-tabela.png") });
+
+  const primeira = p.getByRole("region", { name: "Casimiro de Abreu" }).locator("tbody tr button").first();
+  const nome = await primeira.innerText();
+  await primeira.click();
+  const ficha = p.getByRole("dialog");
+  await ficha.getByRole("link", { name: "Enviar no WhatsApp" }).waitFor();
+  await p.waitForTimeout(400);
+  await p.screenshot({ path: path.join(saida, "celular-ficha.png") });
+  const href = await ficha.getByRole("link", { name: "Enviar no WhatsApp" }).getAttribute("href");
+  assert.match(href, /^https:\/\/wa\.me\/55\d{10,11}\?text=/);
+  assert.ok(decodeURIComponent(href).includes(nome), "a mensagem leva o nome do comércio");
+
+  await p.route("https://wa.me/**", (rota) => rota.fulfill({ contentType: "text/html", body: "ok" }));
+  const [aba] = await Promise.all([
+    cel.contexto.waitForEvent("page"),
+    ficha.getByRole("link", { name: "Enviar no WhatsApp" }).click(),
+  ]);
+  await aba.close();
+  await ficha.getByRole("button", { name: /^Próximo:/ }).waitFor();
+  const escritas = await p.evaluate(() => window.__escritas);
+  assert.equal(escritas.length, 1);
+  assert.equal(escritas[0].dados.status, "enviado");
+  assert.ok(escritas[0].dados.enviadoEm);
+  await p.screenshot({ path: path.join(saida, "celular-enviado.png") });
+
+  await ficha.getByRole("button", { name: "Fechar ficha" }).click();
+  await p.getByRole("button", { name: "Abrir menu" }).click();
+  await p.getByRole("dialog", { name: "Menu" }).getByText("Meta de hoje").waitFor();
+  await p.waitForTimeout(400);
+  await p.screenshot({ path: path.join(saida, "celular-menu.png") });
+  assert.deepEqual(cel.erros, []);
+  await cel.contexto.close();
+
+  // Computador
+  const pc = await abrir(browser, { viewport: { width: 1440, height: 900 }, deviceScaleFactor: 1 });
+  assert.ok(await semTransbordo(pc.pagina));
+  await pc.pagina.screenshot({ path: path.join(saida, "computador.png") });
+  assert.deepEqual(pc.erros, []);
+  await pc.contexto.close();
+
+  console.log(`OK: ${leads.length} empresas, ${casimiro} em Casimiro. Capturas em ${saida}`);
+} finally {
+  await browser.close();
+}
