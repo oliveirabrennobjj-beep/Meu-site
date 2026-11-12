@@ -114,7 +114,7 @@ async function abrir(browser, opcoes) {
     }),
   );
   await pagina.goto("http://painel.teste/");
-  await pagina.getByRole("heading", { name: "Fora de Casimiro" }).waitFor();
+  await pagina.getByRole("region", { name: "Casimiro de Abreu" }).waitFor();
   await pagina.waitForTimeout(900);
   return { contexto, pagina, erros };
 }
@@ -124,7 +124,10 @@ const semTransbordo = (pagina) =>
 
 const browser = await chromium.launch();
 try {
-  const casimiro = leads.filter((l) => /casimiro/i.test(l.cidade ?? "")).length;
+  // Barra de São João é distrito de Casimiro, mas o painel conta como fora.
+  const casimiro = leads.filter(
+    (l) => /casimiro/i.test(l.cidade ?? "") && !/barra de s[aã]o jo[aã]o/i.test(`${l.nome} ${l.cidade}`),
+  ).length;
 
   // Celular
   const cel = await abrir(browser, {
@@ -140,8 +143,27 @@ try {
   await p.screenshot({ path: path.join(saida, "celular-geral.png") });
   await p.screenshot({ path: path.join(saida, "celular-inteiro.png"), fullPage: false });
 
+  // Nicho: tocar em um deixa só ele nas tabelas; tocar de novo volta tudo.
+  const nicho = p.getByRole("region", { name: "Nichos" }).getByRole("button").first();
+  const nomeNicho = await nicho.locator("span span").first().innerText();
+  await nicho.click();
+  const sublinhas = await p.locator("[data-tabelas] tbody tr p").allInnerTexts();
+  assert.ok(sublinhas.length > 0 && sublinhas.every((t) => t === nomeNicho), "só o nicho escolhido aparece");
+  await p.screenshot({ path: path.join(saida, "celular-nicho.png") });
+  await nicho.click();
+
+  // Fora de Casimiro: mensagem de site, sem preço e sem pedido de visita.
+  const cidadeFora = p.locator("[data-tabelas] section[aria-labelledby]").filter({ hasNotText: "Pessoalmente" }).first();
+  await cidadeFora.locator("tbody tr button").first().click();
+  const textoFora = decodeURIComponent(
+    await p.getByRole("dialog").getByRole("link", { name: "Enviar no WhatsApp" }).getAttribute("href"),
+  );
+  assert.match(textoFora, /site próprio/);
+  assert.doesNotMatch(textoFora, /R\$|passar aí/);
+  await p.getByRole("dialog").getByRole("button", { name: "Fechar ficha" }).click();
+
   await p.getByRole("radio", { name: "Só Casimiro de Abreu" }).click();
-  assert.equal(await p.getByRole("region", { name: "Fora de Casimiro" }).count(), 0);
+  assert.equal(await p.locator("[data-tabelas] section[aria-labelledby]").count(), 1);
   await p.getByRole("region", { name: "Casimiro de Abreu" }).scrollIntoViewIfNeeded();
   await p.waitForTimeout(300);
   await p.screenshot({ path: path.join(saida, "celular-casimiro-tabela.png") });
@@ -155,7 +177,10 @@ try {
   await p.screenshot({ path: path.join(saida, "celular-ficha.png") });
   const href = await ficha.getByRole("link", { name: "Enviar no WhatsApp" }).getAttribute("href");
   assert.match(href, /^https:\/\/wa\.me\/55\d{10,11}\?text=/);
-  assert.ok(decodeURIComponent(href).includes(nome), "a mensagem leva o nome do comércio");
+  const textoCasimiro = decodeURIComponent(href);
+  assert.ok(textoCasimiro.includes(nome), "a mensagem leva o nome do comércio");
+  assert.match(textoCasimiro, /falar direto com o dono/);
+  assert.doesNotMatch(textoCasimiro, /R\$/);
 
   await p.route("https://wa.me/**", (rota) => rota.fulfill({ contentType: "text/html", body: "ok" }));
   const [aba] = await Promise.all([
@@ -168,6 +193,7 @@ try {
   assert.equal(escritas.length, 1);
   assert.equal(escritas[0].dados.status, "enviado");
   assert.ok(escritas[0].dados.enviadoEm);
+  assert.equal(escritas[0].dados.canal, "whatsapp");
   await p.screenshot({ path: path.join(saida, "celular-enviado.png") });
 
   await ficha.getByRole("button", { name: "Fechar ficha" }).click();

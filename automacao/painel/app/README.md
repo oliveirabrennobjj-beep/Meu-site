@@ -2,7 +2,7 @@
 
 Painel do Brenno para mandar mensagem a comércios sem site. Publicado como Artifact em
 <https://claude.ai/artifact/LMpGydYCibdZoLEf3eNBNo>. Os comércios ficam no banco do Artifact
-(coleção `leads`; mensagem padrão em `config/mensagem`), nunca neste repositório.
+(coleção `leads`; os três textos de primeiro contato em `config/mensagens`), nunca neste repositório.
 
 Visual: casca escura adaptada do componente "Dashboard Shell" de @isaiahbjork no 21st.dev,
 que o Brenno escolheu como referência. No celular o painel é desenhado a 520 px e encolhido
@@ -21,7 +21,9 @@ e sem `capabilities` (mantém `db` e `user`).
 
 ## Onde fica cada coisa
 
-- `src/painel/leads.ts`: regras (situações, Casimiro ou fora, texto da mensagem, importação).
+- `src/painel/leads.ts`: regras (situações, cidade, nicho, site ou placa, textos das mensagens, importação).
+  Casimiro: mensagem pede para falar com o dono pessoalmente (placa para quem tem menos de 50 avaliações).
+  Fora: mensagem de site pelo WhatsApp. Nenhum texto cita preço.
 - `src/painel/usePainel.ts`: leitura e gravação no banco do Artifact.
 - `src/painel/PainelVendas.tsx`: a tela; `TabelaLeads`, `FichaLead` e `Ferramentas` são as partes.
 - `src/components/ui/`: casca e blocos visuais, sem regra de negócio.

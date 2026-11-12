@@ -31,9 +31,12 @@ usar **B** só num número secundário se quiser ler/responder conversas pelo Cl
 ## 1b. Vendas no automático (prospecção)
 - **Painel de vendas:** https://claude.ai/artifact/LMpGydYCibdZoLEf3eNBNo (só você abre). Fonte: `automacao/painel/app/` (ver o README de lá).
   76 comércios reais da região sem site próprio (Google Maps, 09/11): pizzaria, barbearia, açaí, padaria, salão, lanchonete, pet shop.
-  Desde 12/11 tem o visual escuro da referência do 21st.dev e separa **Casimiro de Abreu** de **fora de Casimiro**, com nota e
-  número de avaliações de cada comércio. Indicadores: a enviar, enviados, responderam, fecharam. Tocar no comércio abre a ficha
-  com a mensagem pronta e o botão "Enviar no WhatsApp"; depois aparece "Próximo" para seguir a lista.
+  Desde 12/11 tem o visual escuro da referência do 21st.dev, focado em vender **site** e **placa NFC**:
+  - Uma tabela por cidade (Casimiro, Barra de São João, Rio das Ostras, Macaé), com nota e número de avaliações.
+  - "Nichos": todos os ramos, um por um; tocar em um filtra as tabelas. Botão "Mais/Menos avaliados" em cada tabela.
+  - **Casimiro:** mensagem pede para passar lá e falar com o dono (placa para quem tem menos de 50 avaliações, senão site),
+    botão "Falei pessoalmente" e roteiro curto. **Fora:** mensagem de site pelo WhatsApp. Nenhum texto cita preço.
+  - Os 3 textos são editáveis em "Mensagens". Depois de enviar aparece "Próximo" para seguir a lista.
 - **Todo dia 06:17:** o resumo lembra a meta (15 mensagens) e traz 10 comércios novos em JSON para "Importar".
 - **Por que não 100% sozinho ainda:** mandar mensagem fria em massa por número comum pode bloquear o número.
   Mandar aos poucos (15/dia) pelo painel é seguro. Com a Evolution API (~R$ 30/mês, decisão com seu pai) o envio

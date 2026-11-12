@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { TPL_PADRAO, lerImportacao, type Lead } from "./leads";
+import { TEXTOS_PADRAO, lerImportacao, type ChaveTexto, type Lead, type Textos } from "./leads";
 
 interface DocSnap {
   id: string;
@@ -51,10 +51,10 @@ function lerLead(doc: DocSnap): Lead {
   };
 }
 
-/** Leads e mensagem padrão, guardados no banco do Artifact (coleções `leads` e `config`). */
+/** Leads e textos das mensagens, guardados no banco do Artifact (coleções `leads` e `config`). */
 export function usePainel(avisar: (texto: string) => void) {
   const [leads, setLeads] = useState<Lead[]>([]);
-  const [tpl, setTpl] = useState(TPL_PADRAO);
+  const [textos, setTextos] = useState<Textos>(TEXTOS_PADRAO);
   const [fase, setFase] = useState<Fase>("carregando");
   const [lento, setLento] = useState(false);
   const [erro, setErro] = useState("");
@@ -79,10 +79,15 @@ export function usePainel(avisar: (texto: string) => void) {
       }
       dbRef.current = db;
       parar.push(
-        db.doc("config/mensagem").onSnapshot(
+        db.doc("config/mensagens").onSnapshot(
           (snap) => {
-            const texto = snap.exists ? snap.data()?.texto : null;
-            if (typeof texto === "string" && texto.trim()) setTpl(texto);
+            const salvos = snap.exists ? (snap.data() ?? {}) : {};
+            const lidos = { ...TEXTOS_PADRAO };
+            for (const chave of Object.keys(lidos) as ChaveTexto[]) {
+              const texto = salvos[chave];
+              if (typeof texto === "string" && texto.trim()) lidos[chave] = texto;
+            }
+            setTextos(lidos);
           },
           () => {},
         ),
@@ -128,20 +133,19 @@ export function usePainel(avisar: (texto: string) => void) {
     [avisar],
   );
 
-  const salvarMensagem = useCallback(
-    async (texto: string) => {
-      const novo = texto.trim() || TPL_PADRAO;
-      setTpl(novo);
+  const salvarMensagens = useCallback(
+    async (novos: Textos) => {
+      setTextos(novos);
       const db = dbRef.current;
       if (!db) {
-        avisar("Sem conexão com o painel: a mensagem não foi salva.");
+        avisar("Sem conexão com o painel: as mensagens não foram salvas.");
         return;
       }
       try {
-        await db.doc("config/mensagem").set({ texto: novo });
-        avisar("Mensagem salva");
+        await db.doc("config/mensagens").set({ ...novos });
+        avisar("Mensagens salvas");
       } catch (e) {
-        avisar(`Não salvou a mensagem: ${motivo(e)}`);
+        avisar(`Não salvou as mensagens: ${motivo(e)}`);
       }
     },
     [avisar],
@@ -164,5 +168,5 @@ export function usePainel(avisar: (texto: string) => void) {
     [leads],
   );
 
-  return { leads, tpl, fase, lento, erro, salvar, salvarMensagem, importar };
+  return { leads, textos, fase, lento, erro, salvar, salvarMensagens, importar };
 }

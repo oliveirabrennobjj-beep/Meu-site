@@ -1,35 +1,26 @@
 import { useId, useMemo, useState, type ReactNode } from "react";
 import {
   ArrowDown,
+  ArrowDownWideNarrow,
   ArrowUp,
   ArrowUpDown,
+  ArrowUpNarrowWide,
   ChevronLeft,
   ChevronRight,
-  Search,
   Star,
 } from "lucide-react";
 import {
-  BlockButton,
   IconButton,
   InitialsAvatar,
+  buttonClass,
   cardSurface,
-  fieldClass,
   focusRing,
 } from "@/components/ui/app-dashboard-shell-utils/app-block-kit";
 import { cn } from "@/lib/utils";
-import {
-  STATUS,
-  STATUS_ORDEM,
-  contar,
-  fmtInt,
-  fmtNota,
-  statusDe,
-  type Lead,
-  type Status,
-} from "./leads";
+import { STATUS, fmtInt, fmtNota, statusDe, tipoDe, type Lead, type Status } from "./leads";
 
-export type Filtro = Status | "todos";
 type Chave = "nome" | "nota" | "avaliacoes";
+type Ordem = { chave: Chave; dir: "asc" | "desc" };
 
 const POR_PAGINA = 8;
 
@@ -99,73 +90,62 @@ function StatusGlyph({ status }: { status: Status }): ReactNode {
   }
 }
 
-/** Tabela de comércios de um grupo: filtro por situação, busca, ordenação e páginas. */
+/** Comércios de uma cidade, já filtrados: ordena por avaliações, nota ou nome e divide em páginas. */
 export function TabelaLeads({
   titulo,
+  detalhe,
   leads,
-  consulta,
-  onConsulta,
-  filtro,
-  onFiltro,
+  menosAvaliadosPrimeiro,
   onAbrir,
-  avisar,
-  carregando,
+  anunciar,
 }: {
   titulo: string;
+  /** Como abordar os comércios dessa cidade, em poucas palavras. */
+  detalhe: string;
   leads: Lead[];
-  consulta: string;
-  onConsulta: (texto: string) => void;
-  filtro: Filtro;
-  onFiltro: (filtro: Filtro) => void;
+  /** Ordem inicial: quem tem menos avaliações em cima (bom para vender placa). */
+  menosAvaliadosPrimeiro: boolean;
   onAbrir: (lead: Lead) => void;
-  avisar: (texto: string) => void;
-  carregando: boolean;
+  anunciar: (texto: string) => void;
 }) {
-  const [ordem, setOrdem] = useState<{ chave: Chave; dir: "asc" | "desc" }>({
+  const [ordem, setOrdem] = useState<Ordem>({
     chave: "avaliacoes",
-    dir: "desc",
+    dir: menosAvaliadosPrimeiro ? "asc" : "desc",
   });
   const [pagina, setPagina] = useState(0);
   const tituloId = useId();
-  const buscaId = useId();
 
   const linhas = useMemo(() => {
-    const q = consulta.trim().toLowerCase();
-    const filtradas = leads.filter(
-      (l) =>
-        (filtro === "todos" || statusDe(l) === filtro) &&
-        (!q || [l.nome, l.tipo, l.cidade].some((campo) => campo?.toLowerCase().includes(q))),
-    );
     const dir = ordem.dir === "asc" ? 1 : -1;
-    return [...filtradas].sort((a, b) => {
+    return [...leads].sort((a, b) => {
       if (ordem.chave === "nome") return a.nome.localeCompare(b.nome, "pt-BR") * dir;
       const av = a[ordem.chave];
       const bv = b[ordem.chave];
-      // Quem não tem nota fica sempre no fim.
+      // Quem não tem o número fica sempre no fim.
       if (av == null || bv == null) return av == null ? (bv == null ? 0 : 1) : -1;
       return (av - bv) * dir || a.nome.localeCompare(b.nome, "pt-BR");
     });
-  }, [leads, filtro, consulta, ordem]);
+  }, [leads, ordem]);
 
   const paginas = Math.max(1, Math.ceil(linhas.length / POR_PAGINA));
   const atual = Math.min(pagina, paginas - 1);
   const visiveis = linhas.slice(atual * POR_PAGINA, atual * POR_PAGINA + POR_PAGINA);
 
-  // Volta para a primeira página quando o conjunto muda.
-  const formato = `${filtro}|${consulta}|${ordem.chave}|${ordem.dir}`;
-  const [ultimoFormato, setUltimoFormato] = useState(formato);
-  if (ultimoFormato !== formato) {
-    setUltimoFormato(formato);
-    setPagina(0);
-  }
-
-  const n = useMemo(() => contar(leads), [leads]);
-
   const ordenar = (chave: Chave, nome: string) => {
     const dir =
       ordem.chave === chave ? (ordem.dir === "desc" ? "asc" : "desc") : chave === "nome" ? "asc" : "desc";
     setOrdem({ chave, dir });
-    avisar(`Ordenado por ${nome}, ${dir === "asc" ? "do menor para o maior" : "do maior para o menor"}`);
+    setPagina(0);
+    anunciar(`${titulo}: ordenado por ${nome}, ${dir === "asc" ? "do menor para o maior" : "do maior para o menor"}`);
+  };
+
+  const porAvaliacoes = ordem.chave === "avaliacoes";
+  const menosPrimeiro = porAvaliacoes && ordem.dir === "asc";
+  const IconeOrdem = menosPrimeiro ? ArrowUpNarrowWide : ArrowDownWideNarrow;
+  const alternarAvaliacoes = () => {
+    if (porAvaliacoes) return ordenar("avaliacoes", "avaliações");
+    setOrdem({ chave: "avaliacoes", dir: "desc" });
+    setPagina(0);
   };
 
   const cabecalho = (chave: Chave, rotulo: string, nome: string, className?: string) => {
@@ -196,67 +176,26 @@ export function TabelaLeads({
 
   return (
     <section aria-labelledby={tituloId} className={cn(cardSurface, "min-w-0")}>
-      <div className="flex flex-wrap items-center justify-between gap-3 px-4 pb-3 pt-4">
-        <div className="flex items-baseline gap-2">
-          <h2 id={tituloId} className="text-[13.5px] font-semibold">
-            {titulo}
-          </h2>
-          <span className="font-mono text-[11.5px] tabular-nums text-[color:var(--bjork-text-soft)]">
-            {linhas.length}
-          </span>
+      <div className="flex items-center justify-between gap-3 px-4 pb-3 pt-3.5">
+        <div className="min-w-0">
+          <div className="flex items-baseline gap-2">
+            <h2 id={tituloId} className="truncate text-[13.5px] font-semibold">
+              {titulo}
+            </h2>
+            <span className="font-mono text-[11.5px] tabular-nums text-[color:var(--bjork-text-soft)]">
+              {linhas.length}
+            </span>
+          </div>
+          <p className="mt-0.5 truncate text-[12px] text-[color:var(--bjork-text-muted)]">{detalhe}</p>
         </div>
-        <div
-          className="hide-scrollbar -mx-1 flex max-w-full items-center gap-1 overflow-x-auto px-1"
-          role="group"
-          aria-label="Filtrar por situação"
+        <button
+          type="button"
+          onClick={alternarAvaliacoes}
+          className={buttonClass("secondary", "sm", "shrink-0")}
         >
-          {(["todos", ...STATUS_ORDEM] as const).map((s) => (
-            <button
-              key={s}
-              type="button"
-              aria-pressed={filtro === s}
-              onClick={() => onFiltro(s)}
-              className={cn(
-                "inline-flex h-7 shrink-0 cursor-pointer items-center gap-1.5 rounded-full border px-2.5 text-[12px] transition-colors duration-150",
-                filtro === s
-                  ? "border-[color:var(--bjork-border-strong)] bg-[var(--bjork-surface-active)] text-[color:var(--bjork-text)]"
-                  : "border-transparent text-[color:var(--bjork-text-muted)] hover:bg-[var(--bjork-surface-hover)] hover:text-[color:var(--bjork-text)]",
-                focusRing,
-              )}
-            >
-              {s !== "todos" && (
-                <span
-                  aria-hidden="true"
-                  className="size-1.5 rounded-full"
-                  style={{ background: STATUS[s].ink }}
-                />
-              )}
-              {s === "todos" ? "Todos" : STATUS[s].plural}
-              <span className="font-mono text-[11px] tabular-nums text-[color:var(--bjork-text-soft)]">
-                {s === "todos" ? leads.length : n[s]}
-              </span>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className="px-4 pb-3 @2xl/main:hidden">
-        <label htmlFor={buscaId} className="relative flex items-center">
-          <span className="sr-only">Buscar em {titulo}</span>
-          <Search
-            aria-hidden="true"
-            className="pointer-events-none absolute left-2.5 size-[15px] text-[color:var(--bjork-text-soft)]"
-          />
-          <input
-            id={buscaId}
-            data-busca
-            type="search"
-            value={consulta}
-            onChange={(event) => onConsulta(event.target.value)}
-            placeholder="Buscar por nome, tipo ou cidade"
-            className={cn(fieldClass, "h-9 rounded-[9px] pl-8 text-[13px]")}
-          />
-        </label>
+          <IconeOrdem aria-hidden="true" />
+          {menosPrimeiro ? "Menos avaliados" : "Mais avaliados"}
+        </button>
       </div>
 
       <table className="w-full table-fixed border-collapse text-[13px]">
@@ -302,7 +241,7 @@ export function TabelaLeads({
                       {lead.nome}
                     </button>
                     <p className="truncate text-[11.5px] leading-tight text-[color:var(--bjork-text-muted)]">
-                      {[lead.tipo, lead.cidade].filter(Boolean).join(" · ")}
+                      {tipoDe(lead)}
                     </p>
                   </div>
                 </div>
@@ -327,72 +266,37 @@ export function TabelaLeads({
               </td>
             </tr>
           ))}
-          {visiveis.length === 0 && (
-            <tr>
-              <td colSpan={5} className="px-4 py-10 text-center">
-                {carregando ? (
-                  <p className="text-[13px] text-[color:var(--bjork-text-muted)]">
-                    Carregando as empresas…
-                  </p>
-                ) : leads.length === 0 ? (
-                  <>
-                    <p className="text-[13px] font-medium">Nenhuma empresa aqui ainda</p>
-                    <p className="mt-1 text-[12.5px] text-[color:var(--bjork-text-muted)]">
-                      Use “Importar” para trazer a lista da pesquisa diária.
-                    </p>
-                  </>
-                ) : (
-                  <>
-                    <p className="text-[13px] font-medium">Nenhuma empresa nesse filtro</p>
-                    <p className="mt-1 text-[12.5px] text-[color:var(--bjork-text-muted)]">
-                      Tente outro nome ou veja todas.
-                    </p>
-                    <BlockButton
-                      size="sm"
-                      variant="secondary"
-                      className="mt-3"
-                      onClick={() => {
-                        onFiltro("todos");
-                        onConsulta("");
-                      }}
-                    >
-                      Ver todas
-                    </BlockButton>
-                  </>
-                )}
-              </td>
-            </tr>
-          )}
         </tbody>
       </table>
 
-      <div className="flex items-center justify-between gap-3 border-t border-[color:var(--bjork-border)] px-4 py-2.5 text-[12px] text-[color:var(--bjork-text-muted)]">
-        <span className="tabular-nums">
-          {linhas.length === 0
-            ? "0 empresas"
-            : `${atual * POR_PAGINA + 1}–${Math.min(linhas.length, (atual + 1) * POR_PAGINA)} de ${linhas.length}`}
-        </span>
-        <div className="flex items-center gap-1">
-          <IconButton
-            label="Página anterior"
-            disabled={atual === 0}
-            onClick={() => setPagina(atual - 1)}
-          >
-            <ChevronLeft />
-          </IconButton>
-          <span className="min-w-[4.5ch] text-center font-mono tabular-nums" aria-live="polite">
-            <span className="sr-only">Página </span>
-            {atual + 1}/{paginas}
+      {paginas > 1 && (
+        <div className="flex items-center justify-between gap-3 border-t border-[color:var(--bjork-border)] px-4 py-2 text-[12px] text-[color:var(--bjork-text-muted)]">
+          <span className="tabular-nums">
+            {atual * POR_PAGINA + 1}–{Math.min(linhas.length, (atual + 1) * POR_PAGINA)} de{" "}
+            {linhas.length}
           </span>
-          <IconButton
-            label="Próxima página"
-            disabled={atual >= paginas - 1}
-            onClick={() => setPagina(atual + 1)}
-          >
-            <ChevronRight />
-          </IconButton>
+          <div className="flex items-center gap-1">
+            <IconButton
+              label={`Página anterior de ${titulo}`}
+              disabled={atual === 0}
+              onClick={() => setPagina(atual - 1)}
+            >
+              <ChevronLeft />
+            </IconButton>
+            <span className="min-w-[4.5ch] text-center font-mono tabular-nums" aria-live="polite">
+              <span className="sr-only">Página </span>
+              {atual + 1}/{paginas}
+            </span>
+            <IconButton
+              label={`Próxima página de ${titulo}`}
+              disabled={atual >= paginas - 1}
+              onClick={() => setPagina(atual + 1)}
+            >
+              <ChevronRight />
+            </IconButton>
+          </div>
         </div>
-      </div>
+      )}
     </section>
   );
 }

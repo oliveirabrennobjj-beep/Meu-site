@@ -1,5 +1,14 @@
 import { useEffect, useState } from "react";
-import { ArrowRight, Copy, ExternalLink, MessageCircle, Send, Star, X } from "lucide-react";
+import {
+  ArrowRight,
+  Copy,
+  ExternalLink,
+  Handshake,
+  MessageCircle,
+  Send,
+  Star,
+  X,
+} from "lucide-react";
 import {
   BlockButton,
   BlockDrawer,
@@ -8,19 +17,26 @@ import {
   buttonClass,
   fieldClass,
 } from "@/components/ui/app-dashboard-shell-utils/app-block-kit";
+import { SegmentedControl, type SegmentOption } from "@/components/ui/dashboard-parts";
 import { cn } from "@/lib/utils";
 import { StatusChip } from "./TabelaLeads";
 import {
   STATUS,
+  cidadeDe,
+  ehCasimiro,
   fmtInt,
   fmtNota,
   linkSeguro,
   linkWhatsApp,
+  produtoSugerido,
   statusDe,
   textoExemplo,
   textoMensagem,
+  tipoDe,
   type Lead,
+  type Produto,
   type Status,
+  type Textos,
 } from "./leads";
 
 const DESFECHOS: [Status, string][] = [
@@ -32,10 +48,17 @@ const DESFECHOS: [Status, string][] = [
   ["novo", "Não enviei"],
 ];
 
+const PRODUTOS: SegmentOption<Produto>[] = [
+  { id: "placa", label: "PLACA", long: "Oferecer a placa de avaliações" },
+  { id: "site", label: "SITE", long: "Oferecer o site" },
+];
+
+const rotuloCampo = "mb-1.5 text-[12.5px] font-medium text-[color:var(--bjork-text-muted)]";
+
 /** Ficha de um comércio: mensagem pronta, envio pelo WhatsApp e o que aconteceu depois. */
 export function FichaLead({
   lead,
-  tpl,
+  textos,
   proximo,
   onFechar,
   onSalvar,
@@ -43,8 +66,8 @@ export function FichaLead({
   avisar,
 }: {
   lead: Lead | null;
-  tpl: string;
-  /** Próximo comércio ainda sem mensagem, no mesmo grupo. */
+  textos: Textos;
+  /** Próximo comércio ainda sem contato, na mesma cidade. */
   proximo: Lead | null;
   onFechar: () => void;
   onSalvar: (id: string, mudanca: Partial<Lead>) => void;
@@ -69,7 +92,7 @@ export function FichaLead({
         <Conteudo
           key={atual.id}
           lead={atual}
-          tpl={tpl}
+          textos={textos}
           proximo={proximo}
           onFechar={onFechar}
           onSalvar={onSalvar}
@@ -83,7 +106,7 @@ export function FichaLead({
 
 function Conteudo({
   lead,
-  tpl,
+  textos,
   proximo,
   onFechar,
   onSalvar,
@@ -91,7 +114,7 @@ function Conteudo({
   avisar,
 }: {
   lead: Lead;
-  tpl: string;
+  textos: Textos;
   proximo: Lead | null;
   onFechar: () => void;
   onSalvar: (id: string, mudanca: Partial<Lead>) => void;
@@ -100,7 +123,9 @@ function Conteudo({
 }) {
   const status = statusDe(lead);
   const novo = status === "novo";
-  const mensagem = textoMensagem(tpl, lead);
+  const daqui = ehCasimiro(lead);
+  const [produto, setProduto] = useState<Produto>(() => produtoSugerido(lead));
+  const mensagem = textoMensagem(textos, lead, produto);
   const link = linkSeguro(lead.link);
   const [obs, setObs] = useState(lead.obs ?? "");
 
@@ -112,6 +137,14 @@ function Conteudo({
       avisar("Não deu para copiar. Segure no texto e copie.");
     }
   };
+
+  const registrarContato = (canal: "whatsapp" | "pessoal") =>
+    onSalvar(lead.id, {
+      status: "enviado",
+      enviadoEm: new Date().toISOString(),
+      produto: daqui ? produto : "site",
+      canal,
+    });
 
   const mudarStatus = (para: Status) => {
     onSalvar(lead.id, para === "novo" ? { status: para, enviadoEm: "" } : { status: para });
@@ -128,7 +161,7 @@ function Conteudo({
             {lead.nome}
           </h2>
           <p className="mt-0.5 text-[13px] text-[color:var(--bjork-text-muted)]">
-            {[lead.tipo, lead.cidade].filter(Boolean).join(" · ")}
+            {tipoDe(lead)} · {cidadeDe(lead)}
           </p>
         </div>
         <IconButton label="Fechar ficha" onClick={onFechar}>
@@ -170,9 +203,24 @@ function Conteudo({
 
         {novo ? (
           <>
+            {daqui && (
+              <div className="flex items-center justify-between gap-3">
+                <p className="text-[13px] text-[color:var(--bjork-text-medium)]">
+                  É daqui: vale ir falar com o dono.
+                </p>
+                <SegmentedControl
+                  value={produto}
+                  onChange={setProduto}
+                  options={PRODUTOS}
+                  label="O que oferecer"
+                />
+              </div>
+            )}
             <div>
-              <h3 className="mb-1.5 text-[12.5px] font-medium text-[color:var(--bjork-text-muted)]">
-                Mensagem pronta
+              <h3 className={rotuloCampo}>
+                {daqui
+                  ? `Mensagem para marcar a visita (${produto === "placa" ? "placa" : "site"})`
+                  : "Mensagem pronta (site)"}
               </h3>
               <p className="max-h-[210px] select-text overflow-y-auto whitespace-pre-wrap rounded-[12px] border border-[color:var(--bjork-border)] bg-[var(--bjork-field-inset)] p-3 text-[13.5px] leading-relaxed text-[color:var(--bjork-text-medium)] [overflow-wrap:anywhere]">
                 {mensagem}
@@ -182,21 +230,33 @@ function Conteudo({
               href={linkWhatsApp(lead, mensagem)}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={() =>
-                onSalvar(lead.id, { status: "enviado", enviadoEm: new Date().toISOString() })
-              }
+              onClick={() => registrarContato("whatsapp")}
               className={buttonClass("primary", "lg", "w-full")}
             >
               <Send aria-hidden="true" />
               Enviar no WhatsApp
             </a>
             <div className="flex flex-wrap gap-2">
+              {daqui && (
+                <BlockButton
+                  variant="secondary"
+                  className="flex-1"
+                  onClick={() => {
+                    registrarContato("pessoal");
+                    avisar("Anotado. Agora marque o que aconteceu.");
+                  }}
+                >
+                  <Handshake aria-hidden="true" />
+                  Falei pessoalmente
+                </BlockButton>
+              )}
               <BlockButton variant="secondary" className="flex-1" onClick={copiar}>
                 <Copy aria-hidden="true" />
                 Copiar mensagem
               </BlockButton>
               {link && <LinkPerfil href={link} />}
             </div>
+            {daqui && <RoteiroPresencial placa={produto === "placa"} />}
           </>
         ) : (
           <>
@@ -231,9 +291,7 @@ function Conteudo({
             </div>
 
             <fieldset>
-              <legend className="mb-2 text-[12.5px] font-medium text-[color:var(--bjork-text-muted)]">
-                O que aconteceu?
-              </legend>
+              <legend className={rotuloCampo}>O que aconteceu?</legend>
               <div className="flex flex-wrap gap-2">
                 {DESFECHOS.filter(([para]) => para !== status).map(([para, rotulo]) => (
                   <BlockButton
@@ -248,10 +306,7 @@ function Conteudo({
             </fieldset>
 
             <div>
-              <label
-                htmlFor={`obs-${lead.id}`}
-                className="mb-1.5 block text-[12.5px] font-medium text-[color:var(--bjork-text-muted)]"
-              >
+              <label htmlFor={`obs-${lead.id}`} className={cn(rotuloCampo, "block")}>
                 Anotação
               </label>
               <input
@@ -270,6 +325,27 @@ function Conteudo({
         )}
       </div>
     </>
+  );
+}
+
+/** Lembrete curto da abordagem presencial (roteiro completo em bn-digital/prospeccao). */
+function RoteiroPresencial({ placa }: { placa: boolean }) {
+  return (
+    <details className="rounded-[12px] border border-[color:var(--bjork-border)] bg-[var(--bjork-surface)] px-3.5 py-2.5 text-[13px]">
+      <summary className="cursor-pointer font-medium">Roteiro para falar pessoalmente</summary>
+      <ol className="mt-2 list-decimal space-y-1.5 pl-5 leading-snug text-[color:var(--bjork-text-medium)]">
+        <li>Chegue com o balcão vazio e peça para falar com o dono.</li>
+        <li>
+          Abra com: “Você concorda que comércio bem avaliado no Google atrai mais cliente?”
+        </li>
+        <li>
+          {placa
+            ? "Encoste o celular na plaquinha e deixe o dono testar na mão dele."
+            : "Mostre no celular um site que você já fez e onde fica o botão do WhatsApp."}
+        </li>
+        <li>Preço só depois que ele disser que faz sentido.</li>
+      </ol>
+    </details>
   );
 }
 

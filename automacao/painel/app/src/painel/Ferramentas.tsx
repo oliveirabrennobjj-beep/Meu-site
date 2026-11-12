@@ -4,43 +4,63 @@ import {
   cardSurface,
   fieldClass,
 } from "@/components/ui/app-dashboard-shell-utils/app-block-kit";
+import { SegmentedControl } from "@/components/ui/dashboard-parts";
 import { cn } from "@/lib/utils";
-import { TPL_PADRAO, textoMensagem, type Lead } from "./leads";
+import {
+  TEXTOS_INFO,
+  TEXTOS_PADRAO,
+  ehCasimiro,
+  statusDe,
+  textoMensagem,
+  type ChaveTexto,
+  type Lead,
+  type Textos,
+} from "./leads";
 
 const rotulo = "mb-1.5 block text-[13px] font-medium";
 const ajuda = "mt-1.5 text-[12.5px] text-[color:var(--bjork-text-muted)]";
 
-/** Edita o texto da primeira mensagem, com prévia em um comércio de verdade. */
-export function MensagemPadrao({
-  tpl,
-  exemplo,
+const CHAVES = Object.keys(TEXTOS_INFO) as ChaveTexto[];
+const ABAS = CHAVES.map((id) => ({ id, label: TEXTOS_INFO[id].curto, long: TEXTOS_INFO[id].longo }));
+
+/** Edita os três textos de primeiro contato, com prévia em um comércio de verdade de cada caso. */
+export function Mensagens({
+  textos,
+  leads,
   onSalvar,
 }: {
-  tpl: string;
-  exemplo: Lead | null;
-  onSalvar: (texto: string) => void;
+  textos: Textos;
+  leads: Lead[];
+  onSalvar: (textos: Textos) => void;
 }) {
-  const [texto, setTexto] = useState(tpl);
+  const [rascunho, setRascunho] = useState(textos);
+  const [aba, setAba] = useState<ChaveTexto>("fora");
   const id = useId();
-  // Acompanha o texto salvo quando ele chega do banco depois de a tela abrir.
-  useEffect(() => setTexto(tpl), [tpl]);
+  // Acompanha os textos salvos quando eles chegam do banco depois de a tela abrir.
+  useEffect(() => setRascunho(textos), [textos]);
+
+  const doLugar = leads.filter((l) => ehCasimiro(l) === (aba !== "fora"));
+  const exemplo = doLugar.find((l) => statusDe(l) === "novo") ?? doLugar[0] ?? null;
+  const mudou = CHAVES.some((chave) => rascunho[chave].trim() !== textos[chave].trim());
 
   return (
     <section className={cn(cardSurface, "flex flex-col gap-4 p-4")}>
+      <SegmentedControl value={aba} onChange={setAba} options={ABAS} label="Qual mensagem editar" />
       <div>
         <label htmlFor={id} className={rotulo}>
-          Texto da primeira mensagem
+          {TEXTOS_INFO[aba].longo}
         </label>
         <textarea
           id={id}
           rows={9}
-          value={texto}
-          onChange={(event) => setTexto(event.target.value)}
+          value={rascunho[aba]}
+          onChange={(event) => setRascunho({ ...rascunho, [aba]: event.target.value })}
           className={cn(fieldClass, "py-2.5 leading-relaxed")}
         />
         <p className={ajuda}>
-          Escreva {"{nome}"} e {"{avaliacoes}"} onde entram o nome e o número de avaliações de cada
-          comércio. Vale para as próximas mensagens.
+          O painel troca sozinho: {"{nome}"}, {"{cidade}"}, {"{nicho}"} (a frase do ramo do
+          comércio) e {"{elogio}"} (cita as avaliações de quem tem 30 ou mais). Não coloque preço:
+          ele entra só na conversa.
         </p>
       </div>
       {exemplo && (
@@ -49,18 +69,18 @@ export function MensagemPadrao({
             Como fica para {exemplo.nome}
           </h2>
           <p className="whitespace-pre-wrap rounded-[12px] border border-[color:var(--bjork-border)] bg-[var(--bjork-field-inset)] p-3 text-[13.5px] leading-relaxed text-[color:var(--bjork-text-medium)] [overflow-wrap:anywhere]">
-            {textoMensagem(texto.trim() || TPL_PADRAO, exemplo)}
+            {textoMensagem(rascunho, exemplo, aba === "casimiroPlaca" ? "placa" : "site")}
           </p>
         </div>
       )}
       <div className="flex flex-wrap gap-2">
-        <BlockButton onClick={() => onSalvar(texto)} disabled={texto.trim() === tpl.trim()}>
-          Salvar mensagem
+        <BlockButton onClick={() => onSalvar(rascunho)} disabled={!mudou}>
+          Salvar mensagens
         </BlockButton>
         <BlockButton
           variant="ghost"
-          onClick={() => setTexto(TPL_PADRAO)}
-          disabled={texto === TPL_PADRAO}
+          onClick={() => setRascunho({ ...rascunho, [aba]: TEXTOS_PADRAO[aba] })}
+          disabled={rascunho[aba] === TEXTOS_PADRAO[aba]}
         >
           Voltar ao texto original
         </BlockButton>

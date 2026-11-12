@@ -7,6 +7,7 @@ import {
   MapPinned,
   MessageSquareText,
   Search,
+  X,
 } from "lucide-react";
 import AppDashboardShell, { type ShellNavGroup } from "@/components/ui/app-dashboard-shell";
 import {
@@ -14,40 +15,42 @@ import {
   IconButton,
   cardSurface,
   fieldClass,
+  focusRing,
   useAnnouncer,
 } from "@/components/ui/app-dashboard-shell-utils/app-block-kit";
 import {
-  Breakdown,
-  CompareChart,
   KpiCard,
+  PickList,
   SegmentedControl,
-  type ComparePoint,
   type KpiData,
   type SegmentOption,
 } from "@/components/ui/dashboard-parts";
 import { cn } from "@/lib/utils";
 import { FichaLead } from "./FichaLead";
-import { Importar, MensagemPadrao } from "./Ferramentas";
-import { TabelaLeads, type Filtro } from "./TabelaLeads";
+import { Importar, Mensagens } from "./Ferramentas";
+import { TabelaLeads } from "./TabelaLeads";
 import {
   META_DIA,
+  STATUS,
+  STATUS_ORDEM,
+  cidadeDe,
   contar,
-  distribuicaoNotas,
   ehCasimiro,
   enviadosHoje,
   fmtInt,
-  fmtNota,
   fmtPct,
-  mediaNota,
   noEscopo,
+  porCidade,
   porTipo,
   statusDe,
+  tipoDe,
   type Escopo,
-  type Lead,
+  type Status,
 } from "./leads";
 import { usePainel } from "./usePainel";
 
-type Vista = "geral" | "mensagem" | "importar";
+type Vista = "geral" | "mensagens" | "importar";
+type Filtro = Status | "todos";
 
 const ESCOPOS: SegmentOption<Escopo>[] = [
   { id: "todos", label: "TODOS", long: "Todos os comércios" },
@@ -59,19 +62,9 @@ const TITULO: Record<Escopo | Exclude<Vista, "geral">, string> = {
   todos: "Visão geral",
   casimiro: "Casimiro de Abreu",
   fora: "Fora de Casimiro",
-  mensagem: "Mensagem padrão",
+  mensagens: "Mensagens",
   importar: "Importar empresas",
 };
-
-const eixoPct = (valor: number) => `${Math.round(valor)}%`;
-const tetoPct = (pico: number) => Math.max(20, Math.ceil((pico * 1.08) / 20) * 20);
-
-function diferenca(a: number | null, b: number | null) {
-  if (a == null || b == null) return null;
-  const d = Math.round((a - b) * 10) / 10;
-  if (d === 0) return "igual";
-  return `${d > 0 ? "+" : "−"}${fmtNota(Math.abs(d))}`;
-}
 
 export function PainelVendas() {
   const [aviso, setAviso] = useState<{ texto: string; n: number } | null>(null);
@@ -85,12 +78,13 @@ export function PainelVendas() {
     return () => window.clearTimeout(timer);
   }, [aviso]);
 
-  const { leads, tpl, fase, lento, erro, salvar, salvarMensagem, importar } = usePainel(avisar);
+  const { leads, textos, fase, lento, erro, salvar, salvarMensagens, importar } = usePainel(avisar);
   const { announce, region } = useAnnouncer();
 
   const [vista, setVista] = useState<Vista>("geral");
   const [escopo, setEscopo] = useState<Escopo>("todos");
   const [filtro, setFiltro] = useState<Filtro>("todos");
+  const [nichoEscolhido, setNichoEscolhido] = useState<string | null>(null);
   const [consulta, setConsulta] = useState("");
   const [fichaId, setFichaId] = useState<string | null>(null);
   const mainRef = useRef<HTMLElement>(null);
@@ -102,12 +96,33 @@ export function PainelVendas() {
   const responderam = useMemo(() => leads.filter((l) => statusDe(l) === "respondeu").length, [leads]);
   const hojeTotal = useMemo(() => enviadosHoje(leads), [leads]);
 
+  const nichos = useMemo(() => porTipo(doEscopo), [doEscopo]);
+  // O nicho escolhido só vale enquanto existir no grupo que está na tela.
+  const nicho = nichos.some((linha) => linha.label === nichoEscolhido) ? nichoEscolhido : null;
+  const doNicho = useMemo(
+    () => (nicho ? doEscopo.filter((l) => tipoDe(l) === nicho) : doEscopo),
+    [doEscopo, nicho],
+  );
+
+  const buscados = useMemo(() => {
+    const q = consulta.trim().toLowerCase();
+    if (!q) return doNicho;
+    return doNicho.filter((l) =>
+      [l.nome, l.tipo, cidadeDe(l)].some((campo) => campo?.toLowerCase().includes(q)),
+    );
+  }, [doNicho, consulta]);
+  const porSituacao = useMemo(() => contar(buscados), [buscados]);
+  const cidades = useMemo(
+    () => porCidade(filtro === "todos" ? buscados : buscados.filter((l) => statusDe(l) === filtro)),
+    [buscados, filtro],
+  );
+
   const kpis = useMemo<KpiData[]>(() => {
-    const n = contar(doEscopo);
-    const total = doEscopo.length;
+    const n = contar(doNicho);
+    const total = doNicho.length;
     const contatados = total - n.novo;
     const comResposta = n.respondeu + n.fechou + n.depois + n.nao;
-    const hoje = enviadosHoje(doEscopo);
+    const hoje = enviadosHoje(doNicho);
     const v = (valor: number) => (carregando ? "—" : fmtInt(valor));
     return [
       {
@@ -147,50 +162,30 @@ export function PainelVendas() {
         hint: "dos contatos",
       },
     ];
-  }, [doEscopo, carregando]);
-
-  const grafico = useMemo(() => {
-    const foraNaFrente = escopo === "fora";
-    const principal = foraNaFrente ? fora : casimiro;
-    const comparado = foraNaFrente ? casimiro : fora;
-    const nomes = foraNaFrente ? (["Fora", "Casimiro"] as const) : (["Casimiro", "Fora"] as const);
-    const pontos: ComparePoint[] = distribuicaoNotas(principal, comparado).map((p) => ({
-      label: `Nota ${fmtNota(p.nota)}`,
-      tick: fmtNota(p.nota),
-      current: p.pctA,
-      previous: p.pctB,
-      currentText: `${Math.round(p.pctA)}% · ${p.qtdA}`,
-      previousText: `${Math.round(p.pctB)}% · ${p.qtdB}`,
-    }));
-    const mCas = mediaNota(casimiro);
-    const mFora = mediaNota(fora);
-    const nota =
-      escopo === "todos"
-        ? `nota média · Casimiro ${fmtNota(mCas)} e fora ${fmtNota(mFora)}`
-        : escopo === "casimiro"
-          ? `nota média · ${diferenca(mCas, mFora) ?? "sem comparação"} vs fora`
-          : `nota média · ${diferenca(mFora, mCas) ?? "sem comparação"} vs Casimiro`;
-    return {
-      pontos,
-      nomes,
-      titulo: fmtNota(mediaNota(doEscopo)),
-      nota,
-      resumo: `Notas no Google. Casimiro de Abreu: média ${fmtNota(mCas)} em ${casimiro.length} comércios. Fora de Casimiro: média ${fmtNota(mFora)} em ${fora.length} comércios.`,
-    };
-  }, [escopo, casimiro, fora, doEscopo]);
-
-  const tipos = useMemo(() => porTipo(doEscopo), [doEscopo]);
+  }, [doNicho, carregando]);
 
   const ficha = useMemo(() => leads.find((l) => l.id === fichaId) ?? null, [leads, fichaId]);
   const proximo = useMemo(() => {
     if (!ficha) return null;
-    const doGrupo = ehCasimiro(ficha);
+    const cidade = cidadeDe(ficha);
+    // Mesma ordem das tabelas: em Casimiro, quem tem menos avaliações vem primeiro.
+    const sentido = ehCasimiro(ficha) ? 1 : -1;
     return (
       leads
-        .filter((l) => l.id !== ficha.id && ehCasimiro(l) === doGrupo && statusDe(l) === "novo")
-        .sort((a, b) => (b.avaliacoes ?? -1) - (a.avaliacoes ?? -1))[0] ?? null
+        .filter(
+          (l) =>
+            l.id !== ficha.id &&
+            cidadeDe(l) === cidade &&
+            statusDe(l) === "novo" &&
+            (!nicho || tipoDe(l) === nicho),
+        )
+        .sort((a, b) => {
+          if (a.avaliacoes == null || b.avaliacoes == null)
+            return a.avaliacoes == null ? (b.avaliacoes == null ? 0 : 1) : -1;
+          return (a.avaliacoes - b.avaliacoes) * sentido;
+        })[0] ?? null
     );
-  }, [leads, ficha]);
+  }, [leads, ficha, nicho]);
 
   const irParaTabelas = (depois?: (main: HTMLElement) => void) => {
     setVista("geral");
@@ -203,7 +198,7 @@ export function PainelVendas() {
   };
 
   const navegar = (id: string) => {
-    if (id === "mensagem" || id === "importar") setVista(id);
+    if (id === "mensagens" || id === "importar") setVista(id);
     else {
       setVista("geral");
       setEscopo(id as Escopo);
@@ -214,6 +209,12 @@ export function PainelVendas() {
   const mudarEscopo = (novo: Escopo) => {
     setEscopo(novo);
     announce(`Mostrando ${ESCOPOS.find((e) => e.id === novo)?.long.toLowerCase()}`);
+  };
+
+  const limparFiltros = () => {
+    setFiltro("todos");
+    setNichoEscolhido(null);
+    setConsulta("");
   };
 
   const nav: ShellNavGroup[] = [
@@ -237,7 +238,7 @@ export function PainelVendas() {
     {
       label: "Ferramentas",
       items: [
-        { id: "mensagem", label: "Mensagem padrão", icon: MessageSquareText },
+        { id: "mensagens", label: "Mensagens", icon: MessageSquareText },
         { id: "importar", label: "Importar empresas", icon: Download },
       ],
     },
@@ -249,8 +250,8 @@ export function PainelVendas() {
     : escopo === "todos"
       ? `${leads.length} comércios sem site · ${casimiro.length} em Casimiro e ${fora.length} fora`
       : escopo === "casimiro"
-        ? `${casimiro.length} comércios sem site · comparados com os de fora`
-        : `${fora.length} comércios sem site · comparados com os de Casimiro`;
+        ? `${casimiro.length} comércios · falar com o dono, placa primeiro`
+        : `${fora.length} comércios · oferta de site pelo WhatsApp`;
 
   const estado =
     fase === "sem-conta"
@@ -263,25 +264,20 @@ export function PainelVendas() {
             : "O painel está demorando para responder. Se não carregar, abra de novo em instantes."
           : null;
 
-  const tabela = (titulo: string, grupo: Lead[]) => (
-    <TabelaLeads
-      titulo={titulo}
-      leads={grupo}
-      consulta={consulta}
-      onConsulta={setConsulta}
-      filtro={filtro}
-      onFiltro={setFiltro}
-      onAbrir={(lead) => setFichaId(lead.id)}
-      avisar={announce}
-      carregando={carregando}
-    />
-  );
+  const chip = (ativa: boolean) =>
+    cn(
+      "inline-flex h-7 shrink-0 cursor-pointer items-center gap-1.5 rounded-full border px-2.5 text-[12px] transition-colors duration-150",
+      ativa
+        ? "border-[color:var(--bjork-border-strong)] bg-[var(--bjork-surface-active)] text-[color:var(--bjork-text)]"
+        : "border-transparent text-[color:var(--bjork-text-muted)] hover:bg-[var(--bjork-surface-hover)] hover:text-[color:var(--bjork-text)]",
+      focusRing,
+    );
 
   return (
     <AppDashboardShell
       workspace={{
         name: "BN Digital",
-        plan: "Prospecção",
+        plan: "Sites e placas",
         mark: (
           <span
             aria-hidden="true"
@@ -360,6 +356,8 @@ export function PainelVendas() {
             }
             onClick={() => {
               setEscopo("todos");
+              setNichoEscolhido(null);
+              setConsulta("");
               setFiltro("respondeu");
               irParaTabelas();
             }}
@@ -387,7 +385,7 @@ export function PainelVendas() {
         <>
           <FichaLead
             lead={ficha}
-            tpl={tpl}
+            textos={textos}
             proximo={proximo}
             onFechar={() => setFichaId(null)}
             onSalvar={salvar}
@@ -415,8 +413,8 @@ export function PainelVendas() {
               {TITULO[ativo]}
             </h1>
             <p className="mt-2 text-[13px] text-[color:var(--bjork-text-muted)]">
-              {vista === "mensagem"
-                ? "O texto que abre a conversa no WhatsApp"
+              {vista === "mensagens"
+                ? "Um texto para cada lugar e cada oferta"
                 : vista === "importar"
                   ? "Traga os comércios novos da pesquisa diária"
                   : subtitulo}
@@ -441,12 +439,8 @@ export function PainelVendas() {
           </p>
         )}
 
-        {vista === "mensagem" && (
-          <MensagemPadrao
-            tpl={tpl}
-            exemplo={leads.find((l) => statusDe(l) === "novo") ?? leads[0] ?? null}
-            onSalvar={salvarMensagem}
-          />
+        {vista === "mensagens" && (
+          <Mensagens textos={textos} leads={leads} onSalvar={salvarMensagens} />
         )}
 
         {vista === "importar" && <Importar onImportar={importar} />}
@@ -462,34 +456,123 @@ export function PainelVendas() {
               ))}
             </section>
 
-            <div className="grid grid-cols-1 gap-3 @5xl/main:grid-cols-[minmax(0,1fr)_300px]">
-              <CompareChart
-                key={`${escopo}-${leads.length > 0}`}
-                title="Notas no Google"
-                headline={carregando ? "—" : grafico.titulo}
-                headlineNote={carregando ? "carregando" : grafico.nota}
-                points={grafico.pontos}
-                currentLabel={grafico.nomes[0]}
-                previousLabel={grafico.nomes[1]}
-                axis={eixoPct}
-                ceiling={tetoPct}
-                summary={grafico.resumo}
-                pointHeader="Nota"
-                emptyText={
-                  carregando ? "Carregando as notas…" : "Ainda não há comércios com nota no Google."
-                }
-              />
-              <Breakdown
-                title="Comércios por tipo"
-                totalText={carregando ? "—" : fmtInt(doEscopo.length)}
-                rows={tipos}
+            <div className="grid grid-cols-1 items-start gap-4 @5xl/main:grid-cols-[300px_minmax(0,1fr)] @3xl:gap-5">
+              <PickList
+                title="Nichos"
+                totalText={carregando ? "—" : nicho ? "toque de novo para ver todos" : "toque para filtrar"}
+                rows={nichos}
+                selected={nicho}
+                onSelect={(escolhido) => {
+                  setNichoEscolhido(escolhido);
+                  announce(escolhido ? `Mostrando só ${escolhido}` : "Mostrando todos os nichos");
+                }}
                 emptyText={carregando ? "Carregando…" : "Nenhum comércio neste grupo."}
               />
-            </div>
 
-            <div data-tabelas className="flex scroll-mt-3 flex-col gap-4 @3xl:gap-5">
-              {escopo !== "fora" && tabela("Casimiro de Abreu", casimiro)}
-              {escopo !== "casimiro" && tabela("Fora de Casimiro", fora)}
+              <div data-tabelas className="flex min-w-0 scroll-mt-3 flex-col gap-4 @3xl:gap-5">
+                <section
+                  aria-label="Filtros"
+                  className={cn(cardSurface, "flex flex-col gap-2.5 p-3")}
+                >
+                  <label className="relative flex items-center @2xl/main:hidden">
+                    <span className="sr-only">Buscar comércio</span>
+                    <Search
+                      aria-hidden="true"
+                      className="pointer-events-none absolute left-2.5 size-[15px] text-[color:var(--bjork-text-soft)]"
+                    />
+                    <input
+                      data-busca
+                      type="search"
+                      value={consulta}
+                      onChange={(event) => setConsulta(event.target.value)}
+                      placeholder="Buscar por nome, nicho ou cidade"
+                      className={cn(fieldClass, "h-9 rounded-[9px] pl-8 text-[13px]")}
+                    />
+                  </label>
+                  <div
+                    className="hide-scrollbar flex items-center gap-1 overflow-x-auto"
+                    role="group"
+                    aria-label="Filtrar por situação"
+                  >
+                    {nicho && (
+                      <button
+                        type="button"
+                        onClick={() => setNichoEscolhido(null)}
+                        aria-label={`Tirar o filtro de ${nicho}`}
+                        className={cn(chip(true), "text-[color:var(--blk-accent-ink)]")}
+                      >
+                        {nicho}
+                        <X aria-hidden="true" className="size-3" />
+                      </button>
+                    )}
+                    {(["todos", ...STATUS_ORDEM] as const).map((s) => (
+                      <button
+                        key={s}
+                        type="button"
+                        aria-pressed={filtro === s}
+                        onClick={() => setFiltro(s)}
+                        className={chip(filtro === s)}
+                      >
+                        {s !== "todos" && (
+                          <span
+                            aria-hidden="true"
+                            className="size-1.5 rounded-full"
+                            style={{ background: STATUS[s].ink }}
+                          />
+                        )}
+                        {s === "todos" ? "Todos" : STATUS[s].plural}
+                        <span className="font-mono text-[11px] tabular-nums text-[color:var(--bjork-text-soft)]">
+                          {s === "todos" ? buscados.length : porSituacao[s]}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </section>
+
+                {cidades.map((grupo) => (
+                  <TabelaLeads
+                    key={grupo.cidade}
+                    titulo={grupo.cidade}
+                    detalhe={grupo.casimiro ? "Pessoalmente · placa ou site" : "WhatsApp · site"}
+                    leads={grupo.leads}
+                    menosAvaliadosPrimeiro={grupo.casimiro}
+                    onAbrir={(lead) => setFichaId(lead.id)}
+                    anunciar={announce}
+                  />
+                ))}
+
+                {cidades.length === 0 && (
+                  <div className={cn(cardSurface, "px-4 py-10 text-center")}>
+                    {carregando ? (
+                      <p className="text-[13px] text-[color:var(--bjork-text-muted)]">
+                        Carregando as empresas…
+                      </p>
+                    ) : doEscopo.length === 0 ? (
+                      <>
+                        <p className="text-[13px] font-medium">Nenhuma empresa aqui ainda</p>
+                        <p className="mt-1 text-[12.5px] text-[color:var(--bjork-text-muted)]">
+                          Use “Importar” para trazer a lista da pesquisa diária.
+                        </p>
+                      </>
+                    ) : (
+                      <>
+                        <p className="text-[13px] font-medium">Nenhuma empresa nesse filtro</p>
+                        <p className="mt-1 text-[12.5px] text-[color:var(--bjork-text-muted)]">
+                          Tente outro nome, outro nicho ou veja todas.
+                        </p>
+                        <BlockButton
+                          size="sm"
+                          variant="secondary"
+                          className="mt-3"
+                          onClick={limparFiltros}
+                        >
+                          Ver todas
+                        </BlockButton>
+                      </>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
           </>
         )}
