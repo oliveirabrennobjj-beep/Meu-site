@@ -159,6 +159,10 @@ try {
     await p.getByRole("dialog").getByRole("link", { name: "Enviar no WhatsApp" }).getAttribute("href"),
   );
   assert.match(textoFora, /site próprio/);
+  // Os atalhos da loja aparecem em toda ficha, não só nas de Casimiro.
+  for (const atalho of ["Ver no Google Maps", /Instagram|página/, "Abrir o WhatsApp da loja"]) {
+    assert.equal(await p.getByRole("dialog").getByRole("link", { name: atalho }).count(), 1);
+  }
   assert.doesNotMatch(textoFora, /R\$|passar aí/);
   await p.getByRole("dialog").getByRole("button", { name: "Fechar ficha" }).click();
 
