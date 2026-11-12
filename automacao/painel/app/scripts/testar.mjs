@@ -177,6 +177,15 @@ try {
   await p.screenshot({ path: path.join(saida, "celular-ficha.png") });
   const href = await ficha.getByRole("link", { name: "Enviar no WhatsApp" }).getAttribute("href");
   assert.match(href, /^https:\/\/wa\.me\/55\d{10,11}\?text=/);
+  // Atalhos da loja: mapa pelo nome, Instagram (perfil ou busca) e WhatsApp sem mensagem.
+  const maps = await ficha.getByRole("link", { name: "Ver no Google Maps" }).getAttribute("href");
+  assert.match(maps, /^https:\/\/www\.google\.com\/maps\/search\/\?api=1&query=/);
+  assert.ok(decodeURIComponent(maps).includes(nome));
+  assert.equal(await ficha.getByRole("link", { name: /Instagram/ }).count(), 1);
+  assert.match(
+    await ficha.getByRole("link", { name: "Abrir o WhatsApp da loja" }).getAttribute("href"),
+    /^https:\/\/wa\.me\/55\d+\?text=$/,
+  );
   const textoCasimiro = decodeURIComponent(href);
   assert.ok(textoCasimiro.includes(nome), "a mensagem leva o nome do comércio");
   assert.match(textoCasimiro, /falar direto com o dono/);

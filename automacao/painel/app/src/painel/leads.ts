@@ -255,6 +255,25 @@ export function textoGostou(textos: Textos, lead: Lead) {
 
 export const linkSeguro = (url?: string) => (url && /^https?:\/\//i.test(url) ? url : null);
 
+/* Sobre a loja --------------------------------------------------------------------------------- */
+
+// O painel não guarda endereço: a busca por nome e cidade abre a ficha da loja no Google Maps.
+export const linkMaps = (lead: Lead) =>
+  `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${lead.nome} ${cidadeDe(lead)} RJ`)}`;
+
+const NAO_E_PERFIL = new Set(["p", "reel", "reels", "explore", "stories"]);
+
+/** Perfil do Instagram da loja, quando o link cadastrado é de lá. */
+export function instagramDe(lead: Lead) {
+  const url = linkSeguro(lead.link);
+  const usuario = url?.match(/instagram\.com\/([A-Za-z0-9._]+)/i)?.[1];
+  if (!url || !usuario || NAO_E_PERFIL.has(usuario.toLowerCase())) return null;
+  return { arroba: `@${usuario}`, url };
+}
+
+export const buscaInstagram = (lead: Lead) =>
+  `https://www.google.com/search?q=${encodeURIComponent(`${lead.nome} ${cidadeDe(lead)} instagram`)}`;
+
 /* Números -------------------------------------------------------------------------------------- */
 
 const NOTA = new Intl.NumberFormat("pt-BR", { minimumFractionDigits: 1, maximumFractionDigits: 1 });

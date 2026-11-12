@@ -36,6 +36,7 @@ usar **B** só num número secundário se quiser ler/responder conversas pelo Cl
   - "Nichos": todos os ramos, um por um; tocar em um filtra as tabelas. Botão "Mais/Menos avaliados" em cada tabela.
   - **Casimiro:** mensagem pede para passar lá e falar com o dono (placa para quem tem menos de 50 avaliações, senão site),
     botão "Falei pessoalmente" e roteiro curto. **Fora:** mensagem de site pelo WhatsApp. Nenhum texto cita preço.
+  - A ficha tem "Sobre a loja": atalhos para o Google Maps, o Instagram (com o @) e o WhatsApp do comércio.
   - Quando a pessoa gosta (situação "Respondeu"), o botão manda a oferta de demonstração do site para hoje ou amanhã.
   - Os 4 textos são editáveis em "Mensagens". Depois de enviar aparece "Próximo" para seguir a lista.
 - **Todo dia 06:17:** o resumo lembra a meta (15 mensagens) e traz 10 comércios novos em JSON para "Importar".

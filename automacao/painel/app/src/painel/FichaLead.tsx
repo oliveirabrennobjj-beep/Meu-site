@@ -4,7 +4,10 @@ import {
   Copy,
   ExternalLink,
   Handshake,
+  Instagram,
+  MapPin,
   MessageCircle,
+  Search,
   Send,
   Star,
   X,
@@ -22,10 +25,13 @@ import { cn } from "@/lib/utils";
 import { StatusChip } from "./TabelaLeads";
 import {
   STATUS,
+  buscaInstagram,
   cidadeDe,
   ehCasimiro,
   fmtInt,
   fmtNota,
+  instagramDe,
+  linkMaps,
   linkSeguro,
   linkWhatsApp,
   produtoSugerido,
@@ -126,7 +132,6 @@ function Conteudo({
   const daqui = ehCasimiro(lead);
   const [produto, setProduto] = useState<Produto>(() => produtoSugerido(lead));
   const mensagem = textoMensagem(textos, lead, produto);
-  const link = linkSeguro(lead.link);
   const [obs, setObs] = useState(lead.obs ?? "");
 
   const copiar = async () => {
@@ -201,6 +206,8 @@ function Conteudo({
           )}
         </dl>
 
+        <SobreALoja lead={lead} />
+
         {novo ? (
           <>
             {daqui && (
@@ -254,7 +261,6 @@ function Conteudo({
                 <Copy aria-hidden="true" />
                 Copiar mensagem
               </BlockButton>
-              {link && <LinkPerfil href={link} />}
             </div>
             {daqui && <RoteiroPresencial placa={produto === "placa"} />}
           </>
@@ -277,19 +283,6 @@ function Conteudo({
                 Oferecer demonstração do site
               </a>
             )}
-            <div className="flex flex-wrap gap-2">
-              <a
-                href={linkWhatsApp(lead, "")}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={buttonClass("secondary", "md", "flex-1")}
-              >
-                <MessageCircle aria-hidden="true" />
-                Abrir conversa
-              </a>
-              {link && <LinkPerfil href={link} />}
-            </div>
-
             <fieldset>
               <legend className={rotuloCampo}>O que aconteceu?</legend>
               <div className="flex flex-wrap gap-2">
@@ -349,16 +342,59 @@ function RoteiroPresencial({ placa }: { placa: boolean }) {
   );
 }
 
-function LinkPerfil({ href }: { href: string }) {
+/** Atalhos para conhecer a loja antes de falar com ela: mapa, Instagram e WhatsApp. */
+function SobreALoja({ lead }: { lead: Lead }) {
+  const instagram = instagramDe(lead);
+  const pagina = instagram ? null : linkSeguro(lead.link);
+  const temWhatsApp = /\d/.test(lead.whatsapp);
+  const atalho = buttonClass("secondary", "md", "min-w-0 px-2.5 text-[13px]");
+  const nova = { target: "_blank", rel: "noopener noreferrer" };
   return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={buttonClass("secondary", "md", "flex-1")}
-    >
-      <ExternalLink aria-hidden="true" />
-      {/instagram\.com/i.test(href) ? "Ver Instagram" : "Ver página"}
-    </a>
+    <div>
+      <h3 className={rotuloCampo}>Sobre a loja</h3>
+      <div className={cn("grid gap-2", temWhatsApp ? "grid-cols-3" : "grid-cols-2")}>
+        <a href={linkMaps(lead)} {...nova} aria-label="Ver no Google Maps" className={atalho}>
+          <MapPin aria-hidden="true" />
+          <span className="truncate">Google Maps</span>
+        </a>
+        {instagram ? (
+          <a
+            href={instagram.url}
+            {...nova}
+            aria-label={`Ver o Instagram ${instagram.arroba}`}
+            className={atalho}
+          >
+            <Instagram aria-hidden="true" />
+            <span className="truncate">{instagram.arroba}</span>
+          </a>
+        ) : pagina ? (
+          <a href={pagina} {...nova} aria-label="Ver a página da loja" className={atalho}>
+            <ExternalLink aria-hidden="true" />
+            <span className="truncate">Página</span>
+          </a>
+        ) : (
+          <a
+            href={buscaInstagram(lead)}
+            {...nova}
+            aria-label="Buscar Instagram da loja no Google"
+            className={atalho}
+          >
+            <Search aria-hidden="true" />
+            <span className="truncate">Buscar Instagram</span>
+          </a>
+        )}
+        {temWhatsApp && (
+          <a
+            href={linkWhatsApp(lead, "")}
+            {...nova}
+            aria-label="Abrir o WhatsApp da loja"
+            className={atalho}
+          >
+            <MessageCircle aria-hidden="true" />
+            <span className="truncate">WhatsApp</span>
+          </a>
+        )}
+      </div>
+    </div>
   );
 }
