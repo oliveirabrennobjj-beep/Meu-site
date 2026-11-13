@@ -460,6 +460,7 @@ try {
   assert.equal(conversaEnviada.fotos, 1, "a foto vai junto");
   const instrucoes = conversaEnviada.entrada[0].content;
   assert.match(instrucoes, /Barra de São João, Rio Dourado, Professor Souza/);
+  assert.match(instrucoes, /ABORDAGEM PROFISSIONAL/);
   assert.match(instrucoes, /w5522900000001 \| Loja Antiga de Teste .*\+55 22 90000-0001/);
   assert.equal(conversaEnviada.entrada.at(-1).content, "o que eu faço com essa?\n[Foto em anexo]");
   assert.doesNotMatch(await p.locator("main").innerText(), /```painel/);
