@@ -27,6 +27,7 @@ import { StatusChip } from "./TabelaLeads";
 import {
   STATUS,
   buscaInstagram,
+  chaveTexto,
   cidadeDe,
   dataEnvio,
   ehCasimiro,
@@ -35,13 +36,14 @@ import {
   instagramDe,
   linkMaps,
   linkWhatsApp,
+  ofertaInicial,
   paginaDe,
-  produtoInicial,
   statusDe,
   textoGostou,
   textoMensagem,
   tipoDe,
   type Lead,
+  type Oferta,
   type Produto,
   type Status,
   type Textos,
@@ -59,6 +61,12 @@ const DESFECHOS: [Status, string][] = [
 const OFERTA: Record<Produto, { nome: string; oferecer: string; enviada: string }> = {
   placa: { nome: "Placa", oferecer: "Oferecer a placa de avaliações", enviada: "Placa: mensagem já enviada" },
   site: { nome: "Site", oferecer: "Oferecer o site", enviada: "Site: mensagem já enviada" },
+};
+
+const AS_DUAS: SegmentOption<Oferta> = {
+  id: "ambas",
+  label: "AS DUAS",
+  long: "Oferecer site e placa na mesma mensagem",
 };
 
 function quando(iso: string) {
@@ -138,20 +146,26 @@ function Conteudo({
   const status = statusDe(lead);
   const novo = status === "novo";
   const daqui = ehCasimiro(lead);
-  const [escolhido, setProduto] = useState<Produto>(() => produtoInicial(lead));
-  // Fora de Casimiro a oferta é sempre o site.
-  const produto: Produto = daqui ? escolhido : "site";
-  const enviada = dataEnvio(lead, produto);
-  const mensagem = textoMensagem(textos, lead, produto);
+  const [escolhida, setOferta] = useState<Oferta>(() => ofertaInicial(lead));
+  const nadaEnviado = !dataEnvio(lead, "site") && !dataEnvio(lead, "placa");
+  // Fora de Casimiro a oferta é sempre o site; "as duas" só vale antes do primeiro envio.
+  const oferta: Oferta = !daqui ? "site" : escolhida === "ambas" && !nadaEnviado ? ofertaInicial(lead) : escolhida;
+  const enviada = oferta === "ambas" ? null : dataEnvio(lead, oferta);
+  const chave = chaveTexto(lead, oferta);
+  const continuacao = chave === "depoisPlaca" || chave === "depoisSite";
+  const mensagem = textoMensagem(textos, lead, oferta);
   const [obs, setObs] = useState(lead.obs ?? "");
-  const opcoes: SegmentOption<Produto>[] = (["placa", "site"] as const).map((id) => {
-    const feita = dataEnvio(lead, id) !== null;
-    return {
-      id,
-      label: `${OFERTA[id].nome.toUpperCase()}${feita ? " ✓" : ""}`,
-      long: feita ? OFERTA[id].enviada : OFERTA[id].oferecer,
-    };
-  });
+  const opcoes: SegmentOption<Oferta>[] = [
+    ...(nadaEnviado ? [AS_DUAS] : []),
+    ...(["placa", "site"] as const).map((id) => {
+      const feita = dataEnvio(lead, id) !== null;
+      return {
+        id,
+        label: `${OFERTA[id].nome.toUpperCase()}${feita ? " ✓" : ""}`,
+        long: feita ? OFERTA[id].enviada : OFERTA[id].oferecer,
+      };
+    }),
+  ];
 
   const copiar = async () => {
     try {
@@ -164,15 +178,19 @@ function Conteudo({
 
   const registrarContato = (canal: "whatsapp" | "pessoal") => {
     const agora = new Date().toISOString();
-    const outra: Produto = produto === "placa" ? "site" : "placa";
-    const dataOutra = dataEnvio(lead, outra);
+    const enviados: Partial<Record<Produto, string>> = {};
+    for (const id of ["site", "placa"] as const) {
+      const anterior = dataEnvio(lead, id);
+      if (oferta === "ambas" || oferta === id) enviados[id] = agora;
+      else if (anterior) enviados[id] = anterior;
+    }
     onSalvar(lead.id, {
       // Mandar a segunda oferta não desfaz o que já foi marcado (respondeu, fechou…).
       ...(novo ? { status: "enviado" } : {}),
       enviadoEm: agora,
-      produto,
+      produto: oferta,
       canal,
-      enviados: { [produto]: agora, ...(dataOutra ? { [outra]: dataOutra } : {}) },
+      enviados,
     });
   };
 
@@ -253,8 +271,8 @@ function Conteudo({
                         .join(" · ")}
                 </p>
                 <SegmentedControl
-                  value={produto}
-                  onChange={setProduto}
+                  value={oferta}
+                  onChange={setOferta}
                   options={opcoes}
                   label="O que oferecer"
                 />
@@ -262,9 +280,11 @@ function Conteudo({
             )}
             <div>
               <h3 className={rotuloCampo}>
-                {daqui
-                  ? `Mensagem para marcar a visita (${produto === "placa" ? "placa" : "site"})`
-                  : "Mensagem pronta (site)"}
+                {!daqui
+                  ? "Mensagem pronta (site)"
+                  : continuacao
+                    ? `Continuação da conversa, sem repetir o oi (${oferta === "placa" ? "placa" : "site"})`
+                    : `Mensagem para marcar a visita (${oferta === "ambas" ? "site e placa" : oferta})`}
               </h3>
               <p className="max-h-[210px] select-text overflow-y-auto whitespace-pre-wrap rounded-[12px] border border-[color:var(--bjork-border)] bg-[var(--bjork-field-inset)] p-3 text-[13.5px] leading-relaxed text-[color:var(--bjork-text-medium)] [overflow-wrap:anywhere]">
                 {mensagem}
@@ -276,7 +296,7 @@ function Conteudo({
                 style={{ color: "var(--blk-success)" }}
               >
                 <Check aria-hidden="true" className="size-4" />
-                Mensagem {produto === "placa" ? "da placa" : "do site"} enviada {quando(enviada)}.
+                Mensagem {oferta === "placa" ? "da placa" : "do site"} enviada {quando(enviada)}.
               </p>
             )}
             <a
@@ -308,7 +328,7 @@ function Conteudo({
                 Copiar mensagem
               </BlockButton>
             </div>
-            {daqui && novo && <RoteiroPresencial placa={produto === "placa"} />}
+            {daqui && novo && <RoteiroPresencial placa={oferta !== "site"} />}
           </>
         )}
 

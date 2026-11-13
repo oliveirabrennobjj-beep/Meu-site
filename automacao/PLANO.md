@@ -36,8 +36,10 @@ usar **B** só num número secundário se quiser ler/responder conversas pelo Cl
   - "Nichos": todos os ramos, um por um; tocar em um filtra as tabelas. Botão "Mais/Menos avaliados" em cada tabela.
   - **Casimiro:** mensagem pede para passar lá e falar com o dono (placa para quem tem menos de 50 avaliações, senão site),
     botão "Falei pessoalmente" e roteiro curto. **Fora:** mensagem de site pelo WhatsApp. Nenhum texto cita preço.
-  - Em Casimiro a mesma loja pode receber as duas ofertas (site e placa): cada envio fica marcado sozinho,
-    com a data, e a outra continua disponível. A meta do dia conta mensagens, não lojas.
+  - Em Casimiro a ficha abre com "AS DUAS" (site e placa numa mensagem só). Se mandar uma oferta só, a outra
+    vira continuação ("Ah, esqueci de falar…"), sem repetir o oi. Cada envio fica marcado com a data.
+    A meta do dia conta mensagens, não lojas.
+  - A saudação muda pela hora do celular: bom dia, boa tarde ou boa noite.
   - A ficha tem "Sobre a loja": atalhos para o Google Maps, o Instagram (com o @) e o WhatsApp do comércio.
   - Quando a pessoa gosta (situação "Respondeu"), o botão manda a oferta de demonstração do site para hoje ou amanhã.
   - Os 4 textos são editáveis em "Mensagens". Depois de enviar aparece "Próximo" para seguir a lista.

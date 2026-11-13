@@ -4,15 +4,15 @@ import {
   cardSurface,
   fieldClass,
 } from "@/components/ui/app-dashboard-shell-utils/app-block-kit";
-import { SegmentedControl } from "@/components/ui/dashboard-parts";
+import { focusRing } from "@/components/ui/app-dashboard-shell-utils/app-block-kit";
 import { cn } from "@/lib/utils";
 import {
   TEXTOS_INFO,
   TEXTOS_PADRAO,
   ehCasimiro,
   statusDe,
+  preencher,
   textoGostou,
-  textoMensagem,
   type ChaveTexto,
   type Lead,
   type Textos,
@@ -22,9 +22,9 @@ const rotulo = "mb-1.5 block text-[13px] font-medium";
 const ajuda = "mt-1.5 text-[12.5px] text-[color:var(--bjork-text-muted)]";
 
 const CHAVES = Object.keys(TEXTOS_INFO) as ChaveTexto[];
-const ABAS = CHAVES.map((id) => ({ id, label: TEXTOS_INFO[id].curto, long: TEXTOS_INFO[id].longo }));
 
-/** Edita os textos de contato (três de abertura e um para quem gostou), com prévia em um comércio de verdade. */
+
+/** Edita os textos de contato (abertura, segunda oferta e quem gostou), com prévia em um comércio de verdade. */
 export function Mensagens({
   textos,
   leads,
@@ -47,7 +47,25 @@ export function Mensagens({
 
   return (
     <section className={cn(cardSurface, "flex flex-col gap-4 p-4")}>
-      <SegmentedControl value={aba} onChange={setAba} options={ABAS} label="Qual mensagem editar" />
+      <div className="flex flex-wrap gap-1.5" role="group" aria-label="Qual mensagem editar">
+        {CHAVES.map((id) => (
+          <button
+            key={id}
+            type="button"
+            aria-pressed={aba === id}
+            onClick={() => setAba(id)}
+            className={cn(
+              "inline-flex h-8 cursor-pointer items-center rounded-full border px-3 text-[12.5px] transition-colors duration-150",
+              aba === id
+                ? "border-[color:var(--bjork-border-strong)] bg-[var(--bjork-surface-active)] text-[color:var(--bjork-text)]"
+                : "border-[color:var(--bjork-border)] text-[color:var(--bjork-text-muted)] hover:bg-[var(--bjork-surface-hover)] hover:text-[color:var(--bjork-text)]",
+              focusRing,
+            )}
+          >
+            {TEXTOS_INFO[id].curto}
+          </button>
+        ))}
+      </div>
       <div>
         <label htmlFor={id} className={rotulo}>
           {TEXTOS_INFO[aba].longo}
@@ -62,7 +80,7 @@ export function Mensagens({
         <p className={ajuda}>
           {aba === "gostou"
             ? "O painel troca sozinho: {nome} e {exemplo} (o link de um site seu parecido)."
-            : "O painel troca sozinho: {nome}, {cidade}, {nicho} (a frase do ramo do comércio) e {elogio} (cita as avaliações de quem tem 30 ou mais)."}{" "}
+            : "O painel troca sozinho: {saudacao} (bom dia, boa tarde ou boa noite, pela hora), {nome}, {cidade}, {nicho} (a frase do ramo do comércio; {nichoSite} e {nichoPlaca} para as duas) e {elogio} (cita as avaliações de quem tem 30 ou mais)."}{" "}
           Não coloque preço: ele entra só na conversa.
         </p>
       </div>
@@ -74,7 +92,7 @@ export function Mensagens({
           <p className="whitespace-pre-wrap rounded-[12px] border border-[color:var(--bjork-border)] bg-[var(--bjork-field-inset)] p-3 text-[13.5px] leading-relaxed text-[color:var(--bjork-text-medium)] [overflow-wrap:anywhere]">
             {aba === "gostou"
               ? textoGostou(rascunho, exemplo)
-              : textoMensagem(rascunho, exemplo, aba === "casimiroPlaca" ? "placa" : "site")}
+              : preencher(rascunho, aba, exemplo)}
           </p>
         </div>
       )}

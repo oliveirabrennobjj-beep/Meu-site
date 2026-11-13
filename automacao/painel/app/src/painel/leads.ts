@@ -177,53 +177,87 @@ function ramoDe(tipo = ""): Ramo {
 }
 
 const NO_SITE: Record<Ramo, string> = {
-  comida: "o cardápio com fotos e um botão que já abre o pedido no WhatsApp",
-  padaria: "os produtos, o horário e um botão para encomendar pelo WhatsApp",
-  beleza: "os serviços com foto, os horários e um botão para marcar pelo WhatsApp",
-  pet: "os serviços, os horários e um botão para agendar pelo WhatsApp",
+  comida: "o cardápio com foto e um botão que já abre o pedido no WhatsApp",
+  padaria: "os produtos, o horário e um botão pra encomendar pelo WhatsApp",
+  beleza: "os serviços com foto, os horários e um botão pra marcar pelo WhatsApp",
+  pet: "os serviços, os horários e um botão pra agendar pelo WhatsApp",
   geral: "o que vocês vendem, o horário, o mapa e um botão que já abre o WhatsApp",
 };
 
-const NA_PLACA: Record<Ramo, string> = {
-  comida: "O cliente encosta o celular nela enquanto espera o pedido e avalia vocês no Google em 10 segundos.",
-  padaria: "O cliente encosta o celular nela no caixa e avalia vocês no Google em 10 segundos.",
-  beleza: "O cliente encosta o celular nela ainda na cadeira e avalia vocês no Google em 10 segundos.",
-  pet: "O cliente encosta o celular nela quando busca o bichinho e avalia vocês no Google em 10 segundos.",
-  geral: "O cliente encosta o celular nela e avalia vocês no Google em 10 segundos.",
+// Onde o cliente está quando encosta o celular na placa.
+const ONDE_PLACA: Record<Ramo, string> = {
+  comida: " enquanto espera o pedido",
+  padaria: " no caixa",
+  beleza: " ainda na cadeira",
+  pet: " quando busca o bichinho",
+  geral: "",
 };
 
-/** Frase da mensagem que muda conforme o ramo do comércio e o que está sendo oferecido. */
-export function fraseNicho(lead: Lead, produto: Produto) {
+function fraseSite(lead: Lead) {
   const ramo = ramoDe(lead.tipo);
-  if (produto === "placa") return NA_PLACA[ramo];
   const tipo = lead.tipo?.trim();
   return tipo && ramo !== "geral"
-    ? `Para ${tipo.toLowerCase()}, eu coloco ${NO_SITE[ramo]}.`
-    : `Eu coloco ${NO_SITE.geral}.`;
+    ? `Pra ${tipo.toLowerCase()} eu monto o site com ${NO_SITE[ramo]}.`
+    : `Eu monto o site com ${NO_SITE.geral}.`;
+}
+
+/** `nela`: a frase vem logo depois de falar da plaquinha; senão ela se apresenta sozinha. */
+function frasePlaca(lead: Lead, nela: boolean) {
+  const onde = ONDE_PLACA[ramoDe(lead.tipo)];
+  return nela
+    ? `O cliente encosta o celular nela${onde} e avalia vocês no Google em 10 segundos.`
+    : `Na plaquinha, o cliente encosta o celular${onde} e avalia vocês no Google em 10 segundos.`;
 }
 
 /* Mensagens ------------------------------------------------------------------------------------ */
 
-export type ChaveTexto = "fora" | "casimiroPlaca" | "casimiroSite" | "gostou";
+/** O que vai na mensagem: uma oferta, ou as duas juntas (só em Casimiro, no primeiro contato). */
+export type Oferta = Produto | "ambas";
+
+export type ChaveTexto =
+  | "fora"
+  | "casimiroAmbas"
+  | "casimiroPlaca"
+  | "casimiroSite"
+  | "depoisPlaca"
+  | "depoisSite"
+  | "gostou";
 export type Textos = Record<ChaveTexto, string>;
 
 export const TEXTOS_INFO: Record<ChaveTexto, { curto: string; longo: string }> = {
-  fora: { curto: "FORA", longo: "Primeira mensagem para fora de Casimiro (site)" },
-  casimiroPlaca: { curto: "CAS. PLACA", longo: "Primeira mensagem em Casimiro (placa)" },
-  casimiroSite: { curto: "CAS. SITE", longo: "Primeira mensagem em Casimiro (site)" },
-  gostou: { curto: "GOSTOU", longo: "Quando a pessoa gostou: oferecer a demonstração" },
+  fora: { curto: "Fora", longo: "Primeira mensagem para fora de Casimiro (site)" },
+  casimiroAmbas: { curto: "Casimiro: as duas", longo: "Primeira mensagem em Casimiro (site e placa juntos)" },
+  casimiroPlaca: { curto: "Casimiro: placa", longo: "Primeira mensagem em Casimiro (só placa)" },
+  casimiroSite: { curto: "Casimiro: site", longo: "Primeira mensagem em Casimiro (só site)" },
+  depoisPlaca: { curto: "2ª: placa", longo: "Placa depois do site, sem repetir o oi" },
+  depoisSite: { curto: "2ª: site", longo: "Site depois da placa, sem repetir o oi" },
+  gostou: { curto: "Gostou", longo: "Quando a pessoa gostou: oferecer a demonstração" },
 };
+
+const APRESENTACAO_CASIMIRO = "Oi, {saudacao}, tudo certo? Aqui é o Brenno, sou daqui de Casimiro mesmo.";
+const VISITA = "Se der, queria falar direto com o dono ou a dona. Qual horário fica melhor?";
 
 // Nenhum texto fala de preço: o Brenno só passa valor depois que a pessoa mostra interesse.
 export const TEXTOS_PADRAO: Textos = {
-  fora: "Oi, tudo bem? Aqui é o Brenno, da BN Digital. Sou de Casimiro de Abreu, pertinho de {cidade}.\nVi a {nome} no Google Maps{elogio} e notei que vocês ainda não têm um site próprio.\n{nicho}\nPosso te mandar um exemplo de como ficaria o da {nome}? Se não fizer sentido agora, sem problema, é só me avisar.",
-  casimiroPlaca:
-    "Oi, tudo bem? Aqui é o Brenno, da BN Digital. Sou daqui de Casimiro mesmo.\nFaço uma plaquinha com chip para deixar no balcão. {nicho}\nMais avaliação é mais gente achando a {nome} quando procura por perto.\nPosso passar aí para mostrar funcionando? Leva 2 minutos. Se der, queria falar direto com o dono ou a dona. Qual o melhor horário?",
-  casimiroSite:
-    "Oi, tudo bem? Aqui é o Brenno, da BN Digital. Sou daqui de Casimiro mesmo.\nVi a {nome} no Google Maps{elogio} e notei que vocês ainda não têm um site próprio.\n{nicho}\nPosso passar aí para mostrar um exemplo no celular? Leva 2 minutos. Se der, queria falar direto com o dono ou a dona. Qual o melhor horário?",
+  fora: "Oi, {saudacao}, tudo certo? Aqui é o Brenno, da BN Digital. Sou de Casimiro, pertinho de {cidade}.\nVi a {nome} no Google Maps{elogio} e reparei que vocês ainda não têm site.\n{nicho}\nQuer que eu te mande um exemplo de como ficaria o de vocês? Se não for a hora, tranquilo, é só falar.",
+  casimiroAmbas: `${APRESENTACAO_CASIMIRO}\nTrabalho com duas coisas pro comércio aqui da cidade: site e uma plaquinha de avaliação pro balcão.\n{nichoSite}\n{nichoPlaca}\nPosso passar aí pra te mostrar as duas? É rapidinho. ${VISITA}`,
+  casimiroPlaca: `${APRESENTACAO_CASIMIRO}\nTô fazendo uma plaquinha com chip pro balcão. {nicho}\nMais avaliação é mais gente achando a {nome} quando procura no Google.\nPosso passar aí pra te mostrar funcionando? É rapidinho. ${VISITA}`,
+  casimiroSite: `${APRESENTACAO_CASIMIRO}\nVi a {nome} no Google Maps{elogio} e reparei que vocês ainda não têm site.\n{nicho}\nPosso passar aí pra te mostrar um exemplo no celular? É rapidinho. ${VISITA}`,
+  depoisPlaca:
+    "Ah, esqueci de falar: também faço uma plaquinha com chip pro balcão. {nicho}\nQuando eu passar aí pra mostrar o site, levo ela junto pra você ver funcionando.",
+  depoisSite:
+    "Ah, e aproveitando: também faço site pro comércio aqui da cidade. {nicho}\nQuando eu passar aí com a plaquinha, já te mostro um exemplo no celular.",
   gostou:
     "Que bom que gostou! Consigo te fazer uma demonstração de design, de como vai ficar o site da {nome}, ainda hoje ou amanhã.\nPara você ter uma ideia, olha um que eu já fiz: {exemplo}\nPosso montar e te mandar por aqui?",
 };
+
+/** "bom dia", "boa tarde" ou "boa noite", pelo relógio do celular na hora de mandar. */
+export function saudacao(agora = new Date()) {
+  const hora = agora.getHours();
+  if (hora >= 5 && hora < 12) return "bom dia";
+  if (hora >= 12 && hora < 18) return "boa tarde";
+  return "boa noite";
+}
 
 /** Em Casimiro, placa para quem ainda tem poucas avaliações (é quem mais ganha com ela); senão, site. */
 export function produtoSugerido(lead: Lead): Produto {
@@ -231,33 +265,55 @@ export function produtoSugerido(lead: Lead): Produto {
   return lead.avaliacoes == null || lead.avaliacoes < 50 ? "placa" : "site";
 }
 
-/** Oferta que abre escolhida na ficha: a sugerida, ou a outra quando a sugerida já foi feita. */
-export function produtoInicial(lead: Lead): Produto {
-  const sugerido = produtoSugerido(lead);
-  if (!ehCasimiro(lead) || !dataEnvio(lead, sugerido)) return sugerido;
-  const outro: Produto = sugerido === "placa" ? "site" : "placa";
-  return dataEnvio(lead, outro) ? sugerido : outro;
+/**
+ * Oferta que abre escolhida na ficha. Em Casimiro, sem nada enviado: as duas numa mensagem só.
+ * Com uma já enviada: a que falta.
+ */
+export function ofertaInicial(lead: Lead): Oferta {
+  if (!ehCasimiro(lead)) return "site";
+  const site = dataEnvio(lead, "site");
+  const placa = dataEnvio(lead, "placa");
+  if (!site && !placa) return "ambas";
+  if (site && !placa) return "placa";
+  if (placa && !site) return "site";
+  return produtoSugerido(lead);
 }
 
-export function chaveTexto(lead: Lead, produto: Produto): Exclude<ChaveTexto, "gostou"> {
+export function chaveTexto(lead: Lead, oferta: Oferta): Exclude<ChaveTexto, "gostou"> {
   if (!ehCasimiro(lead)) return "fora";
-  return produto === "placa" ? "casimiroPlaca" : "casimiroSite";
+  if (oferta === "ambas") return "casimiroAmbas";
+  const outra: Produto = oferta === "placa" ? "site" : "placa";
+  const dataOutra = dataEnvio(lead, outra);
+  const dataEsta = dataEnvio(lead, oferta);
+  // A outra oferta já abriu a conversa: esta entra como continuação, sem novo "oi".
+  if (dataOutra && (!dataEsta || dataOutra < dataEsta)) {
+    return oferta === "placa" ? "depoisPlaca" : "depoisSite";
+  }
+  return oferta === "placa" ? "casimiroPlaca" : "casimiroSite";
 }
 
 const ELOGIO_A_PARTIR_DE = 30;
+const TEXTOS_DE_PLACA = new Set<ChaveTexto>(["casimiroPlaca", "depoisPlaca"]);
 
-export function textoMensagem(textos: Textos, lead: Lead, produto: Produto) {
-  const chave = chaveTexto(lead, produto);
+/** Preenche um texto com os dados do comércio. */
+export function preencher(textos: Textos, chave: Exclude<ChaveTexto, "gostou">, lead: Lead, agora = new Date()) {
   const elogio =
     lead.avaliacoes != null && lead.avaliacoes >= ELOGIO_A_PARTIR_DE
       ? ` (${lead.avaliacoes} avaliações, parabéns!)`
       : "";
   return (textos[chave]?.trim() || TEXTOS_PADRAO[chave])
+    .replaceAll("{saudacao}", saudacao(agora))
     .replaceAll("{nome}", lead.nome || "sua empresa")
     .replaceAll("{cidade}", cidadeDe(lead))
-    .replaceAll("{nicho}", fraseNicho(lead, chave === "casimiroPlaca" ? "placa" : "site"))
+    .replaceAll("{nichoSite}", fraseSite(lead))
+    .replaceAll("{nichoPlaca}", frasePlaca(lead, false))
+    .replaceAll("{nicho}", TEXTOS_DE_PLACA.has(chave) ? frasePlaca(lead, true) : fraseSite(lead))
     .replaceAll("{elogio}", elogio)
     .replaceAll("{avaliacoes}", lead.avaliacoes != null ? String(lead.avaliacoes) : "várias");
+}
+
+export function textoMensagem(textos: Textos, lead: Lead, oferta: Oferta, agora = new Date()) {
+  return preencher(textos, chaveTexto(lead, oferta), lead, agora);
 }
 
 export function linkWhatsApp(lead: Lead, texto: string) {

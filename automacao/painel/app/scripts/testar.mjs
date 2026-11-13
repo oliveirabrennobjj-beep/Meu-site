@@ -174,7 +174,8 @@ try {
   const textoFora = decodeURIComponent(
     await p.getByRole("dialog").getByRole("link", { name: "Enviar no WhatsApp" }).getAttribute("href"),
   );
-  assert.match(textoFora, /site próprio/);
+  assert.match(textoFora, /text=Oi, (bom dia|boa tarde|boa noite), tudo certo\?/);
+  assert.match(textoFora, /não têm site/);
   // Os atalhos da loja aparecem em toda ficha, não só nas de Casimiro.
   for (const atalho of ["Ver no Google Maps", /Instagram/, "Abrir o WhatsApp da loja"]) {
     assert.equal(await p.getByRole("dialog").getByRole("link", { name: atalho }).count(), 1);
@@ -196,10 +197,12 @@ try {
     await antiga.getByRole("radio", { name: "Oferecer a placa de avaliações" }).getAttribute("aria-checked"),
     "true",
   );
-  assert.match(
-    decodeURIComponent(await antiga.getByRole("link", { name: "Enviar no WhatsApp" }).getAttribute("href")),
-    /plaquinha/,
+  // Já falou do site: a placa entra como continuação, sem novo "oi".
+  const textoAntiga = decodeURIComponent(
+    await antiga.getByRole("link", { name: "Enviar no WhatsApp" }).getAttribute("href"),
   );
+  assert.match(textoAntiga, /text=Ah, esqueci de falar: também faço uma plaquinha/);
+  assert.doesNotMatch(textoAntiga, /Oi,|Aqui é o Brenno/);
   await p.waitForTimeout(400);
   await p.screenshot({ path: path.join(saida, "celular-ja-mandou-site.png") });
   await antiga.getByRole("button", { name: "Fechar ficha" }).click();
@@ -222,10 +225,23 @@ try {
     await ficha.getByRole("link", { name: "Abrir o WhatsApp da loja" }).getAttribute("href"),
     /^https:\/\/wa\.me\/55\d+\?text=$/,
   );
-  const textoCasimiro = decodeURIComponent(href);
+  // Nada enviado ainda em Casimiro: abre com as duas ofertas numa mensagem só.
+  assert.equal(
+    await ficha.getByRole("radio", { name: "Oferecer site e placa na mesma mensagem" }).getAttribute("aria-checked"),
+    "true",
+  );
+  const textoAmbas = decodeURIComponent(href);
+  assert.match(textoAmbas, /site e uma plaquinha/);
+  assert.match(textoAmbas, /falar direto com o dono/);
+  assert.doesNotMatch(textoAmbas, /R\$/);
+
+  // Aqui o Brenno escolhe mandar só a placa primeiro.
+  await ficha.getByRole("radio", { name: "Oferecer a placa de avaliações" }).click();
+  const textoCasimiro = decodeURIComponent(
+    await ficha.getByRole("link", { name: "Enviar no WhatsApp" }).getAttribute("href"),
+  );
   assert.ok(textoCasimiro.includes(nome), "a mensagem leva o nome do comércio");
-  assert.match(textoCasimiro, /falar direto com o dono/);
-  assert.doesNotMatch(textoCasimiro, /R\$/);
+  assert.match(textoCasimiro, /plaquinha com chip/);
 
   await p.route("https://wa.me/**", (rota) => rota.fulfill({ contentType: "text/html", body: "ok" }));
   const [aba] = await Promise.all([
@@ -243,6 +259,13 @@ try {
 
   // Em Casimiro dá para mandar a outra oferta depois da primeira; cada uma fica marcada sozinha.
   await ficha.getByRole("radio", { name: /^Oferecer/ }).click({ timeout: 4000 });
+  const textoSegunda = decodeURIComponent(
+    await ficha.getByRole("link", { name: "Enviar no WhatsApp" }).getAttribute("href"),
+  );
+  assert.match(textoSegunda, /text=Ah, e aproveitando: também faço site/);
+  assert.doesNotMatch(textoSegunda, /Oi,|Aqui é o Brenno/);
+  await p.waitForTimeout(300);
+  await p.screenshot({ path: path.join(saida, "celular-segunda-oferta.png") });
   const [outraAba] = await Promise.all([
     cel.contexto.waitForEvent("page"),
     ficha.getByRole("link", { name: "Enviar no WhatsApp" }).click(),
