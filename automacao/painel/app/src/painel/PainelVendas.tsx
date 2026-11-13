@@ -28,6 +28,7 @@ import {
 import { cn } from "@/lib/utils";
 import { FichaLead } from "./FichaLead";
 import { Importar, Mensagens } from "./Ferramentas";
+import { ProximosPassos } from "./ProximosPassos";
 import { TabelaLeads } from "./TabelaLeads";
 import {
   META_DIA,
@@ -447,6 +448,8 @@ export function PainelVendas() {
 
         {vista === "geral" && (
           <>
+            <ProximosPassos leads={leads} onAbrir={(lead) => setFichaId(lead.id)} />
+
             <section
               aria-label="Indicadores"
               className="grid grid-cols-2 gap-2.5 @3xl/main:gap-3 @5xl/main:grid-cols-4"

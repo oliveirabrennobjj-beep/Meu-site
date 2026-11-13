@@ -17,6 +17,7 @@ import {
   focusRing,
 } from "@/components/ui/app-dashboard-shell-utils/app-block-kit";
 import { cn } from "@/lib/utils";
+import { atrasado, quandoCurto } from "./assistente";
 import { STATUS, fmtInt, fmtNota, statusDe, tipoDe, type Lead, type Status } from "./leads";
 
 type Chave = "nome" | "nota" | "avaliacoes";
@@ -242,6 +243,19 @@ export function TabelaLeads({
                     </button>
                     <p className="truncate text-[11.5px] leading-tight text-[color:var(--bjork-text-muted)]">
                       {tipoDe(lead)}
+                      {lead.compromisso && (
+                        <span
+                          className="font-medium"
+                          style={{
+                            color: atrasado(lead.compromisso.quando)
+                              ? "var(--blk-error)"
+                              : "var(--blk-accent-ink)",
+                          }}
+                        >
+                          {" · "}
+                          {quandoCurto(lead.compromisso.quando)}
+                        </span>
+                      )}
                     </p>
                   </div>
                 </div>

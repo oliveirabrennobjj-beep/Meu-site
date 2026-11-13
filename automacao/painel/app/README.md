@@ -17,7 +17,7 @@ npm run teste   # abre o vendas.html com empresas fictícias e confere o fluxo d
 ```
 
 Depois publique `automacao/painel/vendas.html` com a ferramenta Artifact, passando a URL acima
-e sem `capabilities` (mantém `db` e `user`).
+e sem `capabilities` (mantém `db`, `user` e `sample`).
 
 ## Onde fica cada coisa
 
@@ -33,6 +33,9 @@ e sem `capabilities` (mantém `db` e `user`).
   Nenhum texto cita preço.
   Cada oferta tem seu próprio registro de envio (`enviados.site`, `enviados.placa`); contatos antigos tinham
   só `produto` + `enviadoEm` e continuam sendo lidos.
+- `src/painel/assistente.ts` e `Anotar.tsx`: assistente de anotação (capability `sample`, modelo rápido). Grava `obs`,
+  `historico` e `compromisso` ({quando: "AAAA-MM-DDTHH:mm", oque}); `ProximosPassos.tsx` lista os compromissos.
+  Publicar com `capabilities: {db: {}, user: {}, sample: {}}`.
 - `src/painel/usePainel.ts`: leitura e gravação no banco do Artifact.
 - `src/painel/PainelVendas.tsx`: a tela; `TabelaLeads`, `FichaLead` e `Ferramentas` são as partes.
 - `src/components/ui/`: casca e blocos visuais, sem regra de negócio.

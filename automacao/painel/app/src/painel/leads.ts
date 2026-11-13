@@ -26,6 +26,10 @@ export interface Lead {
   pediuVisita?: boolean;
   /** Quando mandou a correção avisando que a conversa segue pelo WhatsApp. */
   corrigidoEm?: string;
+  /** Próximo passo combinado com a loja (ver assistente.ts); null quando já foi feito. */
+  compromisso?: { quando: string; oque: string } | null;
+  /** O que o Brenno anotou, do mais antigo ao mais novo. */
+  historico?: { em: string; texto: string }[];
   /** Quando cada oferta foi feita; a mesma loja pode receber site e placa. */
   enviados?: Partial<Record<Envio, string>>;
   /** Por onde foi o primeiro contato. */

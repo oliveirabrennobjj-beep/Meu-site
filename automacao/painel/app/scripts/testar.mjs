@@ -118,7 +118,20 @@ function bancoDeMentira(iniciais) {
       }),
     }),
   };
-  window.claude = { use: async (nome) => (nome === "db" ? db : null) };
+  // Claude de mentira para o assistente de anotação: devolve sempre o mesmo entendimento.
+  window.__perguntas = [];
+  const amanha = new Date(Date.now() + 86_400_000);
+  const dia = `${amanha.getFullYear()}-${String(amanha.getMonth() + 1).padStart(2, "0")}-${String(amanha.getDate()).padStart(2, "0")}`;
+  const sample = async () => ({ text: "" });
+  sample.json = async (pergunta) => {
+    window.__perguntas.push(pergunta);
+    return {
+      status: "respondeu",
+      compromisso: { quando: `${dia}T12:00`, oque: "Conversar com o dono pessoalmente" },
+      anotacao: "O dono quer conversar amanhã meio-dia na loja.",
+    };
+  };
+  window.claude = { use: async (nome) => (nome === "db" ? db : nome === "sample" ? sample : null) };
 }
 
 const umd = (pacote, arquivo) =>
@@ -375,7 +388,29 @@ try {
   assert.doesNotMatch(textoGostou, /R\$|\{/);
   await p.screenshot({ path: path.join(saida, "celular-gostou.png") });
 
+  // Assistente de anotação: entende o texto, mostra o que vai salvar e grava situação, compromisso e anotação.
+  await ficha.getByLabel(/Conta o que aconteceu/).fill("o dono falou que quer conversar amanhã meio dia lá na loja");
+  await ficha.getByRole("button", { name: "Anotar" }).click();
+  await ficha.getByText("O assistente entendeu:").waitFor();
+  const pergunta = (await p.evaluate(() => window.__perguntas)).at(-1);
+  assert.ok(pergunta.includes(nome) && pergunta.includes("amanhã meio dia"), "o Claude recebe o comércio e o texto");
+  assert.match(await ficha.getByRole("status").filter({ hasText: "Marcado:" }).innerText(), /amanhã 12:00/);
+  await p.waitForTimeout(300);
+  await p.screenshot({ path: path.join(saida, "celular-anotar.png") });
+  await ficha.getByRole("button", { name: "Salvar" }).click();
+  const anotada = (await p.evaluate(() => window.__escritas)).at(-1).dados;
+  assert.equal(anotada.compromisso.oque, "Conversar com o dono pessoalmente");
+  assert.equal(anotada.obs, "O dono quer conversar amanhã meio-dia na loja.");
+  assert.equal(anotada.historico.at(-1).texto, "o dono falou que quer conversar amanhã meio dia lá na loja");
+  await ficha.getByRole("button", { name: "Feito" }).waitFor();
+
   await ficha.getByRole("button", { name: "Fechar ficha" }).click();
+  // O compromisso aparece em "Próximos passos", no topo do painel.
+  const passos = p.getByRole("region", { name: "Próximos passos" });
+  assert.match(await passos.innerText(), new RegExp(`amanhã 12:00[\\s\\S]*${nome}`));
+  await p.getByRole("main").evaluate((el) => el.scrollTo({ top: 0 }));
+  await p.waitForTimeout(300);
+  await p.screenshot({ path: path.join(saida, "celular-proximos-passos.png") });
   await p.getByRole("button", { name: "Abrir menu" }).click();
   await p.getByRole("dialog", { name: "Menu" }).getByText("Meta de hoje").waitFor();
   // Meta de 30 comércios: a padaria recebeu placa, site e dono hoje e conta como 1 contato.

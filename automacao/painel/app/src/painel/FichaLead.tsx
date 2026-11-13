@@ -19,10 +19,10 @@ import {
   IconButton,
   InitialsAvatar,
   buttonClass,
-  fieldClass,
 } from "@/components/ui/app-dashboard-shell-utils/app-block-kit";
 import { SegmentedControl, type SegmentOption } from "@/components/ui/dashboard-parts";
 import { cn } from "@/lib/utils";
+import { Anotar } from "./Anotar";
 import { StatusChip } from "./TabelaLeads";
 import {
   STATUS,
@@ -177,7 +177,6 @@ function Conteudo({
   const chave = chaveTexto(lead, oferta);
   const continuacao = chave === "depoisPlaca" || chave === "depoisSite" || chave === "depoisDono";
   const mensagem = textoMensagem(textos, lead, oferta);
-  const [obs, setObs] = useState(lead.obs ?? "");
   const opcoes: SegmentOption<Oferta>[] = [
     ...(nadaEnviado ? [AS_DUAS] : []),
     ...(["placa", "site", "dono"] as const).map((id) => {
@@ -440,25 +439,10 @@ function Conteudo({
                 ))}
               </div>
             </fieldset>
-
-            <div>
-              <label htmlFor={`obs-${lead.id}`} className={cn(rotuloCampo, "block")}>
-                Anotação
-              </label>
-              <input
-                id={`obs-${lead.id}`}
-                value={obs}
-                onChange={(event) => setObs(event.target.value)}
-                onBlur={() => {
-                  if (obs.trim() !== (lead.obs ?? "")) onSalvar(lead.id, { obs: obs.trim() });
-                }}
-                placeholder="Ex.: volta a falar em janeiro"
-                autoComplete="off"
-                className={cn(fieldClass, "h-11")}
-              />
-            </div>
           </>
         )}
+
+        <Anotar lead={lead} onSalvar={onSalvar} avisar={avisar} />
       </div>
     </>
   );
