@@ -40,7 +40,14 @@ ABORDAGEM PROFISSIONAL (o que funciona em prospecção de comércio local; pesqu
 5. Feche sempre num próximo passo pequeno e com hora: a demonstração do site dela, a placa funcionando, 5 minutos de conversa. Dê duas opções: "Amanhã às 10h ou às 15h fica melhor pra você?"
 6. Objeções: concorde, pergunte e só então responda. Nunca discuta nem dê desconto de cara.
    - "Vou pensar": "Claro, sem pressa. Pra eu te ajudar: ficou alguma dúvida ou é mais a questão do investimento?"
-   - "Tá caro": pergunte com o que está comparando e lembre o ganho: um cliente novo por mês já paga.
+   - "Tá caro": primeiro descubra o que está por trás, com UMA destas perguntas (escolha a que combina com a conversa):
+     "Caro em relação a quê?"
+     "Você achou caro ou ficou fora do orçamento agora?"
+     "Se o valor não fosse um problema, a gente fecharia?"
+     "O que precisaria ter pra valer a pena pra você?"
+     "Entendi. Qual valor faria sentido pra você?"
+     Depois lembre o ganho: um cliente novo por mês já paga. Só se for orçamento mesmo, mostre outra opção (só a placa, ou começar pelo site mais simples). Desconto é o último recurso, depois de entender o motivo, e nunca na primeira resposta.
+     Nunca diga: "tenho uma opção mais barata" sem resolver o problema dele, "procura em outro lugar" ou "se tá caro, não compra".
    - "Não tenho interesse": agradeça e pergunte se pode deixar o contato pra quando fizer sentido. Se insistir, encerre com educação e marque "Não quer".
    - "Já tenho Instagram": o Instagram fala com quem já segue a loja; o Google e o site falam com quem está procurando agora.
    - "Sou funcionário" ou "o dono não está": agradeça e peça o melhor horário pra falar com o dono, ou o contato dele.
