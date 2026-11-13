@@ -271,6 +271,12 @@ export function instagramDe(lead: Lead) {
   return { arroba: `@${usuario}`, url };
 }
 
+/** Outra página da loja (Linktree, cardápio, Facebook). Link de WhatsApp não conta: já tem botão. */
+export function paginaDe(lead: Lead) {
+  const url = linkSeguro(lead.link);
+  return url && !/instagram\.com|wa\.me|whatsapp\.com/i.test(url) ? url : null;
+}
+
 export const buscaInstagram = (lead: Lead) =>
   `https://www.google.com/search?q=${encodeURIComponent(`${lead.nome} ${cidadeDe(lead)} instagram`)}`;
 

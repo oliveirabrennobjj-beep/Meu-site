@@ -32,8 +32,8 @@ import {
   fmtNota,
   instagramDe,
   linkMaps,
-  linkSeguro,
   linkWhatsApp,
+  paginaDe,
   produtoSugerido,
   statusDe,
   textoGostou,
@@ -345,14 +345,15 @@ function RoteiroPresencial({ placa }: { placa: boolean }) {
 /** Atalhos para conhecer a loja antes de falar com ela: mapa, Instagram e WhatsApp. */
 function SobreALoja({ lead }: { lead: Lead }) {
   const instagram = instagramDe(lead);
-  const pagina = instagram ? null : linkSeguro(lead.link);
+  const pagina = paginaDe(lead);
   const temWhatsApp = /\d/.test(lead.whatsapp);
+  const quantos = 2 + (pagina ? 1 : 0) + (temWhatsApp ? 1 : 0);
   const atalho = buttonClass("secondary", "md", "min-w-0 px-2.5 text-[13px]");
   const nova = { target: "_blank", rel: "noopener noreferrer" };
   return (
     <div>
       <h3 className={rotuloCampo}>Sobre a loja</h3>
-      <div className={cn("grid gap-2", temWhatsApp ? "grid-cols-3" : "grid-cols-2")}>
+      <div className={cn("grid gap-2", quantos === 3 ? "grid-cols-3" : "grid-cols-2")}>
         <a href={linkMaps(lead)} {...nova} aria-label="Ver no Google Maps" className={atalho}>
           <MapPin aria-hidden="true" />
           <span className="truncate">Google Maps</span>
@@ -367,11 +368,6 @@ function SobreALoja({ lead }: { lead: Lead }) {
             <Instagram aria-hidden="true" />
             <span className="truncate">{instagram.arroba}</span>
           </a>
-        ) : pagina ? (
-          <a href={pagina} {...nova} aria-label="Ver a página da loja" className={atalho}>
-            <ExternalLink aria-hidden="true" />
-            <span className="truncate">Página</span>
-          </a>
         ) : (
           <a
             href={buscaInstagram(lead)}
@@ -381,6 +377,12 @@ function SobreALoja({ lead }: { lead: Lead }) {
           >
             <Search aria-hidden="true" />
             <span className="truncate">Buscar Instagram</span>
+          </a>
+        )}
+        {pagina && (
+          <a href={pagina} {...nova} aria-label="Ver a página da loja" className={atalho}>
+            <ExternalLink aria-hidden="true" />
+            <span className="truncate">Página da loja</span>
           </a>
         )}
         {temWhatsApp && (
