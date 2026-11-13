@@ -31,6 +31,9 @@ import {
   cidadeDe,
   dataEnvio,
   ehCasimiro,
+  podeVisitar,
+  recebeuPedidoDeVisita,
+  textoCorrecao,
   fmtInt,
   fmtNota,
   instagramDe,
@@ -163,7 +166,9 @@ function Conteudo({
 }) {
   const status = statusDe(lead);
   const novo = status === "novo";
-  const daqui = ehCasimiro(lead);
+  // Só em loja marcada como "dá pra ir" as mensagens pedem visita; o resto vai por WhatsApp.
+  const daqui = podeVisitar(lead);
+  const corrigir = !daqui && recebeuPedidoDeVisita(lead) && !lead.corrigidoEm;
   const [escolhida, setOferta] = useState<Oferta>(() => ofertaInicial(lead));
   const nadaEnviado = semEnvios(lead);
   // Fora de Casimiro a oferta é sempre o site; "as duas" só vale antes do primeiro envio.
@@ -209,6 +214,7 @@ function Conteudo({
       produto: oferta,
       canal,
       enviados,
+      ...(daqui ? { pediuVisita: true } : {}),
     });
     // Já deixa escolhida a próxima mensagem (a oferta que falta, depois o pedido para falar com o dono).
     setOferta(proximaOferta(lead, oferta));
@@ -275,6 +281,46 @@ function Conteudo({
         </dl>
 
         <SobreALoja lead={lead} />
+
+        {ehCasimiro(lead) && (
+          <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
+            <p className="text-[13px] font-medium">Dá pra ir lá pessoalmente?</p>
+            <SegmentedControl
+              value={daqui ? "sim" : "nao"}
+              onChange={(valor) => {
+                const visita = valor === "sim";
+                onSalvar(lead.id, { visita });
+                setOferta(ofertaInicial({ ...lead, visita }));
+              }}
+              options={[
+                { id: "nao", label: "NÃO", long: "Não dá pra ir: mensagem só por WhatsApp" },
+                { id: "sim", label: "SIM", long: "Dá pra ir: mensagem pedindo visita" },
+              ]}
+              label="Dá pra ir lá pessoalmente"
+            />
+          </div>
+        )}
+
+        {corrigir && (
+          <div className="flex flex-col gap-2 rounded-[12px] border border-[color:var(--bjork-border-strong)] bg-[var(--bjork-accent-soft)] p-3">
+            <p className="text-[13px] leading-snug">
+              Essa loja recebeu mensagem pedindo visita. Avise que a conversa segue por aqui:
+            </p>
+            <p className="whitespace-pre-wrap text-[13px] leading-relaxed text-[color:var(--bjork-text-medium)]">
+              {textoCorrecao(lead)}
+            </p>
+            <a
+              href={linkWhatsApp(lead, textoCorrecao(lead))}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => onSalvar(lead.id, { corrigidoEm: new Date().toISOString() })}
+              className={buttonClass("primary", "lg", "w-full")}
+            >
+              <Send aria-hidden="true" />
+              Mandar a correção
+            </a>
+          </div>
+        )}
 
         {(novo || daqui) && (
           <>
@@ -374,7 +420,7 @@ function Conteudo({
                 href={linkWhatsApp(lead, textoGostou(textos, lead))}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={buttonClass("primary", "lg", "w-full")}
+                className={buttonClass(corrigir ? "secondary" : "primary", "lg", "w-full")}
               >
                 <Send aria-hidden="true" />
                 Oferecer demonstração do site

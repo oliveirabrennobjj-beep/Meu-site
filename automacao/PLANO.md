@@ -36,7 +36,10 @@ usar **B** só num número secundário se quiser ler/responder conversas pelo Cl
   - "Nichos": todos os ramos, um por um; tocar em um filtra as tabelas. Botão "Mais/Menos avaliados" em cada tabela.
   - **Casimiro:** mensagem pede para passar lá e falar com o dono (placa para quem tem menos de 50 avaliações, senão site),
     botão "Falei pessoalmente" e roteiro curto. **Fora:** mensagem de site pelo WhatsApp. Nenhum texto cita preço.
-  - Em Casimiro a ficha abre com "AS DUAS" (site e placa numa mensagem só). Se mandar uma oferta só, a outra
+  - **Visita só onde você marcar:** o Google põe "Casimiro de Abreu" até em loja longe do centro (perto de Rio das Ostras).
+    Por isso a ficha de Casimiro pergunta "Dá pra ir lá pessoalmente?". NÃO (padrão): mensagem de site por WhatsApp.
+    SIM: mensagens pedindo visita. Loja longe que já recebeu pedido de visita mostra "Mandar a correção".
+  - Com SIM, a ficha abre com "AS DUAS" (site e placa numa mensagem só). Se mandar uma oferta só, a outra
     vira continuação ("Ah, esqueci de falar…"), sem repetir o oi. Cada envio fica marcado com a data.
     A meta do dia conta mensagens, não lojas.
   - Em Casimiro também tem a opção DONO: mensagem pedindo para falar com o dono (com "oi" se for a primeira,

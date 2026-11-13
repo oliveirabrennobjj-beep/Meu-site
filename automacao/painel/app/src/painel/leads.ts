@@ -20,6 +20,12 @@ export interface Lead {
   obs?: string;
   /** O que foi oferecido no contato mais recente. */
   produto?: string;
+  /** O Brenno marcou que dá para ir pessoalmente (só lojas do centro de Casimiro). */
+  visita?: boolean;
+  /** Mandou uma mensagem que pedia visita (registrado a partir de 13/11/2026). */
+  pediuVisita?: boolean;
+  /** Quando mandou a correção avisando que a conversa segue pelo WhatsApp. */
+  corrigidoEm?: string;
   /** Quando cada oferta foi feita; a mesma loja pode receber site e placa. */
   enviados?: Partial<Record<Envio, string>>;
   /** Por onde foi o primeiro contato. */
@@ -119,6 +125,16 @@ const emBarra = (lead: Lead) => EM_BARRA.test(lead.cidade ?? "") || EM_BARRA.tes
 
 /** Comércio do centro de Casimiro, onde dá para ir falar com o dono pessoalmente. */
 export const ehCasimiro = (lead: Lead) => /casimiro/i.test(lead.cidade ?? "") && !emBarra(lead);
+
+/**
+ * Dá para ir lá falar com o dono. Só vale para loja de Casimiro que o Brenno marcou: o cadastro do
+ * Google diz "Casimiro de Abreu" também para lojas longe do centro, perto de Rio das Ostras.
+ */
+export const podeVisitar = (lead: Lead) => ehCasimiro(lead) && lead.visita === true;
+
+/** A loja recebeu uma mensagem pedindo visita (as de placa e de dono só existem no fluxo de visita). */
+export const recebeuPedidoDeVisita = (lead: Lead) =>
+  lead.pediuVisita === true || Boolean(dataEnvio(lead, "placa")) || Boolean(dataEnvio(lead, "dono"));
 
 export const cidadeDe = (lead: Lead) =>
   emBarra(lead) ? BARRA : ehCasimiro(lead) ? CASIMIRO : lead.cidade?.trim() || "Sem cidade";
@@ -226,13 +242,13 @@ export type ChaveTexto =
 export type Textos = Record<ChaveTexto, string>;
 
 export const TEXTOS_INFO: Record<ChaveTexto, { curto: string; longo: string }> = {
-  fora: { curto: "Fora", longo: "Primeira mensagem para fora de Casimiro (site)" },
-  casimiroAmbas: { curto: "Casimiro: as duas", longo: "Primeira mensagem em Casimiro (site e placa juntos)" },
-  casimiroPlaca: { curto: "Casimiro: placa", longo: "Primeira mensagem em Casimiro (só placa)" },
-  casimiroSite: { curto: "Casimiro: site", longo: "Primeira mensagem em Casimiro (só site)" },
+  fora: { curto: "WhatsApp", longo: "Mensagem de site por WhatsApp, para loja onde não dá pra ir" },
+  casimiroAmbas: { curto: "Visita: as duas", longo: "Pedindo visita: site e placa juntos" },
+  casimiroPlaca: { curto: "Visita: placa", longo: "Pedindo visita: só placa" },
+  casimiroSite: { curto: "Visita: site", longo: "Pedindo visita: só site" },
   depoisPlaca: { curto: "2ª: placa", longo: "Placa depois do site, sem repetir o oi" },
   depoisSite: { curto: "2ª: site", longo: "Site depois da placa, sem repetir o oi" },
-  casimiroDono: { curto: "Casimiro: dono", longo: "Primeira mensagem em Casimiro pedindo para falar com o dono" },
+  casimiroDono: { curto: "Visita: dono", longo: "Pedindo visita: falar com o dono" },
   depoisDono: { curto: "2ª: dono", longo: "Pedir para falar com o dono depois de já ter mandado mensagem" },
   gostou: { curto: "Gostou", longo: "Quando a pessoa gostou: oferecer a demonstração" },
 };
@@ -242,7 +258,7 @@ const VISITA = "Se der, queria falar direto com o dono ou a dona. Qual horário 
 
 // Nenhum texto fala de preço: o Brenno só passa valor depois que a pessoa mostra interesse.
 export const TEXTOS_PADRAO: Textos = {
-  fora: "Oi, {saudacao}, tudo certo? Aqui é o Brenno, da BN Digital. Sou de Casimiro, pertinho de {cidade}.\nVi a {nome} no Google Maps{elogio} e reparei que vocês ainda não têm site.\n{nicho}\nQuer que eu te mande um exemplo de como ficaria o de vocês? Se não for a hora, tranquilo, é só falar.",
+  fora: "Oi, {saudacao}, tudo certo? Aqui é o Brenno, da BN Digital. Sou de Casimiro{pertinho}.\nVi a {nome} no Google Maps{elogio} e reparei que vocês ainda não têm site.\n{nicho}\nQuer que eu te mande um exemplo de como ficaria o de vocês? Se não for a hora, tranquilo, é só falar.",
   casimiroAmbas: `${APRESENTACAO_CASIMIRO}\nTrabalho com duas coisas pro comércio aqui da cidade: site e uma plaquinha de avaliação pro balcão.\n{nichoSite}\n{nichoPlaca}\nPosso passar aí pra te mostrar as duas? É rapidinho. ${VISITA}`,
   casimiroPlaca: `${APRESENTACAO_CASIMIRO}\nTô fazendo uma plaquinha com chip pro balcão. {nicho}\nMais avaliação é mais gente achando a {nome} quando procura no Google.\nPosso passar aí pra te mostrar funcionando? É rapidinho. ${VISITA}`,
   casimiroSite: `${APRESENTACAO_CASIMIRO}\nVi a {nome} no Google Maps{elogio} e reparei que vocês ainda não têm site.\n{nicho}\nPosso passar aí pra te mostrar um exemplo no celular? É rapidinho. ${VISITA}`,
@@ -267,7 +283,7 @@ export function saudacao(agora = new Date()) {
 
 /** Em Casimiro, placa para quem ainda tem poucas avaliações (é quem mais ganha com ela); senão, site. */
 export function produtoSugerido(lead: Lead): Produto {
-  if (!ehCasimiro(lead)) return "site";
+  if (!podeVisitar(lead)) return "site";
   return lead.avaliacoes == null || lead.avaliacoes < 50 ? "placa" : "site";
 }
 
@@ -279,14 +295,14 @@ export const nadaEnviado = (lead: Lead) => ENVIOS.every((envio) => !dataEnvio(le
  * Depois: a oferta que falta e, com as duas mandadas, o pedido para falar com o dono.
  */
 export function ofertaInicial(lead: Lead): Oferta {
-  if (!ehCasimiro(lead)) return "site";
+  if (!podeVisitar(lead)) return "site";
   if (nadaEnviado(lead)) return "ambas";
   return proximaOferta(lead, null);
 }
 
 /** Próxima opção depois de mandar `acabou`: a oferta que falta e, por último, o pedido para falar com o dono. */
 export function proximaOferta(lead: Lead, acabou: Oferta | null): Oferta {
-  if (!ehCasimiro(lead)) return "site";
+  if (!podeVisitar(lead)) return "site";
   const mandou = (envio: Envio) =>
     Boolean(dataEnvio(lead, envio)) || acabou === envio || (acabou === "ambas" && envio !== "dono");
   const sugerido = produtoSugerido(lead);
@@ -306,7 +322,7 @@ const CONTINUACAO: Record<Envio, Exclude<ChaveTexto, "gostou">> = {
 };
 
 export function chaveTexto(lead: Lead, oferta: Oferta): Exclude<ChaveTexto, "gostou"> {
-  if (!ehCasimiro(lead)) return "fora";
+  if (!podeVisitar(lead)) return "fora";
   if (oferta === "ambas") return "casimiroAmbas";
   const dataEsta = dataEnvio(lead, oferta);
   const antes = ENVIOS.filter((envio) => envio !== oferta)
@@ -329,6 +345,7 @@ export function preencher(textos: Textos, chave: Exclude<ChaveTexto, "gostou">, 
   return (textos[chave]?.trim() || TEXTOS_PADRAO[chave])
     .replaceAll("{saudacao}", saudacao(agora))
     .replaceAll("{nome}", lead.nome || "sua empresa")
+    .replaceAll("{pertinho}", ehCasimiro(lead) ? " também" : `, pertinho de ${cidadeDe(lead)}`)
     .replaceAll("{cidade}", cidadeDe(lead))
     .replaceAll("{nichoSite}", fraseSite(lead))
     .replaceAll("{nichoPlaca}", frasePlaca(lead, false))
@@ -353,6 +370,19 @@ function exemploSite(tipo = "") {
   return /aça|sorvet|padar|latic|café|pizz|restaur|lanch|hamb|horti|merc|frut/i.test(tipo)
     ? `${SITES}acai-do-rei/`
     : SITES;
+}
+
+/** Para loja que recebeu pedido de visita mas fica longe: a conversa continua pelo WhatsApp. */
+export function textoCorrecao(lead: Lead) {
+  const site = Boolean(dataEnvio(lead, "site")) || Boolean(dataEnvio(lead, "dono"));
+  const placa = Boolean(dataEnvio(lead, "placa")) || Boolean(dataEnvio(lead, "dono"));
+  const linhas = [
+    "Opa, corrigindo o que falei antes: aí fica longe pra eu passar pessoalmente, mas consigo te mostrar tudo por aqui mesmo.",
+    site ? `Do site, te mando uma demonstração de como ficaria o da ${lead.nome}.` : "",
+    placa ? "Da plaquinha, te mando um vídeo rapidinho dela funcionando." : "",
+    "Pode ser?",
+  ];
+  return linhas.filter(Boolean).join("\n");
 }
 
 /** Mensagem para quem respondeu com interesse: oferece a demonstração do site dele. */

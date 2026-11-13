@@ -250,7 +250,7 @@ export function PainelVendas() {
     : escopo === "todos"
       ? `${leads.length} comércios sem site · ${casimiro.length} em Casimiro e ${fora.length} fora`
       : escopo === "casimiro"
-        ? `${casimiro.length} comércios · falar com o dono, placa primeiro`
+        ? `${casimiro.length} comércios · visita só nas que você marcar`
         : `${fora.length} comércios · oferta de site pelo WhatsApp`;
 
   const estado =
@@ -533,7 +533,7 @@ export function PainelVendas() {
                   <TabelaLeads
                     key={grupo.cidade}
                     titulo={grupo.cidade}
-                    detalhe={grupo.casimiro ? "Pessoalmente · placa ou site" : "WhatsApp · site"}
+                    detalhe={grupo.casimiro ? "Marque na ficha quem dá pra visitar" : "WhatsApp · site"}
                     leads={grupo.leads}
                     menosAvaliadosPrimeiro={grupo.casimiro}
                     onAbrir={(lead) => setFichaId(lead.id)}

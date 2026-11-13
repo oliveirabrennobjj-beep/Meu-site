@@ -60,6 +60,26 @@ leads.push({
   enviadoEm: new Date(Date.now() - 86_400_000).toISOString(),
 });
 
+// Loja longe do centro que recebeu o pedido de visita antes da correção (caso da Parada Ideal).
+const LONGE = "Loja Longe de Teste";
+leads.push({
+  id: "w5522900000002",
+  nome: LONGE,
+  tipo: "Padaria",
+  cidade: "Casimiro de Abreu",
+  whatsapp: "5522900000002",
+  nota: 4.3,
+  avaliacoes: 999998,
+  status: "respondeu",
+  produto: "dono",
+  enviadoEm: new Date(Date.now() - 90_000_000).toISOString(),
+  enviados: {
+    site: new Date(Date.now() - 90_100_000).toISOString(),
+    placa: new Date(Date.now() - 90_100_000).toISOString(),
+    dono: new Date(Date.now() - 90_000_000).toISOString(),
+  },
+});
+
 // Mesma moldura que a plataforma põe em volta da página publicada.
 const moldura = (corpo) => `<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 ${corpo}
@@ -169,13 +189,14 @@ try {
   await nicho.click();
 
   // Fora de Casimiro: mensagem de site, sem preço e sem pedido de visita.
-  const cidadeFora = p.locator("[data-tabelas] section[aria-labelledby]").filter({ hasNotText: "Pessoalmente" }).first();
+  const cidadeFora = p.locator("[data-tabelas] section[aria-labelledby]").filter({ hasText: "WhatsApp · site" }).first();
   await cidadeFora.locator("tbody tr button").first().click();
   const textoFora = decodeURIComponent(
     await p.getByRole("dialog").getByRole("link", { name: "Enviar no WhatsApp" }).getAttribute("href"),
   );
   assert.match(textoFora, /text=Oi, (bom dia|boa tarde|boa noite), tudo certo\?/);
   assert.match(textoFora, /não têm site/);
+  assert.match(textoFora, /Sou de Casimiro, pertinho de /);
   // Os atalhos da loja aparecem em toda ficha, não só nas de Casimiro.
   for (const atalho of ["Ver no Google Maps", /Instagram/, "Abrir o WhatsApp da loja"]) {
     assert.equal(await p.getByRole("dialog").getByRole("link", { name: atalho }).count(), 1);
@@ -190,8 +211,31 @@ try {
   await p.screenshot({ path: path.join(saida, "celular-casimiro-tabela.png") });
 
   // Quem já recebeu o site pela versão antiga ainda pode receber a placa.
+  // Loja longe que já recebeu pedido de visita: a ficha oferece a correção, uma vez só.
+  await p.getByRole("button", { name: LONGE }).click();
+  const longe = p.getByRole("dialog");
+  const correcao = decodeURIComponent(
+    await longe.getByRole("link", { name: "Mandar a correção" }).getAttribute("href"),
+  );
+  assert.match(correcao, /text=Opa, corrigindo o que falei antes: aí fica longe/);
+  assert.match(correcao, /demonstração/);
+  assert.match(correcao, /plaquinha/);
+  await p.waitForTimeout(400);
+  await p.screenshot({ path: path.join(saida, "celular-correcao.png") });
+  await p.route("https://wa.me/**", (rota) => rota.fulfill({ contentType: "text/html", body: "ok" }));
+  const [abaCorrecao] = await Promise.all([
+    cel.contexto.waitForEvent("page"),
+    longe.getByRole("link", { name: "Mandar a correção" }).click(),
+  ]);
+  await abaCorrecao.close();
+  await longe.getByRole("link", { name: "Mandar a correção" }).waitFor({ state: "detached" });
+  assert.ok((await p.evaluate(() => window.__escritas)).at(-1).dados.corrigidoEm);
+  await longe.getByRole("button", { name: "Fechar ficha" }).click();
+  await p.evaluate(() => (window.__escritas.length = 0));
+
   await p.getByRole("button", { name: ANTIGA }).click();
   const antiga = p.getByRole("dialog");
+  await antiga.getByRole("radio", { name: "Dá pra ir: mensagem pedindo visita" }).click();
   await antiga.getByRole("radio", { name: "Site: mensagem já enviada" }).waitFor();
   assert.equal(
     await antiga.getByRole("radio", { name: "Oferecer a placa de avaliações" }).getAttribute("aria-checked"),
@@ -225,14 +269,24 @@ try {
     await ficha.getByRole("link", { name: "Abrir o WhatsApp da loja" }).getAttribute("href"),
     /^https:\/\/wa\.me\/55\d+\?text=$/,
   );
+  // Loja de Casimiro ainda não marcada como "dá pra ir": mensagem só por WhatsApp, sem pedir visita.
+  const textoSemVisita = decodeURIComponent(href);
+  assert.match(textoSemVisita, /Sou de Casimiro também/);
+  assert.doesNotMatch(textoSemVisita, /passar aí|dono/);
+  assert.equal(await ficha.getByRole("radiogroup", { name: "O que oferecer" }).count(), 0);
+  await ficha.getByRole("radio", { name: "Dá pra ir: mensagem pedindo visita" }).click();
+  assert.equal((await p.evaluate(() => window.__escritas)).at(-1).dados.visita, true);
+
   // Nada enviado ainda em Casimiro: abre com as duas ofertas numa mensagem só.
   assert.equal(
     await ficha.getByRole("radio", { name: "Oferecer site e placa na mesma mensagem" }).getAttribute("aria-checked"),
     "true",
   );
   // Antes de mandar, quatro opções: as duas, placa, site e dono.
-  assert.equal(await ficha.getByRole("radio").count(), 4);
-  const textoAmbas = decodeURIComponent(href);
+  assert.equal(await ficha.getByRole("radiogroup", { name: "O que oferecer" }).getByRole("radio").count(), 4);
+  const textoAmbas = decodeURIComponent(
+    await ficha.getByRole("link", { name: "Enviar no WhatsApp" }).getAttribute("href"),
+  );
   assert.match(textoAmbas, /site e uma plaquinha/);
   assert.match(textoAmbas, /falar direto com o dono/);
   assert.doesNotMatch(textoAmbas, /R\$/);
@@ -245,18 +299,17 @@ try {
   assert.ok(textoCasimiro.includes(nome), "a mensagem leva o nome do comércio");
   assert.match(textoCasimiro, /plaquinha com chip/);
 
-  await p.route("https://wa.me/**", (rota) => rota.fulfill({ contentType: "text/html", body: "ok" }));
   const [aba] = await Promise.all([
     cel.contexto.waitForEvent("page"),
     ficha.getByRole("link", { name: "Enviar no WhatsApp" }).click(),
   ]);
   await aba.close();
   await ficha.getByRole("button", { name: /^Próximo:/ }).waitFor();
-  const escritas = await p.evaluate(() => window.__escritas);
+  const escritas = (await p.evaluate(() => window.__escritas)).filter((e) => e.dados.enviadoEm);
   assert.equal(escritas.length, 1);
   assert.equal(escritas[0].dados.status, "enviado");
-  assert.ok(escritas[0].dados.enviadoEm);
   assert.equal(escritas[0].dados.canal, "whatsapp");
+  assert.equal(escritas[0].dados.pediuVisita, true);
   await p.screenshot({ path: path.join(saida, "celular-enviado.png") });
 
   // Em Casimiro dá para mandar a outra oferta depois da primeira; cada uma fica marcada sozinha.

@@ -41,7 +41,7 @@ export function Mensagens({
   useEffect(() => setRascunho(textos), [textos]);
 
   const doLugar =
-    aba === "gostou" ? leads : leads.filter((l) => ehCasimiro(l) === (aba !== "fora"));
+    aba === "gostou" || aba === "fora" ? leads : leads.filter(ehCasimiro);
   const exemplo = doLugar.find((l) => statusDe(l) === "novo") ?? doLugar[0] ?? null;
   const mudou = CHAVES.some((chave) => rascunho[chave].trim() !== textos[chave].trim());
 
@@ -80,7 +80,7 @@ export function Mensagens({
         <p className={ajuda}>
           {aba === "gostou"
             ? "O painel troca sozinho: {nome} e {exemplo} (o link de um site seu parecido)."
-            : "O painel troca sozinho: {saudacao} (bom dia, boa tarde ou boa noite, pela hora), {nome}, {cidade}, {nicho} (a frase do ramo do comércio; {nichoSite} e {nichoPlaca} para as duas) e {elogio} (cita as avaliações de quem tem 30 ou mais)."}{" "}
+            : "O painel troca sozinho: {saudacao} (bom dia, boa tarde ou boa noite, pela hora), {nome}, {cidade}, {pertinho} (vira “, pertinho de Macaé” ou “ também” em Casimiro), {nicho} (a frase do ramo do comércio; {nichoSite} e {nichoPlaca} para as duas) e {elogio} (cita as avaliações de quem tem 30 ou mais)."}{" "}
           Não coloque preço: ele entra só na conversa.
         </p>
       </div>
