@@ -45,6 +45,21 @@ const leads = process.env.LEADS_DIR
       }))
   : leadsFicticios();
 
+// Loja gravada pela versão antiga do painel: um envio só (site), sem o registro por oferta.
+const ANTIGA = "Loja Antiga de Teste";
+leads.push({
+  id: "w5522900000001",
+  nome: ANTIGA,
+  tipo: "Padaria",
+  cidade: "Casimiro de Abreu",
+  whatsapp: "5522900000001",
+  nota: 5,
+  avaliacoes: 999999,
+  status: "enviado",
+  produto: "site",
+  enviadoEm: new Date(Date.now() - 86_400_000).toISOString(),
+});
+
 // Mesma moldura que a plataforma põe em volta da página publicada.
 const moldura = (corpo) => `<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 ${corpo}
@@ -137,7 +152,8 @@ try {
     hasTouch: true,
   });
   const p = cel.pagina;
-  assert.equal(await p.getByRole("article").filter({ hasText: "A enviar" }).locator("p").first().innerText(), String(leads.length));
+  const aEnviar = leads.filter((l) => (l.status ?? "novo") === "novo").length;
+  assert.equal(await p.getByRole("article").filter({ hasText: "A enviar" }).locator("p").first().innerText(), String(aEnviar));
   assert.equal(await p.getByRole("region", { name: "Casimiro de Abreu" }).locator("h2 + span").innerText(), String(casimiro));
   assert.ok(await semTransbordo(p), "a página não pode rolar para o lado");
   await p.screenshot({ path: path.join(saida, "celular-geral.png") });
@@ -171,6 +187,22 @@ try {
   await p.getByRole("region", { name: "Casimiro de Abreu" }).scrollIntoViewIfNeeded();
   await p.waitForTimeout(300);
   await p.screenshot({ path: path.join(saida, "celular-casimiro-tabela.png") });
+
+  // Quem já recebeu o site pela versão antiga ainda pode receber a placa.
+  await p.getByRole("button", { name: ANTIGA }).click();
+  const antiga = p.getByRole("dialog");
+  await antiga.getByRole("radio", { name: "Site: mensagem já enviada" }).waitFor();
+  assert.equal(
+    await antiga.getByRole("radio", { name: "Oferecer a placa de avaliações" }).getAttribute("aria-checked"),
+    "true",
+  );
+  assert.match(
+    decodeURIComponent(await antiga.getByRole("link", { name: "Enviar no WhatsApp" }).getAttribute("href")),
+    /plaquinha/,
+  );
+  await p.waitForTimeout(400);
+  await p.screenshot({ path: path.join(saida, "celular-ja-mandou-site.png") });
+  await antiga.getByRole("button", { name: "Fechar ficha" }).click();
 
   const primeira = p.getByRole("region", { name: "Casimiro de Abreu" }).locator("tbody tr button").first();
   const nome = await primeira.innerText();
@@ -208,6 +240,20 @@ try {
   assert.ok(escritas[0].dados.enviadoEm);
   assert.equal(escritas[0].dados.canal, "whatsapp");
   await p.screenshot({ path: path.join(saida, "celular-enviado.png") });
+
+  // Em Casimiro dá para mandar a outra oferta depois da primeira; cada uma fica marcada sozinha.
+  await ficha.getByRole("radio", { name: /^Oferecer/ }).click({ timeout: 4000 });
+  const [outraAba] = await Promise.all([
+    cel.contexto.waitForEvent("page"),
+    ficha.getByRole("link", { name: "Enviar no WhatsApp" }).click(),
+  ]);
+  await outraAba.close();
+  await ficha.getByRole("button", { name: /^Próximo:/ }).waitFor();
+  assert.equal(await ficha.getByRole("radio", { name: /^Oferecer/ }).count(), 0);
+  const segunda = (await p.evaluate(() => window.__escritas)).at(-1).dados;
+  assert.ok(segunda.enviados.placa && segunda.enviados.site, "as duas ofertas ficam marcadas");
+  assert.equal(segunda.status, undefined, "a segunda oferta não muda a situação");
+  await p.screenshot({ path: path.join(saida, "celular-duas-ofertas.png") });
 
   // A pessoa gostou: a mensagem oferece a demonstração do site, sem preço.
   await ficha.getByRole("button", { name: "Respondeu" }).click();

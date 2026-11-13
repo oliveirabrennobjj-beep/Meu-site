@@ -25,6 +25,8 @@ e sem `capabilities` (mantém `db` e `user`).
   Casimiro: mensagem pede para falar com o dono pessoalmente (placa para quem tem menos de 50 avaliações).
   Fora: mensagem de site pelo WhatsApp. Quem gostou recebe a oferta de demonstração do site para hoje ou amanhã.
   Nenhum texto cita preço.
+  Cada oferta tem seu próprio registro de envio (`enviados.site`, `enviados.placa`); contatos antigos tinham
+  só `produto` + `enviadoEm` e continuam sendo lidos.
 - `src/painel/usePainel.ts`: leitura e gravação no banco do Artifact.
 - `src/painel/PainelVendas.tsx`: a tela; `TabelaLeads`, `FichaLead` e `Ferramentas` são as partes.
 - `src/components/ui/`: casca e blocos visuais, sem regra de negócio.

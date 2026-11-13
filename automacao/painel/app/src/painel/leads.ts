@@ -16,8 +16,10 @@ export interface Lead {
   enviadoEm?: string;
   atualizado?: string;
   obs?: string;
-  /** O que foi oferecido no primeiro contato. */
+  /** O que foi oferecido no contato mais recente. */
   produto?: string;
+  /** Quando cada oferta foi feita; a mesma loja pode receber site e placa. */
+  enviados?: Partial<Record<Produto, string>>;
   /** Por onde foi o primeiro contato. */
   canal?: "whatsapp" | "pessoal";
 }
@@ -84,9 +86,27 @@ export function contar(leads: Lead[]) {
   return n;
 }
 
+/** Quando a oferta foi feita a essa loja, ou `null` se ainda não foi. */
+export function dataEnvio(lead: Lead, produto: Produto): string | null {
+  if (lead.enviados) return lead.enviados[produto] || null;
+  // Contatos antigos guardavam um envio só por loja.
+  const antigo = statusDe(lead) !== "novo" && (lead.produto || "site") === produto;
+  return antigo && lead.enviadoEm ? lead.enviadoEm : null;
+}
+
+const PRODUTOS: Produto[] = ["site", "placa"];
+
+/** Mensagens mandadas hoje: site e placa para a mesma loja contam como duas. */
 export function enviadosHoje(leads: Lead[], agora = new Date()) {
   const hoje = agora.toDateString();
-  return leads.filter((l) => l.enviadoEm && new Date(l.enviadoEm).toDateString() === hoje).length;
+  let total = 0;
+  for (const lead of leads) {
+    for (const produto of PRODUTOS) {
+      const data = dataEnvio(lead, produto);
+      if (data && new Date(data).toDateString() === hoje) total += 1;
+    }
+  }
+  return total;
 }
 
 /* Lugar ---------------------------------------------------------------------------------------- */
@@ -209,6 +229,14 @@ export const TEXTOS_PADRAO: Textos = {
 export function produtoSugerido(lead: Lead): Produto {
   if (!ehCasimiro(lead)) return "site";
   return lead.avaliacoes == null || lead.avaliacoes < 50 ? "placa" : "site";
+}
+
+/** Oferta que abre escolhida na ficha: a sugerida, ou a outra quando a sugerida já foi feita. */
+export function produtoInicial(lead: Lead): Produto {
+  const sugerido = produtoSugerido(lead);
+  if (!ehCasimiro(lead) || !dataEnvio(lead, sugerido)) return sugerido;
+  const outro: Produto = sugerido === "placa" ? "site" : "placa";
+  return dataEnvio(lead, outro) ? sugerido : outro;
 }
 
 export function chaveTexto(lead: Lead, produto: Produto): Exclude<ChaveTexto, "gostou"> {

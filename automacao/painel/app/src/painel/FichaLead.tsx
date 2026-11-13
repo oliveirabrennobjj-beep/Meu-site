@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import {
   ArrowRight,
+  Check,
   Copy,
   ExternalLink,
   Handshake,
@@ -27,6 +28,7 @@ import {
   STATUS,
   buscaInstagram,
   cidadeDe,
+  dataEnvio,
   ehCasimiro,
   fmtInt,
   fmtNota,
@@ -34,7 +36,7 @@ import {
   linkMaps,
   linkWhatsApp,
   paginaDe,
-  produtoSugerido,
+  produtoInicial,
   statusDe,
   textoGostou,
   textoMensagem,
@@ -54,10 +56,16 @@ const DESFECHOS: [Status, string][] = [
   ["novo", "Não enviei"],
 ];
 
-const PRODUTOS: SegmentOption<Produto>[] = [
-  { id: "placa", label: "PLACA", long: "Oferecer a placa de avaliações" },
-  { id: "site", label: "SITE", long: "Oferecer o site" },
-];
+const OFERTA: Record<Produto, { nome: string; oferecer: string; enviada: string }> = {
+  placa: { nome: "Placa", oferecer: "Oferecer a placa de avaliações", enviada: "Placa: mensagem já enviada" },
+  site: { nome: "Site", oferecer: "Oferecer o site", enviada: "Site: mensagem já enviada" },
+};
+
+function quando(iso: string) {
+  const data = new Date(iso);
+  if (data.toDateString() === new Date().toDateString()) return "hoje";
+  return `em ${data.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" })}`;
+}
 
 const rotuloCampo = "mb-1.5 text-[12.5px] font-medium text-[color:var(--bjork-text-muted)]";
 
@@ -130,9 +138,20 @@ function Conteudo({
   const status = statusDe(lead);
   const novo = status === "novo";
   const daqui = ehCasimiro(lead);
-  const [produto, setProduto] = useState<Produto>(() => produtoSugerido(lead));
+  const [escolhido, setProduto] = useState<Produto>(() => produtoInicial(lead));
+  // Fora de Casimiro a oferta é sempre o site.
+  const produto: Produto = daqui ? escolhido : "site";
+  const enviada = dataEnvio(lead, produto);
   const mensagem = textoMensagem(textos, lead, produto);
   const [obs, setObs] = useState(lead.obs ?? "");
+  const opcoes: SegmentOption<Produto>[] = (["placa", "site"] as const).map((id) => {
+    const feita = dataEnvio(lead, id) !== null;
+    return {
+      id,
+      label: `${OFERTA[id].nome.toUpperCase()}${feita ? " ✓" : ""}`,
+      long: feita ? OFERTA[id].enviada : OFERTA[id].oferecer,
+    };
+  });
 
   const copiar = async () => {
     try {
@@ -143,16 +162,27 @@ function Conteudo({
     }
   };
 
-  const registrarContato = (canal: "whatsapp" | "pessoal") =>
+  const registrarContato = (canal: "whatsapp" | "pessoal") => {
+    const agora = new Date().toISOString();
+    const outra: Produto = produto === "placa" ? "site" : "placa";
+    const dataOutra = dataEnvio(lead, outra);
     onSalvar(lead.id, {
-      status: "enviado",
-      enviadoEm: new Date().toISOString(),
-      produto: daqui ? produto : "site",
+      // Mandar a segunda oferta não desfaz o que já foi marcado (respondeu, fechou…).
+      ...(novo ? { status: "enviado" } : {}),
+      enviadoEm: agora,
+      produto,
       canal,
+      enviados: { [produto]: agora, ...(dataOutra ? { [outra]: dataOutra } : {}) },
     });
+  };
 
   const mudarStatus = (para: Status) => {
-    onSalvar(lead.id, para === "novo" ? { status: para, enviadoEm: "" } : { status: para });
+    onSalvar(
+      lead.id,
+      para === "novo"
+        ? { status: para, enviadoEm: "", enviados: { site: "", placa: "" } }
+        : { status: para },
+    );
     avisar(`${lead.nome}: ${STATUS[para].label.toLowerCase()}`);
   };
 
@@ -208,17 +238,24 @@ function Conteudo({
 
         <SobreALoja lead={lead} />
 
-        {novo ? (
+        {(novo || daqui) && (
           <>
             {daqui && (
               <div className="flex items-center justify-between gap-3">
                 <p className="text-[13px] text-[color:var(--bjork-text-medium)]">
-                  É daqui: vale ir falar com o dono.
+                  {novo
+                    ? "É daqui: vale ir falar com o dono."
+                    : (["placa", "site"] as const)
+                        .map((id) => {
+                          const data = dataEnvio(lead, id);
+                          return `${OFERTA[id].nome}: ${data ? `enviada ${quando(data)}` : "falta enviar"}`;
+                        })
+                        .join(" · ")}
                 </p>
                 <SegmentedControl
                   value={produto}
                   onChange={setProduto}
-                  options={PRODUTOS}
+                  options={opcoes}
                   label="O que oferecer"
                 />
               </div>
@@ -233,18 +270,27 @@ function Conteudo({
                 {mensagem}
               </p>
             </div>
+            {enviada && (
+              <p
+                className="-mt-1 flex items-center gap-1.5 text-[13px] font-medium"
+                style={{ color: "var(--blk-success)" }}
+              >
+                <Check aria-hidden="true" className="size-4" />
+                Mensagem {produto === "placa" ? "da placa" : "do site"} enviada {quando(enviada)}.
+              </p>
+            )}
             <a
               href={linkWhatsApp(lead, mensagem)}
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => registrarContato("whatsapp")}
-              className={buttonClass("primary", "lg", "w-full")}
+              className={buttonClass(enviada ? "secondary" : "primary", "lg", "w-full")}
             >
               <Send aria-hidden="true" />
-              Enviar no WhatsApp
+              {enviada ? "Enviar de novo" : "Enviar no WhatsApp"}
             </a>
             <div className="flex flex-wrap gap-2">
-              {daqui && (
+              {daqui && !enviada && (
                 <BlockButton
                   variant="secondary"
                   className="flex-1"
@@ -262,12 +308,20 @@ function Conteudo({
                 Copiar mensagem
               </BlockButton>
             </div>
-            {daqui && <RoteiroPresencial placa={produto === "placa"} />}
+            {daqui && novo && <RoteiroPresencial placa={produto === "placa"} />}
           </>
-        ) : (
+        )}
+
+        {!novo && (
           <>
             {status === "enviado" && proximo && (
-              <BlockButton size="lg" className="w-full" onClick={() => onAbrir(proximo)}>
+              <BlockButton
+                size="lg"
+                // Com oferta ainda por mandar nesta loja, o destaque fica no botão de enviar.
+                variant={daqui && !enviada ? "secondary" : "primary"}
+                className="w-full"
+                onClick={() => onAbrir(proximo)}
+              >
                 <span className="truncate">Próximo: {proximo.nome}</span>
                 <ArrowRight aria-hidden="true" />
               </BlockButton>
