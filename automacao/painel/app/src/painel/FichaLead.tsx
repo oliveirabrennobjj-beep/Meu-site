@@ -8,6 +8,7 @@ import {
   Instagram,
   MapPin,
   MessageCircle,
+  MonitorSmartphone,
   Search,
   Send,
   Star,
@@ -23,6 +24,7 @@ import {
 import { SegmentedControl, type SegmentOption } from "@/components/ui/dashboard-parts";
 import { cn } from "@/lib/utils";
 import { Anotar } from "./Anotar";
+import { Demonstracao } from "./Demonstracao";
 import { StatusChip } from "./TabelaLeads";
 import {
   STATUS,
@@ -170,6 +172,7 @@ function Conteudo({
   const daqui = podeVisitar(lead);
   const corrigir = !daqui && recebeuPedidoDeVisita(lead) && !lead.corrigidoEm;
   const [escolhida, setOferta] = useState<Oferta>(() => ofertaInicial(lead));
+  const [demo, setDemo] = useState(false);
   const nadaEnviado = semEnvios(lead);
   // Fora de Casimiro a oferta é sempre o site; "as duas" só vale antes do primeiro envio.
   const oferta: Oferta = !daqui ? "site" : escolhida === "ambas" && !nadaEnviado ? ofertaInicial(lead) : escolhida;
@@ -280,6 +283,11 @@ function Conteudo({
         </dl>
 
         <SobreALoja lead={lead} />
+        <BlockButton variant="secondary" size="lg" className="w-full" onClick={() => setDemo(true)}>
+          <MonitorSmartphone aria-hidden="true" />
+          Mostrar demonstração do site
+        </BlockButton>
+        {demo && <Demonstracao lead={lead} onFechar={() => setDemo(false)} />}
 
         {ehCasimiro(lead) && (
           <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">

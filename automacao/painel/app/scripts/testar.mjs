@@ -295,6 +295,16 @@ try {
   await ficha.getByRole("link", { name: "Enviar no WhatsApp" }).waitFor();
   await p.waitForTimeout(400);
   await p.screenshot({ path: path.join(saida, "celular-ficha.png") });
+  // Demonstração: prévia do site com o nome da loja; os botões só explicam o que fariam.
+  await ficha.first().getByRole("button", { name: "Mostrar demonstração do site" }).click();
+  const demo = p.getByRole("dialog", { name: `Demonstração do site de ${nome}` });
+  await demo.getByRole("heading", { level: 1, name: nome }).waitFor();
+  await p.waitForTimeout(500);
+  await p.screenshot({ path: path.join(saida, "celular-demonstracao.png") });
+  await demo.getByRole("button", { name: /WhatsApp/ }).first().click();
+  await demo.getByRole("status").filter({ hasText: "No site de verdade" }).waitFor();
+  await demo.getByRole("button", { name: "Fechar demonstração" }).click();
+  await demo.waitFor({ state: "detached" });
   const href = await ficha.getByRole("link", { name: "Enviar no WhatsApp" }).getAttribute("href");
   assert.match(href, /^https:\/\/wa\.me\/55\d{10,11}\?text=/);
   // Atalhos da loja: mapa pelo nome, Instagram (perfil ou busca) e WhatsApp sem mensagem.
