@@ -21,8 +21,15 @@ export interface Proposta {
   anotacao: string;
 }
 
+export type Turno = { role: "user" | "assistant"; content: string };
 type SampleJson = (input: string, options?: Record<string, unknown>) => Promise<unknown>;
-type Sample = { json: SampleJson };
+export type Sample = ((
+  input: string | Turno[],
+  options?: Record<string, unknown>,
+) => Promise<{ text: string; truncated: boolean }>) & {
+  json: SampleJson;
+  limits?: () => Promise<{ images?: { maxCount: number; maxInputBytes: number; mediaTypes: string[] } }>;
+};
 
 let sampleCache: Promise<Sample | null> | null = null;
 
@@ -30,9 +37,60 @@ let sampleCache: Promise<Sample | null> | null = null;
 export function usarSample(): Promise<Sample | null> {
   sampleCache ??= (async () => {
     const sample = (await window.claude?.use?.("sample")) as Sample | null | undefined;
-    return sample && typeof sample.json === "function" ? sample : null;
+    return typeof sample === "function" && typeof sample.json === "function" ? sample : null;
   })();
   return sampleCache;
+}
+
+/** Tipos de foto que o assistente aceita nesta tela; vazio quando não dá para mandar foto. */
+export async function tiposDeFoto(): Promise<string[]> {
+  const sample = await usarSample();
+  const limites = await sample?.limits?.().catch(() => null);
+  return limites?.images?.mediaTypes ?? [];
+}
+
+/** Uma mudança no painel que o assistente propôs na conversa. */
+export interface Acao extends Proposta {
+  loja: string;
+}
+
+/** Uma fala da conversa com o assistente, como fica guardada no banco. */
+export interface Mensagem {
+  papel: "brenno" | "assistente";
+  texto: string;
+  em: string;
+  foto?: boolean;
+  acoes?: Acao[];
+  /** Posições das ações já salvas no painel. */
+  salvas?: number[];
+}
+
+const INICIO_BLOCO = "```painel";
+
+/** Texto a mostrar enquanto a resposta chega: o bloco de ações fica escondido. */
+export const textoVisivel = (texto: string) => texto.split(INICIO_BLOCO)[0].trimEnd();
+
+/** Separa o texto da resposta do bloco ```painel com as mudanças propostas. */
+export function separarAcoes(texto: string, idsValidos: Set<string>): { visivel: string; acoes: Acao[] } {
+  const visivel = textoVisivel(texto);
+  const bloco = texto.split(INICIO_BLOCO)[1]?.split("```")[0];
+  if (!bloco) return { visivel, acoes: [] };
+  let lista: unknown;
+  try {
+    lista = JSON.parse(bloco.trim());
+  } catch {
+    return { visivel, acoes: [] };
+  }
+  const itens = Array.isArray(lista) ? lista : [lista];
+  const acoes: Acao[] = [];
+  for (const item of itens) {
+    const loja = String((item as { loja?: unknown })?.loja ?? "");
+    if (!idsValidos.has(loja)) continue;
+    const proposta = lerProposta(item, "");
+    if (!proposta.anotacao && !proposta.status && !proposta.compromisso) continue;
+    acoes.push({ loja, ...proposta });
+  }
+  return { visivel, acoes };
 }
 
 const DIAS = ["domingo", "segunda", "terça", "quarta", "quinta", "sexta", "sábado"];

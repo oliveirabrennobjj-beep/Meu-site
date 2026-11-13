@@ -98,9 +98,9 @@ function bancoDeMentira(iniciais) {
     ouvintes.forEach((fn) => fn(snap));
   };
   const db = {
-    doc: () => ({
+    doc: (caminho) => ({
       onSnapshot: (next) => (setTimeout(() => next({ exists: false, data: () => undefined }), 0), () => {}),
-      set: async (dados) => void window.__escritas.push({ op: "set", caminho: "config/mensagem", dados }),
+      set: async (dados) => void window.__escritas.push({ op: "set", caminho, dados }),
     }),
     collection: () => ({
       onSnapshot: (next) => (ouvintes.add(next), setTimeout(emitir, 30), () => ouvintes.delete(next)),
@@ -122,7 +122,30 @@ function bancoDeMentira(iniciais) {
   window.__perguntas = [];
   const amanha = new Date(Date.now() + 86_400_000);
   const dia = `${amanha.getFullYear()}-${String(amanha.getMonth() + 1).padStart(2, "0")}-${String(amanha.getDate()).padStart(2, "0")}`;
-  const sample = async () => ({ text: "" });
+  // Conversa: responde em partes (como o Claude de verdade) e propõe salvar um compromisso na "Loja Antiga".
+  window.__conversas = [];
+  const resposta =
+    'Ela respondeu que o dono chega meio-dia. Manda amanhã:\n"Oi, tudo bem? Aqui é o Brenno."\n```painel\n' +
+    JSON.stringify([
+      {
+        loja: "w5522900000001",
+        status: "respondeu",
+        compromisso: { quando: `${dia}T12:00`, oque: "Mandar mensagem pro dono" },
+        anotacao: "Funcionária disse que o dono chega meio-dia.",
+      },
+    ]) +
+    "\n```";
+  const sample = async (entrada, opcoes = {}) => {
+    window.__conversas.push({ entrada, fotos: opcoes.images?.length ?? 0 });
+    opcoes.onText?.({ text: resposta.slice(0, 40), delta: resposta.slice(0, 40) });
+    await new Promise((fim) => setTimeout(fim, 200));
+    opcoes.onText?.({ text: resposta, delta: resposta.slice(40) });
+    return { text: resposta, truncated: false };
+  };
+  sample.limits = async () => ({
+    maxPromptBytes: 262144,
+    images: { maxCount: 1, maxInputBytes: 20_000_000, mediaTypes: ["image/png", "image/jpeg", "image/webp"] },
+  });
   sample.json = async (pergunta) => {
     window.__perguntas.push(pergunta);
     return {
@@ -419,6 +442,38 @@ try {
   assert.equal(await meta.getAttribute("aria-valuenow"), "1");
   await p.waitForTimeout(400);
   await p.screenshot({ path: path.join(saida, "celular-menu.png") });
+  // Assistente: manda um print com pergunta, ele responde e propõe salvar no painel.
+  await p.getByRole("dialog", { name: "Menu" }).getByRole("link", { name: "Assistente" }).click();
+  await p.getByRole("heading", { name: "Assistente" }).waitFor();
+  await p.getByLabel("Escolher foto").setInputFiles({
+    name: "print.png",
+    mimeType: "image/png",
+    buffer: Buffer.from(
+      "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==",
+      "base64",
+    ),
+  });
+  await p.getByLabel("Mensagem para o assistente").fill("o que eu faço com essa?");
+  await p.getByRole("button", { name: "Enviar" }).click();
+  await p.getByRole("button", { name: "Salvar no painel" }).waitFor();
+  const conversaEnviada = (await p.evaluate(() => window.__conversas)).at(-1);
+  assert.equal(conversaEnviada.fotos, 1, "a foto vai junto");
+  const instrucoes = conversaEnviada.entrada[0].content;
+  assert.match(instrucoes, /Barra de São João, Rio Dourado, Professor Souza/);
+  assert.match(instrucoes, /w5522900000001 \| Loja Antiga de Teste .*\+55 22 90000-0001/);
+  assert.equal(conversaEnviada.entrada.at(-1).content, "o que eu faço com essa?\n[Foto em anexo]");
+  assert.doesNotMatch(await p.locator("main").innerText(), /```painel/);
+  await p.waitForTimeout(300);
+  await p.screenshot({ path: path.join(saida, "celular-assistente.png") });
+  await p.getByRole("button", { name: "Salvar no painel" }).click();
+  await p.getByText("Salvo no painel", { exact: true }).waitFor();
+  const salvaPeloAssistente = (await p.evaluate(() => window.__escritas)).filter((e) => e.id === "w5522900000001").at(-1);
+  assert.equal(salvaPeloAssistente.dados.status, "respondeu");
+  assert.equal(salvaPeloAssistente.dados.compromisso.oque, "Mandar mensagem pro dono");
+  const guardada = (await p.evaluate(() => window.__escritas)).filter((e) => e.caminho === "assistente/conversa").at(-1);
+  assert.equal(guardada.dados.mensagens.length, 2);
+  assert.deepEqual(guardada.dados.mensagens[1].salvas, [0]);
+
   assert.deepEqual(cel.erros, []);
   await cel.contexto.close();
 

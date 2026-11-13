@@ -6,6 +6,7 @@ import {
   MapPin,
   MapPinned,
   MessageSquareText,
+  Sparkles,
   Search,
   X,
 } from "lucide-react";
@@ -28,6 +29,7 @@ import {
 import { cn } from "@/lib/utils";
 import { FichaLead } from "./FichaLead";
 import { Importar, Mensagens } from "./Ferramentas";
+import { Assistente } from "./Assistente";
 import { ProximosPassos } from "./ProximosPassos";
 import { TabelaLeads } from "./TabelaLeads";
 import {
@@ -50,7 +52,7 @@ import {
 } from "./leads";
 import { usePainel } from "./usePainel";
 
-type Vista = "geral" | "mensagens" | "importar";
+type Vista = "geral" | "assistente" | "mensagens" | "importar";
 type Filtro = Status | "todos";
 
 const ESCOPOS: SegmentOption<Escopo>[] = [
@@ -63,6 +65,7 @@ const TITULO: Record<Escopo | Exclude<Vista, "geral">, string> = {
   todos: "Visão geral",
   casimiro: "Casimiro de Abreu",
   fora: "Fora de Casimiro",
+  assistente: "Assistente",
   mensagens: "Mensagens",
   importar: "Importar empresas",
 };
@@ -79,7 +82,8 @@ export function PainelVendas() {
     return () => window.clearTimeout(timer);
   }, [aviso]);
 
-  const { leads, textos, fase, lento, erro, salvar, salvarMensagens, importar } = usePainel(avisar);
+  const { leads, textos, conversa, fase, lento, erro, salvar, salvarMensagens, salvarConversa, importar } =
+    usePainel(avisar);
   const { announce, region } = useAnnouncer();
 
   const [vista, setVista] = useState<Vista>("geral");
@@ -199,7 +203,7 @@ export function PainelVendas() {
   };
 
   const navegar = (id: string) => {
-    if (id === "mensagens" || id === "importar") setVista(id);
+    if (id === "assistente" || id === "mensagens" || id === "importar") setVista(id);
     else {
       setVista("geral");
       setEscopo(id as Escopo);
@@ -239,6 +243,7 @@ export function PainelVendas() {
     {
       label: "Ferramentas",
       items: [
+        { id: "assistente", label: "Assistente", icon: Sparkles },
         { id: "mensagens", label: "Mensagens", icon: MessageSquareText },
         { id: "importar", label: "Importar empresas", icon: Download },
       ],
@@ -407,14 +412,22 @@ export function PainelVendas() {
         </>
       }
     >
-      <div className="mx-auto flex w-full max-w-[1280px] flex-col gap-4 px-5 pb-10 pt-5 @3xl:gap-5 @3xl:px-6 @3xl:pt-6">
+      <div
+        className={cn(
+          "mx-auto flex w-full max-w-[1280px] flex-col gap-4 px-5 pt-5 @3xl:gap-5 @3xl:px-6 @3xl:pt-6",
+          // No chat, a área ocupa a tela toda para a caixa de escrever ficar no rodapé.
+          vista === "assistente" ? "min-h-full pb-0" : "pb-10",
+        )}
+      >
         <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
           <div className="min-w-0">
             <h1 className="font-bjork-display text-[24px] font-bold italic leading-none tracking-[-0.02em] @3xl:text-[28px]">
               {TITULO[ativo]}
             </h1>
             <p className="mt-2 text-[13px] text-[color:var(--bjork-text-muted)]">
-              {vista === "mensagens"
+              {vista === "assistente"
+                ? "Pergunte, peça mensagem pronta ou mande o print da conversa"
+                : vista === "mensagens"
                 ? "Um texto para cada lugar e cada oferta"
                 : vista === "importar"
                   ? "Traga os comércios novos da pesquisa diária"
@@ -438,6 +451,17 @@ export function PainelVendas() {
           >
             {estado}
           </p>
+        )}
+
+        {vista === "assistente" && (
+          <Assistente
+            leads={leads}
+            conversa={conversa}
+            onConversa={salvarConversa}
+            onSalvar={salvar}
+            onAbrir={(lead) => setFichaId(lead.id)}
+            avisar={avisar}
+          />
         )}
 
         {vista === "mensagens" && (

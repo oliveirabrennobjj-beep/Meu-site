@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import type { Mensagem } from "./assistente";
 import { TEXTOS_PADRAO, lerImportacao, type ChaveTexto, type Lead, type Textos } from "./leads";
 
 interface DocSnap {
@@ -60,6 +61,7 @@ export function usePainel(avisar: (texto: string) => void) {
   const [erro, setErro] = useState("");
   const dbRef = useRef<Db | null>(null);
   const filas = useRef(new Map<string, Promise<unknown>>());
+  const [conversa, setConversa] = useState<Mensagem[]>([]);
 
   useEffect(() => {
     let vivo = true;
@@ -88,6 +90,15 @@ export function usePainel(avisar: (texto: string) => void) {
               if (typeof texto === "string" && texto.trim()) lidos[chave] = texto;
             }
             setTextos(lidos);
+          },
+          () => {},
+        ),
+      );
+      parar.push(
+        db.doc("assistente/conversa").onSnapshot(
+          (snap) => {
+            const mensagens = snap.exists ? snap.data()?.mensagens : null;
+            if (Array.isArray(mensagens)) setConversa(mensagens as Mensagem[]);
           },
           () => {},
         ),
@@ -168,5 +179,32 @@ export function usePainel(avisar: (texto: string) => void) {
     [leads],
   );
 
-  return { leads, textos, fase, lento, erro, salvar, salvarMensagens, importar };
+  /** Guarda a conversa com o assistente (só as últimas 40 falas). */
+  const salvarConversa = useCallback(
+    (mensagens: Mensagem[]) => {
+      const ultimas = mensagens.slice(-40);
+      setConversa(ultimas);
+      const db = dbRef.current;
+      if (!db) return;
+      const anterior = filas.current.get("conversa") ?? Promise.resolve();
+      const proxima = anterior
+        .then(() => db.doc("assistente/conversa").set({ mensagens: ultimas }))
+        .catch((e) => avisar(`Não salvou a conversa: ${motivo(e)}`));
+      filas.current.set("conversa", proxima);
+    },
+    [avisar],
+  );
+
+  return {
+    leads,
+    textos,
+    conversa,
+    fase,
+    lento,
+    erro,
+    salvar,
+    salvarMensagens,
+    salvarConversa,
+    importar,
+  };
 }

@@ -46,6 +46,9 @@ usar **B** só num número secundário se quiser ler/responder conversas pelo Cl
   - Em Casimiro também tem a opção DONO: mensagem pedindo para falar com o dono (com "oi" se for a primeira,
     como continuação se já mandou algo). Depois de cada envio a ficha já pula para a próxima opção que falta.
   - A saudação muda pela hora do celular: bom dia, boa tarde ou boa noite.
+  - **Assistente (menu → Assistente):** chat com o Claude dentro do painel. Sabe as regras de abordagem, lê o print da
+    conversa do WhatsApp, escreve a resposta pronta e propõe atualizar a loja (botão "Salvar no painel").
+    As regras ficam em `automacao/painel/app/src/painel/conhecimento.ts`.
   - **Assistente de anotação:** na ficha, "Conta o que aconteceu" do seu jeito; o Claude do próprio painel entende e mostra
     a situação, o compromisso (dia e hora) e um resumo para você conferir e salvar. Gasta um pouco do seu uso do Claude.
     Os compromissos aparecem em "Próximos passos", no topo do painel, e na linha da loja.
