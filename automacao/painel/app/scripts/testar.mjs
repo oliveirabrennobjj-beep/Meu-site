@@ -72,6 +72,7 @@ leads.push({
   avaliacoes: 999998,
   status: "respondeu",
   produto: "dono",
+  visita: false,
   enviadoEm: new Date(Date.now() - 90_000_000).toISOString(),
   enviados: {
     site: new Date(Date.now() - 90_100_000).toISOString(),
@@ -269,11 +270,19 @@ try {
     await ficha.getByRole("link", { name: "Abrir o WhatsApp da loja" }).getAttribute("href"),
     /^https:\/\/wa\.me\/55\d+\?text=$/,
   );
-  // Loja de Casimiro ainda não marcada como "dá pra ir": mensagem só por WhatsApp, sem pedir visita.
-  const textoSemVisita = decodeURIComponent(href);
+  // Loja da cidade de Casimiro já abre com visita; marcando NÃO, vira mensagem só por WhatsApp.
+  assert.equal(
+    await ficha.getByRole("radio", { name: "Dá pra ir: mensagem pedindo visita" }).getAttribute("aria-checked"),
+    "true",
+  );
+  await ficha.getByRole("radio", { name: "Não dá pra ir: mensagem só por WhatsApp" }).click();
+  const textoSemVisita = decodeURIComponent(
+    await ficha.getByRole("link", { name: "Enviar no WhatsApp" }).getAttribute("href"),
+  );
   assert.match(textoSemVisita, /Sou de Casimiro também/);
   assert.doesNotMatch(textoSemVisita, /passar aí|dono/);
   assert.equal(await ficha.getByRole("radiogroup", { name: "O que oferecer" }).count(), 0);
+  assert.equal((await p.evaluate(() => window.__escritas)).at(-1).dados.visita, false);
   await ficha.getByRole("radio", { name: "Dá pra ir: mensagem pedindo visita" }).click();
   assert.equal((await p.evaluate(() => window.__escritas)).at(-1).dados.visita, true);
 
@@ -289,6 +298,7 @@ try {
   );
   assert.match(textoAmbas, /site e uma plaquinha/);
   assert.match(textoAmbas, /falar direto com o dono/);
+  assert.match(textoAmbas, /me passa o contato/);
   assert.doesNotMatch(textoAmbas, /R\$/);
 
   // Aqui o Brenno escolhe mandar só a placa primeiro.

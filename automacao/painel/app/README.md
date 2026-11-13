@@ -23,7 +23,8 @@ e sem `capabilities` (mantém `db` e `user`).
 
 - `src/painel/leads.ts`: regras (situações, cidade, nicho, site ou placa, textos das mensagens, importação).
   Casimiro: mensagem pede para falar com o dono pessoalmente (placa para quem tem menos de 50 avaliações).
-  Visita só em loja de Casimiro marcada com SIM (`visita: true`); o resto recebe o texto de WhatsApp (`fora`).
+  Visita na cidade de Casimiro (distritos como Barra de São João e Rio Dourado contam como fora); `visita: false` tira uma loja.
+  O resto recebe o texto de WhatsApp (`fora`).
   Loja longe que recebeu pedido de visita ganha a mensagem de correção (`corrigidoEm` quando enviada).
   Com visita, abre com as duas ofertas numa mensagem; a segunda oferta mandada depois entra como continuação, sem novo "oi".
   Opção DONO (`enviados.dono`): pedir para falar com o dono; depois de cada envio a ficha pula para a próxima opção.

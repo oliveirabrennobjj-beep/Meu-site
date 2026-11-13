@@ -117,27 +117,32 @@ export function contatosHoje(leads: Lead[], agora = new Date()) {
 /* Lugar ---------------------------------------------------------------------------------------- */
 
 const CASIMIRO = "Casimiro de Abreu";
-const BARRA = "Barra de São João";
-const EM_BARRA = /barra de s[aã]o jo[aã]o/i;
 
-// Barra de São João é distrito de Casimiro, mas fica longe do centro: para o Brenno conta como fora.
-const emBarra = (lead: Lead) => EM_BARRA.test(lead.cidade ?? "") || EM_BARRA.test(lead.nome);
+// Distritos de Casimiro longe do centro: para o Brenno contam como fora (só WhatsApp).
+const DISTRITOS: [string, RegExp][] = [
+  ["Barra de São João", /barra de s[aã]o jo[aã]o/i],
+  ["Rio Dourado", /rio dourado/i],
+  ["Professor Souza", /professor souza/i],
+];
 
-/** Comércio do centro de Casimiro, onde dá para ir falar com o dono pessoalmente. */
-export const ehCasimiro = (lead: Lead) => /casimiro/i.test(lead.cidade ?? "") && !emBarra(lead);
+const distritoDe = (lead: Lead) =>
+  DISTRITOS.find(([, padrao]) => padrao.test(lead.cidade ?? "") || padrao.test(lead.nome))?.[0] ?? null;
+
+/** Comércio da cidade de Casimiro (sem os distritos), onde dá para ir falar com o dono pessoalmente. */
+export const ehCasimiro = (lead: Lead) => /casimiro/i.test(lead.cidade ?? "") && !distritoDe(lead);
 
 /**
- * Dá para ir lá falar com o dono. Só vale para loja de Casimiro que o Brenno marcou: o cadastro do
- * Google diz "Casimiro de Abreu" também para lojas longe do centro, perto de Rio das Ostras.
+ * Dá para ir lá falar com o dono: loja da cidade de Casimiro, a não ser que o Brenno marque que fica
+ * longe (o cadastro do Google às vezes diz "Casimiro de Abreu" para loja de distrito).
  */
-export const podeVisitar = (lead: Lead) => ehCasimiro(lead) && lead.visita === true;
+export const podeVisitar = (lead: Lead) => ehCasimiro(lead) && lead.visita !== false;
 
 /** A loja recebeu uma mensagem pedindo visita (as de placa e de dono só existem no fluxo de visita). */
 export const recebeuPedidoDeVisita = (lead: Lead) =>
   lead.pediuVisita === true || Boolean(dataEnvio(lead, "placa")) || Boolean(dataEnvio(lead, "dono"));
 
 export const cidadeDe = (lead: Lead) =>
-  emBarra(lead) ? BARRA : ehCasimiro(lead) ? CASIMIRO : lead.cidade?.trim() || "Sem cidade";
+  distritoDe(lead) ?? (ehCasimiro(lead) ? CASIMIRO : lead.cidade?.trim() || "Sem cidade");
 
 export function noEscopo(leads: Lead[], escopo: Escopo) {
   if (escopo === "todos") return leads;
@@ -145,7 +150,7 @@ export function noEscopo(leads: Lead[], escopo: Escopo) {
 }
 
 // Da mais perto de Casimiro para a mais longe; cidade nova entra no fim, em ordem alfabética.
-const ORDEM_CIDADES = [CASIMIRO, BARRA, "Rio das Ostras", "Macaé"];
+const ORDEM_CIDADES = [CASIMIRO, ...DISTRITOS.map(([nome]) => nome), "Rio das Ostras", "Macaé"];
 
 export function porCidade(leads: Lead[]) {
   const mapa = new Map<string, Lead[]>();
@@ -254,7 +259,8 @@ export const TEXTOS_INFO: Record<ChaveTexto, { curto: string; longo: string }> =
 };
 
 const APRESENTACAO_CASIMIRO = "Oi, {saudacao}, tudo certo? Aqui é o Brenno, sou daqui de Casimiro mesmo.";
-const VISITA = "Se der, queria falar direto com o dono ou a dona. Qual horário fica melhor?";
+const VISITA =
+  "Se der, queria falar direto com o dono ou a dona. Qual horário fica melhor? Ou, se preferir, me passa o contato de quem resolve isso.";
 
 // Nenhum texto fala de preço: o Brenno só passa valor depois que a pessoa mostra interesse.
 export const TEXTOS_PADRAO: Textos = {
@@ -266,9 +272,9 @@ export const TEXTOS_PADRAO: Textos = {
     "Ah, esqueci de falar: também faço uma plaquinha com chip pro balcão. {nicho}\nQuando eu passar aí, levo ela pra você ver funcionando.",
   depoisSite:
     "Ah, e aproveitando: também faço site pro comércio aqui da cidade. {nicho}\nQuando eu passar aí, já te mostro um exemplo no celular.",
-  casimiroDono: `${APRESENTACAO_CASIMIRO}\nQueria mostrar pra {nome} um trabalho que faço pro comércio aqui da cidade: site e uma plaquinha de avaliação pro balcão.\nConsigo falar com o dono ou a dona? É rapidinho. Qual horário costuma ser melhor pra encontrar?`,
+  casimiroDono: `${APRESENTACAO_CASIMIRO}\nQueria mostrar pra {nome} um trabalho que faço pro comércio aqui da cidade: site e uma plaquinha de avaliação pro balcão.\nConsigo falar com o dono ou a dona? É rapidinho. Qual horário costuma ser melhor pra encontrar? Ou, se preferir, me passa o contato.`,
   depoisDono:
-    "Ah, e quem eu procuro aí pra conversar sobre isso? Se puder ser o dono ou a dona, melhor, já mostro tudo pessoalmente.\nQual horário costuma ser melhor pra encontrar?",
+    "Ah, e quem eu procuro aí pra conversar sobre isso? Se puder ser o dono ou a dona, melhor, já mostro tudo pessoalmente.\nQual horário costuma ser melhor pra encontrar? Ou, se preferir, me passa o contato.",
   gostou:
     "Que bom que gostou! Consigo te fazer uma demonstração de design, de como vai ficar o site da {nome}, ainda hoje ou amanhã.\nPara você ter uma ideia, olha um que eu já fiz: {exemplo}\nPosso montar e te mandar por aqui?",
 };
