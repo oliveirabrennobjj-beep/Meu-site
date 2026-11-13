@@ -14,6 +14,7 @@
   - Botões: Enviar no WhatsApp, Falei pessoalmente, Copiar e Próximo.
   - Quando a loja responde: oferta de demonstração e botões de resultado.
   - "Anotar": o assistente organiza a anotação.
+  - "Mostrar demonstração do site": prévia do site da loja no estilo do ramo (fotos de banco livre, só dados reais). "Mandar foto" gera a imagem da página para mandar no WhatsApp.
 - **Assistente:** chat com o Claude dentro do app. Aceita print da conversa e propõe atualizar a loja.
 - **Mensagens:** editar os textos prontos.
 - **Importar:** colar uma lista de lojas.
@@ -38,6 +39,8 @@
   - `Ferramentas.tsx`: Mensagens e Importar.
 - Montar e testar: `npm install && npm run build` gera `automacao/painel/vendas.html`. `npm run teste` testa no celular simulado.
 - Publicar: mandar o `vendas.html` para o mesmo link com a ferramenta Artifact, **sem** `capabilities`. Detalhes em `app/README.md`.
+- Fotos e fontes da prévia: `automacao/painel/img/demo/` (publicadas junto como arquivos de apoio, com `root` = `automacao/painel`; só precisa reenviar quando mudarem). Temas por ramo em `src/painel/Demonstracao.tsx`. Nunca usar foto com marca de outra empresa.
+- Ver a prévia de um ramo sem publicar: `EXTRA='{"nome":"Loja","tipo":"Pizzaria"}' npm run teste` salva `capturas/foto-previa.jpg`.
 - Dados ficam no banco do Artifact:
   - `leads`: as lojas.
   - `config/mensagens`: os textos.

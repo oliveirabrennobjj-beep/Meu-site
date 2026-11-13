@@ -287,7 +287,7 @@ function Conteudo({
           <MonitorSmartphone aria-hidden="true" />
           Mostrar demonstração do site
         </BlockButton>
-        {demo && <Demonstracao lead={lead} onFechar={() => setDemo(false)} />}
+        {demo && <Demonstracao lead={lead} mensagem={textoPrevia(lead)} onFechar={() => setDemo(false)} />}
 
         {ehCasimiro(lead) && (
           <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
@@ -423,14 +423,24 @@ function Conteudo({
               </BlockButton>
             )}
             {status === "respondeu" && (
+              <BlockButton
+                size="lg"
+                variant={corrigir ? "secondary" : "primary"}
+                className="w-full"
+                onClick={() => setDemo(true)}
+              >
+                <Send aria-hidden="true" />
+                Mandar prévia do site com foto
+              </BlockButton>
+            )}
+            {status === "respondeu" && (
               <a
                 href={linkWhatsApp(lead, textoGostou(textos, lead))}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={buttonClass(corrigir ? "secondary" : "primary", "lg", "w-full")}
+                className={buttonClass("ghost", "md", "w-full")}
               >
-                <Send aria-hidden="true" />
-                Oferecer demonstração do site
+                Só oferecer a demonstração por texto
               </a>
             )}
             <fieldset>
@@ -454,6 +464,11 @@ function Conteudo({
       </div>
     </>
   );
+}
+
+/** Vai junto com a foto da prévia: sem preço e sem prometer visita. */
+function textoPrevia(lead: Lead) {
+  return `Fiz uma prévia de como ficaria o site da ${lead.nome}. Dá uma olhada na foto! Se gostar, eu monto a versão completa com as fotos, os produtos e os horários de vocês.`;
 }
 
 /** Lembrete curto da abordagem presencial (roteiro completo em bn-digital/prospeccao). */

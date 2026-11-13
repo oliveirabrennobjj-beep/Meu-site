@@ -17,7 +17,9 @@ npm run teste   # abre o vendas.html com empresas fictícias e confere o fluxo d
 ```
 
 Depois publique `automacao/painel/vendas.html` com a ferramenta Artifact, passando a URL acima
-e sem `capabilities` (mantém `db`, `user` e `sample` com fotos).
+e sem `capabilities` (mantém `db`, `user`, `downloads` e `sample` com fotos). As fotos e fontes da
+prévia do site ficam em `automacao/painel/img/demo/` e vão como arquivos de apoio (`root` =
+`automacao/painel`); só precisa reenviar quando mudarem.
 
 ## Onde fica cada coisa
 
@@ -37,7 +39,7 @@ e sem `capabilities` (mantém `db`, `user` e `sample` com fotos).
   `historico` e `compromisso` ({quando: "AAAA-MM-DDTHH:mm", oque}); `ProximosPassos.tsx` lista os compromissos.
   `Assistente.tsx` + `conhecimento.ts`: chat com foto (regras de abordagem e lista de lojas vão no início de cada pedido;
   a resposta pode terminar num bloco ```painel com mudanças que o Brenno confirma). Conversa em `assistente/conversa`.
-  Publicar com `capabilities: {db: {}, user: {}, sample: {images: true}}`.
+  Publicar com `capabilities: {db: {}, user: {}, sample: {images: true}, downloads: true}`.
 - `src/painel/usePainel.ts`: leitura e gravação no banco do Artifact.
 - `src/painel/PainelVendas.tsx`: a tela; `TabelaLeads`, `FichaLead` e `Ferramentas` são as partes.
 - `src/components/ui/`: casca e blocos visuais, sem regra de negócio.

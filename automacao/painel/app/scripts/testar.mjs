@@ -4,7 +4,7 @@
 //   LEADS_DIR=pasta node scripts/...   → um .json por empresa (ex.: exportado do banco)
 //   SAIDA=pasta                        → onde salvar as capturas (padrão: ./capturas)
 import assert from "node:assert/strict";
-import { mkdirSync, readdirSync, readFileSync } from "node:fs";
+import { mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -44,6 +44,21 @@ const leads = process.env.LEADS_DIR
         id: f.replace(/\.json$/, ""),
       }))
   : leadsFicticios();
+
+// EXTRA='{"nome":"…","tipo":"…"}' põe uma loja no topo de Casimiro, para ver a prévia de outro ramo
+// e salva só a tela e a foto dela (celular-demonstracao.png e foto-previa.jpg).
+if (process.env.EXTRA) {
+  leads.push({
+    id: "w5522999990001",
+    whatsapp: "5522999990001",
+    cidade: "Casimiro de Abreu",
+    nota: 4.8,
+    avaliacoes: 12,
+    status: "novo",
+    link: "",
+    ...JSON.parse(process.env.EXTRA),
+  });
+}
 
 // Loja gravada pela versão antiga do painel: um envio só (site), sem o registro por oferta.
 const ANTIGA = "Loja Antiga de Teste";
@@ -179,6 +194,12 @@ async function abrir(browser, opcoes) {
   await pagina.route("**/fonts.googleapis.com/**", (rota) =>
     rota.fulfill({ contentType: "text/css", body: "" }),
   );
+  await pagina.route("http://painel.teste/img/**", (rota) =>
+    rota.fulfill({
+      contentType: rota.request().url().endsWith(".woff2") ? "font/woff2" : "image/webp",
+      body: readFileSync(path.join(raiz, "..", new URL(rota.request().url()).pathname)),
+    }),
+  );
   await pagina.route("http://painel.teste/", (rota) =>
     rota.fulfill({
       contentType: "text/html",
@@ -209,6 +230,25 @@ try {
     hasTouch: true,
   });
   const p = cel.pagina;
+  if (process.env.EXTRA) {
+    // Só a prévia da loja extra: tela e foto gerada.
+    const nomeExtra = JSON.parse(process.env.EXTRA).nome;
+    await p.getByRole("button", { name: nomeExtra }).first().click();
+    await p.getByRole("dialog").first().getByRole("button", { name: "Mostrar demonstração do site" }).click();
+    const previa = p.getByRole("dialog", { name: `Demonstração do site de ${nomeExtra}` });
+    await previa.getByRole("heading", { level: 1 }).waitFor();
+    await p.waitForTimeout(600);
+    await p.screenshot({ path: path.join(saida, "celular-demonstracao.png") });
+    await previa.getByRole("button", { name: "Mandar foto" }).click();
+    const gerada = previa.getByRole("img", { name: `Foto da prévia do site de ${nomeExtra}` });
+    await gerada.waitFor({ timeout: 20000 });
+    const src = await gerada.getAttribute("src");
+    writeFileSync(path.join(saida, "foto-previa.jpg"), Buffer.from(src.split(",")[1], "base64"));
+    assert.deepEqual(cel.erros, []);
+    console.log(`Prévia de ${nomeExtra} em ${saida}`);
+    await browser.close();
+    process.exit(0);
+  }
   const aEnviar = leads.filter((l) => (l.status ?? "novo") === "novo").length;
   assert.equal(await p.getByRole("article").filter({ hasText: "A enviar" }).locator("p").first().innerText(), String(aEnviar));
   assert.equal(await p.getByRole("region", { name: "Casimiro de Abreu" }).locator("h2 + span").innerText(), String(casimiro));
@@ -298,11 +338,20 @@ try {
   // Demonstração: prévia do site com o nome da loja; os botões só explicam o que fariam.
   await ficha.first().getByRole("button", { name: "Mostrar demonstração do site" }).click();
   const demo = p.getByRole("dialog", { name: `Demonstração do site de ${nome}` });
-  await demo.getByRole("heading", { level: 1, name: nome }).waitFor();
+  await demo.getByText(`Prévia: ${nome}`).waitFor();
+  await demo.getByRole("heading", { level: 1 }).waitFor();
   await p.waitForTimeout(500);
   await p.screenshot({ path: path.join(saida, "celular-demonstracao.png") });
   await demo.getByRole("button", { name: /WhatsApp/ }).first().click();
   await demo.getByRole("status").filter({ hasText: "No site de verdade" }).waitFor();
+  // Mandar foto: sem compartilhar nem salvar no navegador de teste, mostra a foto gerada.
+  await demo.getByRole("button", { name: "Mandar foto" }).click();
+  const fotoGerada = demo.getByRole("img", { name: `Foto da prévia do site de ${nome}` });
+  await fotoGerada.waitFor({ timeout: 20000 });
+  const srcFoto = await fotoGerada.getAttribute("src");
+  assert.match(srcFoto, /^data:image\/jpeg;base64,/);
+  writeFileSync(path.join(saida, "foto-previa.jpg"), Buffer.from(srcFoto.split(",")[1], "base64"));
+  await demo.getByRole("button", { name: "Voltar para a prévia" }).click();
   await demo.getByRole("button", { name: "Fechar demonstração" }).click();
   await demo.waitFor({ state: "detached" });
   const href = await ficha.getByRole("link", { name: "Enviar no WhatsApp" }).getAttribute("href");
@@ -413,7 +462,7 @@ try {
   // A pessoa gostou: a mensagem oferece a demonstração do site, sem preço.
   await ficha.getByRole("button", { name: "Respondeu" }).click();
   const textoGostou = decodeURIComponent(
-    await ficha.getByRole("link", { name: "Oferecer demonstração do site" }).getAttribute("href"),
+    await ficha.getByRole("link", { name: "Só oferecer a demonstração por texto" }).getAttribute("href"),
   );
   assert.match(textoGostou, /demonstração de design/);
   assert.match(textoGostou, /hoje ou amanhã/);
