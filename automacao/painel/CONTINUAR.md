@@ -1,5 +1,7 @@
 # Painel de vendas (o app): resumo
 
+Atualizado em 13/11/2026 (noite).
+
 ## O que é
 - Link (só o Brenno abre): https://claude.ai/artifact/LMpGydYCibdZoLEf3eNBNo
 - App que o Brenno usa no celular para achar comércios e mandar mensagem no WhatsApp oferecendo **site** (aluguel) e **placa NFC** de avaliação do Google.
@@ -15,12 +17,15 @@
   - Quando a loja responde: oferta de demonstração e botões de resultado.
   - "Anotar": o assistente organiza a anotação.
   - "Mostrar demonstração do site": prévia do site da loja no estilo do ramo (fotos de banco livre, só dados reais). "Mandar foto" gera a imagem da página para mandar no WhatsApp.
-- **Assistente:** chat com o Claude dentro do app. Aceita print da conversa e propõe atualizar a loja.
+- **Agenda:** calendário do mês; o dia com algo combinado ganha um ponto (vermelho se passou). Tocar no dia mostra as lojas e o horário. Para marcar, usar "Anotar" na ficha.
+- **Funil:** fluxo animado das etapas (A enviar → Enviado → Respondeu → Fechou / Mais pra frente / Não quer) com a quantidade de lojas; tocar numa etapa abre a lista dela.
+- **Assistente:** chat com o Claude dentro do app. Aceita print da conversa e propõe atualizar a loja. Sabe o roteiro do "tá caro" (perguntar antes, nunca desconto de cara).
 - **Mensagens:** editar os textos prontos.
 - **Importar:** colar uma lista de lojas.
 
 ## De onde vêm as lojas
-- 13/11: 103 de Casimiro vieram do "Mapa da Plaquinha" (93 da sede, 10 de Barra de São João).
+- 13/11: 103 de Casimiro vieram do "Mapa da Plaquinha" (93 da sede, 10 de Barra de São João). Entraram também Barbearia Dias e Cid Burguer (o número do Cid Burguer não foi confirmado). Hoje são 180 lojas: 69 em Macaé e Rio das Ostras, o resto em Casimiro.
+- A "Barbearia em São Paulo - Barbshop" foi tirada: o número não tem WhatsApp.
 - A pesquisa das 06:17 traz até 30 por dia, nesta ordem: sede de Casimiro (outros ramos), depois Barra de São João, Rio Dourado, Professor Souza, e só então Rio das Ostras e Macaé. Colar o JSON em Importar.
 
 ## Regras que o app segue
@@ -45,6 +50,13 @@
   - `leads`: as lojas.
   - `config/mensagens`: os textos.
   - `assistente/conversa`: o chat.
+
+## Esperando o Brenno
+- Testar o botão "Mandar foto" no celular de verdade e dizer o que aconteceu (abriu o WhatsApp, salvou a foto ou mostrou a foto para segurar).
+- Dizer se quer o botão "Número sem WhatsApp" na ficha (tira a loja da lista na hora).
+- Mandar uma foto boa de açaí na tigela (a prévia de açaiteria usa copo de açaí e sorvete).
+- Decidir o merge do branch `ccr-aeb44e3e-tksqri` na main.
+- 14/11 às 11:45 chega o aviso para falar com o dono da Parada Ideal por volta das 12h.
 
 ## Melhorias pendentes no app
 - Reescrever as mensagens prontas no formato profissional (o roteiro está em `conhecimento.ts`).
