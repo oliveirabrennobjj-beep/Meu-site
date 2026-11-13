@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   Bell,
+  CalendarDays,
   Download,
   LayoutDashboard,
   MapPin,
@@ -8,6 +9,7 @@ import {
   MessageSquareText,
   Sparkles,
   Search,
+  Workflow,
   X,
 } from "lucide-react";
 import AppDashboardShell, { type ShellNavGroup } from "@/components/ui/app-dashboard-shell";
@@ -29,7 +31,9 @@ import {
 import { cn } from "@/lib/utils";
 import { FichaLead } from "./FichaLead";
 import { Importar, Mensagens } from "./Ferramentas";
+import { Agenda } from "./Agenda";
 import { Assistente } from "./Assistente";
+import { Funil } from "./Funil";
 import { ProximosPassos } from "./ProximosPassos";
 import { TabelaLeads } from "./TabelaLeads";
 import {
@@ -52,7 +56,7 @@ import {
 } from "./leads";
 import { usePainel } from "./usePainel";
 
-type Vista = "geral" | "assistente" | "mensagens" | "importar";
+type Vista = "geral" | "agenda" | "funil" | "assistente" | "mensagens" | "importar";
 type Filtro = Status | "todos";
 
 const ESCOPOS: SegmentOption<Escopo>[] = [
@@ -65,6 +69,8 @@ const TITULO: Record<Escopo | Exclude<Vista, "geral">, string> = {
   todos: "Visão geral",
   casimiro: "Casimiro de Abreu",
   fora: "Fora de Casimiro",
+  agenda: "Agenda",
+  funil: "Funil",
   assistente: "Assistente",
   mensagens: "Mensagens",
   importar: "Importar empresas",
@@ -203,7 +209,7 @@ export function PainelVendas() {
   };
 
   const navegar = (id: string) => {
-    if (id === "assistente" || id === "mensagens" || id === "importar") setVista(id);
+    if (["agenda", "funil", "assistente", "mensagens", "importar"].includes(id)) setVista(id as Vista);
     else {
       setVista("geral");
       setEscopo(id as Escopo);
@@ -222,6 +228,8 @@ export function PainelVendas() {
     setConsulta("");
   };
 
+  const marcados = leads.filter((l) => l.compromisso).length;
+
   const nav: ShellNavGroup[] = [
     {
       items: [
@@ -238,6 +246,13 @@ export function PainelVendas() {
           icon: MapPinned,
           badge: carregando ? undefined : String(fora.length),
         },
+        {
+          id: "agenda",
+          label: "Agenda",
+          icon: CalendarDays,
+          badge: marcados ? String(marcados) : undefined,
+        },
+        { id: "funil", label: "Funil", icon: Workflow },
       ],
     },
     {
@@ -425,7 +440,11 @@ export function PainelVendas() {
               {TITULO[ativo]}
             </h1>
             <p className="mt-2 text-[13px] text-[color:var(--bjork-text-muted)]">
-              {vista === "assistente"
+              {vista === "agenda"
+                ? "O que ficou combinado com cada loja, dia a dia"
+                : vista === "funil"
+                ? "Em que etapa cada loja está agora"
+                : vista === "assistente"
                 ? "Pergunte, peça mensagem pronta ou mande o print da conversa"
                 : vista === "mensagens"
                 ? "Um texto para cada lugar e cada oferta"
@@ -461,6 +480,21 @@ export function PainelVendas() {
             onSalvar={salvar}
             onAbrir={(lead) => setFichaId(lead.id)}
             avisar={avisar}
+          />
+        )}
+
+        {vista === "agenda" && <Agenda leads={leads} onAbrir={(lead) => setFichaId(lead.id)} />}
+
+        {vista === "funil" && (
+          <Funil
+            leads={leads}
+            onEtapa={(status) => {
+              setFiltro(status);
+              setNichoEscolhido(null);
+              setConsulta("");
+              irParaTabelas();
+              announce(`Mostrando ${STATUS[status].plural.toLowerCase()}`);
+            }}
           />
         )}
 

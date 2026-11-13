@@ -475,6 +475,30 @@ try {
   assert.equal(guardada.dados.mensagens.length, 2);
   assert.deepEqual(guardada.dados.mensagens[1].salvas, [0]);
 
+  // Agenda: o dia de amanhã tem o ponto e lista as lojas combinadas.
+  await p.getByRole("button", { name: "Abrir menu" }).click();
+  await p.getByRole("dialog", { name: "Menu" }).getByRole("link", { name: /Agenda/ }).click();
+  await p.getByRole("heading", { name: "Agenda" }).waitFor();
+  const amanha = new Date(Date.now() + 86_400_000);
+  const MESES = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
+  await p.getByRole("button", { name: new RegExp(`^${amanha.getDate()} de ${MESES[amanha.getMonth()]}, \\d lojas? marcadas?$`) }).click();
+  const doDia = await p.getByRole("main").innerText();
+  assert.match(doDia, /Amanhã, /);
+  assert.match(doDia, new RegExp(nome));
+  assert.ok(await semTransbordo(p));
+  await p.screenshot({ path: path.join(saida, "celular-agenda.png") });
+
+  // Funil: o fluxo mostra as etapas e tocar numa leva à lista filtrada.
+  await p.getByRole("button", { name: "Abrir menu" }).click();
+  await p.getByRole("dialog", { name: "Menu" }).getByRole("link", { name: "Funil" }).click();
+  await p.getByRole("region", { name: "Funil de vendas" }).waitFor();
+  await p.waitForTimeout(600);
+  assert.ok(await semTransbordo(p));
+  await p.screenshot({ path: path.join(saida, "celular-funil.png") });
+  await p.locator(".react-flow__node", { hasText: "Enviado" }).click();
+  await p.getByRole("status").filter({ hasText: "Mostrando enviados" }).first().waitFor({ state: "attached" });
+  await p.locator("[data-tabelas]").waitFor();
+
   assert.deepEqual(cel.erros, []);
   await cel.contexto.close();
 
