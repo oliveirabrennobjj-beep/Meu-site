@@ -76,7 +76,8 @@ export const STATUS: Record<
 
 export const STATUS_ORDEM = Object.keys(STATUS) as Status[];
 
-export const META_DIA = 15;
+/** Comércios contatados por dia. */
+export const META_DIA = 30;
 
 export function statusDe(lead: Lead): Status {
   return lead.status && lead.status in STATUS ? (lead.status as Status) : "novo";
@@ -98,17 +99,13 @@ export function dataEnvio(lead: Lead, produto: Envio): string | null {
 
 export const ENVIOS: Envio[] = ["site", "placa", "dono"];
 
-/** Mensagens mandadas hoje: site e placa para a mesma loja contam como duas. */
-export function enviadosHoje(leads: Lead[], agora = new Date()) {
+/** Comércios contatados hoje: a mesma loja conta uma vez, mesmo com site, placa e dono no mesmo dia. */
+export function contatosHoje(leads: Lead[], agora = new Date()) {
   const hoje = agora.toDateString();
-  let total = 0;
-  for (const lead of leads) {
-    for (const produto of ENVIOS) {
-      const data = dataEnvio(lead, produto);
-      if (data && new Date(data).toDateString() === hoje) total += 1;
-    }
-  }
-  return total;
+  const ehHoje = (data?: string | null) => Boolean(data) && new Date(data!).toDateString() === hoje;
+  return leads.filter(
+    (lead) => ehHoje(lead.enviadoEm) || ENVIOS.some((envio) => ehHoje(dataEnvio(lead, envio))),
+  ).length;
 }
 
 /* Lugar ---------------------------------------------------------------------------------------- */

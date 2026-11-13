@@ -6,9 +6,18 @@ Para fechar: troque `[ ]` por `[x]`.
 
 ## Todo dia
 - [ ] Ler o resumo da pesquisa diária (aviso no celular, de manhã).
-- [ ] Mandar 15 mensagens no painel de vendas (https://claude.ai/artifact/LMpGydYCibdZoLEf3eNBNo) e marcar respostas.
+- [ ] Contatar 30 comércios no painel de vendas (https://claude.ai/artifact/LMpGydYCibdZoLEf3eNBNo), espalhados ao longo do dia, e marcar respostas.
+- [ ] Fazer a "melhoria de hoje" do resumo das 06:17: uma coisa pequena no portfólio ou no painel.
 - [ ] Postar 1 conteúdo no Instagram da BN Digital (reel ou carrossel).
 - [ ] Responder clientes no WhatsApp.
+
+## Ideias para o painel e o portfólio
+O resumo das 06:17 sugere um item destes por dia. Para incluir: fale "ideia pro painel: ..." ou "ideia pro portfólio: ..." em qualquer conversa.
+- [ ] Portfólio: site de exemplo de pet shop (12 na lista) e de salão de beleza (7), para mandar na demonstração.
+- [ ] Painel: o botão "Oferecer demonstração" mandar o exemplo do mesmo nicho (hamburgueria, padaria, barbearia) em vez de sempre o açaí.
+- [ ] Painel: trazer os 139 comércios de Casimiro do "Mapa da Plaquinha".
+- [ ] Painel: salvar o Instagram dos 58 comércios sem @ (precisa liberar a busca paga do Firecrawl).
+- [ ] Painel: parte de marketing para perfis (mais pra frente, quando decidir).
 
 ## Pendentes (decisão do Brenno)
 - [ ] Conectar Instagram/TikTok no Metricool (link em `automacao/PLANO.md`, seção 2).

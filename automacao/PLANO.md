@@ -45,7 +45,8 @@ usar **B** só num número secundário se quiser ler/responder conversas pelo Cl
   - A ficha tem "Sobre a loja": atalhos para o Google Maps, o Instagram (com o @) e o WhatsApp do comércio.
   - Quando a pessoa gosta (situação "Respondeu"), o botão manda a oferta de demonstração do site para hoje ou amanhã.
   - Os 4 textos são editáveis em "Mensagens". Depois de enviar aparece "Próximo" para seguir a lista.
-- **Todo dia 06:17:** o resumo lembra a meta (15 mensagens) e traz 10 comércios novos em JSON para "Importar".
+- **Todo dia 06:17:** o resumo lembra a meta (30 comércios contatados), sugere 1 melhoria do dia (lista "Ideias para o painel
+  e o portfólio" em `automacao/LEMBRETES.md`) e traz 10 comércios novos em JSON para "Importar".
 - **Por que não 100% sozinho ainda:** mandar mensagem fria em massa por número comum pode bloquear o número.
   Mandar aos poucos (15/dia) pelo painel é seguro. Com a Evolution API (~R$ 30/mês, decisão com seu pai) o envio
   e as respostas viram automáticos; com a API oficial da Meta, só com modelo de mensagem aprovado.

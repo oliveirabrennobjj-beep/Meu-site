@@ -315,6 +315,10 @@ try {
   await ficha.getByRole("button", { name: "Fechar ficha" }).click();
   await p.getByRole("button", { name: "Abrir menu" }).click();
   await p.getByRole("dialog", { name: "Menu" }).getByText("Meta de hoje").waitFor();
+  // Meta de 30 comércios: a padaria recebeu placa, site e dono hoje e conta como 1 contato.
+  const meta = p.getByRole("dialog", { name: "Menu" }).getByRole("meter", { name: "Comércios contatados hoje" });
+  assert.equal(await meta.getAttribute("aria-valuemax"), "30");
+  assert.equal(await meta.getAttribute("aria-valuenow"), "1");
   await p.waitForTimeout(400);
   await p.screenshot({ path: path.join(saida, "celular-menu.png") });
   assert.deepEqual(cel.erros, []);

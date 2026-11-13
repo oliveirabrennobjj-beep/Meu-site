@@ -41,6 +41,7 @@ Quando o Brenno mandar print de skill ou plugin: instalar em `.claude/skills/` c
 # Automação e lembretes
 
 - "Me lembra de …" → adicionar em `automacao/LEMBRETES.md` (commit + push).
+- "Ideia pro painel/portfólio: …" → seção "Ideias para o painel e o portfólio" de `automacao/LEMBRETES.md` (commit + push). O resumo das 06:17 sugere uma por dia e lê esse arquivo do branch `ccr-aeb44e3e-tksqri`: se o trabalho mudar de branch, atualize o link na tarefa agendada.
 - Plano de automação (WhatsApp, vídeo, celular→PC, token, design): `automacao/PLANO.md`.
 - Tarefas agendadas: 02:43 pesquisa profunda, 06:17 resumo + lembretes, domingo 19:23 roteiros de vídeo (aviso no celular).
 - Vídeo rápido de lista/dicas: `fabrica-video/` (roteiro JSON → `./gerar.sh` → MP4 vertical).

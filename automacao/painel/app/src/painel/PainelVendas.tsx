@@ -36,7 +36,7 @@ import {
   cidadeDe,
   contar,
   ehCasimiro,
-  enviadosHoje,
+  contatosHoje,
   fmtInt,
   fmtPct,
   noEscopo,
@@ -94,7 +94,7 @@ export function PainelVendas() {
   const fora = useMemo(() => leads.filter((l) => !ehCasimiro(l)), [leads]);
   const doEscopo = useMemo(() => noEscopo(leads, escopo), [leads, escopo]);
   const responderam = useMemo(() => leads.filter((l) => statusDe(l) === "respondeu").length, [leads]);
-  const hojeTotal = useMemo(() => enviadosHoje(leads), [leads]);
+  const hojeTotal = useMemo(() => contatosHoje(leads), [leads]);
 
   const nichos = useMemo(() => porTipo(doEscopo), [doEscopo]);
   // O nicho escolhido só vale enquanto existir no grupo que está na tela.
@@ -122,7 +122,7 @@ export function PainelVendas() {
     const total = doNicho.length;
     const contatados = total - n.novo;
     const comResposta = n.respondeu + n.fechou + n.depois + n.nao;
-    const hoje = enviadosHoje(doNicho);
+    const hoje = contatosHoje(doNicho);
     const v = (valor: number) => (carregando ? "—" : fmtInt(valor));
     return [
       {
@@ -303,11 +303,11 @@ export function PainelVendas() {
           </div>
           <div
             role="meter"
-            aria-label="Mensagens enviadas hoje"
+            aria-label="Comércios contatados hoje"
             aria-valuemin={0}
             aria-valuemax={META_DIA}
             aria-valuenow={Math.min(hojeTotal, META_DIA)}
-            aria-valuetext={`${hojeTotal} de ${META_DIA} mensagens`}
+            aria-valuetext={`${hojeTotal} de ${META_DIA} comércios`}
             className="mt-2 h-1.5 overflow-hidden rounded-full bg-[var(--bjork-surface-active)]"
           >
             <div
@@ -316,7 +316,7 @@ export function PainelVendas() {
             />
           </div>
           <p className="mt-2 text-[11.5px] leading-snug text-[color:var(--bjork-text-muted)]">
-            Mandar aos poucos evita bloqueio do número.
+            Espalhe as mensagens ao longo do dia: evita bloqueio do número.
           </p>
         </div>
       }
