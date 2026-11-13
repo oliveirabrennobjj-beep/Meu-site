@@ -15,7 +15,7 @@ Para fechar: troque `[ ]` por `[x]`.
 O resumo das 06:17 sugere um item destes por dia. Para incluir: fale "ideia pro painel: ..." ou "ideia pro portfólio: ..." em qualquer conversa.
 - [ ] Portfólio: site de exemplo de pet shop (12 na lista) e de salão de beleza (7), para mandar na demonstração.
 - [ ] Painel: o botão "Oferecer demonstração" mandar o exemplo do mesmo nicho (hamburgueria, padaria, barbearia) em vez de sempre o açaí.
-- [ ] Painel: trazer os 139 comércios de Casimiro do "Mapa da Plaquinha".
+- [x] Painel: trazer os 139 comércios de Casimiro do "Mapa da Plaquinha" (13/11: 103 com WhatsApp entraram; 34 sem WhatsApp ficaram de fora).
 - [ ] Painel: salvar o Instagram dos 58 comércios sem @ (precisa liberar a busca paga do Firecrawl).
 - [ ] Painel: parte de marketing para perfis (mais pra frente, quando decidir).
 

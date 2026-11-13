@@ -18,6 +18,10 @@
 - **Mensagens:** editar os textos prontos.
 - **Importar:** colar uma lista de lojas.
 
+## De onde vêm as lojas
+- 13/11: 103 de Casimiro vieram do "Mapa da Plaquinha" (93 da sede, 10 de Barra de São João).
+- A pesquisa das 06:17 traz até 30 por dia, nesta ordem: sede de Casimiro (outros ramos), depois Barra de São João, Rio Dourado, Professor Souza, e só então Rio das Ostras e Macaé. Colar o JSON em Importar.
+
 ## Regras que o app segue
 - Visita pessoal só na cidade de Casimiro de Abreu.
 - Barra de São João, Rio Dourado, Professor Souza e outras cidades: só WhatsApp.
@@ -41,5 +45,4 @@
 
 ## Melhorias pendentes no app
 - Reescrever as mensagens prontas no formato profissional (o roteiro está em `conhecimento.ts`).
-- Trazer para o app os 139 comércios de Casimiro do "Mapa da Plaquinha".
 - Outras ideias: seção "Ideias para o painel e o portfólio" em `automacao/LEMBRETES.md`.
