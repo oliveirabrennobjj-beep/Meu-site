@@ -36,15 +36,17 @@ import {
   instagramDe,
   linkMaps,
   linkWhatsApp,
+  nadaEnviado as semEnvios,
   ofertaInicial,
+  proximaOferta,
   paginaDe,
   statusDe,
   textoGostou,
   textoMensagem,
   tipoDe,
+  type Envio,
   type Lead,
   type Oferta,
-  type Produto,
   type Status,
   type Textos,
 } from "./leads";
@@ -58,9 +60,25 @@ const DESFECHOS: [Status, string][] = [
   ["novo", "Não enviei"],
 ];
 
-const OFERTA: Record<Produto, { nome: string; oferecer: string; enviada: string }> = {
-  placa: { nome: "Placa", oferecer: "Oferecer a placa de avaliações", enviada: "Placa: mensagem já enviada" },
-  site: { nome: "Site", oferecer: "Oferecer o site", enviada: "Site: mensagem já enviada" },
+const OFERTA: Record<Envio, { nome: string; oferecer: string; enviada: string; feito: string }> = {
+  placa: {
+    nome: "Placa",
+    oferecer: "Oferecer a placa de avaliações",
+    enviada: "Placa: mensagem já enviada",
+    feito: "Mensagem da placa enviada",
+  },
+  site: {
+    nome: "Site",
+    oferecer: "Oferecer o site",
+    enviada: "Site: mensagem já enviada",
+    feito: "Mensagem do site enviada",
+  },
+  dono: {
+    nome: "Dono",
+    oferecer: "Pedir para falar com o dono",
+    enviada: "Dono: pedido já enviado",
+    feito: "Pedido para falar com o dono enviado",
+  },
 };
 
 const AS_DUAS: SegmentOption<Oferta> = {
@@ -147,17 +165,17 @@ function Conteudo({
   const novo = status === "novo";
   const daqui = ehCasimiro(lead);
   const [escolhida, setOferta] = useState<Oferta>(() => ofertaInicial(lead));
-  const nadaEnviado = !dataEnvio(lead, "site") && !dataEnvio(lead, "placa");
+  const nadaEnviado = semEnvios(lead);
   // Fora de Casimiro a oferta é sempre o site; "as duas" só vale antes do primeiro envio.
   const oferta: Oferta = !daqui ? "site" : escolhida === "ambas" && !nadaEnviado ? ofertaInicial(lead) : escolhida;
   const enviada = oferta === "ambas" ? null : dataEnvio(lead, oferta);
   const chave = chaveTexto(lead, oferta);
-  const continuacao = chave === "depoisPlaca" || chave === "depoisSite";
+  const continuacao = chave === "depoisPlaca" || chave === "depoisSite" || chave === "depoisDono";
   const mensagem = textoMensagem(textos, lead, oferta);
   const [obs, setObs] = useState(lead.obs ?? "");
   const opcoes: SegmentOption<Oferta>[] = [
     ...(nadaEnviado ? [AS_DUAS] : []),
-    ...(["placa", "site"] as const).map((id) => {
+    ...(["placa", "site", "dono"] as const).map((id) => {
       const feita = dataEnvio(lead, id) !== null;
       return {
         id,
@@ -178,10 +196,10 @@ function Conteudo({
 
   const registrarContato = (canal: "whatsapp" | "pessoal") => {
     const agora = new Date().toISOString();
-    const enviados: Partial<Record<Produto, string>> = {};
-    for (const id of ["site", "placa"] as const) {
+    const enviados: Partial<Record<Envio, string>> = {};
+    for (const id of ["site", "placa", "dono"] as const) {
       const anterior = dataEnvio(lead, id);
-      if (oferta === "ambas" || oferta === id) enviados[id] = agora;
+      if ((oferta === "ambas" && id !== "dono") || oferta === id) enviados[id] = agora;
       else if (anterior) enviados[id] = anterior;
     }
     onSalvar(lead.id, {
@@ -192,13 +210,15 @@ function Conteudo({
       canal,
       enviados,
     });
+    // Já deixa escolhida a próxima mensagem (a oferta que falta, depois o pedido para falar com o dono).
+    setOferta(proximaOferta(lead, oferta));
   };
 
   const mudarStatus = (para: Status) => {
     onSalvar(
       lead.id,
       para === "novo"
-        ? { status: para, enviadoEm: "", enviados: { site: "", placa: "" } }
+        ? { status: para, enviadoEm: "", enviados: { site: "", placa: "", dono: "" } }
         : { status: para },
     );
     avisar(`${lead.nome}: ${STATUS[para].label.toLowerCase()}`);
@@ -259,14 +279,15 @@ function Conteudo({
         {(novo || daqui) && (
           <>
             {daqui && (
-              <div className="flex items-center justify-between gap-3">
+              <div className="flex flex-col gap-2">
                 <p className="text-[13px] text-[color:var(--bjork-text-medium)]">
                   {novo
                     ? "É daqui: vale ir falar com o dono."
-                    : (["placa", "site"] as const)
-                        .map((id) => {
+                    : (["placa", "site", "dono"] as const)
+                        .flatMap((id) => {
                           const data = dataEnvio(lead, id);
-                          return `${OFERTA[id].nome}: ${data ? `enviada ${quando(data)}` : "falta enviar"}`;
+                          if (id === "dono") return data ? [`Dono: pedido ${quando(data)}`] : [];
+                          return [`${OFERTA[id].nome}: ${data ? `enviada ${quando(data)}` : "falta enviar"}`];
                         })
                         .join(" · ")}
                 </p>
@@ -283,8 +304,10 @@ function Conteudo({
                 {!daqui
                   ? "Mensagem pronta (site)"
                   : continuacao
-                    ? `Continuação da conversa, sem repetir o oi (${oferta === "placa" ? "placa" : "site"})`
-                    : `Mensagem para marcar a visita (${oferta === "ambas" ? "site e placa" : oferta})`}
+                    ? `Continuação da conversa, sem repetir o oi (${OFERTA[oferta === "ambas" ? "site" : oferta].nome.toLowerCase()})`
+                    : oferta === "dono"
+                      ? "Mensagem pedindo para falar com o dono"
+                      : `Mensagem para marcar a visita (${oferta === "ambas" ? "site e placa" : oferta})`}
               </h3>
               <p className="max-h-[210px] select-text overflow-y-auto whitespace-pre-wrap rounded-[12px] border border-[color:var(--bjork-border)] bg-[var(--bjork-field-inset)] p-3 text-[13.5px] leading-relaxed text-[color:var(--bjork-text-medium)] [overflow-wrap:anywhere]">
                 {mensagem}
@@ -296,7 +319,7 @@ function Conteudo({
                 style={{ color: "var(--blk-success)" }}
               >
                 <Check aria-hidden="true" className="size-4" />
-                Mensagem {oferta === "placa" ? "da placa" : "do site"} enviada {quando(enviada)}.
+                {OFERTA[oferta === "ambas" ? "site" : oferta].feito} {quando(enviada)}.
               </p>
             )}
             <a

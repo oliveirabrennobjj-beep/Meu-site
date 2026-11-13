@@ -230,6 +230,8 @@ try {
     await ficha.getByRole("radio", { name: "Oferecer site e placa na mesma mensagem" }).getAttribute("aria-checked"),
     "true",
   );
+  // Antes de mandar, quatro opções: as duas, placa, site e dono.
+  assert.equal(await ficha.getByRole("radio").count(), 4);
   const textoAmbas = decodeURIComponent(href);
   assert.match(textoAmbas, /site e uma plaquinha/);
   assert.match(textoAmbas, /falar direto com o dono/);
@@ -276,6 +278,27 @@ try {
   const segunda = (await p.evaluate(() => window.__escritas)).at(-1).dados;
   assert.ok(segunda.enviados.placa && segunda.enviados.site, "as duas ofertas ficam marcadas");
   assert.equal(segunda.status, undefined, "a segunda oferta não muda a situação");
+
+  // Depois das duas ofertas, a ficha passa a sugerir pedir para falar com o dono, sem novo "oi".
+  assert.equal(
+    await ficha.getByRole("radio", { name: "Pedir para falar com o dono" }).getAttribute("aria-checked"),
+    "true",
+  );
+  const textoDono = decodeURIComponent(
+    await ficha.getByRole("link", { name: "Enviar no WhatsApp" }).getAttribute("href"),
+  );
+  assert.match(textoDono, /text=Ah, e quem eu procuro aí/);
+  assert.doesNotMatch(textoDono, /Oi,|Aqui é o Brenno/);
+  const [abaDono] = await Promise.all([
+    cel.contexto.waitForEvent("page"),
+    ficha.getByRole("link", { name: "Enviar no WhatsApp" }).click(),
+  ]);
+  await abaDono.close();
+  await ficha.getByRole("radio", { name: "Dono: pedido já enviado" }).waitFor();
+  const terceira = (await p.evaluate(() => window.__escritas)).at(-1).dados;
+  assert.ok(terceira.enviados.dono && terceira.enviados.placa && terceira.enviados.site);
+  await p.waitForTimeout(300);
+  await p.screenshot({ path: path.join(saida, "celular-dono.png") });
   await p.screenshot({ path: path.join(saida, "celular-duas-ofertas.png") });
 
   // A pessoa gostou: a mensagem oferece a demonstração do site, sem preço.

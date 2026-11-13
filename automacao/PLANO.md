@@ -39,6 +39,8 @@ usar **B** só num número secundário se quiser ler/responder conversas pelo Cl
   - Em Casimiro a ficha abre com "AS DUAS" (site e placa numa mensagem só). Se mandar uma oferta só, a outra
     vira continuação ("Ah, esqueci de falar…"), sem repetir o oi. Cada envio fica marcado com a data.
     A meta do dia conta mensagens, não lojas.
+  - Em Casimiro também tem a opção DONO: mensagem pedindo para falar com o dono (com "oi" se for a primeira,
+    como continuação se já mandou algo). Depois de cada envio a ficha já pula para a próxima opção que falta.
   - A saudação muda pela hora do celular: bom dia, boa tarde ou boa noite.
   - A ficha tem "Sobre a loja": atalhos para o Google Maps, o Instagram (com o @) e o WhatsApp do comércio.
   - Quando a pessoa gosta (situação "Respondeu"), o botão manda a oferta de demonstração do site para hoje ou amanhã.

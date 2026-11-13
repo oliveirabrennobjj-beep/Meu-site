@@ -1,6 +1,8 @@
 export type Status = "novo" | "enviado" | "respondeu" | "fechou" | "depois" | "nao";
 export type Escopo = "todos" | "casimiro" | "fora";
 export type Produto = "site" | "placa";
+/** Cada mensagem que fica registrada na loja: as duas ofertas e o pedido para falar com o dono. */
+export type Envio = Produto | "dono";
 
 export interface Lead {
   id: string;
@@ -19,7 +21,7 @@ export interface Lead {
   /** O que foi oferecido no contato mais recente. */
   produto?: string;
   /** Quando cada oferta foi feita; a mesma loja pode receber site e placa. */
-  enviados?: Partial<Record<Produto, string>>;
+  enviados?: Partial<Record<Envio, string>>;
   /** Por onde foi o primeiro contato. */
   canal?: "whatsapp" | "pessoal";
 }
@@ -87,21 +89,21 @@ export function contar(leads: Lead[]) {
 }
 
 /** Quando a oferta foi feita a essa loja, ou `null` se ainda não foi. */
-export function dataEnvio(lead: Lead, produto: Produto): string | null {
+export function dataEnvio(lead: Lead, produto: Envio): string | null {
   if (lead.enviados) return lead.enviados[produto] || null;
   // Contatos antigos guardavam um envio só por loja.
   const antigo = statusDe(lead) !== "novo" && (lead.produto || "site") === produto;
   return antigo && lead.enviadoEm ? lead.enviadoEm : null;
 }
 
-const PRODUTOS: Produto[] = ["site", "placa"];
+export const ENVIOS: Envio[] = ["site", "placa", "dono"];
 
 /** Mensagens mandadas hoje: site e placa para a mesma loja contam como duas. */
 export function enviadosHoje(leads: Lead[], agora = new Date()) {
   const hoje = agora.toDateString();
   let total = 0;
   for (const lead of leads) {
-    for (const produto of PRODUTOS) {
+    for (const produto of ENVIOS) {
       const data = dataEnvio(lead, produto);
       if (data && new Date(data).toDateString() === hoje) total += 1;
     }
@@ -212,7 +214,7 @@ function frasePlaca(lead: Lead, nela: boolean) {
 /* Mensagens ------------------------------------------------------------------------------------ */
 
 /** O que vai na mensagem: uma oferta, ou as duas juntas (só em Casimiro, no primeiro contato). */
-export type Oferta = Produto | "ambas";
+export type Oferta = Envio | "ambas";
 
 export type ChaveTexto =
   | "fora"
@@ -221,6 +223,8 @@ export type ChaveTexto =
   | "casimiroSite"
   | "depoisPlaca"
   | "depoisSite"
+  | "casimiroDono"
+  | "depoisDono"
   | "gostou";
 export type Textos = Record<ChaveTexto, string>;
 
@@ -231,6 +235,8 @@ export const TEXTOS_INFO: Record<ChaveTexto, { curto: string; longo: string }> =
   casimiroSite: { curto: "Casimiro: site", longo: "Primeira mensagem em Casimiro (só site)" },
   depoisPlaca: { curto: "2ª: placa", longo: "Placa depois do site, sem repetir o oi" },
   depoisSite: { curto: "2ª: site", longo: "Site depois da placa, sem repetir o oi" },
+  casimiroDono: { curto: "Casimiro: dono", longo: "Primeira mensagem em Casimiro pedindo para falar com o dono" },
+  depoisDono: { curto: "2ª: dono", longo: "Pedir para falar com o dono depois de já ter mandado mensagem" },
   gostou: { curto: "Gostou", longo: "Quando a pessoa gostou: oferecer a demonstração" },
 };
 
@@ -244,9 +250,12 @@ export const TEXTOS_PADRAO: Textos = {
   casimiroPlaca: `${APRESENTACAO_CASIMIRO}\nTô fazendo uma plaquinha com chip pro balcão. {nicho}\nMais avaliação é mais gente achando a {nome} quando procura no Google.\nPosso passar aí pra te mostrar funcionando? É rapidinho. ${VISITA}`,
   casimiroSite: `${APRESENTACAO_CASIMIRO}\nVi a {nome} no Google Maps{elogio} e reparei que vocês ainda não têm site.\n{nicho}\nPosso passar aí pra te mostrar um exemplo no celular? É rapidinho. ${VISITA}`,
   depoisPlaca:
-    "Ah, esqueci de falar: também faço uma plaquinha com chip pro balcão. {nicho}\nQuando eu passar aí pra mostrar o site, levo ela junto pra você ver funcionando.",
+    "Ah, esqueci de falar: também faço uma plaquinha com chip pro balcão. {nicho}\nQuando eu passar aí, levo ela pra você ver funcionando.",
   depoisSite:
-    "Ah, e aproveitando: também faço site pro comércio aqui da cidade. {nicho}\nQuando eu passar aí com a plaquinha, já te mostro um exemplo no celular.",
+    "Ah, e aproveitando: também faço site pro comércio aqui da cidade. {nicho}\nQuando eu passar aí, já te mostro um exemplo no celular.",
+  casimiroDono: `${APRESENTACAO_CASIMIRO}\nQueria mostrar pra {nome} um trabalho que faço pro comércio aqui da cidade: site e uma plaquinha de avaliação pro balcão.\nConsigo falar com o dono ou a dona? É rapidinho. Qual horário costuma ser melhor pra encontrar?`,
+  depoisDono:
+    "Ah, e quem eu procuro aí pra conversar sobre isso? Se puder ser o dono ou a dona, melhor, já mostro tudo pessoalmente.\nQual horário costuma ser melhor pra encontrar?",
   gostou:
     "Que bom que gostou! Consigo te fazer uma demonstração de design, de como vai ficar o site da {nome}, ainda hoje ou amanhã.\nPara você ter uma ideia, olha um que eu já fiz: {exemplo}\nPosso montar e te mandar por aqui?",
 };
@@ -265,31 +274,50 @@ export function produtoSugerido(lead: Lead): Produto {
   return lead.avaliacoes == null || lead.avaliacoes < 50 ? "placa" : "site";
 }
 
+/** Nada mandado ainda para essa loja (nem oferta, nem pedido para falar com o dono). */
+export const nadaEnviado = (lead: Lead) => ENVIOS.every((envio) => !dataEnvio(lead, envio));
+
 /**
- * Oferta que abre escolhida na ficha. Em Casimiro, sem nada enviado: as duas numa mensagem só.
- * Com uma já enviada: a que falta.
+ * Opção que abre escolhida na ficha. Em Casimiro, sem nada enviado: as duas ofertas numa mensagem só.
+ * Depois: a oferta que falta e, com as duas mandadas, o pedido para falar com o dono.
  */
 export function ofertaInicial(lead: Lead): Oferta {
   if (!ehCasimiro(lead)) return "site";
-  const site = dataEnvio(lead, "site");
-  const placa = dataEnvio(lead, "placa");
-  if (!site && !placa) return "ambas";
-  if (site && !placa) return "placa";
-  if (placa && !site) return "site";
-  return produtoSugerido(lead);
+  if (nadaEnviado(lead)) return "ambas";
+  return proximaOferta(lead, null);
 }
+
+/** Próxima opção depois de mandar `acabou`: a oferta que falta e, por último, o pedido para falar com o dono. */
+export function proximaOferta(lead: Lead, acabou: Oferta | null): Oferta {
+  if (!ehCasimiro(lead)) return "site";
+  const mandou = (envio: Envio) =>
+    Boolean(dataEnvio(lead, envio)) || acabou === envio || (acabou === "ambas" && envio !== "dono");
+  const sugerido = produtoSugerido(lead);
+  const outro: Produto = sugerido === "placa" ? "site" : "placa";
+  return ([sugerido, outro, "dono"] as const).find((envio) => !mandou(envio)) ?? acabou ?? sugerido;
+}
+
+const ABERTURA: Record<Envio, Exclude<ChaveTexto, "gostou">> = {
+  placa: "casimiroPlaca",
+  site: "casimiroSite",
+  dono: "casimiroDono",
+};
+const CONTINUACAO: Record<Envio, Exclude<ChaveTexto, "gostou">> = {
+  placa: "depoisPlaca",
+  site: "depoisSite",
+  dono: "depoisDono",
+};
 
 export function chaveTexto(lead: Lead, oferta: Oferta): Exclude<ChaveTexto, "gostou"> {
   if (!ehCasimiro(lead)) return "fora";
   if (oferta === "ambas") return "casimiroAmbas";
-  const outra: Produto = oferta === "placa" ? "site" : "placa";
-  const dataOutra = dataEnvio(lead, outra);
   const dataEsta = dataEnvio(lead, oferta);
-  // A outra oferta já abriu a conversa: esta entra como continuação, sem novo "oi".
-  if (dataOutra && (!dataEsta || dataOutra < dataEsta)) {
-    return oferta === "placa" ? "depoisPlaca" : "depoisSite";
-  }
-  return oferta === "placa" ? "casimiroPlaca" : "casimiroSite";
+  const antes = ENVIOS.filter((envio) => envio !== oferta)
+    .map((envio) => dataEnvio(lead, envio))
+    .filter((data): data is string => Boolean(data))
+    .sort()[0];
+  // Outra mensagem já abriu a conversa: esta entra como continuação, sem novo "oi".
+  return antes && (!dataEsta || antes < dataEsta) ? CONTINUACAO[oferta] : ABERTURA[oferta];
 }
 
 const ELOGIO_A_PARTIR_DE = 30;

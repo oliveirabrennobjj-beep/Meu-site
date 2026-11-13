@@ -24,6 +24,7 @@ e sem `capabilities` (mantém `db` e `user`).
 - `src/painel/leads.ts`: regras (situações, cidade, nicho, site ou placa, textos das mensagens, importação).
   Casimiro: mensagem pede para falar com o dono pessoalmente (placa para quem tem menos de 50 avaliações).
   Casimiro abre com as duas ofertas numa mensagem; a segunda oferta mandada depois entra como continuação, sem novo "oi".
+  Opção DONO (`enviados.dono`): pedir para falar com o dono; depois de cada envio a ficha pula para a próxima opção.
   `{saudacao}` vira bom dia, boa tarde ou boa noite pela hora do celular.
   Fora: mensagem de site pelo WhatsApp. Quem gostou recebe a oferta de demonstração do site para hoje ou amanhã.
   Nenhum texto cita preço.
