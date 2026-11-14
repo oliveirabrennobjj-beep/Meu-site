@@ -31,3 +31,6 @@ como-funciona/*/out/
 
 # Estado de trabalho do gate tasteskill (capturas e JSON locais), não versionar
 .taste-skill/
+
+# Mapa do código da skill graphify: é refeito a cada sessão (.claude/hooks/graphify-mapa.sh)
+graphify-out/

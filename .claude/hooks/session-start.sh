@@ -23,6 +23,9 @@ if [ -n "${PLAYWRIGHT_BROWSERS_PATH:-}" ] && [ ! -d "$PLAYWRIGHT_BROWSERS_PATH/c
   echo "Aviso: chromium-1194 não encontrado em $PLAYWRIGHT_BROWSERS_PATH; ajuste PLAYWRIGHT_VERSION (ver .claude/SKILLS.md)." >&2
 fi
 
+# Skill graphify: instala e monta o mapa do código sem atrasar o começo da sessão.
+nohup "$CLAUDE_PROJECT_DIR/.claude/hooks/graphify-mapa.sh" > "$VENV/graphify-mapa.log" 2>&1 < /dev/null &
+
 if [ -n "${CLAUDE_ENV_FILE:-}" ]; then
   echo "export VIRTUAL_ENV=\"$VENV\"" >> "$CLAUDE_ENV_FILE"
   echo "export PATH=\"$VENV/bin:\$PATH\"" >> "$CLAUDE_ENV_FILE"
