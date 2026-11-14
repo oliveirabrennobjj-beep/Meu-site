@@ -35,6 +35,8 @@ prévia do site ficam em `automacao/painel/img/demo/` e vão como arquivos de ap
   Nenhum texto cita preço.
   Cada oferta tem seu próprio registro de envio (`enviados.site`, `enviados.placa`); contatos antigos tinham
   só `produto` + `enviadoEm` e continuam sendo lidos.
+  `tirada` ({motivo: `semWhatsApp` ou `naoExiste`, em}): loja fora das listas e das contagens. Sai pelos botões
+  "Tira da lista" da ficha e volta pelo filtro "Tiradas". Continua no banco para a importação reconhecer o número.
 - `src/painel/assistente.ts` e `Anotar.tsx`: assistente de anotação (capability `sample`, modelo rápido). Grava `obs`,
   `historico` e `compromisso` ({quando: "AAAA-MM-DDTHH:mm", oque}); `ProximosPassos.tsx` lista os compromissos.
   `Assistente.tsx` + `conhecimento.ts`: chat com foto (regras de abordagem e lista de lojas vão no início de cada pedido;

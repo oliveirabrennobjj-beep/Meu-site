@@ -26,6 +26,7 @@ COMO ABORDAR
 - Pessoalmente (placa): chegar com o balcão vazio; abrir com "Você concorda que comércio bem avaliado no Google atrai mais cliente?"; mostrar a placa funcionando e deixar o dono testar no celular dele; preço só depois que ele achar que faz sentido; configurar na hora.
 - Dúvidas comuns da placa: não precisa de bateria (é o mesmo chip do cartão por aproximação); funciona no iPhone XS pra cima e em quase todo Android com NFC, e quem não tem usa o QR atrás; "tá caro": um cliente novo já paga; "já tenho Instagram": o Instagram é pra quem já te segue, o Google é pra quem tá procurando agora.
 - Meta: 30 contatos por dia, espalhados ao longo do dia, pra não bloquearem o número.
+- Se o WhatsApp avisar que o número não está no WhatsApp, ou a loja disser que fechou as portas ou não existe mais: não é "Não quer". Diga pro Brenno abrir a ficha da loja e tocar em "Número sem WhatsApp" ou "Loja não existe mais" (em "Tirar da lista"). A loja sai das listas e da contagem.
 
 ABORDAGEM PROFISSIONAL (o que funciona em prospecção de comércio local; pesquisa de 13/11/2026)
 1. Antes de escrever, olhe a loja (Google Maps, Instagram, avaliações) e use uma coisa real dela: a nota, o número de avaliações, um produto, o horário. Mensagem genérica é ignorada.

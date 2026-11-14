@@ -281,6 +281,35 @@ try {
   assert.doesNotMatch(textoFora, /R\$|passar aí/);
   await p.getByRole("dialog").getByRole("button", { name: "Fechar ficha" }).click();
 
+  // Número sem WhatsApp: a loja sai das listas e da contagem; em "Tiradas" dá para trazer de volta.
+  const kpiAEnviar = () => p.getByRole("article").filter({ hasText: "A enviar" }).locator("p").first().innerText();
+  await cidadeFora.locator("tbody tr button").first().click();
+  const semZap = await p.getByRole("dialog").getByRole("heading", { level: 2 }).innerText();
+  await p.getByRole("dialog").getByRole("button", { name: "Loja não existe mais" }).waitFor();
+  await p.waitForTimeout(400);
+  await p.getByRole("dialog").getByRole("button", { name: "Número sem WhatsApp" }).scrollIntoViewIfNeeded();
+  await p.screenshot({ path: path.join(saida, "celular-tirar-da-lista.png") });
+  await p.getByRole("dialog").getByRole("button", { name: "Número sem WhatsApp" }).click();
+  await p.getByRole("status").filter({ hasText: `${semZap} saiu da lista: número sem WhatsApp` }).first().waitFor({ state: "attached" });
+  assert.equal((await p.evaluate(() => window.__escritas)).at(-1).dados.tirada.motivo, "semWhatsApp");
+  // A ficha pula para a próxima loja da mesma cidade.
+  assert.notEqual(await p.getByRole("dialog").getByRole("heading", { level: 2 }).innerText(), semZap);
+  await p.getByRole("dialog").getByRole("button", { name: "Fechar ficha" }).click();
+  assert.equal(await kpiAEnviar(), String(aEnviar - 1));
+  assert.equal(await p.getByRole("button", { name: semZap, exact: true }).count(), 0);
+  await p.getByRole("button", { name: "Tiradas da lista: 1" }).click();
+  await p.getByRole("button", { name: semZap, exact: true }).click();
+  await p.getByRole("dialog").getByText(/Tirada da lista hoje: número sem WhatsApp/).waitFor();
+  assert.equal(await p.getByRole("dialog").getByRole("button", { name: "Número sem WhatsApp" }).count(), 0);
+  await p.waitForTimeout(400);
+  await p.screenshot({ path: path.join(saida, "celular-tirada.png") });
+  await p.getByRole("dialog").getByRole("button", { name: "Voltar pra lista" }).click();
+  assert.equal((await p.evaluate(() => window.__escritas)).at(-1).dados.tirada, null);
+  await p.getByRole("dialog").getByRole("button", { name: "Número sem WhatsApp" }).waitFor();
+  await p.getByRole("dialog").getByRole("button", { name: "Fechar ficha" }).click();
+  await p.getByRole("button", { name: "Ver todas" }).click();
+  assert.equal(await kpiAEnviar(), String(aEnviar));
+
   await p.getByRole("radio", { name: "Só Casimiro de Abreu" }).click();
   assert.equal(await p.locator("[data-tabelas] section[aria-labelledby]").count(), 1);
   await p.getByRole("region", { name: "Casimiro de Abreu" }).scrollIntoViewIfNeeded();

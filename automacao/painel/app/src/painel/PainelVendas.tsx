@@ -46,6 +46,7 @@ import {
   contatosHoje,
   fmtInt,
   fmtPct,
+  naLista,
   noEscopo,
   porCidade,
   porTipo,
@@ -57,7 +58,7 @@ import {
 import { usePainel } from "./usePainel";
 
 type Vista = "geral" | "agenda" | "funil" | "assistente" | "mensagens" | "importar";
-type Filtro = Status | "todos";
+type Filtro = Status | "todos" | "tiradas";
 
 const ESCOPOS: SegmentOption<Escopo>[] = [
   { id: "todos", label: "TODOS", long: "Todos os comércios" },
@@ -88,8 +89,11 @@ export function PainelVendas() {
     return () => window.clearTimeout(timer);
   }, [aviso]);
 
-  const { leads, textos, conversa, fase, lento, erro, salvar, salvarMensagens, salvarConversa, importar } =
+  const { leads: todos, textos, conversa, fase, lento, erro, salvar, salvarMensagens, salvarConversa, importar } =
     usePainel(avisar);
+  // Loja tirada da lista (número sem WhatsApp, loja que não existe mais) some das telas e das contagens.
+  const leads = useMemo(() => todos.filter(naLista), [todos]);
+  const tiradas = useMemo(() => todos.filter((l) => !naLista(l)), [todos]);
   const { announce, region } = useAnnouncer();
 
   const [vista, setVista] = useState<Vista>("geral");
@@ -124,8 +128,15 @@ export function PainelVendas() {
   }, [doNicho, consulta]);
   const porSituacao = useMemo(() => contar(buscados), [buscados]);
   const cidades = useMemo(
-    () => porCidade(filtro === "todos" ? buscados : buscados.filter((l) => statusDe(l) === filtro)),
-    [buscados, filtro],
+    () =>
+      porCidade(
+        filtro === "tiradas"
+          ? noEscopo(tiradas, escopo)
+          : filtro === "todos"
+            ? buscados
+            : buscados.filter((l) => statusDe(l) === filtro),
+      ),
+    [buscados, filtro, tiradas, escopo],
   );
 
   const kpis = useMemo<KpiData[]>(() => {
@@ -175,7 +186,7 @@ export function PainelVendas() {
     ];
   }, [doNicho, carregando]);
 
-  const ficha = useMemo(() => leads.find((l) => l.id === fichaId) ?? null, [leads, fichaId]);
+  const ficha = useMemo(() => todos.find((l) => l.id === fichaId) ?? null, [todos, fichaId]);
   const proximo = useMemo(() => {
     if (!ficha) return null;
     const cidade = cidadeDe(ficha);
@@ -587,6 +598,20 @@ export function PainelVendas() {
                         </span>
                       </button>
                     ))}
+                    {(tiradas.length > 0 || filtro === "tiradas") && (
+                      <button
+                        type="button"
+                        aria-pressed={filtro === "tiradas"}
+                        aria-label={`Tiradas da lista: ${tiradas.length}`}
+                        onClick={() => setFiltro("tiradas")}
+                        className={chip(filtro === "tiradas")}
+                      >
+                        Tiradas
+                        <span className="font-mono text-[11px] tabular-nums text-[color:var(--bjork-text-soft)]">
+                          {tiradas.length}
+                        </span>
+                      </button>
+                    )}
                   </div>
                 </section>
 
@@ -594,7 +619,13 @@ export function PainelVendas() {
                   <TabelaLeads
                     key={grupo.cidade}
                     titulo={grupo.cidade}
-                    detalhe={grupo.casimiro ? "Pessoalmente ou contato do dono" : "WhatsApp · site"}
+                    detalhe={
+                      filtro === "tiradas"
+                        ? "Fora da lista: abra a loja para trazer de volta"
+                        : grupo.casimiro
+                          ? "Pessoalmente ou contato do dono"
+                          : "WhatsApp · site"
+                    }
                     leads={grupo.leads}
                     menosAvaliadosPrimeiro={grupo.casimiro}
                     onAbrir={(lead) => setFichaId(lead.id)}

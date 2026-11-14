@@ -27,6 +27,7 @@ import { Anotar } from "./Anotar";
 import { Demonstracao } from "./Demonstracao";
 import { StatusChip } from "./TabelaLeads";
 import {
+  MOTIVO_TIRADA,
   STATUS,
   buscaInstagram,
   chaveTexto,
@@ -41,6 +42,7 @@ import {
   instagramDe,
   linkMaps,
   linkWhatsApp,
+  motivoTirada,
   nadaEnviado as semEnvios,
   ofertaInicial,
   proximaOferta,
@@ -51,6 +53,7 @@ import {
   tipoDe,
   type Envio,
   type Lead,
+  type MotivoTirada,
   type Oferta,
   type Status,
   type Textos,
@@ -232,6 +235,14 @@ function Conteudo({
     avisar(`${lead.nome}: ${STATUS[para].label.toLowerCase()}`);
   };
 
+  const tirada = motivoTirada(lead);
+  const tirar = (motivo: MotivoTirada) => {
+    onSalvar(lead.id, { tirada: { motivo, em: new Date().toISOString() } });
+    avisar(`${lead.nome} saiu da lista: ${MOTIVO_TIRADA[motivo].frase}`);
+    if (proximo) onAbrir(proximo);
+    else onFechar();
+  };
+
   return (
     <>
       <div aria-hidden="true" className="mx-auto mt-2 h-1 w-9 shrink-0 rounded-full bg-[var(--bjork-border-strong)]" />
@@ -281,6 +292,25 @@ function Conteudo({
             </div>
           )}
         </dl>
+
+        {tirada && (
+          <div className="flex flex-col gap-2 rounded-[12px] border border-[color:var(--bjork-border-strong)] bg-[var(--bjork-surface)] p-3">
+            <p className="text-[13px] leading-snug">
+              Tirada da lista {lead.tirada?.em ? quando(lead.tirada.em) : ""}: {MOTIVO_TIRADA[tirada].frase}. Não
+              aparece nas listas nem conta nos números do painel.
+            </p>
+            <BlockButton
+              variant="secondary"
+              className="w-full"
+              onClick={() => {
+                onSalvar(lead.id, { tirada: null });
+                avisar(`${lead.nome} voltou pra lista`);
+              }}
+            >
+              Voltar pra lista
+            </BlockButton>
+          </div>
+        )}
 
         <SobreALoja lead={lead} />
         <BlockButton variant="secondary" size="lg" className="w-full" onClick={() => setDemo(true)}>
@@ -458,6 +488,19 @@ function Conteudo({
               </div>
             </fieldset>
           </>
+        )}
+
+        {!tirada && (
+          <fieldset>
+            <legend className={rotuloCampo}>Não dá pra falar com essa loja? Tira da lista:</legend>
+            <div className="flex flex-wrap gap-2">
+              {(Object.keys(MOTIVO_TIRADA) as MotivoTirada[]).map((motivo) => (
+                <BlockButton key={motivo} variant="secondary" onClick={() => tirar(motivo)}>
+                  {MOTIVO_TIRADA[motivo].botao}
+                </BlockButton>
+              ))}
+            </div>
+          </fieldset>
         )}
 
         <Anotar lead={lead} onSalvar={onSalvar} avisar={avisar} />

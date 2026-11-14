@@ -18,7 +18,17 @@ import {
 } from "@/components/ui/app-dashboard-shell-utils/app-block-kit";
 import { cn } from "@/lib/utils";
 import { atrasado, quandoCurto } from "./assistente";
-import { STATUS, fmtInt, fmtNota, statusDe, tipoDe, type Lead, type Status } from "./leads";
+import {
+  MOTIVO_TIRADA,
+  STATUS,
+  fmtInt,
+  fmtNota,
+  motivoTirada,
+  statusDe,
+  tipoDe,
+  type Lead,
+  type Status,
+} from "./leads";
 
 type Chave = "nome" | "nota" | "avaliacoes";
 type Ordem = { chave: Chave; dir: "asc" | "desc" };
@@ -243,6 +253,7 @@ export function TabelaLeads({
                     </button>
                     <p className="truncate text-[11.5px] leading-tight text-[color:var(--bjork-text-muted)]">
                       {tipoDe(lead)}
+                      {motivoTirada(lead) && ` · ${MOTIVO_TIRADA[motivoTirada(lead)!].frase}`}
                       {lead.compromisso && (
                         <span
                           className="font-medium"

@@ -1,6 +1,6 @@
 # Painel de vendas (o app): resumo
 
-Atualizado em 13/11/2026 (noite).
+Atualizado em 14/11/2026 (tarde).
 
 ## O que é
 - Link (só o Brenno abre): https://claude.ai/artifact/LMpGydYCibdZoLEf3eNBNo
@@ -16,6 +16,7 @@ Atualizado em 13/11/2026 (noite).
   - Botões: Enviar no WhatsApp, Falei pessoalmente, Copiar e Próximo.
   - Quando a loja responde: oferta de demonstração e botões de resultado.
   - "Anotar": o assistente organiza a anotação.
+  - "Tira da lista": botões "Número sem WhatsApp" e "Loja não existe mais". A loja some das listas e das contagens (meta do dia, funil, agenda, assistente) e a ficha pula para a próxima. O filtro "Tiradas" mostra essas lojas; na ficha delas, "Voltar pra lista" desfaz.
   - "Mostrar demonstração do site": prévia do site da loja no estilo do ramo (fotos de banco livre, só dados reais). "Mandar foto" gera a imagem da página para mandar no WhatsApp.
 - **Agenda:** calendário do mês; o dia com algo combinado ganha um ponto (vermelho se passou). Tocar no dia mostra as lojas e o horário. Para marcar, usar "Anotar" na ficha.
 - **Funil:** fluxo animado das etapas (A enviar → Enviado → Respondeu → Fechou / Mais pra frente / Não quer) com a quantidade de lojas; tocar numa etapa abre a lista dela.
@@ -26,6 +27,8 @@ Atualizado em 13/11/2026 (noite).
 ## De onde vêm as lojas
 - 13/11: 103 de Casimiro vieram do "Mapa da Plaquinha" (93 da sede, 10 de Barra de São João). Entraram também Barbearia Dias e Cid Burguer (o número do Cid Burguer não foi confirmado). Hoje são 180 lojas: 69 em Macaé e Rio das Ostras, o resto em Casimiro.
 - A "Barbearia em São Paulo - Barbshop" foi tirada: o número não tem WhatsApp.
+- 14/11: tiradas da lista (continuam no banco, para a importação não trazer de volta) a Studio Juliana Bkenda (número sem WhatsApp) e a Sol Marques Espaço da Beleza (respondeu que não tem mais o salão).
+- Não existe jeito de testar de fora se um número tem WhatsApp: só o WhatsApp do celular sabe. Por isso o botão na ficha.
 - A pesquisa das 06:17 traz até 30 por dia, nesta ordem: sede de Casimiro (outros ramos), depois Barra de São João, Rio Dourado, Professor Souza, e só então Rio das Ostras e Macaé. Colar o JSON em Importar.
 
 ## Regras que o app segue
@@ -34,7 +37,7 @@ Atualizado em 13/11/2026 (noite).
 - Sem preço na primeira mensagem. Sempre buscar o dono.
 
 ## Código
-- Pasta `automacao/painel/app` (React 18, Tailwind 4, Vite), no branch `ccr-aeb44e3e-tksqri`.
+- Pasta `automacao/painel/app` (React 18, Tailwind 4, Vite), no branch `ccr-1d993679-yyz410` (continuação do `ccr-aeb44e3e-tksqri`).
 - Arquivos principais em `src/painel/`:
   - `leads.ts`: regras e textos.
   - `FichaLead.tsx`: ficha da loja.
@@ -53,10 +56,9 @@ Atualizado em 13/11/2026 (noite).
 
 ## Esperando o Brenno
 - Testar o botão "Mandar foto" no celular de verdade e dizer o que aconteceu (abriu o WhatsApp, salvou a foto ou mostrou a foto para segurar).
-- Dizer se quer o botão "Número sem WhatsApp" na ficha (tira a loja da lista na hora).
 - Mandar uma foto boa de açaí na tigela (a prévia de açaiteria usa copo de açaí e sorvete).
-- Decidir o merge do branch `ccr-aeb44e3e-tksqri` na main.
-- 14/11 às 11:45 chega o aviso para falar com o dono da Parada Ideal por volta das 12h.
+- Decidir o merge do branch `ccr-1d993679-yyz410` na main.
+- Contar como foi a conversa com o dono da Parada Ideal (combinada para 14/11 por volta das 12h).
 
 ## Melhorias pendentes no app
 - Reescrever as mensagens prontas no formato profissional (o roteiro está em `conhecimento.ts`).

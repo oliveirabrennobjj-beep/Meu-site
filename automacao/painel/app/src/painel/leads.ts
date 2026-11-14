@@ -34,6 +34,8 @@ export interface Lead {
   enviados?: Partial<Record<Envio, string>>;
   /** Por onde foi o primeiro contato. */
   canal?: "whatsapp" | "pessoal";
+  /** Loja tirada da lista porque não dá para falar com ela; null quando o Brenno traz de volta. */
+  tirada?: { motivo: MotivoTirada; em: string } | null;
 }
 
 export const STATUS: Record<
@@ -117,6 +119,25 @@ export function contatosHoje(leads: Lead[], agora = new Date()) {
     (lead) => ehHoje(lead.enviadoEm) || ENVIOS.some((envio) => ehHoje(dataEnvio(lead, envio))),
   ).length;
 }
+
+/* Fora da lista -------------------------------------------------------------------------------- */
+
+export type MotivoTirada = "semWhatsApp" | "naoExiste";
+
+export const MOTIVO_TIRADA: Record<MotivoTirada, { botao: string; frase: string }> = {
+  semWhatsApp: { botao: "Número sem WhatsApp", frase: "número sem WhatsApp" },
+  naoExiste: { botao: "Loja não existe mais", frase: "a loja não existe mais" },
+};
+
+/** Por que a loja saiu da lista, ou null se ela continua nela. */
+export const motivoTirada = (lead: Lead): MotivoTirada | null =>
+  lead.tirada && lead.tirada.motivo in MOTIVO_TIRADA ? lead.tirada.motivo : null;
+
+/**
+ * A loja aparece nas listas e nas contagens. A tirada continua no banco: assim a importação
+ * reconhece o número e não traz a mesma loja de volta.
+ */
+export const naLista = (lead: Lead) => motivoTirada(lead) === null;
 
 /* Lugar ---------------------------------------------------------------------------------------- */
 
