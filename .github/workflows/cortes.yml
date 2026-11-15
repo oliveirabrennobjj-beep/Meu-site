@@ -1,0 +1,55 @@
+# Cortes de vídeo: baixa o vídeo de cortes/pedido.json, executa o pedido e publica
+# o resultado cifrado no branch cortes-saida. Roda quando o pedido muda.
+name: Cortes de vídeo
+
+on:
+  push:
+    branches: [ccr-5c9d9fcd-k9f87h]
+    paths:
+      - "cortes/pedido.json"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: cortes
+  cancel-in-progress: true
+
+jobs:
+  cortes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Ferramentas
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg jq
+          pip install -q -U "yt-dlp[default]"
+          if [ -f cortes/requisitos.txt ]; then pip install -q -r cortes/requisitos.txt; fi
+
+      - name: Ler pedido
+        id: pedido
+        run: echo "vid=$(jq -r .id cortes/pedido.json)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache do vídeo original
+        uses: actions/cache@v4
+        with:
+          path: fonte
+          key: cortes-fonte-${{ steps.pedido.outputs.vid }}
+
+      - name: Baixar vídeo
+        run: python cortes/ci/baixar.py
+
+      - name: Executar pedido
+        run: python cortes/ci/executar.py
+
+      - name: Publicar saída cifrada
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash cortes/ci/publicar.sh
