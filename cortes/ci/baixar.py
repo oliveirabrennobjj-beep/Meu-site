@@ -16,7 +16,7 @@ if (fonte / 'video.mp4').exists():
 
 if 'drive.google.com' in url:
     # Arquivo que o dono subiu no Google Drive com "qualquer pessoa com o link".
-    r = subprocess.run(['gdown', '--fuzzy', url, '-O', 'fonte/video.mp4'])
+    r = subprocess.run(['gdown', url, '-O', 'fonte/video.mp4'])
     if r.returncode != 0 or not (fonte / 'video.mp4').exists():
         sys.exit('não consegui baixar do Google Drive; confira se o link está público')
     subprocess.run(['ffprobe', '-v', 'error', '-show_entries',
