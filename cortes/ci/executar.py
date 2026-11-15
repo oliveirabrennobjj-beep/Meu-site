@@ -25,6 +25,8 @@ for extra in list(fonte.glob('*.json')) + list(fonte.glob('*.json3')):
     shutil.copy(extra, saida / extra.name)
 
 if pedido['modo'] == 'sonda':
+    if video.stat().st_size < 60_000_000:  # arquivo pequeno: devolve o original também
+        shutil.copy(video, saida / 'original.mp4')
     rodar(['ffmpeg', '-v', 'error', '-stats', '-i', video, '-vf', 'fps=12,scale=-2:360',
            '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '30', '-g', '24',
            '-c:a', 'libopus', '-b:a', '32k', '-ac', '1', saida / 'proxy.mp4'])

@@ -14,6 +14,16 @@ if (fonte / 'video.mp4').exists():
     print('vídeo já está no cache')
     sys.exit(0)
 
+if 'drive.google.com' in url:
+    # Arquivo que o dono subiu no Google Drive com "qualquer pessoa com o link".
+    r = subprocess.run(['gdown', '--fuzzy', url, '-O', 'fonte/video.mp4'])
+    if r.returncode != 0 or not (fonte / 'video.mp4').exists():
+        sys.exit('não consegui baixar do Google Drive; confira se o link está público')
+    subprocess.run(['ffprobe', '-v', 'error', '-show_entries',
+                    'stream=codec_name,width,height,avg_frame_rate:format=duration,size',
+                    '-of', 'default=nw=1', 'fonte/video.mp4'])
+    sys.exit(0)
+
 FORMATO = ('bv*[height<=1080][vcodec^=avc1]+ba[ext=m4a]/'
            'bv*[height<=1080]+ba/b[height<=1080]/b')
 base = ['yt-dlp', '--no-playlist', '--js-runtimes', 'node', '-f', FORMATO,

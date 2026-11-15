@@ -30,7 +30,7 @@ jobs:
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq ffmpeg jq
-          pip install -q -U "yt-dlp[default]"
+          pip install -q -U "yt-dlp[default]" gdown
           if [ -f cortes/requisitos.txt ]; then pip install -q -r cortes/requisitos.txt; fi
 
       - name: Ler pedido
