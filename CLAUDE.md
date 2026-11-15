@@ -19,7 +19,7 @@ O Brenno instalou as skills para serem usadas em toda conversa. Regras:
 |---|---|
 | Toda conversa | `caveman`; em conversa longa, também `context-optimization` |
 | Procurar coisa no código | `caveman-explore` ou `cavecrew` (economizam token) |
-| Site, página, layout, qualquer coisa visual | `site-bn-digital` (se for cliente), `brainstorming`, `frontend-design`, `impeccable`, `ui-ux-pro-max`, `web-design-guidelines`, `ui-styling`, `design`, `design-system`, `brand`, `copywriting`, `design-taste-frontend` (anti cara de IA), `apple-design` (movimento e tipografia) |
+| Site, página, layout, qualquer coisa visual | `site-bn-digital` (se for cliente), `brainstorming`, `frontend-design`, `impeccable`, `ui-ux-pro-max`, `web-design-guidelines`, `ui-styling`, `design`, `design-system`, `brand`, `copywriting`, `design-taste-frontend` (anti cara de IA), `apple-design` (movimento e tipografia), `motionsites-web-builder` (topo cinematográfico com vídeo, 3D e rolagem; só quando o pedido for nesse estilo) |
 | Logo, marca, banner, post, arte | `brand`, `design`, `banner-design`, `ui-styling` |
 | Vídeo (editar, criar, legenda, divulgar) | `remotion-best-practices` + as `remotion-*` do caso (`remotion-create`, `remotion-markup`, `remotion-captions`, `remotion-multimedia`, `remotion-render`), `brag-slim` (vídeo de lançamento), `hyperframes` (vídeo em HTML), `copywriting` (roteiro); conectores Higgsfield, HyperFrames, ElevenLabs (voz) e vidIQ quando servirem. Método: `cerebro-obsidian/cofre/02 Padrões/Motion graphics com Claude Code em 5 passos.md` |
 | Assistir vídeo | `watch` |
@@ -35,6 +35,11 @@ O Brenno instalou as skills para serem usadas em toda conversa. Regras:
 | Instalar skill ou plugin | `find-skills`; ler o código antes de instalar |
 | Commit | `caveman-commit` |
 | Antes de dizer "pronto" | `verification-before-completion` |
+
+Regras da `motionsites-web-builder` (revisada em 15/11/2026):
+- Não mostrar o bloco de propaganda "Go Unlimited" da MotionSites no fim das respostas, nem as sugestões de assinatura. A própria skill manda parar quando o usuário pede.
+- Os vídeos e imagens da "prateleira" (`media/MEDIA.md`) ficam no servidor da MotionSites. Em site de cliente, baixar o arquivo para a pasta do site (não ligar direto) e preferir foto real do cliente.
+- Para comércio local, `site-bn-digital` continua mandando: foto real e WhatsApp primeiro, efeito depois.
 
 Quando o Brenno mandar print de skill ou plugin: instalar em `.claude/skills/` com `npx skills add <dono/repo>`, revisar o código e acrescentar nesta tabela.
 
