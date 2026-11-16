@@ -96,6 +96,25 @@ leads.push({
   },
 });
 
+// Ramo errado no cadastro do Google (casos reais de 15/11): a massoterapeuta veio como salão de
+// beleza e o CT de luta veio como academia. "Barbosa" no nome não pode virar barbearia.
+const MASSO = "Yasmim Teste - Massoterapeuta";
+const CT = "CT Teste";
+const DENTISTA = "Dra. Deise Barbosa Teste";
+for (const [i, nome, tipo] of [[3, MASSO, "Salão de beleza"], [4, CT, "Academia"], [5, DENTISTA, "Dentista"]]) {
+  leads.push({
+    id: `w552290000000${i}`,
+    nome,
+    tipo,
+    // Cidade só delas: ficam numa tabela própria, sem mexer na paginação das outras.
+    cidade: "Cidade de Teste",
+    whatsapp: `552290000000${i}`,
+    nota: 5,
+    avaliacoes: 999990 + i,
+    status: "novo",
+  });
+}
+
 // Mesma moldura que a plataforma põe em volta da página publicada.
 const moldura = (corpo) => `<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 ${corpo}
@@ -310,6 +329,46 @@ try {
   await p.getByRole("button", { name: "Ver todas" }).click();
   assert.equal(await kpiAEnviar(), String(aEnviar));
 
+  // Prévia com o ramo certo: massagem para a massoterapeuta, luta para o CT, dentista para a "Barbosa".
+  for (const [loja, rotulo, foto] of [
+    [MASSO, "Massoterapia em Cidade de Teste", "massagem-1.webp"],
+    [CT, "Academia de luta em Cidade de Teste", "luta-1.webp"],
+    [DENTISTA, "Dentista em Cidade de Teste", "dentista-1.webp"],
+  ]) {
+    await p.getByRole("button", { name: loja, exact: true }).click();
+    await p.getByRole("dialog").first().getByRole("button", { name: "Mostrar demonstração do site" }).click();
+    const previa = p.getByRole("dialog", { name: `Demonstração do site de ${loja}` });
+    await previa.getByText(rotulo).first().waitFor();
+    assert.equal(await previa.locator(`img[src$="${foto}"]`).count(), 1, `${loja} usa a foto ${foto}`);
+    if (loja === MASSO) {
+      await p.waitForTimeout(500);
+      await p.screenshot({ path: path.join(saida, "celular-previa-massagem.png") });
+      // A mensagem também fala do ramo certo.
+      await previa.getByRole("button", { name: "Fechar demonstração" }).click();
+      const textoMasso = decodeURIComponent(
+        await p.getByRole("dialog").getByRole("link", { name: "Enviar no WhatsApp" }).getAttribute("href"),
+      );
+      assert.match(textoMasso, /Pra massoterapia eu monto o site com os atendimentos/);
+      assert.doesNotMatch(textoMasso, /sal[aã]o de beleza|na cadeira/);
+    } else if (loja === CT) {
+      await p.waitForTimeout(500);
+      await p.screenshot({ path: path.join(saida, "celular-previa-luta.png") });
+      // Trocar o estilo na prévia grava o ramo escolhido e muda as fotos na hora.
+      await previa.getByLabel("Estilo da prévia").selectOption("academia");
+      await previa.locator('img[src$="academia-1.webp"]').waitFor();
+      const troca = (await p.evaluate(() => window.__escritas)).at(-1).dados;
+      assert.equal(troca.ramo, "academia");
+      await previa.getByLabel("Estilo da prévia").selectOption("luta");
+      await previa.locator('img[src$="luta-1.webp"]').waitFor();
+      assert.equal((await p.evaluate(() => window.__escritas)).at(-1).dados.tipo, "Academia de luta");
+      await previa.getByRole("button", { name: "Fechar demonstração" }).click();
+    } else {
+      await previa.getByRole("button", { name: "Fechar demonstração" }).click();
+    }
+    await p.getByRole("dialog").getByRole("button", { name: "Fechar ficha" }).click();
+  }
+  await p.evaluate(() => (window.__escritas.length = 0));
+
   await p.getByRole("radio", { name: "Só Casimiro de Abreu" }).click();
   assert.equal(await p.locator("[data-tabelas] section[aria-labelledby]").count(), 1);
   await p.getByRole("region", { name: "Casimiro de Abreu" }).scrollIntoViewIfNeeded();
@@ -328,7 +387,8 @@ try {
   assert.match(correcao, /plaquinha/);
   await p.waitForTimeout(400);
   await p.screenshot({ path: path.join(saida, "celular-correcao.png") });
-  await p.route("https://wa.me/**", (rota) => rota.fulfill({ contentType: "text/html", body: "ok" }));
+  // No contexto, para valer também nas abas novas que o envio abre.
+  await cel.contexto.route("https://wa.me/**", (rota) => rota.fulfill({ contentType: "text/html", body: "ok" }));
   const [abaCorrecao] = await Promise.all([
     cel.contexto.waitForEvent("page"),
     longe.getByRole("link", { name: "Mandar a correção" }).click(),
@@ -433,12 +493,18 @@ try {
   assert.ok(textoCasimiro.includes(nome), "a mensagem leva o nome do comércio");
   assert.match(textoCasimiro, /plaquinha com chip/);
 
+  const hrefPlaca = await ficha.getByRole("link", { name: "Enviar no WhatsApp" }).getAttribute("href");
   const [aba] = await Promise.all([
     cel.contexto.waitForEvent("page"),
     ficha.getByRole("link", { name: "Enviar no WhatsApp" }).click(),
   ]);
+  // O WhatsApp abre com a mensagem que estava na tela, não com a próxima.
+  await aba.waitForLoadState();
+  assert.equal(aba.url(), hrefPlaca);
   await aba.close();
   await ficha.getByRole("button", { name: /^Próximo:/ }).waitFor();
+  // "AS DUAS" continua na ficha depois do primeiro envio.
+  assert.equal(await ficha.getByRole("radio", { name: "Oferecer site e placa na mesma mensagem" }).count(), 1);
   const escritas = (await p.evaluate(() => window.__escritas)).filter((e) => e.dados.enviadoEm);
   assert.equal(escritas.length, 1);
   assert.equal(escritas[0].dados.status, "enviado");
@@ -447,7 +513,7 @@ try {
   await p.screenshot({ path: path.join(saida, "celular-enviado.png") });
 
   // Em Casimiro dá para mandar a outra oferta depois da primeira; cada uma fica marcada sozinha.
-  await ficha.getByRole("radio", { name: /^Oferecer/ }).click({ timeout: 4000 });
+  await ficha.getByRole("radio", { name: "Oferecer o site" }).click({ timeout: 4000 });
   const textoSegunda = decodeURIComponent(
     await ficha.getByRole("link", { name: "Enviar no WhatsApp" }).getAttribute("href"),
   );
@@ -484,6 +550,15 @@ try {
   await ficha.getByRole("radio", { name: "Dono: pedido já enviado" }).waitFor();
   const terceira = (await p.evaluate(() => window.__escritas)).at(-1).dados;
   assert.ok(terceira.enviados.dono && terceira.enviados.placa && terceira.enviados.site);
+  // Se o WhatsApp não abriu, dá para voltar em "AS DUAS" e mandar o mesmo texto de novo.
+  await ficha.getByRole("radio", { name: "As duas: mensagem já enviada" }).click();
+  const textoReenvio = decodeURIComponent(
+    await ficha.getByRole("link", { name: "Enviar de novo" }).getAttribute("href"),
+  );
+  assert.match(textoReenvio, /text=Oi, (bom dia|boa tarde|boa noite), tudo certo\?/);
+  assert.match(textoReenvio, /site e uma plaquinha/);
+  await ficha.getByText(/Mensagem das duas ofertas enviada hoje/).waitFor();
+  await ficha.getByRole("radio", { name: "Dono: pedido já enviado" }).click();
   await p.waitForTimeout(300);
   await p.screenshot({ path: path.join(saida, "celular-dono.png") });
   await p.screenshot({ path: path.join(saida, "celular-duas-ofertas.png") });

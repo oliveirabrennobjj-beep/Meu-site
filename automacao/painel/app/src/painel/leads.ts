@@ -34,6 +34,8 @@ export interface Lead {
   enviados?: Partial<Record<Envio, string>>;
   /** Por onde foi o primeiro contato. */
   canal?: "whatsapp" | "pessoal";
+  /** Ramo que o Brenno escolheu na ficha (id de RAMOS); vale mais que o tipo vindo do Google. */
+  ramo?: string;
   /** Loja tirada da lista porque não dá para falar com ela; null quando o Brenno traz de volta. */
   tirada?: { motivo: MotivoTirada; em: string } | null;
 }
@@ -211,44 +213,217 @@ export function porTipo(leads: Lead[]) {
     .sort((x, y) => y.value - x.value || x.label.localeCompare(y.label, "pt-BR"));
 }
 
-type Ramo = "comida" | "padaria" | "beleza" | "pet" | "geral";
+/* Ramo ----------------------------------------------------------------------------------------- */
 
-function ramoDe(tipo = ""): Ramo {
-  if (/pizz|hamb|lanch|restaur|aça|sorvet/i.test(tipo)) return "comida";
-  if (/padar|caf[eé]|latic|confeit/i.test(tipo)) return "padaria";
-  if (/barb|sal[aã]o|beleza|est[eé]tic/i.test(tipo)) return "beleza";
-  if (/pet|veterin/i.test(tipo)) return "pet";
-  return "geral";
+export type RamoId =
+  | "luta"
+  | "academia"
+  | "barbearia"
+  | "massagem"
+  | "salao"
+  | "estetica"
+  | "acai"
+  | "pizzaria"
+  | "hamburgueria"
+  | "padaria"
+  | "restaurante"
+  | "pet"
+  | "oficina"
+  | "dentista"
+  | "geral";
+
+export interface Ramo {
+  id: RamoId;
+  /** Vira o `tipo` da loja quando o Brenno escolhe este ramo. */
+  nome: string;
+  /** Texto na lista de escolha, quando o ramo junta mais de um tipo de loja. */
+  opcao?: string;
+  /** Reconhece o ramo pelo tipo que veio do Google. */
+  tipo: RegExp;
+  /** Reconhece pelo nome da loja quando o tipo não diz nada (palavra inteira: "Barbosa" não é barbearia). */
+  nomeLoja?: RegExp;
+  /** O nome da loja corrige o tipo do Google, mas só quando o tipo caiu num dos ramos de `corrige`. */
+  certeza?: { padrao: RegExp; corrige: RamoId[] };
+  /** "Pra {quem} eu monto o site com {noSite}." Sem `quem`, usa o tipo da loja. */
+  quem?: string;
+  noSite: string;
+  /** Onde o cliente está quando encosta o celular na placa. */
+  ondePlaca: string;
 }
 
-const NO_SITE: Record<Ramo, string> = {
-  comida: "o cardápio com foto e um botão que já abre o pedido no WhatsApp",
-  padaria: "os produtos, o horário e um botão pra encomendar pelo WhatsApp",
-  beleza: "os serviços com foto, os horários e um botão pra marcar pelo WhatsApp",
-  pet: "os serviços, os horários e um botão pra agendar pelo WhatsApp",
-  geral: "o que vocês vendem, o horário, o mapa e um botão que já abre o WhatsApp",
+const CARDAPIO = "o cardápio com foto e um botão que já abre o pedido no WhatsApp";
+const SERVICOS = "os serviços com foto, os horários e um botão pra marcar pelo WhatsApp";
+
+const GERAL: Ramo = {
+  id: "geral",
+  nome: "Outro comércio",
+  tipo: /$^/,
+  noSite: "o que vocês vendem, o horário, o mapa e um botão que já abre o WhatsApp",
+  ondePlaca: "",
 };
 
-// Onde o cliente está quando encosta o celular na placa.
-const ONDE_PLACA: Record<Ramo, string> = {
-  comida: " enquanto espera o pedido",
-  padaria: " no caixa",
-  beleza: " ainda na cadeira",
-  pet: " quando busca o bichinho",
-  geral: "",
-};
+// A ordem importa: o primeiro ramo que reconhece o tipo ganha ("Academia de luta" é luta, não academia).
+export const RAMOS: Ramo[] = [
+  {
+    id: "luta",
+    nome: "Academia de luta",
+    opcao: "Luta (muay thai, jiu-jitsu, boxe)",
+    tipo: /luta|muay|jiu|boxe|kickbox|artes marciais|karat|jud[oô]|capoeira|taekwondo/i,
+    nomeLoja: /\bmuay|\bjiu|\blutas?\b|\bboxe\b|\bkarat|\bjud[oô]\b|\bcapoeira|\btaekwondo/i,
+    certeza: {
+      padrao: /\bmuay|\bjiu|\bbjj\b|\blutas?\b|\bboxe\b|\bkarat|\bjud[oô]\b|\btaekwondo|\bcapoeira|\bfight|\bct\b|centro de treinamento|\bteam\b/i,
+      corrige: ["academia", "geral"],
+    },
+    quem: "academia de luta",
+    noSite: "as modalidades, os horários das turmas e um botão pra marcar aula experimental pelo WhatsApp",
+    ondePlaca: " depois do treino",
+  },
+  {
+    id: "academia",
+    nome: "Academia",
+    tipo: /academ|gym|fitness|crossfit|muscula|pilates|funcional/i,
+    nomeLoja: /\bacademia|\bgym\b|\bfit(ness)?\b|\bcrossfit|\bpilates/i,
+    noSite: "os planos, os horários e um botão pra marcar aula experimental pelo WhatsApp",
+    ondePlaca: " depois do treino",
+  },
+  {
+    id: "barbearia",
+    nome: "Barbearia",
+    tipo: /barb/i,
+    nomeLoja: /\bbarbe(aria|r)/i,
+    noSite: SERVICOS,
+    ondePlaca: " ainda na cadeira",
+  },
+  {
+    id: "massagem",
+    nome: "Massoterapia",
+    opcao: "Massagem e massoterapia",
+    tipo: /massot|massag|\bspa\b/i,
+    nomeLoja: /\bmassoterap|\bmassag|\bspa\b/i,
+    certeza: { padrao: /\bmassoterap|\bmassag|\bspa\b/i, corrige: ["salao", "estetica", "geral"] },
+    noSite: "os atendimentos, os horários e um botão pra agendar pelo WhatsApp",
+    ondePlaca: " depois do atendimento",
+  },
+  {
+    id: "salao",
+    nome: "Salão de beleza",
+    tipo: /sal[aã]o|beleza|cabel|manicure|nail|unhas?\b|sobrancel|c[ií]lios|maquia/i,
+    nomeLoja: /\bsal[aã]o|\bbeleza|\bbeauty|\bstudio\b|\bcabel|\bhair|\bnails?\b|\bunhas?\b/i,
+    noSite: SERVICOS,
+    ondePlaca: " ainda na cadeira",
+  },
+  {
+    id: "estetica",
+    nome: "Clínica de estética",
+    tipo: /est[eé]tic|depila|harmoniza|dermat|micropigment/i,
+    nomeLoja: /\best[eé]tica\b/i,
+    certeza: {
+      padrao: /cl[ií]nica[^|]*est[eé]tica|centro de [^|]*est[eé]tica|harmoniza/i,
+      corrige: ["salao", "geral"],
+    },
+    noSite: "os procedimentos, os horários e um botão pra agendar pelo WhatsApp",
+    ondePlaca: " depois do atendimento",
+  },
+  {
+    id: "acai",
+    nome: "Açaiteria",
+    opcao: "Açaí e sorvete",
+    tipo: /a[cç]a[ií]|sorvet|gelat/i,
+    nomeLoja: /a[cç]a[ií]|\bsorvet/i,
+    certeza: { padrao: /a[cç]a[ií]/i, corrige: ["padaria", "hamburgueria", "restaurante", "geral"] },
+    noSite: CARDAPIO,
+    ondePlaca: " enquanto espera o pedido",
+  },
+  {
+    id: "pizzaria",
+    nome: "Pizzaria",
+    tipo: /pizz/i,
+    nomeLoja: /pizz/i,
+    noSite: CARDAPIO,
+    ondePlaca: " enquanto espera o pedido",
+  },
+  {
+    id: "hamburgueria",
+    nome: "Lanchonete",
+    opcao: "Lanchonete e hamburgueria",
+    tipo: /hamb|burg|lanch|hot ?dog|pastel|salgad/i,
+    nomeLoja: /hamb[uú]rg|\bburg|\blanch|\bsmash/i,
+    noSite: CARDAPIO,
+    ondePlaca: " enquanto espera o pedido",
+  },
+  {
+    id: "padaria",
+    nome: "Padaria",
+    opcao: "Padaria e cafeteria",
+    tipo: /padar|confeit|latic|leiteria|caf[eé]|doceria|\bbolo/i,
+    nomeLoja: /\bpadaria|\bconfeitaria|\bcafeteria|\bdoceria|\bp[aã]o\b/i,
+    noSite: "os produtos, o horário e um botão pra encomendar pelo WhatsApp",
+    ondePlaca: " no caixa",
+  },
+  {
+    id: "restaurante",
+    nome: "Restaurante",
+    tipo: /restaur|churras|grill|marmit|gastronom|steak|self.?service/i,
+    nomeLoja: /\brestaurante|\bchurrasc|\bgrill\b|\bmarmit|\bgastronomia|\bsteak/i,
+    noSite: CARDAPIO,
+    ondePlaca: " enquanto espera o pedido",
+  },
+  {
+    id: "pet",
+    nome: "Pet shop",
+    opcao: "Pet shop e veterinária",
+    tipo: /pet|veterin|ra[cç][oõ]es|agropecu/i,
+    nomeLoja: /\bpet\b|\bpetshop|\bveterin|\bra[cç][oõ]es/i,
+    noSite: "os serviços, os horários e um botão pra agendar pelo WhatsApp",
+    ondePlaca: " quando busca o bichinho",
+  },
+  {
+    id: "oficina",
+    nome: "Oficina mecânica",
+    tipo: /oficina|mec[aâ]nic|auto|diesel|motor|lanterna|funilaria|radiador|pneu|borrach|moto|lava.?jato/i,
+    nomeLoja: /\boficina|\bmec[aâ]nica|\bauto\b|\bautomotiv|\bdiesel|\bmotos?\b|\bpneus?\b|lava.?jato|lanternagem/i,
+    noSite: "os serviços, o horário, o mapa e um botão pra pedir orçamento pelo WhatsApp",
+    ondePlaca: " na hora de buscar o carro",
+  },
+  {
+    id: "dentista",
+    nome: "Dentista",
+    tipo: /dent|odonto/i,
+    nomeLoja: /\bdentista|\bodonto|\bsorriso/i,
+    noSite: "os tratamentos, os horários e um botão pra marcar consulta pelo WhatsApp",
+    ondePlaca: " na recepção",
+  },
+  GERAL,
+];
+
+/**
+ * Ramo da loja: a escolha do Brenno, senão o tipo do Google, senão o nome. No fim, o nome pode
+ * corrigir o tipo (a massoterapeuta cadastrada como salão, o CT cadastrado como academia).
+ */
+export function ramoDe(lead: Pick<Lead, "nome" | "tipo" | "ramo">): Ramo {
+  const escolhido = RAMOS.find((r) => r.id === lead.ramo);
+  if (escolhido) return escolhido;
+  const base =
+    RAMOS.find((r) => r.tipo.test(lead.tipo ?? "")) ??
+    RAMOS.find((r) => r.nomeLoja?.test(lead.nome)) ??
+    GERAL;
+  return (
+    RAMOS.find((r) => r.certeza?.corrige.includes(base.id) && r.certeza.padrao.test(lead.nome)) ?? base
+  );
+}
 
 function fraseSite(lead: Lead) {
-  const ramo = ramoDe(lead.tipo);
+  const ramo = ramoDe(lead);
+  if (ramo.id === "geral") return `Eu monto o site com ${GERAL.noSite}.`;
   const tipo = lead.tipo?.trim();
-  return tipo && ramo !== "geral"
-    ? `Pra ${tipo.toLowerCase()} eu monto o site com ${NO_SITE[ramo]}.`
-    : `Eu monto o site com ${NO_SITE.geral}.`;
+  // O tipo do Google só entra na frase quando é do mesmo ramo (a massoterapeuta não é "salão de beleza").
+  const quem = ramo.quem ?? (tipo && ramo.tipo.test(tipo) ? tipo : ramo.nome).toLowerCase();
+  return `Pra ${quem} eu monto o site com ${ramo.noSite}.`;
 }
 
 /** `nela`: a frase vem logo depois de falar da plaquinha; senão ela se apresenta sozinha. */
 function frasePlaca(lead: Lead, nela: boolean) {
-  const onde = ONDE_PLACA[ramoDe(lead.tipo)];
+  const onde = ramoDe(lead).ondePlaca;
   return nela
     ? `O cliente encosta o celular nela${onde} e avalia vocês no Google em 10 segundos.`
     : `Na plaquinha, o cliente encosta o celular${onde} e avalia vocês no Google em 10 segundos.`;

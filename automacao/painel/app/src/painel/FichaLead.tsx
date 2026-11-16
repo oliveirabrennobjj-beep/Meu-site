@@ -28,6 +28,7 @@ import { Demonstracao } from "./Demonstracao";
 import { StatusChip } from "./TabelaLeads";
 import {
   MOTIVO_TIRADA,
+  RAMOS,
   STATUS,
   buscaInstagram,
   chaveTexto,
@@ -35,6 +36,7 @@ import {
   dataEnvio,
   ehCasimiro,
   podeVisitar,
+  ramoDe,
   recebeuPedidoDeVisita,
   textoCorrecao,
   fmtInt,
@@ -43,7 +45,6 @@ import {
   linkMaps,
   linkWhatsApp,
   motivoTirada,
-  nadaEnviado as semEnvios,
   ofertaInicial,
   proximaOferta,
   paginaDe,
@@ -55,6 +56,7 @@ import {
   type Lead,
   type MotivoTirada,
   type Oferta,
+  type RamoId,
   type Status,
   type Textos,
 } from "./leads";
@@ -176,15 +178,19 @@ function Conteudo({
   const corrigir = !daqui && recebeuPedidoDeVisita(lead) && !lead.corrigidoEm;
   const [escolhida, setOferta] = useState<Oferta>(() => ofertaInicial(lead));
   const [demo, setDemo] = useState(false);
-  const nadaEnviado = semEnvios(lead);
-  // Fora de Casimiro a oferta é sempre o site; "as duas" só vale antes do primeiro envio.
-  const oferta: Oferta = !daqui ? "site" : escolhida === "ambas" && !nadaEnviado ? ofertaInicial(lead) : escolhida;
-  const enviada = oferta === "ambas" ? null : dataEnvio(lead, oferta);
+  // Fora de Casimiro a oferta é sempre o site.
+  const oferta: Oferta = !daqui ? "site" : escolhida;
+  const site = dataEnvio(lead, "site");
+  const placa = dataEnvio(lead, "placa");
+  // "As duas" conta como enviada quando site e placa já foram (juntas ou uma de cada vez).
+  const ambasEnviada = site && placa ? (site > placa ? site : placa) : null;
+  const enviada = oferta === "ambas" ? ambasEnviada : dataEnvio(lead, oferta);
   const chave = chaveTexto(lead, oferta);
   const continuacao = chave === "depoisPlaca" || chave === "depoisSite" || chave === "depoisDono";
   const mensagem = textoMensagem(textos, lead, oferta);
   const opcoes: SegmentOption<Oferta>[] = [
-    ...(nadaEnviado ? [AS_DUAS] : []),
+    // Fica sempre na lista: se o WhatsApp não abrir, dá para voltar nela e mandar de novo.
+    ambasEnviada ? { id: "ambas", label: "AS DUAS ✓", long: "As duas: mensagem já enviada" } : AS_DUAS,
     ...(["placa", "site", "dono"] as const).map((id) => {
       const feita = dataEnvio(lead, id) !== null;
       return {
@@ -233,6 +239,18 @@ function Conteudo({
         : { status: para },
     );
     avisar(`${lead.nome}: ${STATUS[para].label.toLowerCase()}`);
+  };
+
+  const ramo = ramoDe(lead);
+  const mudarRamo = (id: RamoId) => {
+    const novoRamo = RAMOS.find((r) => r.id === id);
+    if (!novoRamo || novoRamo.id === ramo.id) return;
+    onSalvar(lead.id, {
+      ramo: novoRamo.id,
+      // O tipo do Google fica quando já é desse ramo (ex.: "Muay Thai" numa academia de luta).
+      ...(novoRamo.id === "geral" || novoRamo.tipo.test(lead.tipo ?? "") ? {} : { tipo: novoRamo.nome }),
+    });
+    avisar(`${lead.nome}: ${(novoRamo.opcao ?? novoRamo.nome).toLowerCase()}`);
   };
 
   const tirada = motivoTirada(lead);
@@ -317,7 +335,28 @@ function Conteudo({
           <MonitorSmartphone aria-hidden="true" />
           Mostrar demonstração do site
         </BlockButton>
-        {demo && <Demonstracao lead={lead} mensagem={textoPrevia(lead)} onFechar={() => setDemo(false)} />}
+        {demo && (
+          <Demonstracao lead={lead} mensagem={textoPrevia(lead)} onFechar={() => setDemo(false)} onRamo={mudarRamo} />
+        )}
+        <label className="-mt-1 flex flex-wrap items-center justify-between gap-x-3 gap-y-1.5">
+          <span className="text-[13px] font-medium">
+            Ramo da loja
+            <span className="block text-[12px] font-normal text-[color:var(--bjork-text-muted)]">
+              Muda a prévia e o texto da mensagem
+            </span>
+          </span>
+          <select
+            value={ramo.id}
+            onChange={(e) => mudarRamo(e.target.value as RamoId)}
+            className="h-10 min-w-0 max-w-full cursor-pointer rounded-[10px] border border-[color:var(--bjork-border-strong)] bg-[var(--bjork-field)] px-3 text-[13.5px] font-medium text-[color:var(--bjork-text)] focus-visible:border-[color:var(--bjork-accent)] focus-visible:outline-none"
+          >
+            {RAMOS.map((r) => (
+              <option key={r.id} value={r.id}>
+                {r.opcao ?? r.nome}
+              </option>
+            ))}
+          </select>
+        </label>
 
         {ehCasimiro(lead) && (
           <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
@@ -350,7 +389,8 @@ function Conteudo({
               href={linkWhatsApp(lead, textoCorrecao(lead))}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={() => onSalvar(lead.id, { corrigidoEm: new Date().toISOString() })}
+              // Depois do toque: salvar tira este link da tela, e link fora da tela pode não abrir.
+              onClick={() => window.setTimeout(() => onSalvar(lead.id, { corrigidoEm: new Date().toISOString() }), 0)}
               className={buttonClass("primary", "lg", "w-full")}
             >
               <Send aria-hidden="true" />
@@ -359,7 +399,7 @@ function Conteudo({
           </div>
         )}
 
-        {(novo || daqui) && (
+        {(novo || daqui || status === "enviado") && (
           <>
             {daqui && (
               <div className="flex flex-col gap-2">
@@ -402,14 +442,16 @@ function Conteudo({
                 style={{ color: "var(--blk-success)" }}
               >
                 <Check aria-hidden="true" className="size-4" />
-                {OFERTA[oferta === "ambas" ? "site" : oferta].feito} {quando(enviada)}.
+                {oferta === "ambas" ? "Mensagem das duas ofertas enviada" : OFERTA[oferta].feito} {quando(enviada)}.
               </p>
             )}
             <a
               href={linkWhatsApp(lead, mensagem)}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={() => registrarContato("whatsapp")}
+              // Registrar troca a mensagem da tela, e com ela o endereço deste link. Fica para depois
+              // do toque: assim o WhatsApp abre com o texto que o Brenno viu, não com o próximo.
+              onClick={() => window.setTimeout(() => registrarContato("whatsapp"), 0)}
               className={buttonClass(enviada ? "secondary" : "primary", "lg", "w-full")}
             >
               <Send aria-hidden="true" />

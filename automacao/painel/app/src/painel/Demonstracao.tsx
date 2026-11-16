@@ -11,15 +11,18 @@ import {
   Clock,
   Croissant,
   CupSoda,
+  Droplets,
   Dumbbell,
   HeartPulse,
   IceCreamCone,
   Instagram,
+  Leaf,
   Loader2,
   MapPin,
   MessageCircle,
   PawPrint,
   Pizza,
+  ScanFace,
   Scissors,
   Send,
   ShieldCheck,
@@ -27,17 +30,18 @@ import {
   Sparkles,
   Star,
   Store,
+  Swords,
   Utensils,
   Wrench,
   X,
   Zap,
   type LucideIcon,
 } from "lucide-react";
-import { cidadeDe, fmtInt, type Lead } from "./leads";
+import { RAMOS, cidadeDe, fmtInt, ramoDe, type Lead, type RamoId } from "./leads";
 
 // Prévia de como ficaria o site da loja, no nível de um site pronto (referência: shots do
 // Pinterest que o Brenno mandou). Só usa o que é verdade (nome, ramo, cidade, nota do Google);
-// fotos são de banco livre (Unsplash) por ramo, e produtos, preços e horários ficam como espaço
+// fotos são de banco livre (Unsplash e Pexels) por ramo, e produtos, preços e horários ficam como espaço
 // para os da loja. O botão "Mandar foto" gera uma imagem da página para mandar no WhatsApp.
 
 type Servico = [nome: string, linha: string, icone: LucideIcon];
@@ -72,8 +76,8 @@ interface Tema {
 
 const SERIF = `"Fraunces", Georgia, serif`;
 
-const TEMAS: [RegExp, Tema][] = [
-  [/barb/i, {
+const TEMAS: Record<RamoId, Tema> = {
+  barbearia: {
     foto: "barbearia", escuro: true, fundo: "#121110", cartao: "#1c1a18", tinta: "#f2ece3", suave: "#f2ece3a8",
     destaque: "#c9a24a", noDestaque: "#121110", mancha: "#c9a24a2e", capa: "#121110", fonte: `"Oswald", sans-serif`, maiusculo: true,
     destaques: [["Barba", "Desenho e acabamento"], ["Corte", "Tesoura ou máquina"]],
@@ -82,8 +86,8 @@ const TEMAS: [RegExp, Tema][] = [
     servicos: [["Corte", "Do clássico ao degradê", Scissors], ["Barba", "Desenho e acabamento", Sparkles],
       ["Corte e barba", "O combo completo", BadgeCheck], ["Hora marcada", "Sem esperar na fila", Clock]],
     sobre: ["Seu lugar", "de confiança"], cta: ["Bora marcar seu horário?", "Escolha o dia e confirme pelo WhatsApp."],
-  }],
-  [/sal[aã]o|beleza|est[eé]tic|unha|nail|manicure|studio|massot|sobrancel|cabel|makeup|beauty/i, {
+  },
+  salao: {
     foto: "salao", fundo: "#fbf4f1", cartao: "#ffffff", tinta: "#2b2424", suave: "#2b2424a8",
     destaque: "#a8645a", noDestaque: "#ffffff", mancha: "#eccbc1", fonte: `"Cormorant Garamond", serif`, italico: true,
     destaques: [["Cabelo", "Corte, cor e tratamento"], ["Unhas", "Mãos e pés"]],
@@ -92,8 +96,8 @@ const TEMAS: [RegExp, Tema][] = [
     servicos: [["Cabelo", "Corte, cor e tratamento", Scissors], ["Unhas", "Mãos e pés", Sparkles],
       ["Sobrancelha", "Design e acabamento", Smile], ["Estética", "Cuidados com a pele", HeartPulse]],
     sobre: ["Um cantinho", "pra você se cuidar"], cta: ["Pronta pra se cuidar?", "Marque seu horário em poucos toques."],
-  }],
-  [/academ|gym|fitness|treino|crossfit|luta|jiu|steel|ct /i, {
+  },
+  academia: {
     foto: "academia", escuro: true, fundo: "#0d0f14", cartao: "#161a22", tinta: "#f5f7fa", suave: "#f5f7faa8",
     destaque: "#4b84f5", noDestaque: "#ffffff", mancha: "#4b84f533", capa: "#0d0f14", fonte: `"Archivo Black", sans-serif`, maiusculo: true,
     destaques: [["Musculação", "Força e resultado"], ["Aula experimental", "Conheça antes de fechar"]],
@@ -102,8 +106,8 @@ const TEMAS: [RegExp, Tema][] = [
     servicos: [["Musculação", "Força e resultado", Dumbbell], ["Planos", "Escolha o que cabe", BadgeCheck],
       ["Aula experimental", "Conheça antes de fechar", Zap], ["Horários", "A grade da semana", Clock]],
     sobre: ["Seu treino", "no seu ritmo"], cta: ["Primeira aula, bora?", "Agende pelo WhatsApp e venha conhecer."],
-  }],
-  [/a[cç]a[ií]|sorvet/i, {
+  },
+  acai: {
     foto: "acai", fundo: "#f8f2fb", cartao: "#ffffff", tinta: "#2b0e36", suave: "#2b0e36a8",
     destaque: "#6a1f86", noDestaque: "#ffffff", mancha: "#e7d2f1", fonte: `"Bricolage Grotesque", sans-serif`,
     destaques: [["Açaí no copo", "Do seu tamanho"], ["Sorvetes", "Pra refrescar"]],
@@ -112,8 +116,8 @@ const TEMAS: [RegExp, Tema][] = [
     servicos: [["Açaí no copo", "Do seu tamanho", IceCreamCone], ["Adicionais", "Frutas, cremes e mais", Sparkles],
       ["Sorvetes", "Pra refrescar", IceCreamCone], ["Bebidas", "Geladas", CupSoda]],
     sobre: ["Feito na hora,", "do jeito que você gosta"], cta: ["Bateu a vontade?", "Monte seu pedido e mande pelo WhatsApp."],
-  }],
-  [/pizz/i, {
+  },
+  pizzaria: {
     foto: "pizzaria", fundo: "#faf3ea", cartao: "#ffffff", tinta: "#2a1a14", suave: "#2a1a14a8",
     destaque: "#b8322a", noDestaque: "#ffffff", mancha: "#f1d3c1", fonte: SERIF, italico: true,
     destaques: [["Salgadas", "Os clássicos da casa"], ["Especiais", "Sabores diferentes"]],
@@ -122,8 +126,8 @@ const TEMAS: [RegExp, Tema][] = [
     servicos: [["Salgadas", "Os clássicos da casa", Pizza], ["Especiais", "Sabores diferentes", Pizza],
       ["Doces", "Pra fechar a noite", CakeSlice], ["Bebidas", "Pra acompanhar", CupSoda]],
     sobre: ["Sabor de casa,", "toda noite"], cta: ["Bateu a fome?", "Escolha os sabores e peça em poucos toques."],
-  }],
-  [/hamb|burg|lanch|smash|dog/i, {
+  },
+  hamburgueria: {
     foto: "hamburgueria", fundo: "#fffaf5", cartao: "#ffffff", tinta: "#2a1310", suave: "#2a1310a8",
     destaque: "#d62828", noDestaque: "#ffffff", mancha: "#fbdcd5", capa: "#9c1212", noCapa: "#ffd23f", fonte: `"Anton", sans-serif`, maiusculo: true,
     destaques: [["Lanches", "Os mais pedidos"], ["Porções", "Pra dividir"]],
@@ -132,8 +136,8 @@ const TEMAS: [RegExp, Tema][] = [
     servicos: [["Lanches", "Os mais pedidos", Utensils], ["Combos", "Pra matar a fome", BadgeCheck],
       ["Porções", "Pra dividir", Utensils], ["Bebidas", "Geladas", CupSoda]],
     sobre: ["Feito na chapa,", "do jeito certo"], cta: ["Bateu a fome?", "Escolha no cardápio e peça pelo WhatsApp."],
-  }],
-  [/padar|confeit|latic|leiteria|caf[eé]|doce|bolo|p[aã]o/i, {
+  },
+  padaria: {
     foto: "padaria", fundo: "#faf4ea", cartao: "#ffffff", tinta: "#2e1b10", suave: "#2e1b10a8",
     destaque: "#9a5b1f", noDestaque: "#ffffff", mancha: "#efd9bd", fonte: SERIF, italico: true,
     destaques: [["Pães", "Saindo do forno"], ["Doces e bolos", "Pra adoçar o dia"]],
@@ -142,8 +146,8 @@ const TEMAS: [RegExp, Tema][] = [
     servicos: [["Pães", "Saindo do forno", Croissant], ["Doces e bolos", "Pra adoçar o dia", CakeSlice],
       ["Salgados", "Pro lanche", Utensils], ["Encomendas", "Bolos e festas", Store]],
     sobre: ["A padaria", "do seu bairro"], cta: ["Vai uma encomenda?", "Mande o pedido pelo WhatsApp e retire no balcão."],
-  }],
-  [/restaur|churras|grill|cozinha|comida|marmit|gastronom|sabor/i, {
+  },
+  restaurante: {
     foto: "restaurante", escuro: true, fundo: "#14100c", cartao: "#1f1913", tinta: "#f4ead9", suave: "#f4ead9a8",
     destaque: "#d39a3d", noDestaque: "#14100c", mancha: "#d39a3d2b", capa: "#14100c", fonte: SERIF, maiusculo: true,
     destaques: [["Pratos do dia", "O cardápio de hoje"], ["Carnes", "No ponto certo"]],
@@ -152,8 +156,8 @@ const TEMAS: [RegExp, Tema][] = [
     servicos: [["Pratos do dia", "O cardápio de hoje", Utensils], ["Carnes", "No ponto certo", Utensils],
       ["Sobremesas", "Pra fechar", CakeSlice], ["Bebidas", "Pra acompanhar", CupSoda]],
     sobre: ["Mesa posta,", "comida no ponto"], cta: ["Bora almoçar?", "Veja o cardápio e peça pelo WhatsApp."],
-  }],
-  [/pet|veterin|ra[cç][oõ]es|vet\b/i, {
+  },
+  pet: {
     foto: "pet", fundo: "#f2f7f3", cartao: "#ffffff", tinta: "#17352a", suave: "#17352aa8",
     destaque: "#2f7d52", noDestaque: "#ffffff", mancha: "#cfe5d6", fonte: `"Bricolage Grotesque", sans-serif`,
     destaques: [["Banho e tosa", "Cheiroso e feliz"], ["Saúde", "Cuidado em dia"]],
@@ -162,8 +166,8 @@ const TEMAS: [RegExp, Tema][] = [
     servicos: [["Banho e tosa", "Cheiroso e feliz", PawPrint], ["Saúde", "Cuidado em dia", HeartPulse],
       ["Rações", "Para cada fase", Store], ["Acessórios", "Coleiras e brinquedos", Sparkles]],
     sobre: ["Cuidado com", "quem você ama"], cta: ["Bora cuidar do seu pet?", "Marque pelo WhatsApp em poucos toques."],
-  }],
-  [/oficina|mec[aâ]nic|auto|diesel|motor|lanterna|radiador|pneu|refrigera|moto/i, {
+  },
+  oficina: {
     foto: "oficina", escuro: true, fundo: "#14161a", cartao: "#1d2026", tinta: "#f1f1ee", suave: "#f1f1eea8",
     destaque: "#f28c28", noDestaque: "#14161a", mancha: "#f28c282b", capa: "#14161a", fonte: `"Archivo Black", sans-serif`, maiusculo: true,
     destaques: [["Troca de óleo", "Motor protegido"], ["Revisão", "Antes da viagem"]],
@@ -172,8 +176,8 @@ const TEMAS: [RegExp, Tema][] = [
     servicos: [["Troca de óleo", "Motor protegido", Car], ["Revisão", "Antes da viagem", Wrench],
       ["Freios", "Segurança em dia", CircleGauge], ["Elétrica", "Bateria e luzes", Zap]],
     sobre: ["Serviço bem feito,", "preço combinado"], cta: ["Carro dando sinal?", "Mande uma mensagem e peça seu orçamento."],
-  }],
-  [/dent|odonto|sorriso|cl[ií]nica|sa[uú]de/i, {
+  },
+  dentista: {
     foto: "dentista", fundo: "#f3f8f6", cartao: "#ffffff", tinta: "#13332e", suave: "#13332ea8",
     destaque: "#1f6b5c", noDestaque: "#ffffff", mancha: "#cfe3dc", fonte: SERIF, italico: true,
     destaques: [["Ortodontia", "Aparelho e alinhadores"], ["Clínico geral", "Prevenção e limpeza"]],
@@ -182,10 +186,38 @@ const TEMAS: [RegExp, Tema][] = [
     servicos: [["Clínico geral", "Prevenção e limpeza", Smile], ["Ortodontia", "Aparelho e alinhamento", Sparkles],
       ["Implantes", "Recupere o sorriso", ShieldCheck], ["Estética", "Clareamento e lentes", Star]],
     sobre: ["Sua clínica", "de confiança"], cta: ["Pronto pro seu sorriso?", "Marque sua avaliação pelo WhatsApp."],
-  }],
-];
-
-const GERAL: Tema = {
+  },
+  luta: {
+    foto: "luta", escuro: true, fundo: "#0f0f10", cartao: "#1b1b1d", tinta: "#f5f3ef", suave: "#f5f3efa8",
+    destaque: "#e5383b", noDestaque: "#ffffff", mancha: "#e5383b30", capa: "#0f0f10", fonte: `"Anton", sans-serif`, maiusculo: true,
+    destaques: [["Aulas", "Do iniciante ao avançado"], ["Aula experimental", "Venha treinar um dia"]],
+    roteiro: "Bora treinar", titulo: ["Treino de luta", "pra todos os níveis"],
+    chamada: "Conheça as turmas e marque sua aula experimental pelo WhatsApp.", botao: "Aula experimental",
+    servicos: [["Aulas", "Do iniciante ao avançado", Swords], ["Aula experimental", "Venha treinar um dia", Zap],
+      ["Turmas", "Os horários da semana", Clock], ["Planos", "Escolha o que cabe", BadgeCheck]],
+    sobre: ["Disciplina", "dentro e fora do tatame"], cta: ["Bora pro primeiro treino?", "Marque sua aula experimental pelo WhatsApp."],
+  },
+  massagem: {
+    foto: "massagem", fundo: "#f1f4ef", cartao: "#ffffff", tinta: "#22332b", suave: "#22332ba8",
+    destaque: "#3f6b54", noDestaque: "#ffffff", mancha: "#d5e4d8", fonte: `"Cormorant Garamond", serif`,
+    destaques: [["Massagem relaxante", "Pra aliviar a tensão"], ["Massagem terapêutica", "Pra dores e contraturas"]],
+    roteiro: "Respira fundo", titulo: ["Uma pausa", "pro seu corpo"],
+    chamada: "Escolha o atendimento e agende seu horário pelo WhatsApp.", botao: "Agendar horário",
+    servicos: [["Massagem relaxante", "Pra aliviar a tensão", Leaf], ["Massagem terapêutica", "Pra dores e contraturas", HeartPulse],
+      ["Drenagem linfática", "Leveza pro corpo", Droplets], ["Hora marcada", "Atendimento só seu", Clock]],
+    sobre: ["Um tempo", "só pra você"], cta: ["Bora cuidar de você?", "Agende seu horário em poucos toques."],
+  },
+  estetica: {
+    foto: "estetica", fundo: "#faf5f1", cartao: "#ffffff", tinta: "#33261f", suave: "#33261fa8",
+    destaque: "#96592f", noDestaque: "#ffffff", mancha: "#f1dccb", fonte: SERIF,
+    destaques: [["Limpeza de pele", "Pele limpa e renovada"], ["Tratamentos faciais", "Cuidado feito pra você"]],
+    roteiro: "Pele bem cuidada", titulo: ["Cuidado de verdade", "pra sua pele"],
+    chamada: "Conheça os procedimentos e agende sua avaliação pelo WhatsApp.", botao: "Agendar avaliação",
+    servicos: [["Limpeza de pele", "Pele limpa e renovada", Sparkles], ["Tratamentos faciais", "Cuidado feito pra você", ScanFace],
+      ["Tratamentos corporais", "Com acompanhamento", HeartPulse], ["Avaliação", "Antes de qualquer procedimento", ShieldCheck]],
+    sobre: ["Atendimento", "com hora marcada"], cta: ["Vamos marcar sua avaliação?", "Agende pelo WhatsApp em poucos toques."],
+  },
+  geral: {
   foto: "geral", fundo: "#f4f6fb", cartao: "#ffffff", tinta: "#18233a", suave: "#18233aa8",
   destaque: "#2457f5", noDestaque: "#ffffff", mancha: "#d6e0fb", fonte: `"Bricolage Grotesque", sans-serif`,
   roteiro: "Vem conferir", titulo: ["Tudo o que você precisa,", "pertinho de casa"],
@@ -193,10 +225,10 @@ const GERAL: Tema = {
   servicos: [["Produtos", "Confira as novidades", Store], ["Serviços", "Do jeito que você precisa", Sparkles],
     ["Atendimento", "Rápido pelo WhatsApp", MessageCircle], ["Entrega", "Combine pelo WhatsApp", Bike]],
   sobre: ["O comércio", "do seu bairro"], cta: ["Ficou com alguma dúvida?", "Chame no WhatsApp que a gente responde."],
+},
 };
 
-export const temaDe = (lead: Lead) =>
-  TEMAS.find(([padrao]) => padrao.test(`${lead.tipo ?? ""} ${lead.nome}`))?.[1] ?? GERAL;
+export const temaDe = (lead: Lead) => TEMAS[ramoDe(lead).id];
 
 const nota = (n: number) => n.toLocaleString("pt-BR", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 const arquivo = (nome: string) =>
@@ -264,11 +296,14 @@ export function Demonstracao({
   lead,
   mensagem,
   onFechar,
+  onRamo,
 }: {
   lead: Lead;
   /** Texto que vai junto com a foto no WhatsApp. */
   mensagem: string;
   onFechar: () => void;
+  /** O Brenno trocou o ramo: muda o estilo e as fotos da prévia (e o texto das mensagens). */
+  onRamo: (ramo: RamoId) => void;
 }) {
   const t = temaDe(lead);
   const fechar = useRef<HTMLButtonElement>(null);
@@ -345,7 +380,10 @@ export function Demonstracao({
   }
 
   const cidade = cidadeDe(lead);
-  const ramo = lead.tipo?.trim() || "Comércio";
+  const ramoDaLoja = ramoDe(lead);
+  // O tipo do Google só aparece quando é do ramo que está na tela.
+  const tipo = lead.tipo?.trim();
+  const ramo = tipo && (ramoDaLoja.id === "geral" || ramoDaLoja.tipo.test(tipo)) ? tipo : ramoDaLoja.nome;
   const temNota = typeof lead.nota === "number" && lead.nota > 0;
   const titulo: CSSProperties = { fontFamily: t.fonte, textTransform: t.maiusculo ? "uppercase" : undefined };
   const destaqueTitulo: CSSProperties = { ...titulo, color: t.destaque, fontStyle: t.italico ? "italic" : undefined };
@@ -416,6 +454,21 @@ export function Demonstracao({
           {gerando ? "Gerando foto…" : "Mandar foto"}
         </button>
       </div>
+
+      <label className="flex shrink-0 items-center gap-2.5 border-b border-[color:var(--bjork-border)] bg-[var(--bjork-panel)] px-3 py-2 text-[13px] text-[color:var(--bjork-text-muted)]">
+        <span className="shrink-0">Estilo da prévia</span>
+        <select
+          value={ramoDaLoja.id}
+          onChange={(e) => onRamo(e.target.value as RamoId)}
+          className="h-9 min-w-0 flex-1 cursor-pointer rounded-[9px] border border-[color:var(--bjork-border-strong)] bg-[var(--bjork-field)] px-2.5 text-[13.5px] font-medium text-[color:var(--bjork-text)] focus-visible:border-[color:var(--bjork-accent)] focus-visible:outline-none"
+        >
+          {RAMOS.map((r) => (
+            <option key={r.id} value={r.id}>
+              {r.opcao ?? r.nome}
+            </option>
+          ))}
+        </select>
+      </label>
 
       <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
         <article
