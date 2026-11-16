@@ -448,7 +448,7 @@ export function Demonstracao({
           type="button"
           onClick={mandarFoto}
           disabled={gerando}
-          className="inline-flex h-10 shrink-0 cursor-pointer items-center gap-2 rounded-full bg-[var(--bjork-accent)] px-4 text-[13.5px] font-semibold text-white disabled:opacity-70 focus-visible:ring-2 focus-visible:ring-white"
+          className="inline-flex h-10 shrink-0 cursor-pointer items-center gap-2 rounded-full bjork-fill px-4 text-[13.5px] font-semibold text-[color:var(--blk-accent-fill-ink)] disabled:opacity-70 focus-visible:ring-2 focus-visible:ring-white"
         >
           {gerando ? <Loader2 aria-hidden="true" className="size-4 animate-spin" /> : <Send aria-hidden="true" className="size-4" />}
           {gerando ? "Gerando foto…" : "Mandar foto"}

@@ -300,7 +300,7 @@ export function PainelVendas() {
     cn(
       "inline-flex h-7 shrink-0 cursor-pointer items-center gap-1.5 rounded-full border px-2.5 text-[12px] transition-colors duration-150",
       ativa
-        ? "border-[color:var(--bjork-border-strong)] bg-[var(--bjork-surface-active)] text-[color:var(--bjork-text)]"
+        ? "border-[color:var(--bjork-accent-line)] bg-[var(--bjork-accent-soft)] text-[color:var(--blk-accent-ink)]"
         : "border-transparent text-[color:var(--bjork-text-muted)] hover:bg-[var(--bjork-surface-hover)] hover:text-[color:var(--bjork-text)]",
       focusRing,
     );
@@ -313,7 +313,7 @@ export function PainelVendas() {
         mark: (
           <span
             aria-hidden="true"
-            className="grid size-8 shrink-0 place-items-center rounded-[9px] bg-[var(--blk-accent-fill)] text-[12px] font-bold tracking-[-0.02em] text-[color:var(--blk-accent-fill-ink)] shadow-[inset_0_1px_0_rgba(255,255,255,0.28),0_1px_2px_rgba(0,0,0,0.2)]"
+            className="grid size-8 shrink-0 place-items-center rounded-[9px] bjork-fill text-[12px] font-bold tracking-[-0.02em] text-[color:var(--blk-accent-fill-ink)] shadow-[inset_0_1px_0_rgba(255,255,255,0.28),0_1px_2px_rgba(0,0,0,0.2)]"
           >
             BN
           </span>
@@ -343,7 +343,7 @@ export function PainelVendas() {
             className="mt-2 h-1.5 overflow-hidden rounded-full bg-[var(--bjork-surface-active)]"
           >
             <div
-              className="h-full rounded-full bg-[var(--bjork-accent)] transition-[width] duration-300 motion-reduce:transition-none"
+              className="bjork-fill h-full rounded-full transition-[width] duration-300 motion-reduce:transition-none"
               style={{ width: `${Math.min(100, (hojeTotal / META_DIA) * 100)}%` }}
             />
           </div>

@@ -14,7 +14,7 @@ export const focusRing =
   "outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--bjork-accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--bjork-ring-offset)]";
 
 export const blockRoot =
-  "@container relative isolate flex w-full overflow-clip bg-[var(--bjork-bg)] font-sans text-[14px] leading-normal text-[color:var(--bjork-text)] antialiased";
+  "@container relative isolate flex w-full overflow-clip bjork-canvas font-sans text-[14px] leading-normal text-[color:var(--bjork-text)] antialiased";
 
 export const cardSurface =
   "rounded-[16px] border border-[color:var(--bjork-border)] bg-[var(--bjork-surface)] shadow-[var(--bjork-shadow-surface)]";
@@ -101,7 +101,7 @@ type ButtonSize = "sm" | "md" | "lg";
 
 const BUTTON_VARIANT: Record<ButtonVariant, string> = {
   primary:
-    "bg-[var(--blk-accent-fill)] text-[color:var(--blk-accent-fill-ink)] shadow-[inset_0_1px_0_rgba(255,255,255,0.22),0_1px_2px_rgba(0,0,0,0.3)] hover:bg-[var(--bjork-accent-hover)]",
+    "bjork-fill text-[color:var(--blk-accent-fill-ink)] shadow-[inset_0_1px_0_rgba(255,255,255,0.3),0_8px_20px_-8px_rgba(255,106,31,0.6)] hover:brightness-110",
   secondary:
     "border border-[color:var(--bjork-border)] bg-[var(--bjork-surface)] text-[color:var(--bjork-text)] shadow-[var(--bjork-shadow-soft)] hover:bg-[var(--bjork-surface-hover)]",
   ghost:

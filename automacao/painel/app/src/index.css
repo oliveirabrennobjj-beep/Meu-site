@@ -11,32 +11,35 @@
 /* Visual único e escuro de propósito: o Brenno pediu igual à foto, em qualquer tema do aparelho. */
 :root {
   color-scheme: dark;
-  --bjork-bg: #111111;
-  --bjork-surface: #121212;
-  --bjork-surface-hover: #161616;
-  --bjork-surface-active: #202020;
-  --bjork-panel: #0d0d0d;
-  --bjork-menu: rgba(18, 18, 18, 0.98);
-  --bjork-field: rgba(18, 18, 18, 0.95);
-  --bjork-field-inset: rgba(9, 9, 9, 0.75);
-  --bjork-text: #ededed;
+  --bjork-bg: #0e0907;
+  --bjork-surface: #16100d;
+  --bjork-surface-hover: #1e1612;
+  --bjork-surface-active: #2a1f18;
+  --bjork-panel: #0a0705;
+  --bjork-menu: rgba(22, 16, 13, 0.98);
+  --bjork-field: rgba(22, 16, 13, 0.95);
+  --bjork-field-inset: rgba(10, 7, 5, 0.75);
+  --bjork-text: #f7eee8;
   --bjork-text-medium: rgba(237, 237, 237, 0.72);
   --bjork-text-muted: rgba(237, 237, 237, 0.6);
   --bjork-text-soft: rgba(237, 237, 237, 0.4);
   --bjork-text-faint: rgba(237, 237, 237, 0.22);
-  --bjork-border: #232323;
-  --bjork-border-strong: #343434;
-  --bjork-accent: #ec5c13;
-  --bjork-accent-hover: #f07832;
-  --bjork-accent-soft: rgba(236, 92, 19, 0.12);
+  --bjork-border: #2b201a;
+  --bjork-border-strong: #3f2f25;
+  --bjork-accent: #ff6a1f;
+  --bjork-accent-hover: #ff8240;
+  --bjork-accent-soft: rgba(255, 106, 31, 0.14);
+  --bjork-accent-line: rgba(255, 106, 31, 0.42);
+  --bjork-accent-gradient: linear-gradient(135deg, #ffa05c 0%, #ff6a1f 55%, #e2480f 100%);
+  --bjork-glow: radial-gradient(70% 55% at 100% 0%, rgba(255, 106, 31, 0.2), transparent 70%), radial-gradient(55% 45% at 0% 100%, rgba(255, 106, 31, 0.12), transparent 70%);
   --bjork-shadow-surface: inset 0 7px 14px rgba(255, 255, 255, 0.03), inset 0 0.5px 0.5px rgba(255, 255, 255, 0.06), 0 14px 20px -6px rgba(0, 0, 0, 0.45);
   --bjork-shadow-soft: inset 0 1px 0 rgba(255, 255, 255, 0.045);
   --bjork-shadow-menu: inset 0 1px 0 rgba(255, 255, 255, 0.055), inset 0 12px 24px rgba(255, 255, 255, 0.018), inset 0 -18px 26px rgba(0, 0, 0, 0.24), 0 22px 42px -22px rgba(0, 0, 0, 0.9);
   --bjork-shadow-inset: inset 0 1px 10px rgba(0, 0, 0, 0.45);
   --bjork-ring-offset: #080808;
-  --blk-accent-ink: #f58a4e;
-  --blk-accent-fill: #ec5c13;
-  --blk-accent-fill-ink: #fff7f1;
+  --blk-accent-ink: #ff9a5c;
+  --blk-accent-fill: #ff6a1f;
+  --blk-accent-fill-ink: #1a0b04;
   --blk-success: #52c98c;
   --blk-success-soft: rgba(82, 201, 140, 0.13);
   --blk-warning: #e7b455;
@@ -65,6 +68,15 @@ body {
   &::-webkit-scrollbar {
     display: none;
   }
+}
+
+/* Laranja espalhado: preenchimento em degradê e fundo com brilho que se apaga. */
+.bjork-fill {
+  background-image: var(--bjork-accent-gradient);
+}
+.bjork-canvas {
+  background-color: var(--bjork-bg);
+  background-image: var(--bjork-glow);
 }
 
 @keyframes blk-fade-in {

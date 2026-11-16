@@ -103,7 +103,7 @@ export interface KpiData {
 }
 
 const CHIP_TONE: Record<KpiData["tone"], string> = {
-  good: "bg-[var(--blk-success-soft)] text-[color:var(--blk-success)]",
+  good: "bg-[var(--bjork-accent-soft)] text-[color:var(--blk-accent-ink)]",
   bad: "bg-[var(--blk-error-soft)] text-[color:var(--blk-error)]",
   neutral: "bg-[var(--bjork-surface-active)] text-[color:var(--bjork-text-medium)]",
 };
@@ -117,6 +117,10 @@ export function KpiCard({ kpi }: { kpi: KpiData }) {
         "@container/kpi relative flex min-w-0 flex-col overflow-hidden p-3.5 @3xl/main:p-4",
       )}
     >
+      <span
+        aria-hidden="true"
+        className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,transparent,var(--bjork-accent),transparent)]"
+      />
       <h3 className="text-[12.5px] font-medium text-[color:var(--bjork-text-muted)]">
         {kpi.label}
       </h3>
@@ -216,7 +220,7 @@ export function PickList({
                     className="mt-1.5 block h-1.5 overflow-hidden rounded-full bg-[var(--bjork-surface-active)]"
                   >
                     <span
-                      className="block h-full rounded-full bg-[var(--bjork-accent)]"
+                      className="bjork-fill block h-full rounded-full"
                       style={{ width: `${(row.value / max) * 100}%` }}
                     />
                   </span>

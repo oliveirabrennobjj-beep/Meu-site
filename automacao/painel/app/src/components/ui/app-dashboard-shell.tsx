@@ -247,7 +247,7 @@ function SidebarContent({
                         "group relative flex h-10 items-center gap-2.5 rounded-[9px] text-[13.5px] transition-colors duration-150",
                         collapsed ? "justify-center px-0" : "px-2.5",
                         isActive
-                          ? "bg-[var(--bjork-surface)] font-medium text-[color:var(--bjork-text)] shadow-[var(--bjork-shadow-soft),0_0_0_1px_var(--bjork-border)]"
+                          ? "bg-[var(--bjork-accent-soft)] font-medium text-[color:var(--bjork-text)] shadow-[inset_0_0_0_1px_var(--bjork-accent-line)]"
                           : "text-[color:var(--bjork-text-medium)] hover:bg-[var(--bjork-surface-hover)] hover:text-[color:var(--bjork-text)]",
                         focusRing,
                       )}
