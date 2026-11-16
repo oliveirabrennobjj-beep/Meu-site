@@ -346,7 +346,7 @@ def sprite_titulo(texto, credito):
 
 # ---------------------------------------------------------------- render
 
-def editar(video, ini, fim, palavras, titulo, saida, credito='', planos=None):
+def editar(video, ini, fim, palavras, titulo, saida, credito='', planos=None, zoom=1.0):
     """Renderiza um corte. `palavras` usa tempos relativos ao início do corte."""
     dur = fim - ini
     w, h = sondar(video)
@@ -370,6 +370,10 @@ def editar(video, ini, fim, palavras, titulo, saida, credito='', planos=None):
         t = n / FPS
         plano = next((p for p in planos if p['t0'] <= t < p['t1']), planos[-1])
         tela = compor(quadro, plano)
+        if zoom != 1.0:   # aproximação lenta e contínua
+            z = 1 + (zoom - 1) * min(t / max(dur, 0.1), 1.0)
+            m = cv2.getRotationMatrix2D((LARG / 2, ALT * 0.42), 0, z)
+            tela = cv2.warpAffine(tela, m, (LARG, ALT), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REFLECT)
         if titulo_img is not None:
             entrada = min(t / 0.35, 1.0)
             suave = 1 - (1 - entrada) ** 3
@@ -387,6 +391,52 @@ def editar(video, ini, fim, palavras, titulo, saida, credito='', planos=None):
                         'rostos': len(p['rostos'])} for p in planos]}
 
 
+# ---------------------------------------------------------------- teaser (abre com o clímax)
+
+def _norm(t):
+    return re.sub(r'[^a-z0-9à-ú]', '', t.lower())
+
+
+def achar_frase(palavras, frase):
+    """Acha a frase nas palavras transcritas; devolve (t0, t1) ou None."""
+    alvo = [_norm(w) for w in frase.split() if _norm(w)]
+    toks = [_norm(p['texto']) for p in palavras]
+    if not alvo or len(toks) < len(alvo):
+        return None
+    melhor, onde = 0.0, None
+    for i in range(len(toks) - len(alvo) + 1):
+        janela = toks[i:i + len(alvo)]
+        nota = sum(1 for a, b in zip(alvo, janela) if a == b) / len(alvo)
+        if nota > melhor:
+            melhor, onde = nota, i
+    if melhor < 0.6:
+        return None
+    return palavras[onde]['t0'], palavras[onde + len(alvo) - 1]['t1']
+
+
+def editar_com_teaser(video, ini, fim, palavras, titulo, saida, credito='', teaser=None, pasta_tmp=None):
+    """Abre o corte com o trecho `teaser` (tempos relativos ao corte), um flash branco e o corte inteiro."""
+    if not teaser:
+        return editar(video, ini, fim, palavras, titulo, saida, credito)
+    a, b = max(teaser[0] - 0.25, 0), min(teaser[1] + 0.45, fim - ini)
+    tmp = Path(pasta_tmp or Path(saida).parent)
+    p1, p2 = tmp / (Path(saida).stem + '_teaser.mp4'), tmp / (Path(saida).stem + '_corpo.mp4')
+    pal_t = [dict(p, t0=p['t0'] - a, t1=p['t1'] - a) for p in palavras]
+    r1 = editar(video, ini + a, ini + b, pal_t, titulo, p1, credito, zoom=1.10)
+    r2 = editar(video, ini, fim, palavras, titulo, p2, credito)
+    d1 = b - a
+    flash = 0.18
+    subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', str(p1), '-i', str(p2), '-filter_complex',
+                    f'[0:v][1:v]xfade=transition=fadewhite:duration={flash}:offset={d1 - flash:.3f}[v];'
+                    f'[0:a][1:a]acrossfade=d={flash}[a]',
+                    '-map', '[v]', '-map', '[a]', '-c:v', 'libx264', '-preset', 'medium', '-crf', '20',
+                    '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '160k', '-movflags', '+faststart', str(saida)],
+                   check=True)
+    p1.unlink()
+    p2.unlink()
+    return {'saida': str(saida), 'teaser': [round(a, 2), round(b, 2)], 'planos': r2['planos']}
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--lote', help='JSON com uma lista de cortes')
@@ -397,6 +447,7 @@ def main():
     ap.add_argument('--titulo', default='')
     ap.add_argument('--credito', default='')
     ap.add_argument('--saida')
+    ap.add_argument('--teaser', help='frase do clímax para abrir o corte')
     a = ap.parse_args()
     if a.lote:
         cortes = json.loads(Path(a.lote).read_text())
@@ -404,13 +455,16 @@ def main():
         if not (a.video and a.fim and a.saida):
             ap.error('informe --lote ou --video, --fim e --saida')
         cortes = [{'video': a.video, 'ini': a.ini, 'fim': a.fim, 'palavras': a.palavras,
-                   'titulo': a.titulo, 'credito': a.credito, 'saida': a.saida}]
+                   'titulo': a.titulo, 'credito': a.credito, 'saida': a.saida, 'teaser': a.teaser}]
     for c in cortes:
         palavras = c.get('palavras') or []
         if isinstance(palavras, str):
             palavras = json.loads(Path(palavras).read_text())
-        r = editar(c['video'], c['ini'], c['fim'], palavras, c.get('titulo', ''), c['saida'],
-                   c.get('credito', ''))
+        teaser = c.get('teaser')
+        if isinstance(teaser, str):
+            teaser = achar_frase(palavras, teaser)
+        r = editar_com_teaser(c['video'], c['ini'], c['fim'], palavras, c.get('titulo', ''), c['saida'],
+                              c.get('credito', ''), teaser)
         print(json.dumps(r, ensure_ascii=False), flush=True)
 
 
