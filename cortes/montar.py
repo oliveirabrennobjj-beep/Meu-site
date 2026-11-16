@@ -29,6 +29,9 @@ def main():
     ap.add_argument('--so', help='números dos cortes, separados por vírgula')
     ap.add_argument('--saida', default=str(AQUI / 'prontos'))
     ap.add_argument('--credito', default='')
+    ap.add_argument('--estilo', default='ref', choices=['ref', 'padrao'])
+    ap.add_argument('--nome', default='EDUARDA CAMPOPIANO', help='nome padrão de quem fala')
+    ap.add_argument('--arroba', default='', help='@ do seu canal')
     a = ap.parse_args()
 
     brutos = Path(a.brutos)
@@ -57,7 +60,14 @@ def main():
         if teaser and teaser[0] < 2.5:   # clímax já está no começo: teaser não acrescenta nada
             teaser = None
         destino = Path(a.saida) / nome_arquivo(c['n'], c['gancho'])
-        r = editar.editar_com_teaser(video, ini, fim, rel, c['gancho'], destino, credito, teaser)
+        if a.estilo == 'ref':
+            fim_txt = '' if c['gancho'].rstrip().endswith(('?', '!', '...')) else '!'
+            titulo = f"•{c['gancho']}{fim_txt} {c.get('emoji', '🤯')}"
+            nome = f"•{c.get('nome', a.nome)} 🎙️🔥"
+        else:
+            titulo, nome = c['gancho'], ''
+        r = editar.editar_com_teaser(video, ini, fim, rel, titulo, destino, credito, teaser,
+                                     estilo=a.estilo, nome=nome, arroba=a.arroba)
         print(json.dumps({'n': c['n'], **r}, ensure_ascii=False)[:300], flush=True)
 
 

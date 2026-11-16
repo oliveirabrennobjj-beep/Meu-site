@@ -32,6 +32,16 @@ FONTE_LEGENDA = AQUI / 'fontes' / 'Poppins-Black.ttf'
 FONTE_TITULO = AQUI / 'fontes' / 'Anton-Regular.ttf'
 FONTE_CREDITO = AQUI / 'fontes' / 'Poppins-Bold.ttf'
 
+FONTE_SERIFA = AQUI / 'fontes' / 'LiberationSerif-Bold.ttf'
+FONTE_EMOJI = next((c for c in [AQUI / 'fontes' / 'NotoColorEmoji.ttf',
+                                Path('/usr/share/fonts/truetype/noto/NotoColorEmoji.ttf')] if c.exists()), None)
+
+# Estilo "ref" (corte clássico de debate): fundo preto, vídeo inteiro no meio,
+# título em caixa branca acima, nome de quem fala abaixo, legenda no rodapé.
+REF_TOPO_VIDEO = 600
+REF_NOME_Y = 1385
+REF_LEGENDA_Y = 1640
+
 AMARELO = (255, 225, 60)
 BRANCO = (255, 255, 255)
 PRETO = (12, 12, 14)
@@ -344,17 +354,140 @@ def sprite_titulo(texto, credito):
     return para_bgra(img)
 
 
+# ---------------------------------------------------------------- caixas brancas com emoji (estilo "ref")
+
+def _eh_emoji(ch):
+    o = ord(ch)
+    return o >= 0x1F000 or 0x2600 <= o <= 0x27BF or 0x2B00 <= o <= 0x2BFF or o in (0x200D, 0xFE0F, 0x203C, 0x2049)
+
+
+def _corridas(texto):
+    """Divide o texto em pedaços de texto comum e de emoji."""
+    partes, atual, tipo = [], '', None
+    for ch in texto:
+        t = _eh_emoji(ch)
+        if tipo is not None and t != tipo:
+            partes.append((tipo, atual))
+            atual = ''
+        atual += ch
+        tipo = t
+    if atual:
+        partes.append((tipo, atual))
+    return partes
+
+
+_cache_emoji = {}
+
+
+def _emoji(seq, tam):
+    chave = (seq, tam)
+    if chave not in _cache_emoji:
+        img = None
+        if FONTE_EMOJI:
+            f = ImageFont.truetype(str(FONTE_EMOJI), 109)
+            tela = Image.new('RGBA', (160 * max(len(seq), 1), 160), (0, 0, 0, 0))
+            ImageDraw.Draw(tela).text((0, 10), seq, font=f, embedded_color=True)
+            caixa = tela.getbbox()
+            if caixa:
+                img = tela.crop(caixa)
+                img = img.resize((max(1, int(img.width * tam / img.height)), tam), Image.LANCZOS)
+        _cache_emoji[chave] = img
+    return _cache_emoji[chave]
+
+
+def _largura(texto, fonte, tam_emoji):
+    total = 0
+    for eh, parte in _corridas(texto):
+        if eh:
+            e = _emoji(parte.replace('\ufe0f', ''), tam_emoji)
+            total += (e.width if e else 0) + int(tam_emoji * 0.12)
+        else:
+            total += fonte.getlength(parte)
+    return total
+
+
+def _escrever(img, x, y, texto, fonte, cor, tam_emoji):
+    d = ImageDraw.Draw(img)
+    for eh, parte in _corridas(texto):
+        if eh:
+            e = _emoji(parte.replace('\ufe0f', ''), tam_emoji)
+            if e:
+                asc = fonte.getmetrics()[0]
+                img.alpha_composite(e, (int(x + tam_emoji * 0.06), int(y + asc - tam_emoji * 0.92)))
+                x += e.width + int(tam_emoji * 0.12)
+        else:
+            d.text((x, y), parte, font=fonte, fill=cor)
+            x += fonte.getlength(parte)
+
+
+def sprite_caixa(texto, tam=66, max_linhas=3, largura=980, raio=22, pad=(26, 14)):
+    """Caixa branca arredondada com texto preto em serifa (e emoji colorido)."""
+    while True:
+        fonte = ImageFont.truetype(str(FONTE_SERIFA), tam)
+        te = int(tam * 0.82)
+        linhas, atual = [], ''
+        for palavra in texto.split():
+            teste = (atual + ' ' + palavra).strip()
+            if _largura(teste, fonte, te) <= largura - 2 * pad[0] or not atual:
+                atual = teste
+            else:
+                linhas.append(atual)
+                atual = palavra
+        if atual:
+            linhas.append(atual)
+        if len(linhas) <= max_linhas or tam <= 34:
+            break
+        tam -= 4
+    alt_linha = int(tam * 1.06)
+    larg_txt = max(_largura(l, fonte, te) for l in linhas)
+    w, h = int(larg_txt + 2 * pad[0]), int(alt_linha * len(linhas) + 2 * pad[1] + tam * 0.12)
+    img = Image.new('RGBA', (w + 8, h + 8), (0, 0, 0, 0))
+    ImageDraw.Draw(img).rounded_rectangle((0, 0, w, h), raio, fill=(255, 255, 255, 255))
+    for k, l in enumerate(linhas):
+        lw = _largura(l, fonte, te)
+        _escrever(img, (w - lw) / 2, pad[1] + k * alt_linha, l, fonte, (0, 0, 0, 255), te)
+    return para_bgra(img)
+
+
+def sprite_arroba(texto):
+    fonte = ImageFont.truetype(str(FONTE_SERIFA), 28)
+    w = int(fonte.getlength(texto)) + 12
+    img = Image.new('RGBA', (w, 40), (0, 0, 0, 0))
+    ImageDraw.Draw(img).text((4, 2), texto, font=fonte, fill=(255, 255, 255, 235))
+    return para_bgra(img)
+
+
+def compor_ref(quadro):
+    h, w = quadro.shape[:2]
+    if h > w:   # fonte vertical: não cabe no layout de faixa
+        return compor(quadro, {'modo': 'geral', 'recortes': []})
+    tela = np.zeros((ALT, LARG, 3), np.uint8)
+    alt_v = int(LARG * h / w)
+    tela[REF_TOPO_VIDEO:REF_TOPO_VIDEO + alt_v] = cv2.resize(quadro, (LARG, alt_v), interpolation=cv2.INTER_AREA)
+    return tela
+
+
 # ---------------------------------------------------------------- render
 
-def editar(video, ini, fim, palavras, titulo, saida, credito='', planos=None, zoom=1.0):
+def editar(video, ini, fim, palavras, titulo, saida, credito='', planos=None, zoom=1.0,
+           estilo='padrao', nome='', arroba='', legenda=True):
     """Renderiza um corte. `palavras` usa tempos relativos ao início do corte."""
     dur = fim - ini
     w, h = sondar(video)
-    planos = planos or analisar(video, ini, dur)
-    for p in planos:
-        p.update(enquadrar(p, w, h))
-    legenda = Legenda([p for p in palavras if p['t1'] > 0 and p['t0'] < dur])
-    titulo_img = sprite_titulo(titulo, credito) if titulo else None
+    ref = estilo == 'ref'
+    if ref:
+        planos = [{'t0': 0.0, 't1': dur + 1, 'modo': 'ref', 'rostos': []}]
+    else:
+        planos = planos or analisar(video, ini, dur)
+        for p in planos:
+            p.update(enquadrar(p, w, h))
+    leg = Legenda([p for p in palavras if p['t1'] > 0 and p['t0'] < dur]) if legenda else None
+    if ref:
+        titulo_img = sprite_caixa(titulo, 66, 3) if titulo else None
+        nome_img = sprite_caixa(nome, 54, 1, raio=18, pad=(24, 9)) if nome else None
+        arroba_img = sprite_arroba(arroba) if arroba else None
+    else:
+        titulo_img = sprite_titulo(titulo, credito) if titulo else None
 
     saida = Path(saida)
     saida.parent.mkdir(parents=True, exist_ok=True)
@@ -369,19 +502,31 @@ def editar(video, ini, fim, palavras, titulo, saida, credito='', planos=None, zo
     for n, quadro in enumerate(quadros(video, ini, dur, FPS, w, h)):
         t = n / FPS
         plano = next((p for p in planos if p['t0'] <= t < p['t1']), planos[-1])
-        tela = compor(quadro, plano)
+        tela = compor_ref(quadro) if ref else compor(quadro, plano)
         if zoom != 1.0:   # aproximação lenta e contínua
             z = 1 + (zoom - 1) * min(t / max(dur, 0.1), 1.0)
             m = cv2.getRotationMatrix2D((LARG / 2, ALT * 0.42), 0, z)
             tela = cv2.warpAffine(tela, m, (LARG, ALT), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REFLECT)
-        if titulo_img is not None:
-            entrada = min(t / 0.35, 1.0)
-            suave = 1 - (1 - entrada) ** 3
-            colar(tela, titulo_img, LARG / 2, Y_TITULO + titulo_img.shape[0] / 2 - 40 * (1 - suave),
-                  opacidade=suave)
-        legenda.aplicar(tela, t, Y_LEGENDA[plano['modo']])
-        barra = int(LARG * min(t / dur, 1.0))
-        tela[0:10, :barra] = AMARELO[::-1]
+        if ref:
+            if titulo_img is not None:   # título fixo, logo acima do vídeo
+                colar(tela, titulo_img, LARG / 2, REF_TOPO_VIDEO - 22 - titulo_img.shape[0] / 2)
+            if nome_img is not None:
+                colar(tela, nome_img, LARG / 2, REF_NOME_Y)
+                if arroba_img is not None:
+                    xr = LARG / 2 + nome_img.shape[1] / 2 - arroba_img.shape[1] / 2
+                    colar(tela, arroba_img, xr, REF_NOME_Y + nome_img.shape[0] / 2 + 22)
+            if leg:
+                leg.aplicar(tela, t, REF_LEGENDA_Y)
+        else:
+            if titulo_img is not None:
+                entrada = min(t / 0.35, 1.0)
+                suave = 1 - (1 - entrada) ** 3
+                colar(tela, titulo_img, LARG / 2, Y_TITULO + titulo_img.shape[0] / 2 - 40 * (1 - suave),
+                      opacidade=suave)
+            if leg:
+                leg.aplicar(tela, t, Y_LEGENDA[plano['modo']])
+            barra = int(LARG * min(t / dur, 1.0))
+            tela[0:10, :barra] = AMARELO[::-1]
         cod.stdin.write(tela.tobytes())
     cod.stdin.close()
     if cod.wait() != 0:
@@ -414,16 +559,17 @@ def achar_frase(palavras, frase):
     return palavras[onde]['t0'], palavras[onde + len(alvo) - 1]['t1']
 
 
-def editar_com_teaser(video, ini, fim, palavras, titulo, saida, credito='', teaser=None, pasta_tmp=None):
+def editar_com_teaser(video, ini, fim, palavras, titulo, saida, credito='', teaser=None, pasta_tmp=None,
+                      **estilo):
     """Abre o corte com o trecho `teaser` (tempos relativos ao corte), um flash branco e o corte inteiro."""
     if not teaser:
-        return editar(video, ini, fim, palavras, titulo, saida, credito)
+        return editar(video, ini, fim, palavras, titulo, saida, credito, **estilo)
     a, b = max(teaser[0] - 0.25, 0), min(teaser[1] + 0.45, fim - ini)
     tmp = Path(pasta_tmp or Path(saida).parent)
     p1, p2 = tmp / (Path(saida).stem + '_teaser.mp4'), tmp / (Path(saida).stem + '_corpo.mp4')
     pal_t = [dict(p, t0=p['t0'] - a, t1=p['t1'] - a) for p in palavras]
-    r1 = editar(video, ini + a, ini + b, pal_t, titulo, p1, credito, zoom=1.10)
-    r2 = editar(video, ini, fim, palavras, titulo, p2, credito)
+    r1 = editar(video, ini + a, ini + b, pal_t, titulo, p1, credito, zoom=1.10, **estilo)
+    r2 = editar(video, ini, fim, palavras, titulo, p2, credito, **estilo)
     d1 = b - a
     flash = 0.18
     subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', str(p1), '-i', str(p2), '-filter_complex',
@@ -448,6 +594,10 @@ def main():
     ap.add_argument('--credito', default='')
     ap.add_argument('--saida')
     ap.add_argument('--teaser', help='frase do clímax para abrir o corte')
+    ap.add_argument('--estilo', default='padrao', choices=['padrao', 'ref'])
+    ap.add_argument('--nome', default='', help='nome de quem fala (estilo ref)')
+    ap.add_argument('--arroba', default='', help='@ do canal (estilo ref)')
+    ap.add_argument('--sem-legenda', action='store_true')
     a = ap.parse_args()
     if a.lote:
         cortes = json.loads(Path(a.lote).read_text())
@@ -455,7 +605,8 @@ def main():
         if not (a.video and a.fim and a.saida):
             ap.error('informe --lote ou --video, --fim e --saida')
         cortes = [{'video': a.video, 'ini': a.ini, 'fim': a.fim, 'palavras': a.palavras,
-                   'titulo': a.titulo, 'credito': a.credito, 'saida': a.saida, 'teaser': a.teaser}]
+                   'titulo': a.titulo, 'credito': a.credito, 'saida': a.saida, 'teaser': a.teaser,
+                   'estilo': a.estilo, 'nome': a.nome, 'arroba': a.arroba, 'legenda': not a.sem_legenda}]
     for c in cortes:
         palavras = c.get('palavras') or []
         if isinstance(palavras, str):
@@ -464,7 +615,8 @@ def main():
         if isinstance(teaser, str):
             teaser = achar_frase(palavras, teaser)
         r = editar_com_teaser(c['video'], c['ini'], c['fim'], palavras, c.get('titulo', ''), c['saida'],
-                              c.get('credito', ''), teaser)
+                              c.get('credito', ''), teaser, estilo=c.get('estilo', 'padrao'),
+                              nome=c.get('nome', ''), arroba=c.get('arroba', ''), legenda=c.get('legenda', True))
         print(json.dumps(r, ensure_ascii=False), flush=True)
 
 
