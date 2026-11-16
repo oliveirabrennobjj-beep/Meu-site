@@ -29,6 +29,7 @@ Atualizado em 14/11/2026 (tarde).
 - A "Barbearia em São Paulo - Barbshop" foi tirada: o número não tem WhatsApp.
 - 14/11: tiradas da lista (continuam no banco, para a importação não trazer de volta) a Studio Juliana Bkenda (número sem WhatsApp) e a Sol Marques Espaço da Beleza (respondeu que não tem mais o salão).
 - Não existe jeito de testar de fora se um número tem WhatsApp: só o WhatsApp do celular sabe. Por isso o botão na ficha.
+- 16/11: entraram 44 lojas das pesquisas de 15 e 16/11 e mais 78 de modalidades (pilates, yoga, CrossFit/funcional, natação, dança) achadas no Google Maps: 11 em Casimiro e Barra de São João, o resto em Rio das Ostras e Macaé. Ficaram de fora as que só têm telefone fixo (Acqua Sport, natação em Casimiro: (22) 2778-4620; Escola de Dança de Barra de São João: (22) 2774-5631) — dá para ir pessoalmente.
 - A pesquisa das 06:17 traz até 30 por dia, nesta ordem: sede de Casimiro (outros ramos), depois Barra de São João, Rio Dourado, Professor Souza, e só então Rio das Ostras e Macaé. Colar o JSON em Importar.
 
 ## Regras que o app segue
