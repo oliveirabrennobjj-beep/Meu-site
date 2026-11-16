@@ -29,6 +29,7 @@ import { StatusChip } from "./TabelaLeads";
 import {
   MOTIVO_TIRADA,
   RAMOS,
+  RAMOS_ESCOLHA,
   STATUS,
   buscaInstagram,
   chaveTexto,
@@ -350,7 +351,7 @@ function Conteudo({
             onChange={(e) => mudarRamo(e.target.value as RamoId)}
             className="h-10 min-w-0 max-w-full cursor-pointer rounded-[10px] border border-[color:var(--bjork-border-strong)] bg-[var(--bjork-field)] px-3 text-[13.5px] font-medium text-[color:var(--bjork-text)] focus-visible:border-[color:var(--bjork-accent)] focus-visible:outline-none"
           >
-            {RAMOS.map((r) => (
+            {RAMOS_ESCOLHA.map((r) => (
               <option key={r.id} value={r.id}>
                 {r.opcao ?? r.nome}
               </option>

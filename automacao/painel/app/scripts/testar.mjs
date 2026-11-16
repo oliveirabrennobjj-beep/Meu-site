@@ -258,6 +258,19 @@ try {
     await previa.getByRole("heading", { level: 1 }).waitFor();
     await p.waitForTimeout(600);
     await p.screenshot({ path: path.join(saida, "celular-demonstracao.png") });
+    // RAMOS=crossfit,pilates troca o estilo da prévia e tira um print de cada (sem gerar a foto).
+    if (process.env.RAMOS) {
+      for (const id of process.env.RAMOS.split(",")) {
+        await previa.getByLabel("Estilo da prévia").selectOption(id);
+        await previa.locator(`img[src*="img/demo/${id}-1"]`).first().waitFor();
+        await p.waitForTimeout(500);
+        await p.screenshot({ path: path.join(saida, `previa-${id}.png`) });
+      }
+      assert.deepEqual(cel.erros, []);
+      console.log(`Prévias de ${process.env.RAMOS} em ${saida}`);
+      await browser.close();
+      process.exit(0);
+    }
     await previa.getByRole("button", { name: "Mandar foto" }).click();
     const gerada = previa.getByRole("img", { name: `Foto da prévia do site de ${nomeExtra}` });
     await gerada.waitFor({ timeout: 20000 });

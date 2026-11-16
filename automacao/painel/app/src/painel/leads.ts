@@ -216,8 +216,21 @@ export function porTipo(leads: Lead[]) {
 /* Ramo ----------------------------------------------------------------------------------------- */
 
 export type RamoId =
+  | "crossfit"
   | "luta"
+  | "pilates"
+  | "yoga"
+  | "danca"
+  | "natacao"
   | "academia"
+  | "fisioterapia"
+  | "lavajato"
+  | "moda"
+  | "papelaria"
+  | "otica"
+  | "construcao"
+  | "mercado"
+  | "farmacia"
   | "barbearia"
   | "massagem"
   | "salao"
@@ -262,8 +275,23 @@ const GERAL: Ramo = {
   ondePlaca: "",
 };
 
-// A ordem importa: o primeiro ramo que reconhece o tipo ganha ("Academia de luta" é luta, não academia).
+// Modalidades de treino: só reconhecem pelo nome quando o Google cadastrou como academia (ou nada).
+const MODALIDADE: RamoId[] = ["academia", "geral"];
+const AULA_EXPERIMENTAL = "os horários das turmas, os planos e um botão pra marcar aula experimental pelo WhatsApp";
+
+// A ordem importa: o primeiro ramo que reconhece o tipo ganha ("Academia de luta" é luta, não academia;
+// "Pilates e fisioterapia" é pilates; "Estética automotiva" é lava-jato, não clínica de estética).
 export const RAMOS: Ramo[] = [
+  {
+    id: "crossfit",
+    nome: "Box de CrossFit e funcional",
+    opcao: "CrossFit e treino funcional",
+    tipo: /cross ?fit|cross ?training|funcional|\bhiit\b/i,
+    nomeLoja: /\bcross ?fit|\bcross\b|\bfuncional/i,
+    certeza: { padrao: /\bcross ?fit|\bcross\b|\bfuncional|\bhiit\b|\bbox\b/i, corrige: MODALIDADE },
+    noSite: AULA_EXPERIMENTAL,
+    ondePlaca: " depois do treino",
+  },
   {
     id: "luta",
     nome: "Academia de luta",
@@ -277,6 +305,57 @@ export const RAMOS: Ramo[] = [
     quem: "academia de luta",
     noSite: "as modalidades, os horários das turmas e um botão pra marcar aula experimental pelo WhatsApp",
     ondePlaca: " depois do treino",
+  },
+  {
+    id: "pilates",
+    nome: "Studio de pilates",
+    tipo: /pilates/i,
+    nomeLoja: /\bpilates/i,
+    certeza: { padrao: /\bpilates/i, corrige: ["academia", "fisioterapia", "estetica", "geral"] },
+    noSite: AULA_EXPERIMENTAL,
+    ondePlaca: " depois da aula",
+  },
+  {
+    id: "yoga",
+    nome: "Studio de yoga",
+    tipo: /\byoga|\bioga|medita/i,
+    nomeLoja: /\byoga|\bioga/i,
+    certeza: { padrao: /\byoga|\bioga/i, corrige: MODALIDADE },
+    noSite: AULA_EXPERIMENTAL,
+    ondePlaca: " depois da aula",
+  },
+  {
+    id: "danca",
+    nome: "Escola de dança",
+    opcao: "Dança (balé, zumba, ritmos)",
+    tipo: /dan[cç]a|ballet|\bbal[eé]\b|zumba|forr[oó]|\bsamba|hip.?hop|\bjazz/i,
+    nomeLoja: /\bdan[cç]a|\bballet|\bbal[eé]\b|\bzumba/i,
+    certeza: { padrao: /\bdan[cç]a|\bballet|\bbal[eé]\b|\bzumba|\britmos\b/i, corrige: MODALIDADE },
+    noSite: "as modalidades, os horários das turmas e um botão pra marcar aula experimental pelo WhatsApp",
+    ondePlaca: " depois da aula",
+  },
+  {
+    id: "natacao",
+    nome: "Escola de natação",
+    opcao: "Natação e hidroginástica",
+    tipo: /nata[cç]|hidrogin|aqu[aá]tic/i,
+    nomeLoja: /\bnata[cç][aã]o|\bhidrogin[aá]stica|\bswim/i,
+    certeza: { padrao: /\bnata[cç][aã]o|\bhidrogin[aá]stica|\bswim/i, corrige: MODALIDADE },
+    noSite: "as turmas por idade, os horários e um botão pra marcar aula experimental pelo WhatsApp",
+    ondePlaca: " depois da aula",
+  },
+  {
+    id: "lavajato",
+    nome: "Lava-jato",
+    opcao: "Lava-jato e estética automotiva",
+    tipo: /lava.?jato|lava.?r[aá]pido|est[eé]tica (automotiva|auto|veicular)|detail|polimento|lavagem|insulfilm|envelopamento/i,
+    nomeLoja: /lava.?jato|\bdetail|\bcar ?wash|est[eé]tica (automotiva|auto)/i,
+    certeza: {
+      padrao: /lava.?jato|\bdetail|\bcar ?wash|est[eé]tica (automotiva|auto)|polimento/i,
+      corrige: ["estetica", "oficina", "geral"],
+    },
+    noSite: "os serviços com foto, o horário e um botão pra agendar a lavagem pelo WhatsApp",
+    ondePlaca: " na hora de buscar o carro",
   },
   {
     id: "academia",
@@ -293,6 +372,15 @@ export const RAMOS: Ramo[] = [
     nomeLoja: /\bbarbe(aria|r)/i,
     noSite: SERVICOS,
     ondePlaca: " ainda na cadeira",
+  },
+  {
+    id: "fisioterapia",
+    nome: "Clínica de fisioterapia",
+    tipo: /fisiot|quiropr|osteop|reabilita/i,
+    nomeLoja: /\bfisio/i,
+    certeza: { padrao: /\bfisio/i, corrige: ["salao", "estetica", "massagem", "academia", "geral"] },
+    noSite: "os tratamentos, os horários e um botão pra agendar avaliação pelo WhatsApp",
+    ondePlaca: " depois da sessão",
   },
   {
     id: "massagem",
@@ -372,7 +460,7 @@ export const RAMOS: Ramo[] = [
     id: "pet",
     nome: "Pet shop",
     opcao: "Pet shop e veterinária",
-    tipo: /pet|veterin|ra[cç][oõ]es|agropecu/i,
+    tipo: /\bpet|veterin|ra[cç][oõ]es|agropecu/i,
     nomeLoja: /\bpet\b|\bpetshop|\bveterin|\bra[cç][oõ]es/i,
     noSite: "os serviços, os horários e um botão pra agendar pelo WhatsApp",
     ondePlaca: " quando busca o bichinho",
@@ -393,8 +481,65 @@ export const RAMOS: Ramo[] = [
     noSite: "os tratamentos, os horários e um botão pra marcar consulta pelo WhatsApp",
     ondePlaca: " na recepção",
   },
+  {
+    id: "moda",
+    nome: "Loja de roupas",
+    opcao: "Roupas, calçados e acessórios",
+    tipo: /roupa|\bmoda\b|vestu[aá]rio|boutique|cal[cç]ados?\b|sapat|lingerie|\bnoivas?\b|bijuter|acess[oó]rios femininos|loja infantil|moda infantil|confec[cç]/i,
+    nomeLoja: /\bmodas?\b|\bboutique|\bcal[cç]ados|\bconfec[cç]/i,
+    noSite: "as novidades com foto, os tamanhos e um botão que já abre o WhatsApp pra reservar a peça",
+    ondePlaca: " no caixa",
+  },
+  {
+    id: "papelaria",
+    nome: "Papelaria",
+    tipo: /papelar|livrar|armarinho/i,
+    nomeLoja: /\bpapelaria|\bpapel\b|\blivraria/i,
+    noSite: "os produtos, a lista de material escolar e um botão pra pedir pelo WhatsApp",
+    ondePlaca: " no caixa",
+  },
+  {
+    id: "otica",
+    nome: "Ótica",
+    // Sem \b: em JS o "Ó" não conta como letra, e "robótica" não é ótica.
+    tipo: /(?<![a-zà-ü])[oó]ticas?\b|[oó]culos|optic/i,
+    nomeLoja: /(?<![a-zà-ü])[oó]ticas?\b|[oó]culos/i,
+    noSite: "as armações com foto, o horário e um botão pra pedir orçamento das lentes pelo WhatsApp",
+    ondePlaca: " na hora de buscar os óculos",
+  },
+  {
+    id: "construcao",
+    nome: "Material de construção",
+    opcao: "Construção, tintas e vidraçaria",
+    tipo: /constru|\btintas?\b|madeireir|ferragen|ferrament|el[eé]tric[oa] e hidr|hidr[aá]ulic|vidra[cç]|marmor|serralher|home ?center/i,
+    nomeLoja: /\bconstru|\btintas\b|\bmadeireira|\bferragens|\bvidra[cç]aria|\bmateriais/i,
+    noSite: "os produtos, o horário, o mapa e um botão pra pedir orçamento pelo WhatsApp",
+    ondePlaca: " no balcão",
+  },
+  {
+    id: "mercado",
+    nome: "Mercado",
+    opcao: "Mercado, mercearia e hortifrúti",
+    tipo: /mercad|mercearia|hortifr|sacol[aã]o|atacad|a[cç]ougue|frutar|emp[oó]rio/i,
+    nomeLoja: /\bmercad|\bmercearia|\bhortifr|\bsacol[aã]o|\ba[cç]ougue/i,
+    noSite: "as ofertas da semana, o horário e um botão pra fazer o pedido pelo WhatsApp",
+    ondePlaca: " no caixa",
+  },
+  {
+    id: "farmacia",
+    nome: "Farmácia",
+    tipo: /farm[aá]c|drogaria|manipula/i,
+    nomeLoja: /\bfarma|\bdrogaria/i,
+    noSite: "o horário, a entrega e um botão pra pedir pelo WhatsApp",
+    ondePlaca: " no balcão",
+  },
   GERAL,
 ];
+
+/** Os ramos na lista de escolha: em ordem alfabética, com "Outro comércio" no fim. */
+export const RAMOS_ESCOLHA = RAMOS.filter((r) => r !== GERAL)
+  .sort((a, b) => (a.opcao ?? a.nome).localeCompare(b.opcao ?? b.nome, "pt-BR"))
+  .concat(GERAL);
 
 /**
  * Ramo da loja: a escolha do Brenno, senão o tipo do Google, senão o nome. No fim, o nome pode

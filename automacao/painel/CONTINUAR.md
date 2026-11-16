@@ -48,7 +48,8 @@ Atualizado em 14/11/2026 (tarde).
 - Montar e testar: `npm install && npm run build` gera `automacao/painel/vendas.html`. `npm run teste` testa no celular simulado.
 - Publicar: mandar o `vendas.html` para o mesmo link com a ferramenta Artifact, **sem** `capabilities`. Detalhes em `app/README.md`.
 - Fotos e fontes da prévia: `automacao/painel/img/demo/` (publicadas junto como arquivos de apoio, com `root` = `automacao/painel`; só precisa reenviar quando mudarem). Temas por ramo em `src/painel/Demonstracao.tsx`. Nunca usar foto com marca de outra empresa.
-- Ver a prévia de um ramo sem publicar: `EXTRA='{"nome":"Loja","tipo":"Pizzaria"}' npm run teste` salva `capturas/foto-previa.jpg`.
+- Ver a prévia de um ramo sem publicar: `EXTRA='{"nome":"Loja","tipo":"Pizzaria"}' npm run teste` salva `capturas/foto-previa.jpg`. Com `RAMOS=crossfit,moda` junto, tira um print da prévia de cada ramo (`capturas/previa-<ramo>.png`).
+- Ramos (16/11): além dos de antes, CrossFit e funcional, pilates, yoga, dança, natação, fisioterapia, lava-jato, roupas, papelaria, ótica, construção, mercado e farmácia. Sem tema ainda: pousada, distribuidora, assistência de celular, presentes e variedades (caem em "Outro comércio").
 - Dados ficam no banco do Artifact:
   - `leads`: as lojas.
   - `config/mensagens`: os textos.
