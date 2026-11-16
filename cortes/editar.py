@@ -594,7 +594,7 @@ def main():
     ap.add_argument('--credito', default='')
     ap.add_argument('--saida')
     ap.add_argument('--teaser', help='frase do clímax para abrir o corte')
-    ap.add_argument('--estilo', default='padrao', choices=['padrao', 'ref'])
+    ap.add_argument('--estilo', default='ref', choices=['ref', 'padrao'])
     ap.add_argument('--nome', default='', help='nome de quem fala (estilo ref)')
     ap.add_argument('--arroba', default='', help='@ do canal (estilo ref)')
     ap.add_argument('--sem-legenda', action='store_true')
