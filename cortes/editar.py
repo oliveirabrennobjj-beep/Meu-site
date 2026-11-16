@@ -36,9 +36,9 @@ AMARELO = (255, 225, 60)
 BRANCO = (255, 255, 255)
 PRETO = (12, 12, 14)
 
-Y_LEGENDA = 1090          # centro vertical da legenda
+Y_LEGENDA = {'solo': 1270, 'dupla': 960, 'geral': 1240}   # centro vertical da legenda por modo
 Y_TITULO = 170            # topo da caixa do título
-Y_GERAL = 640             # centro do quadro inteiro no modo "geral"
+Y_GERAL = 800             # centro do quadro inteiro no modo "geral" (abaixo do título)
 LARGURA_TEXTO = 940       # largura máxima da legenda e do título
 
 
@@ -186,7 +186,12 @@ def compor(quadro, enq):
     fundo = cv2.GaussianBlur(cv2.resize(fundo, (LARG // 4, ALT // 4)), (0, 0), 14)
     tela = (cv2.resize(fundo, (LARG, ALT), interpolation=cv2.INTER_LINEAR) * 0.42).astype(np.uint8)
     alt_v = int(LARG * h / w)
-    y0 = Y_GERAL - alt_v // 2
+    if alt_v >= ALT * 0.8:   # o vídeo já é vertical: ocupa a tela toda
+        larg_v = int(ALT * w / h)
+        cheio = cv2.resize(quadro, (max(larg_v, LARG), ALT), interpolation=cv2.INTER_AREA)
+        x0 = (cheio.shape[1] - LARG) // 2
+        return np.ascontiguousarray(cheio[:, x0:x0 + LARG])
+    y0 = max(Y_GERAL - alt_v // 2, 0)
     tela[y0:y0 + alt_v] = cv2.resize(quadro, (LARG, alt_v), interpolation=cv2.INTER_AREA)
     return tela
 
@@ -282,7 +287,7 @@ class Legenda:
         self.cache[chave] = para_bgra(img)
         return self.cache[chave]
 
-    def aplicar(self, tela, t):
+    def aplicar(self, tela, t, y=1270):
         for i, pg in enumerate(self.pags):
             if pg['t0'] <= t < pg['t1']:
                 ativa = -1
@@ -291,7 +296,7 @@ class Legenda:
                         ativa = k
                 entrada = min((t - pg['t0']) / 0.10, 1.0)
                 escala = 0.86 + 0.14 * (1 - (1 - entrada) ** 3)
-                colar(tela, self._desenhar(i, ativa), LARG / 2, Y_LEGENDA, escala)
+                colar(tela, self._desenhar(i, ativa), LARG / 2, y, escala)
                 return
 
 
@@ -370,7 +375,7 @@ def editar(video, ini, fim, palavras, titulo, saida, credito='', planos=None):
             suave = 1 - (1 - entrada) ** 3
             colar(tela, titulo_img, LARG / 2, Y_TITULO + titulo_img.shape[0] / 2 - 40 * (1 - suave),
                   opacidade=suave)
-        legenda.aplicar(tela, t)
+        legenda.aplicar(tela, t, Y_LEGENDA[plano['modo']])
         barra = int(LARG * min(t / dur, 1.0))
         tela[0:10, :barra] = AMARELO[::-1]
         cod.stdin.write(tela.tobytes())
