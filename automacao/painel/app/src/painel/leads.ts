@@ -38,6 +38,8 @@ export interface Lead {
   ramo?: string;
   /** Loja tirada da lista porque não dá para falar com ela; null quando o Brenno traz de volta. */
   tirada?: { motivo: MotivoTirada; em: string } | null;
+  /** Outro celular que o Google mostra para a loja, para tentar quando o principal não dá certo. */
+  outroWhatsapp?: string;
 }
 
 export const STATUS: Record<
@@ -124,10 +126,11 @@ export function contatosHoje(leads: Lead[], agora = new Date()) {
 
 /* Fora da lista -------------------------------------------------------------------------------- */
 
-export type MotivoTirada = "semWhatsApp" | "naoExiste";
+export type MotivoTirada = "semWhatsApp" | "numeroErrado" | "naoExiste";
 
 export const MOTIVO_TIRADA: Record<MotivoTirada, { botao: string; frase: string }> = {
   semWhatsApp: { botao: "Número sem WhatsApp", frase: "número sem WhatsApp" },
+  numeroErrado: { botao: "Número de outra pessoa", frase: "o número é de outra pessoa" },
   naoExiste: { botao: "Loja não existe mais", frase: "a loja não existe mais" },
 };
 

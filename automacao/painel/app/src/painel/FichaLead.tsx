@@ -583,7 +583,8 @@ function SobreALoja({ lead }: { lead: Lead }) {
   const instagram = instagramDe(lead);
   const pagina = paginaDe(lead);
   const temWhatsApp = /\d/.test(lead.whatsapp);
-  const quantos = 2 + (pagina ? 1 : 0) + (temWhatsApp ? 1 : 0);
+  const outro = (lead.outroWhatsapp ?? "").replace(/\D/g, "");
+  const quantos = 2 + (pagina ? 1 : 0) + (temWhatsApp ? 1 : 0) + (outro ? 1 : 0);
   const atalho = buttonClass("secondary", "md", "min-w-0 px-2.5 text-[13px]");
   const nova = { target: "_blank", rel: "noopener noreferrer" };
   return (
@@ -630,6 +631,17 @@ function SobreALoja({ lead }: { lead: Lead }) {
           >
             <MessageCircle aria-hidden="true" />
             <span className="truncate">WhatsApp</span>
+          </a>
+        )}
+        {outro && (
+          <a
+            href={`https://wa.me/${outro}`}
+            {...nova}
+            aria-label={`Abrir o outro número que o Google mostra: ${outro.slice(2)}`}
+            className={atalho}
+          >
+            <MessageCircle aria-hidden="true" />
+            <span className="truncate">Outro número</span>
           </a>
         )}
       </div>
