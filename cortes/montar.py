@@ -30,7 +30,7 @@ def main():
     ap.add_argument('--saida', default=str(AQUI / 'prontos'))
     ap.add_argument('--credito', default='')
     ap.add_argument('--lista', default=str(AQUI / 'lista.json'))
-    ap.add_argument('--estilo', default='ref', choices=['ref', 'game', 'padrao'])
+    ap.add_argument('--estilo', default='ref', choices=['ref', 'game', 'game-titulo', 'padrao'])
     ap.add_argument('--nome', default='EDUARDA CAMPOPIANO', help='nome padrão de quem fala')
     ap.add_argument('--arroba', default='', help='@ do seu canal')
     a = ap.parse_args()
@@ -61,7 +61,7 @@ def main():
         if teaser and teaser[0] < 2.5:   # clímax já está no começo: teaser não acrescenta nada
             teaser = None
         destino = Path(a.saida) / nome_arquivo(c['n'], c['gancho'])
-        if a.estilo in ('ref', 'game'):
+        if a.estilo == 'ref' or a.estilo.startswith('game'):
             fim_txt = '' if c['gancho'].rstrip().endswith(('?', '!', '...')) else '!'
             titulo = f"•{c['gancho']}{fim_txt} {c.get('emoji', '🤯')}"
             nome = f"•{c.get('nome', a.nome)} 🎙️🔥"

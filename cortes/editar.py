@@ -43,9 +43,20 @@ REF_NOME_Y = 1385
 REF_LEGENDA_Y = 1640
 
 # Estilo "game" (corte de live): faixa preta com título, câmera do streamer, jogo embaixo.
-GAME_TOPO_CAM = 260        # topo do painel da câmera
-GAME_ALT_CAM = 640         # altura do painel da câmera (1080 x 640)
+GAME_LAYOUT = {
+    'game': {'topo_cam': 0, 'alt_cam': 730},          # tela cheia: câmera em cima, jogo embaixo (referência)
+    'game-titulo': {'topo_cam': 260, 'alt_cam': 640},  # faixa preta com título em cima
+}
+GAME_TOPO_CAM, GAME_ALT_CAM = 0, 730
 GAME_TOPO_JOGO = GAME_TOPO_CAM + GAME_ALT_CAM
+GAME_GANCHO_S = 3.0        # no estilo tela cheia, o gancho aparece só nos primeiros segundos
+
+
+def usar_layout(estilo):
+    global GAME_TOPO_CAM, GAME_ALT_CAM, GAME_TOPO_JOGO
+    lay = GAME_LAYOUT.get(estilo, GAME_LAYOUT['game'])
+    GAME_TOPO_CAM, GAME_ALT_CAM = lay['topo_cam'], lay['alt_cam']
+    GAME_TOPO_JOGO = GAME_TOPO_CAM + GAME_ALT_CAM
 
 AMARELO = (255, 225, 60)
 BRANCO = (255, 255, 255)
@@ -563,12 +574,15 @@ def compor_ref(quadro):
 # ---------------------------------------------------------------- render
 
 def editar(video, ini, fim, palavras, titulo, saida, credito='', planos=None, zoom=1.0,
-           estilo='padrao', nome='', arroba='', legenda=True):
+           estilo='padrao', nome='', arroba='', legenda=True, teaser_s=0.0):
     """Renderiza um corte. `palavras` usa tempos relativos ao início do corte."""
     dur = fim - ini
     w, h = sondar(video)
     ref = estilo == 'ref'
-    game = estilo == 'game'
+    game = estilo.startswith('game')
+    faixa = estilo == 'game-titulo'
+    if game:
+        usar_layout(estilo)
     if ref:
         planos = [{'t0': 0.0, 't1': dur + 1, 'modo': 'ref', 'rostos': []}]
     else:
@@ -612,11 +626,14 @@ def editar(video, ini, fim, palavras, titulo, saida, credito='', planos=None, zo
             tela = cv2.warpAffine(tela, m, (LARG, ALT), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REFLECT)
         if game:
             if plano['modo'] == 'game':
-                if titulo_img is not None:
+                if titulo_img is not None and faixa:
                     colar(tela, titulo_img, LARG / 2, GAME_TOPO_CAM / 2)
+                elif titulo_img is not None and t < GAME_GANCHO_S + teaser_s:   # gancho rápido na emenda
+                    op = min(1.0, (GAME_GANCHO_S + teaser_s - t) / 0.3)
+                    colar(tela, titulo_img, LARG / 2, GAME_TOPO_JOGO, opacidade=op)
                 if nome_img is not None:
                     colar(tela, nome_img, 30 + nome_img.shape[1] / 2, GAME_TOPO_JOGO - 18 - nome_img.shape[0] / 2)
-                y_leg = GAME_TOPO_JOGO + 150
+                y_leg = GAME_TOPO_JOGO + 190
             else:
                 if titulo_img is not None:
                     colar(tela, titulo_img, LARG / 2, Y_TITULO + titulo_img.shape[0] / 2)
@@ -688,7 +705,7 @@ def editar_com_teaser(video, ini, fim, palavras, titulo, saida, credito='', teas
     p1, p2 = tmp / (Path(saida).stem + '_teaser.mp4'), tmp / (Path(saida).stem + '_corpo.mp4')
     pal_t = [dict(p, t0=p['t0'] - a, t1=p['t1'] - a) for p in palavras]
     r1 = editar(video, ini + a, ini + b, pal_t, titulo, p1, credito, zoom=1.10, **estilo)
-    r2 = editar(video, ini, fim, palavras, titulo, p2, credito, **estilo)
+    r2 = editar(video, ini, fim, palavras, titulo, p2, credito, teaser_s=-99, **estilo)
     d1 = b - a
     flash = 0.18
     subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', str(p1), '-i', str(p2), '-filter_complex',
@@ -713,7 +730,7 @@ def main():
     ap.add_argument('--credito', default='')
     ap.add_argument('--saida')
     ap.add_argument('--teaser', help='frase do clímax para abrir o corte')
-    ap.add_argument('--estilo', default='ref', choices=['ref', 'game', 'padrao'])
+    ap.add_argument('--estilo', default='ref', choices=['ref', 'game', 'game-titulo', 'padrao'])
     ap.add_argument('--nome', default='', help='nome de quem fala (estilo ref)')
     ap.add_argument('--arroba', default='', help='@ do canal (estilo ref)')
     ap.add_argument('--sem-legenda', action='store_true')
