@@ -42,6 +42,11 @@ REF_TOPO_VIDEO = 600
 REF_NOME_Y = 1385
 REF_LEGENDA_Y = 1640
 
+# Estilo "game" (corte de live): faixa preta com título, câmera do streamer, jogo embaixo.
+GAME_TOPO_CAM = 260        # topo do painel da câmera
+GAME_ALT_CAM = 640         # altura do painel da câmera (1080 x 640)
+GAME_TOPO_JOGO = GAME_TOPO_CAM + GAME_ALT_CAM
+
 AMARELO = (255, 225, 60)
 BRANCO = (255, 255, 255)
 PRETO = (12, 12, 14)
@@ -168,6 +173,94 @@ def enquadrar(plano, w, h):
         x = min(max(r[0] * w - lc / 2, 0), w - lc)
         return {'modo': 'solo', 'recortes': [(int(x), 0, int(lc), h)]}
     return {'modo': 'geral', 'recortes': []}
+
+
+def detectar_camera(video, ini, dur, rosto):
+    """Acha a moldura da câmera do streamer em volta do rosto.
+
+    Bordas de sobreposição ficam paradas enquanto o jogo se mexe, então usa o mínimo
+    do gradiente em vários quadros. Devolve (x0, y0, x1, y1) normalizado, ou None.
+    """
+    amostras = []
+    for k in range(6):
+        t = ini + dur * (k + 0.5) / 6
+        r = subprocess.run(['ffmpeg', '-v', 'error', '-ss', f'{t:.2f}', '-i', str(video), '-frames:v', '1',
+                            '-vf', f'scale={AN_L}:{AN_A}', '-f', 'rawvideo', '-pix_fmt', 'gray', '-'],
+                           capture_output=True)
+        if len(r.stdout) == AN_L * AN_A:
+            amostras.append(np.frombuffer(r.stdout, np.uint8).reshape(AN_A, AN_L).astype(np.float32))
+    if len(amostras) < 3:
+        return None
+    ex = np.min([np.abs(cv2.Sobel(a, cv2.CV_32F, 1, 0, ksize=3)) for a in amostras], axis=0)
+    ey = np.min([np.abs(cv2.Sobel(a, cv2.CV_32F, 0, 1, ksize=3)) for a in amostras], axis=0)
+    fx, fy, fw, fh = rosto[0] * AN_L, rosto[1] * AN_A, rosto[2] * AN_L, rosto[3] * AN_A
+    y_a, y_b = int(max(fy - 1.3 * fh, 0)), int(min(fy + 1.3 * fh, AN_A))
+
+    def melhor(perfil, faixa, borda):
+        faixa = [i for i in faixa if 0 <= i < len(perfil)]
+        if not faixa:
+            return borda
+        i = max(faixa, key=lambda k: perfil[k])
+        return i if perfil[i] > 18 else borda
+
+    col = ex[y_a:y_b].mean(axis=0)
+    x0 = melhor(col, range(int(fx - 0.45 * AN_L), int(fx - 0.9 * fw)), 0)
+    x1 = melhor(col, range(int(fx + 0.9 * fw), int(fx + 0.45 * AN_L)), AN_L)
+    lin = ey[:, x0:x1].mean(axis=1) if x1 - x0 > 10 else ey.mean(axis=1)
+    y0 = melhor(lin, range(int(fy - 0.45 * AN_A), int(fy - 0.9 * fh)), 0)
+    y1 = melhor(lin, range(int(fy + 0.9 * fh), int(fy + 0.5 * AN_A)), AN_A)
+    if (x1 - x0) < 2.2 * fw or (y1 - y0) < 2.0 * fh:
+        return None
+    m = 2   # tira a linha da borda
+    return ((x0 + m) / AN_L, (y0 + m) / AN_A, (x1 - m) / AN_L, (y1 - m) / AN_A)
+
+
+def enquadrar_game(plano, w, h):
+    """Live: câmera no canto + jogo, só câmera (just chatting) ou só jogo."""
+    rostos = [r for r in plano['rostos'] if r[4] >= 0.5]
+    if rostos:
+        r = max(rostos, key=lambda x: x[3])
+        if r[3] >= 0.16:   # rosto grande: só câmera, recorte vertical no rosto
+            lc = h * LARG / ALT
+            x = min(max(r[0] * w - lc / 2, 0), w - lc)
+            return {'modo': 'solo', 'recortes': [(int(x), 0, int(lc), h)]}
+        # câmera no canto: usa a moldura detectada e recorta dentro dela na proporção do painel
+        mold = plano.get('camera')
+        if mold:
+            bx0, by0, bx1, by1 = mold[0] * w, mold[1] * h, mold[2] * w, mold[3] * h
+        else:
+            ac0 = r[3] * h * 2.2
+            bx0, bx1 = r[0] * w - ac0 * 0.9, r[0] * w + ac0 * 0.9
+            by0, by1 = r[1] * h - ac0 * 0.45, r[1] * h + ac0 * 0.55
+        bw, bh = bx1 - bx0, by1 - by0
+        prop = LARG / GAME_ALT_CAM
+        if bw / bh > prop:   # moldura mais larga que o painel: corta dos lados, centrado no rosto
+            lc, ac = bh * prop, bh
+            x = min(max(r[0] * w - lc / 2, bx0), bx1 - lc)
+            y = by0
+        else:                # mais alta: corta em cima e embaixo
+            lc, ac = bw, bw / prop
+            x = bx0
+            y = min(max(r[1] * h - ac * 0.45, by0), by1 - ac)
+        cam = (int(x), int(y), int(lc), int(ac))
+        # jogo: recorte central na proporção do painel de baixo
+        aj = (ALT - GAME_TOPO_JOGO) / LARG
+        lj = min(w, h / aj)
+        jogo = (int((w - lj) / 2), 0, int(lj), h)
+        return {'modo': 'game', 'recortes': [cam, jogo]}
+    return {'modo': 'geral', 'recortes': []}
+
+
+def compor_game(quadro, enq):
+    if enq['modo'] != 'game':
+        return compor(quadro, enq)
+    tela = np.zeros((ALT, LARG, 3), np.uint8)
+    (x, y, lc, ac), (xj, yj, lj, aj) = enq['recortes']
+    tela[GAME_TOPO_CAM:GAME_TOPO_JOGO] = nitidez(cv2.resize(quadro[y:y + ac, x:x + lc], (LARG, GAME_ALT_CAM),
+                                                            interpolation=cv2.INTER_CUBIC))
+    tela[GAME_TOPO_JOGO:] = cv2.resize(quadro[yj:yj + aj, xj:xj + lj], (LARG, ALT - GAME_TOPO_JOGO),
+                                      interpolation=cv2.INTER_AREA)
+    return tela
 
 
 # ---------------------------------------------------------------- composição do quadro
@@ -475,14 +568,24 @@ def editar(video, ini, fim, palavras, titulo, saida, credito='', planos=None, zo
     dur = fim - ini
     w, h = sondar(video)
     ref = estilo == 'ref'
+    game = estilo == 'game'
     if ref:
         planos = [{'t0': 0.0, 't1': dur + 1, 'modo': 'ref', 'rostos': []}]
     else:
         planos = planos or analisar(video, ini, dur)
         for p in planos:
-            p.update(enquadrar(p, w, h))
+            if game:
+                cand = [r for r in p['rostos'] if r[4] >= 0.5 and r[3] < 0.16]
+                if cand:
+                    p['camera'] = detectar_camera(video, ini + p['t0'], min(p['t1'], dur) - p['t0'],
+                                                  max(cand, key=lambda x: x[3]))
+            p.update(enquadrar_game(p, w, h) if game else enquadrar(p, w, h))
     leg = Legenda([p for p in palavras if p['t1'] > 0 and p['t0'] < dur]) if legenda else None
-    if ref:
+    if game:
+        titulo_img = sprite_caixa(titulo, 58, 2, raio=20, pad=(24, 10)) if titulo else None
+        nome_img = sprite_caixa(nome, 40, 1, raio=14, pad=(18, 6)) if nome else None
+        arroba_img = sprite_arroba(arroba) if arroba else None
+    elif ref:
         titulo_img = sprite_caixa(titulo, 66, 3) if titulo else None
         nome_img = sprite_caixa(nome, 54, 1, raio=18, pad=(24, 9)) if nome else None
         arroba_img = sprite_arroba(arroba) if arroba else None
@@ -502,12 +605,27 @@ def editar(video, ini, fim, palavras, titulo, saida, credito='', planos=None, zo
     for n, quadro in enumerate(quadros(video, ini, dur, FPS, w, h)):
         t = n / FPS
         plano = next((p for p in planos if p['t0'] <= t < p['t1']), planos[-1])
-        tela = compor_ref(quadro) if ref else compor(quadro, plano)
+        tela = compor_ref(quadro) if ref else compor_game(quadro, plano) if game else compor(quadro, plano)
         if zoom != 1.0:   # aproximação lenta e contínua
             z = 1 + (zoom - 1) * min(t / max(dur, 0.1), 1.0)
             m = cv2.getRotationMatrix2D((LARG / 2, ALT * 0.42), 0, z)
             tela = cv2.warpAffine(tela, m, (LARG, ALT), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REFLECT)
-        if ref:
+        if game:
+            if plano['modo'] == 'game':
+                if titulo_img is not None:
+                    colar(tela, titulo_img, LARG / 2, GAME_TOPO_CAM / 2)
+                if nome_img is not None:
+                    colar(tela, nome_img, 30 + nome_img.shape[1] / 2, GAME_TOPO_JOGO - 18 - nome_img.shape[0] / 2)
+                y_leg = GAME_TOPO_JOGO + 150
+            else:
+                if titulo_img is not None:
+                    colar(tela, titulo_img, LARG / 2, Y_TITULO + titulo_img.shape[0] / 2)
+                y_leg = Y_LEGENDA.get(plano['modo'], 1270)
+            if arroba_img is not None:
+                colar(tela, arroba_img, LARG - 30 - arroba_img.shape[1] / 2, ALT - 60)
+            if leg:
+                leg.aplicar(tela, t, y_leg)
+        elif ref:
             if titulo_img is not None:   # título fixo, logo acima do vídeo
                 colar(tela, titulo_img, LARG / 2, REF_TOPO_VIDEO - 22 - titulo_img.shape[0] / 2)
             if nome_img is not None:
@@ -533,6 +651,7 @@ def editar(video, ini, fim, palavras, titulo, saida, credito='', planos=None, zo
         raise RuntimeError(f'ffmpeg falhou em {saida}')
     return {'saida': str(saida), 'quadros': n + 1,
             'planos': [{'t0': round(p['t0'], 2), 't1': round(p['t1'], 2), 'modo': p['modo'],
+                        'camera': [round(v, 3) for v in p['camera']] if p.get('camera') else None,
                         'rostos': len(p['rostos'])} for p in planos]}
 
 
@@ -594,7 +713,7 @@ def main():
     ap.add_argument('--credito', default='')
     ap.add_argument('--saida')
     ap.add_argument('--teaser', help='frase do clímax para abrir o corte')
-    ap.add_argument('--estilo', default='ref', choices=['ref', 'padrao'])
+    ap.add_argument('--estilo', default='ref', choices=['ref', 'game', 'padrao'])
     ap.add_argument('--nome', default='', help='nome de quem fala (estilo ref)')
     ap.add_argument('--arroba', default='', help='@ do canal (estilo ref)')
     ap.add_argument('--sem-legenda', action='store_true')
