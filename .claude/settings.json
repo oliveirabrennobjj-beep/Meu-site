@@ -104,6 +104,12 @@
         "source": "github",
         "repo": "google/elephant-goldfish-model"
       }
+    },
+    "ecc": {
+      "source": {
+        "source": "github",
+        "repo": "affaan-m/ECC"
+      }
     }
   },
   "enabledPlugins": {
@@ -113,6 +119,7 @@
     "octo@nyldn-plugins": true,
     "claude-mem@thedotmack": true,
     "claude-code-setup@claude-plugins-official": true,
-    "egm@egm": true
+    "egm@egm": true,
+    "ecc@ecc": true
   }
 }
