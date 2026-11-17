@@ -29,13 +29,14 @@ def main():
     ap.add_argument('--so', help='números dos cortes, separados por vírgula')
     ap.add_argument('--saida', default=str(AQUI / 'prontos'))
     ap.add_argument('--credito', default='')
-    ap.add_argument('--estilo', default='ref', choices=['ref', 'padrao'])
+    ap.add_argument('--lista', default=str(AQUI / 'lista.json'))
+    ap.add_argument('--estilo', default='ref', choices=['ref', 'game', 'padrao'])
     ap.add_argument('--nome', default='EDUARDA CAMPOPIANO', help='nome padrão de quem fala')
     ap.add_argument('--arroba', default='', help='@ do seu canal')
     a = ap.parse_args()
 
     brutos = Path(a.brutos)
-    lista = json.loads((AQUI / 'lista.json').read_text())
+    lista = json.loads(Path(a.lista).read_text())
     meta = {m['n']: m for m in json.loads((brutos / 'meta.json').read_text())}
     so = {int(x) for x in a.so.split(',')} if a.so else None
     credito = a.credito or f"trecho: {lista.get('fonte', '')}".strip(': ')
@@ -60,7 +61,7 @@ def main():
         if teaser and teaser[0] < 2.5:   # clímax já está no começo: teaser não acrescenta nada
             teaser = None
         destino = Path(a.saida) / nome_arquivo(c['n'], c['gancho'])
-        if a.estilo == 'ref':
+        if a.estilo in ('ref', 'game'):
             fim_txt = '' if c['gancho'].rstrip().endswith(('?', '!', '...')) else '!'
             titulo = f"•{c['gancho']}{fim_txt} {c.get('emoji', '🤯')}"
             nome = f"•{c.get('nome', a.nome)} 🎙️🔥"
