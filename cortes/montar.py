@@ -8,6 +8,8 @@ Saída: prontos/NN-gancho.mp4, verticais, com legenda, título e teaser.
 Uso: montar.py <pasta_brutos> [--so 1,5,9] [--saida prontos]
 """
 import argparse
+import subprocess
+import tempfile
 import json
 import re
 import unicodedata
@@ -23,6 +25,41 @@ def nome_arquivo(n, gancho):
     return f"{n:02d}-{re.sub(r'[^a-z0-9]+', '-', base).strip('-')[:40]}.mp4"
 
 
+def sem_pausas(video, ini, fim, palavras, destino, max_pausa=1.1, folga=0.28):
+    """Tira os silêncios longos (jump cut). Devolve (video_novo, palavras_novas, duracao) ou None."""
+    if not palavras:
+        return None
+    dur = fim - ini
+    segs = []
+    a = max(0.0, palavras[0]['t0'] - folga) if palavras[0]['t0'] > 1.5 else 0.0
+    ult = palavras[0]['t1']
+    for w in palavras[1:]:
+        if w['t0'] - ult > max_pausa:
+            segs.append((a, min(ult + folga, dur)))
+            a = max(w['t0'] - folga, 0)
+        ult = max(ult, w['t1'])
+    segs.append((a, min(ult + 0.6, dur)))
+    tirado = dur - sum(b - x for x, b in segs)
+    if tirado < 2.0:
+        return None
+    filtros, rotulos = [], ''
+    for i, (x, b) in enumerate(segs):
+        filtros.append(f'[0:v]trim=start={ini + x:.3f}:end={ini + b:.3f},setpts=PTS-STARTPTS[v{i}]')
+        filtros.append(f'[0:a]atrim=start={ini + x:.3f}:end={ini + b:.3f},asetpts=PTS-STARTPTS[a{i}]')
+        rotulos += f'[v{i}][a{i}]'
+    filtros.append(f'{rotulos}concat=n={len(segs)}:v=1:a=1[v][a]')
+    subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', str(video), '-filter_complex', ';'.join(filtros),
+                    '-map', '[v]', '-map', '[a]', '-r', '30', '-c:v', 'libx264', '-preset', 'fast', '-crf', '17',
+                    '-c:a', 'aac', '-b:a', '192k', str(destino)], check=True)
+    novas, base = [], 0.0
+    for x, b in segs:
+        for w in palavras:
+            if x <= w['t0'] < b:
+                novas.append(dict(w, t0=w['t0'] - x + base, t1=min(w['t1'], b) - x + base))
+        base += b - x
+    return destino, novas, base
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('brutos')
@@ -33,6 +70,7 @@ def main():
     ap.add_argument('--estilo', default='ref', choices=['ref', 'game', 'game-titulo', 'padrao'])
     ap.add_argument('--nome', default='EDUARDA CAMPOPIANO', help='nome padrão de quem fala')
     ap.add_argument('--arroba', default='', help='@ do seu canal')
+    ap.add_argument('--com-pausas', action='store_true', help='não tira os silêncios longos')
     a = ap.parse_args()
 
     brutos = Path(a.brutos)
@@ -57,7 +95,16 @@ def main():
         if depois and depois[0]['t1'] - fim < 1.5:
             fim = min(depois[0]['t1'] + 0.35, m['dur_bruto'])
         rel = [dict(p, t0=p['t0'] - ini, t1=p['t1'] - ini) for p in palavras if p['t1'] > ini and p['t0'] < fim]
+        tmp = None
+        if not a.com_pausas and a.estilo.startswith('game'):
+            tmp = Path(tempfile.mkdtemp()) / 'sem_pausas.mp4'
+            r = sem_pausas(video, ini, fim, rel, tmp)
+            if r:
+                video, rel, dur = r
+                ini, fim = 0.0, dur
         teaser = editar.achar_frase(rel, c['teaser']) if c.get('teaser') else None
+        if teaser and teaser[1] - teaser[0] > 4.5:   # frase espalhada: fica só com o fim (o soco)
+            teaser = (teaser[1] - 3.5, teaser[1])
         if teaser and teaser[0] < 2.5:   # clímax já está no começo: teaser não acrescenta nada
             teaser = None
         destino = Path(a.saida) / nome_arquivo(c['n'], c['gancho'])

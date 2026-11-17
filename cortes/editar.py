@@ -628,10 +628,11 @@ def editar(video, ini, fim, palavras, titulo, saida, credito='', planos=None, zo
             if plano['modo'] == 'game':
                 if titulo_img is not None and faixa:
                     colar(tela, titulo_img, LARG / 2, GAME_TOPO_CAM / 2)
-                elif titulo_img is not None and t < GAME_GANCHO_S + teaser_s:   # gancho rápido na emenda
+                mostrando_gancho = (not faixa and titulo_img is not None and t < GAME_GANCHO_S + teaser_s)
+                if mostrando_gancho:   # gancho rápido na emenda
                     op = min(1.0, (GAME_GANCHO_S + teaser_s - t) / 0.3)
                     colar(tela, titulo_img, LARG / 2, GAME_TOPO_JOGO, opacidade=op)
-                if nome_img is not None:
+                if nome_img is not None and not mostrando_gancho:
                     colar(tela, nome_img, 30 + nome_img.shape[1] / 2, GAME_TOPO_JOGO - 18 - nome_img.shape[0] / 2)
                 y_leg = GAME_TOPO_JOGO + 190
             else:
