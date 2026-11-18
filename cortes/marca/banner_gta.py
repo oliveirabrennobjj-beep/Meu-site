@@ -116,9 +116,10 @@ def main():
     centro_x = (col0 + col1) / 2
     t1 = texto_degrade('TUDO SOBRE', ImageFont.truetype(FONTE, 72), [(0, (255, 255, 255)), (1, (255, 255, 255))],
                        contorno=11, borda=18)
-    t2 = texto_degrade('GTA 6', ImageFont.truetype(FONTE, 172),
-                       [(0, (255, 236, 130)), (0.35, (255, 196, 92)), (0.55, (255, 130, 70)), (0.75, (255, 62, 138)),
-                        (1, (255, 62, 138))], contorno=18, borda=30)
+    # "GTA VI" com o degradê do pôr do sol dos trailers do GTA 6 (laranja, rosa, roxo) e brilho neon
+    t2 = texto_degrade('GTA VI', ImageFont.truetype(FONTE, 180),
+                       [(0, (255, 214, 120)), (0.30, (255, 150, 90)), (0.52, (255, 84, 150)), (0.74, (196, 70, 220)),
+                        (1, (110, 70, 255))], contorno=14, borda=22)
     b1, b2 = t1.getchannel('A').getbbox(), t2.getchannel('A').getbbox()
     f3 = ImageFont.truetype(FONTE2, 27)
     sep = '  •  '
@@ -129,7 +130,13 @@ def main():
     topo = (SEG[1] + SEG[3]) / 2 - total / 2 - 16
     img.alpha_composite(t1, (int(centro_x - (b1[0] + b1[2]) / 2), int(topo - b1[1])))
     topo += (b1[3] - b1[1]) - 14
-    img.alpha_composite(t2, (int(centro_x - (b2[0] + b2[2]) / 2), int(topo - b2[1])))
+    pos2 = (int(centro_x - (b2[0] + b2[2]) / 2), int(topo - b2[1]))
+    brilho = np.array(t2.getchannel('A')).astype(np.float32) / 255
+    brilho = cv2.GaussianBlur(brilho, (0, 0), 28) * 0.9
+    neon = Image.fromarray(np.dstack([np.full_like(brilho, 255), np.full_like(brilho, 70), np.full_like(brilho, 170),
+                                      brilho * 255]).astype(np.uint8), 'RGBA')
+    img.alpha_composite(neon, pos2)
+    img.alpha_composite(t2, pos2)
     topo += (b2[3] - b2[1]) + 2
 
     # faixa com os temas
