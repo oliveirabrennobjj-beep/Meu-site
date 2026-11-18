@@ -638,6 +638,8 @@ def editar(video, ini, fim, palavras, titulo, saida, credito='', planos=None, zo
             else:
                 if titulo_img is not None:
                     colar(tela, titulo_img, LARG / 2, Y_TITULO + titulo_img.shape[0] / 2)
+                    if nome_img is not None:   # nome de quem fala logo abaixo do título
+                        colar(tela, nome_img, LARG / 2, Y_TITULO + titulo_img.shape[0] + 14 + nome_img.shape[0] / 2)
                 y_leg = Y_LEGENDA.get(plano['modo'], 1270)
             if arroba_img is not None:
                 colar(tela, arroba_img, LARG - 30 - arroba_img.shape[1] / 2, ALT - 60)

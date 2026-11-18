@@ -15,6 +15,10 @@ Fluxo para transformar debates, podcasts e lives em cortes de 20 a 60 s para Tik
 
 Os dois abrem com a frase mais forte do corte (teaser de 2 a 3 s), um flash branco e depois o trecho inteiro.
 
+## Checar antes de postar
+
+`checar.py <corte.mp4>` gera os quadros do gancho, do meio e do fim, a fala com tempos e as medidas (duração, 9:16, volume, silêncios). A skill `checar-viral` usa isso para dar nota aos 6 pontos (persona, ângulo, formato, hook, body e CTA), igual aos analisadores pagos.
+
 ## Fonte do vídeo
 
 - YouTube recusa servidores ("Sign in to confirm you're not a bot"), tanto aqui quanto no GitHub.
