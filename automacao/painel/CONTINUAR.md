@@ -56,6 +56,11 @@ Atualizado em 14/11/2026 (tarde).
   - `config/mensagens`: os textos.
   - `assistente/conversa`: o chat.
 
+## Horário marcado (novidade de 18/11)
+- Oferta "Horário" na ficha de barbearia (visita, WhatsApp e continuação). Barbearia sem contato já abre nela.
+- 18/11: entraram 16 barbearias de Casimiro, Barra de São João e Rio Dourado (Google Maps). Sem telefone no Google, só indo lá: KING BARBER e Seu Orlando (Barra), Niilo Barbeiro, Léo do Corte e Barbearia Pirulito (Casimiro), Tesoura de Ouro e Barberia do Zé (Rio Dourado).
+- Demonstração para mostrar ao barbeiro: https://claude.ai/artifact/Wd4vVWKcnP8NRG6qcT8ZUY (fonte em `automacao/horario-marcado/`). "Trocar nome" põe o nome da barbearia antes de mostrar. Dados de exemplo; o sistema de verdade só depois de 2 ou 3 barbearias toparem.
+
 ## Esperando o Brenno
 - Testar o botão "Mandar foto" no celular de verdade e dizer o que aconteceu (abriu o WhatsApp, salvou a foto ou mostrou a foto para segurar).
 - Mandar uma foto boa de açaí na tigela (a prévia de açaiteria usa copo de açaí e sorvete).

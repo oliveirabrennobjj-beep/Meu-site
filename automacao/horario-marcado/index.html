@@ -1,0 +1,623 @@
+<title>Horário Marcado</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=Manrope:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: app de celular com três telas (cliente, agenda do barbeiro, resumo do mês); no computador as três lado a lado. */
+:root {
+  color-scheme: dark;
+  --couro: #15100c;
+  --couro-2: #1f1813;
+  --couro-3: #2a211a;
+  --linha: #3a2e24;
+  --osso: #efe6d8;
+  --osso-2: #bcae9b;
+  --osso-3: #8f8372;
+  --latao: #c9a15b;
+  --latao-2: #e0bd7d;
+  --latao-tinta: #1b140b;
+  --latao-fundo: rgba(201, 161, 91, 0.13);
+  --poste: #c0503a;
+  --poste-fundo: rgba(192, 80, 58, 0.14);
+  --display: "Big Shoulders Display", "Oswald", "Arial Narrow", sans-serif;
+  --texto: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --raio: 16px;
+}
+* { box-sizing: border-box; }
+html, body { min-height: 100%; }
+body {
+  background: var(--couro);
+  color: var(--osso);
+  font: 15px/1.5 var(--texto);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  -webkit-font-smoothing: antialiased;
+}
+button, input { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--latao-2); outline-offset: 2px; }
+.num { font-variant-numeric: tabular-nums; }
+
+.app { max-width: 440px; margin: 0 auto; padding-block: 18px 104px; }
+
+/* Topo: nome da barbearia (dá para trocar antes de mostrar ao cliente) */
+.topo { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.poste { flex: none; width: 14px; height: 40px; border-radius: 7px; border: 2px solid var(--osso-3);
+  background: repeating-linear-gradient(135deg, var(--poste) 0 6px, var(--osso) 6px 12px, #2f5f8f 12px 18px, var(--osso) 18px 24px); }
+.marca { min-width: 0; flex: 1; }
+.marca h1 { margin: 0; font: 800 26px/1 var(--display); letter-spacing: 0.01em; text-transform: uppercase; overflow-wrap: anywhere; }
+.marca p { margin: 3px 0 0; font-size: 12.5px; color: var(--osso-3); }
+.trocar { flex: none; border: 1px solid var(--linha); background: transparent; color: var(--osso-2); border-radius: 999px; padding: 7px 12px; font-size: 12.5px; }
+.trocar:hover { border-color: var(--latao); color: var(--osso); }
+.nome-form { display: flex; gap: 8px; margin: -6px 0 16px; }
+.nome-form input { flex: 1; min-width: 0; }
+.nome-form[hidden] { display: none; }
+
+/* Telas */
+.telas { display: grid; gap: 22px; }
+.tela { min-width: 0; }
+.tela[hidden] { display: none !important; }
+.tela-rotulo { display: none; }
+.titulo { font: 800 30px/1 var(--display); text-transform: uppercase; letter-spacing: 0.01em; margin: 0 0 4px; text-wrap: balance; }
+.sub { margin: 0 0 16px; color: var(--osso-2); font-size: 14px; }
+.exemplo { display: inline-block; font-size: 11.5px; color: var(--osso-3); border: 1px dashed var(--linha); border-radius: 6px; padding: 1px 7px; }
+
+/* Cliente: capa da barbearia */
+.capa { position: relative; border-radius: 20px; overflow: hidden; aspect-ratio: 16 / 10; max-width: 100%; background: var(--couro-3); margin-bottom: 18px; }
+.capa img { width: 100%; height: 100%; object-fit: cover; display: block; filter: saturate(0.85) contrast(1.05); }
+.capa::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(21,16,12,0) 35%, rgba(21,16,12,0.92) 100%); }
+.capa-texto { position: absolute; left: 16px; right: 16px; bottom: 14px; z-index: 1; }
+.capa-texto strong { display: block; font: 800 28px/1 var(--display); text-transform: uppercase; }
+.capa-texto span { font-size: 13px; color: var(--osso-2); }
+.aberto { color: var(--latao-2); font-weight: 600; }
+
+.passo { margin-bottom: 22px; }
+.passo h3 { display: flex; align-items: center; gap: 10px; margin: 0 0 10px; font-size: 14px; font-weight: 700; }
+.passo h3 b { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--latao-fundo); color: var(--latao-2); font-size: 12.5px; font-weight: 700; }
+.passo h3 em { margin-left: auto; font-style: normal; font-weight: 500; font-size: 12.5px; color: var(--osso-3); }
+
+.servicos { display: grid; gap: 8px; }
+.servico { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 4px 12px; text-align: left; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--linha); background: var(--couro-2); }
+.servico span { color: var(--osso-3); font-size: 12.5px; grid-column: 1; }
+.servico strong { font-weight: 600; }
+.servico .preco { grid-row: 1 / span 2; grid-column: 2; font-weight: 700; color: var(--osso); font-size: 15px; }
+.servico[aria-pressed="true"], .chip[aria-pressed="true"], .dia[aria-pressed="true"] { border-color: var(--latao); background: var(--latao-fundo); }
+.servico[aria-pressed="true"] .preco { color: var(--latao-2); }
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { display: inline-flex; align-items: center; gap: 8px; padding: 7px 14px 7px 7px; border-radius: 999px; border: 1px solid var(--linha); background: var(--couro-2); font-weight: 600; font-size: 14px; }
+.chip i { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--couro-3); font-style: normal; font-size: 12px; color: var(--latao-2); }
+.chip.sem-avatar { padding-left: 14px; }
+
+.dias { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+.dias::-webkit-scrollbar { display: none; }
+.dia { flex: none; width: 58px; padding: 9px 0; border-radius: 12px; border: 1px solid var(--linha); background: var(--couro-2); text-align: center; line-height: 1.15; }
+.dia small { display: block; font-size: 11.5px; color: var(--osso-3); text-transform: capitalize; }
+.dia strong { display: block; font: 800 22px/1.05 var(--display); }
+.dia[aria-pressed="true"] small { color: var(--latao-2); }
+
+.horas { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.hora { padding: 10px 0; border-radius: 10px; border: 1px solid var(--linha); background: var(--couro-2); font-weight: 600; }
+.hora:disabled { cursor: default; color: var(--osso-3); opacity: 0.5; text-decoration: line-through; background: transparent; }
+.hora[aria-pressed="true"] { background: var(--latao); border-color: var(--latao); color: var(--latao-tinta); }
+.vazio { padding: 14px; border-radius: 12px; border: 1px dashed var(--linha); color: var(--osso-2); font-size: 13.5px; }
+
+.campos { display: grid; gap: 10px; }
+label.campo { display: grid; gap: 5px; font-size: 12.5px; color: var(--osso-2); }
+input[type="text"], input[type="tel"] { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--linha); background: var(--couro-2); font-size: 15px; }
+input::placeholder { color: var(--osso-3); }
+input:focus { border-color: var(--latao); outline: none; }
+
+.botao { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 52px; padding: 12px 18px; border-radius: 14px; border: 0; background: var(--latao); color: var(--latao-tinta); font-weight: 700; font-size: 15.5px; text-decoration: none; text-align: center; transition: transform 120ms ease, background-color 120ms ease; }
+.botao:hover { background: var(--latao-2); }
+.botao:active { transform: scale(0.98); }
+.botao:disabled { background: var(--couro-3); color: var(--osso-3); cursor: default; transform: none; }
+.botao.secundario { background: transparent; color: var(--osso); border: 1px solid var(--linha); }
+.botao.secundario:hover { border-color: var(--latao); }
+.marcar { position: sticky; bottom: calc(80px + env(safe-area-inset-bottom, 0px)); z-index: 5; padding-top: 10px; background: linear-gradient(180deg, rgba(21,16,12,0), var(--couro) 30%); }
+
+.confirmado { border-radius: 20px; border: 1px solid var(--latao); background: var(--latao-fundo); padding: 22px 18px; display: grid; gap: 14px; }
+.confirmado h3 { margin: 0; font: 800 30px/1 var(--display); text-transform: uppercase; color: var(--latao-2); }
+.confirmado dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; }
+.confirmado dt { color: var(--osso-3); font-size: 13px; }
+.confirmado dd { margin: 0; font-weight: 600; }
+.rodape { margin-top: 18px; font-size: 12.5px; color: var(--osso-3); }
+
+/* Agenda do barbeiro */
+.seg { display: inline-grid; grid-auto-flow: column; grid-auto-columns: 1fr; padding: 3px; border-radius: 12px; background: var(--couro-2); border: 1px solid var(--linha); margin-bottom: 12px; }
+.seg button { border: 0; background: transparent; padding: 8px 18px; border-radius: 9px; font-weight: 600; color: var(--osso-2); }
+.seg button[aria-pressed="true"] { background: var(--couro-3); color: var(--osso); box-shadow: inset 0 0 0 1px var(--linha); }
+.contagem { display: flex; flex-wrap: wrap; gap: 6px 14px; margin: 4px 0 14px; font-size: 13px; color: var(--osso-2); }
+.contagem b { color: var(--osso); }
+.linha-tempo { display: grid; gap: 6px; }
+.slot { display: grid; grid-template-columns: 50px 1fr; gap: 10px; align-items: stretch; }
+.slot time { padding-top: 11px; font-size: 13px; color: var(--osso-3); font-weight: 600; }
+.cartao { display: flex; align-items: center; gap: 10px; min-height: 46px; padding: 9px 12px; border-radius: 12px; border: 1px solid var(--linha); background: var(--couro-2); min-width: 0; }
+.cartao .quem { flex: 1; min-width: 0; }
+.cartao .quem strong { display: block; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cartao .quem span { display: block; font-size: 12.5px; color: var(--osso-3); }
+.cliente-cartao { border-left: 3px solid var(--latao); }
+.cliente-cartao.passou { opacity: 0.55; }
+.livre-cartao { background: transparent; border-style: dashed; color: var(--osso-3); }
+.bloq-cartao { background: var(--poste-fundo); border-color: rgba(192, 80, 58, 0.45); color: #e8a597; }
+.almoco-cartao { background: transparent; border: 0; color: var(--osso-3); font-size: 13px; }
+.novo { font-size: 11px; font-weight: 700; color: var(--latao-tinta); background: var(--latao); border-radius: 6px; padding: 2px 6px; }
+.mini { flex: none; border: 1px solid var(--linha); background: transparent; border-radius: 999px; padding: 5px 11px; font-size: 12.5px; color: var(--osso-2); }
+.mini:hover { border-color: var(--latao); color: var(--osso); }
+.agora { display: grid; grid-template-columns: 50px 1fr; gap: 10px; align-items: center; }
+.agora span { font-size: 12px; font-weight: 700; color: var(--poste); }
+.agora i { height: 4px; border-radius: 2px; background: repeating-linear-gradient(135deg, var(--poste) 0 6px, var(--osso) 6px 12px, #2f5f8f 12px 18px, var(--osso) 18px 24px); }
+
+/* Resumo do mês */
+.numeros { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-bottom: 14px; }
+.numero { border-radius: var(--raio); border: 1px solid var(--linha); background: var(--couro-2); padding: 14px; min-width: 0; }
+.numero.largo { grid-column: 1 / -1; display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
+.numero small { display: block; font-size: 12.5px; color: var(--osso-3); }
+.numero strong { display: block; font: 800 34px/1.05 var(--display); margin-top: 4px; }
+.numero.largo strong { font-size: 40px; color: var(--latao-2); }
+.numero p { margin: 4px 0 0; font-size: 12.5px; color: var(--osso-2); }
+.bloco { border-radius: var(--raio); border: 1px solid var(--linha); background: var(--couro-2); padding: 14px; margin-bottom: 14px; }
+.bloco h3 { margin: 0 0 12px; font-size: 14px; font-weight: 700; display: flex; justify-content: space-between; gap: 10px; }
+.bloco h3 span { font-weight: 500; font-size: 12.5px; color: var(--osso-3); }
+.barras { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; align-items: end; height: 150px; }
+.barra { display: grid; grid-template-rows: auto 1fr auto; height: 100%; text-align: center; gap: 4px; }
+.barra b { font-size: 12.5px; font-weight: 700; color: var(--osso-2); }
+.barra div { display: flex; align-items: flex-end; }
+.barra div i { display: block; width: 100%; border-radius: 6px 6px 3px 3px; background: rgba(201, 161, 91, 0.32); min-height: 4px; }
+.barra.topo-semana div i { background: var(--latao); }
+.barra.topo-semana b { color: var(--latao-2); }
+.barra small { font-size: 12px; color: var(--osso-3); text-transform: capitalize; }
+.ranking { display: grid; gap: 10px; }
+.ranking li { list-style: none; display: grid; grid-template-columns: 1fr auto; gap: 4px 10px; font-size: 14px; }
+.ranking ol { margin: 0; padding: 0; }
+.ranking .trilho { grid-column: 1 / -1; height: 6px; border-radius: 3px; background: var(--couro-3); overflow: hidden; }
+.ranking .trilho i { display: block; height: 100%; background: var(--latao); border-radius: 3px; }
+.ranking span { color: var(--osso-2); font-size: 13px; }
+
+/* Abas (celular) */
+.abas { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; display: flex; justify-content: center; gap: 4px;
+  padding: 8px max(16px, env(safe-area-inset-left, 0px)) calc(10px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-right, 0px));
+  background: rgba(21, 16, 12, 0.94); border-top: 1px solid var(--linha); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+.abas a { flex: 1; max-width: 140px; display: grid; justify-items: center; gap: 3px; padding: 6px 0; border-radius: 12px; color: var(--osso-3); font-size: 12px; font-weight: 600; text-decoration: none; }
+.abas a svg { width: 22px; height: 22px; }
+.abas a[aria-current="page"] { color: var(--latao-2); background: var(--latao-fundo); }
+
+@media (min-width: 1100px) {
+  .app { max-width: 1280px; padding-block: 32px 40px; }
+  .topo { max-width: 1280px; }
+  .telas { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; align-items: start; }
+  .tela, .tela[hidden] { display: block !important; border: 1px solid var(--linha); border-radius: 30px; background: #19130f; padding: 22px 20px 24px; }
+  .tela-rotulo { display: block; margin: -4px 0 14px; font-size: 12.5px; color: var(--osso-3); }
+  .abas { display: none; }
+  .marcar { position: static; background: none; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="app">
+  <header class="topo">
+    <span class="poste" aria-hidden="true"></span>
+    <div class="marca">
+      <h1 id="nome-barbearia">Sua Barbearia</h1>
+      <p>Horário marcado online · Casimiro de Abreu</p>
+    </div>
+    <button class="trocar" id="trocar" type="button" aria-expanded="false" aria-controls="nome-form">Trocar nome</button>
+  </header>
+  <form class="nome-form" id="nome-form" hidden>
+    <input type="text" id="nome-input" aria-label="Nome da barbearia" placeholder="Nome da barbearia" maxlength="40">
+    <button class="botao" type="submit" style="width:auto;min-height:44px">Salvar</button>
+  </form>
+
+  <main class="telas">
+    <section class="tela" id="cliente" aria-labelledby="cliente-titulo">
+      <p class="tela-rotulo">O que o cliente vê no celular</p>
+      <div class="capa">
+        <img src="img/barbearia.webp" alt="Cadeira e espelho de barbearia" width="720" height="540">
+        <div class="capa-texto">
+          <strong id="capa-nome">Sua Barbearia</strong>
+          <span id="capa-status"></span>
+        </div>
+      </div>
+      <h2 class="titulo" id="cliente-titulo">Marque seu horário</h2>
+      <p class="sub">Escolha o serviço, o barbeiro e o horário. Sem esperar resposta no WhatsApp.</p>
+      <div id="fluxo"></div>
+      <p class="rodape">Demonstração da BN Digital. Preços, barbeiros e horários são de exemplo.</p>
+    </section>
+
+    <section class="tela" id="agenda" aria-labelledby="agenda-titulo" hidden>
+      <p class="tela-rotulo">O que o barbeiro vê</p>
+      <h2 class="titulo" id="agenda-titulo">Agenda</h2>
+      <p class="sub">Os horários marcados caem aqui. Toque em um horário livre para bloquear.</p>
+      <div class="dias" id="agenda-dias" role="group" aria-label="Dia da agenda"></div>
+      <div style="height:12px"></div>
+      <div class="seg" id="agenda-barbeiros" role="group" aria-label="Barbeiro"></div>
+      <div class="contagem" id="agenda-contagem"></div>
+      <div class="linha-tempo" id="linha-tempo"></div>
+    </section>
+
+    <section class="tela" id="resumo" aria-labelledby="resumo-titulo" hidden>
+      <p class="tela-rotulo">Resumo do mês, para o dono</p>
+      <h2 class="titulo" id="resumo-titulo">Resumo de <span id="mes"></span></h2>
+      <p class="sub">Conta tudo que passou pela agenda até hoje. <span class="exemplo">dados de exemplo</span></p>
+      <div class="numeros" id="numeros"></div>
+      <div class="bloco">
+        <h3>Atendimentos por dia <span>no mês</span></h3>
+        <div class="barras" id="barras"></div>
+      </div>
+      <div class="bloco">
+        <h3>Serviços mais pedidos <span id="total-servicos"></span></h3>
+        <ol class="ranking" id="ranking"></ol>
+      </div>
+    </section>
+  </main>
+
+  <nav class="abas" aria-label="Telas">
+    <a href="#cliente" data-aba="cliente">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12"/></svg>
+      Cliente
+    </a>
+    <a href="#agenda" data-aba="agenda">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+      Agenda
+    </a>
+    <a href="#resumo" data-aba="resumo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M5 20V11M12 20V5M19 20v-6"/></svg>
+      Resumo
+    </a>
+  </nav>
+</div>
+
+<script>
+(() => {
+  // ---- Dados da demonstração -------------------------------------------------------------
+  const SERVICOS = [
+    { id: "corte", nome: "Corte", tempo: "30 min", slots: 1, preco: 35, peso: 45 },
+    { id: "combo", nome: "Corte + barba", tempo: "1 hora", slots: 2, preco: 55, peso: 30 },
+    { id: "barba", nome: "Barba", tempo: "30 min", slots: 1, preco: 25, peso: 12 },
+    { id: "pezinho", nome: "Pezinho", tempo: "15 min", slots: 1, preco: 10, peso: 8 },
+    { id: "sobrancelha", nome: "Sobrancelha", tempo: "15 min", slots: 1, preco: 10, peso: 5 },
+  ];
+  const BARBEIROS = [{ id: "rafa", nome: "Rafa" }, { id: "thiago", nome: "Thiago" }];
+  const NOMES = ["Lucas", "Gabriel", "Matheus", "João Pedro", "Rafael", "Felipe", "Bruno", "Diego", "Caio", "Vitor",
+    "Enzo", "Davi", "Igor", "Renan", "Wesley", "Kauã", "Arthur", "Miguel", "Leandro", "Marcos", "Seu Jorge", "Paulinho"];
+  // 9h às 19h, de 30 em 30 minutos; almoço de 12h às 13h.
+  const HORAS = [];
+  for (let m = 9 * 60; m < 19 * 60; m += 30) HORAS.push(`${String(Math.floor(m / 60)).padStart(2, "0")}:${String(m % 60).padStart(2, "0")}`);
+  const ALMOCO = new Set(["12:00", "12:30"]);
+  const SEMANA = ["dom", "seg", "ter", "qua", "qui", "sex", "sáb"];
+  const reais = (v) => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 });
+
+  // ---- Guardado no navegador (só deste aparelho) ------------------------------------------
+  const ler = (k, padrao) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : padrao; } catch { return padrao; } };
+  const gravar = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
+  let marcados = ler("hm-marcados", []);
+  let bloqueios = ler("hm-bloqueios", {});
+
+  // ---- Datas -------------------------------------------------------------------------------
+  const iso = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  const deIso = (s) => { const [a, m, d] = s.split("-").map(Number); return new Date(a, m - 1, d); };
+  const agora = () => new Date();
+  const minutosAgora = () => { const n = agora(); return n.getHours() * 60 + n.getMinutes(); };
+  const minutos = (h) => { const [a, b] = h.split(":").map(Number); return a * 60 + b; };
+  const abre = (d) => d.getDay() !== 0;
+  const hoje = iso(agora());
+  const diaCurto = (s) => { const d = deIso(s); return `${SEMANA[d.getDay()]}, ${String(d.getDate()).padStart(2, "0")}/${String(d.getMonth() + 1).padStart(2, "0")}`; };
+  const diaLongo = (s) => deIso(s).toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "2-digit" });
+
+  // Os próximos n dias de funcionamento, a partir de hoje.
+  function proximosDias(n) {
+    const lista = [];
+    const d = agora();
+    while (lista.length < n) {
+      if (abre(d)) lista.push(iso(d));
+      d.setDate(d.getDate() + 1);
+    }
+    return lista;
+  }
+
+  // ---- Agenda de exemplo, sempre igual para o mesmo dia ------------------------------------
+  function semente(txt) { let h = 1779033703 ^ txt.length; for (let i = 0; i < txt.length; i++) { h = Math.imul(h ^ txt.charCodeAt(i), 3432918353); h = (h << 13) | (h >>> 19); } return () => { h = Math.imul(h ^ (h >>> 16), 2246822507); h = Math.imul(h ^ (h >>> 13), 3266489909); return ((h ^= h >>> 16) >>> 0) / 4294967296; }; }
+  function servicoSorteado(r) { let x = r() * 100; for (const s of SERVICOS) { if ((x -= s.peso) < 0) return s; } return SERVICOS[0]; }
+
+  const cache = new Map();
+  function exemploDoDia(data, barbeiro) {
+    const chave = `${data}|${barbeiro}`;
+    if (cache.has(chave)) return cache.get(chave);
+    const r = semente(chave);
+    const d = deIso(data);
+    const distancia = Math.round((d - deIso(hoje)) / 86400000);
+    let chance = [0, 0.38, 0.5, 0.52, 0.58, 0.7, 0.86][d.getDay()];
+    if (distancia > 0) chance *= Math.max(0.35, 1 - distancia * 0.16);
+    const slots = HORAS.map((h) => (ALMOCO.has(h) ? { tipo: "almoco" } : null));
+    for (let i = 0; i < HORAS.length; i++) {
+      if (slots[i] || r() > chance) continue;
+      const s = servicoSorteado(r);
+      if (s.slots === 2 && (i + 1 >= HORAS.length || slots[i + 1])) continue;
+      const cliente = Math.floor(r() * 150);
+      slots[i] = { tipo: "cliente", nome: NOMES[cliente % NOMES.length], cliente, servico: s.id, ex: true };
+      if (s.slots === 2) slots[i + 1] = { tipo: "cont" };
+    }
+    cache.set(chave, slots);
+    return slots;
+  }
+
+  function diaCompleto(data, barbeiro) {
+    const slots = exemploDoDia(data, barbeiro).map((s) => s && { ...s });
+    for (const m of marcados) {
+      if (m.data !== data || m.barbeiro !== barbeiro) continue;
+      const s = SERVICOS.find((x) => x.id === m.servico);
+      slots[m.idx] = { tipo: "cliente", nome: m.nome, servico: m.servico, novo: true };
+      if (s && s.slots === 2 && m.idx + 1 < slots.length) slots[m.idx + 1] = { tipo: "cont" };
+    }
+    HORAS.forEach((_, i) => { if (!slots[i] && bloqueios[`${data}|${barbeiro}|${i}`]) slots[i] = { tipo: "bloq" }; });
+    return slots;
+  }
+
+  const passou = (data, i) => data < hoje || (data === hoje && minutos(HORAS[i]) <= minutosAgora());
+
+  function livre(data, barbeiro, i, servico) {
+    const slots = diaCompleto(data, barbeiro);
+    const s = SERVICOS.find((x) => x.id === servico);
+    const precisa = s ? s.slots : 1;
+    for (let k = 0; k < precisa; k++) {
+      if (i + k >= HORAS.length || slots[i + k] || passou(data, i + k)) return false;
+    }
+    return true;
+  }
+
+  // ---- Nome da barbearia -------------------------------------------------------------------
+  const nomeEls = [document.getElementById("nome-barbearia"), document.getElementById("capa-nome")];
+  const form = document.getElementById("nome-form");
+  const trocar = document.getElementById("trocar");
+  const nomeInput = document.getElementById("nome-input");
+  function aplicarNome(nome) { nomeEls.forEach((el) => (el.textContent = nome || "Sua Barbearia")); document.title = nome ? `${nome} · Horário Marcado` : "Horário Marcado"; }
+  aplicarNome(ler("hm-nome", ""));
+  trocar.addEventListener("click", () => {
+    form.hidden = !form.hidden;
+    trocar.setAttribute("aria-expanded", String(!form.hidden));
+    if (!form.hidden) { nomeInput.value = ler("hm-nome", ""); nomeInput.focus(); }
+  });
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const nome = nomeInput.value.trim();
+    gravar("hm-nome", nome); aplicarNome(nome); form.hidden = true; trocar.setAttribute("aria-expanded", "false");
+  });
+
+  // Status na capa: aberto agora ou quando abre.
+  (function status() {
+    const n = agora();
+    const el = document.getElementById("capa-status");
+    const m = minutosAgora();
+    if (abre(n) && m >= 9 * 60 && m < 19 * 60) el.innerHTML = `<span class="aberto">Aberto agora</span> · fecha às 19h`;
+    else el.textContent = abre(n) && m < 9 * 60 ? "Abre hoje às 9h" : "Fechado agora · seg a sáb, 9h às 19h";
+  })();
+
+  // ---- Tela do cliente ---------------------------------------------------------------------
+  const fluxo = document.getElementById("fluxo");
+  const escolha = { servico: "corte", barbeiro: "qualquer", dia: null, idx: null, nome: "", tel: "" };
+  let confirmado = null;
+
+  function diasCliente() {
+    return proximosDias(8).filter((d) => BARBEIROS.some((b) => HORAS.some((_, i) => livre(d, b.id, i, escolha.servico))));
+  }
+
+  function horariosLivres() {
+    if (!escolha.dia) return [];
+    const quem = escolha.barbeiro === "qualquer" ? BARBEIROS.map((b) => b.id) : [escolha.barbeiro];
+    return HORAS.map((h, i) => ({ h, i, ok: quem.some((b) => livre(escolha.dia, b, i, escolha.servico)) }))
+      .filter((x) => !ALMOCO.has(x.h) && !passou(escolha.dia, x.i));
+  }
+
+  function el(tag, attrs = {}, ...filhos) {
+    const e = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs)) {
+      if (k === "on") Object.entries(v).forEach(([ev, fn]) => e.addEventListener(ev, fn));
+      else if (k === "html") e.innerHTML = v;
+      else if (v !== false && v != null) e.setAttribute(k, v === true ? "" : v);
+    }
+    for (const f of filhos.flat()) if (f != null) e.append(f);
+    return e;
+  }
+
+  function passo(n, titulo, extra, conteudo) {
+    return el("div", { class: "passo" }, el("h3", {}, el("b", {}, String(n)), titulo, extra ? el("em", {}, extra) : null), conteudo);
+  }
+
+  function renderCliente() {
+    fluxo.replaceChildren();
+    if (confirmado) {
+      const s = SERVICOS.find((x) => x.id === confirmado.servico);
+      const barbeiro = BARBEIROS.find((b) => b.id === confirmado.barbeiro).nome;
+      const texto = `Oi! Marquei ${s.nome.toLowerCase()} com o ${barbeiro} ${diaLongo(confirmado.data)}, às ${HORAS[confirmado.idx]}. Nome: ${confirmado.nome}.`;
+      fluxo.append(
+        el("div", { class: "confirmado", role: "status" },
+          el("h3", {}, "Horário marcado"),
+          el("dl", {},
+            el("dt", {}, "Serviço"), el("dd", {}, `${s.nome} · ${reais(s.preco)}`),
+            el("dt", {}, "Barbeiro"), el("dd", {}, barbeiro),
+            el("dt", {}, "Quando"), el("dd", { class: "num" }, `${diaLongo(confirmado.data)}, ${HORAS[confirmado.idx]}`),
+            el("dt", {}, "Nome"), el("dd", {}, confirmado.nome),
+          ),
+          el("a", { class: "botao", href: `https://wa.me/?text=${encodeURIComponent(texto)}`, target: "_blank", rel: "noopener noreferrer" }, "Mandar confirmação no WhatsApp"),
+          el("button", { class: "botao secundario", type: "button", on: { click: () => { confirmado = null; renderCliente(); } } }, "Marcar outro horário"),
+          el("p", { class: "rodape", style: "margin:0" }, "Já apareceu na agenda do barbeiro. Veja na aba Agenda."),
+        ),
+      );
+      return;
+    }
+
+    const servicos = el("div", { class: "servicos", role: "group", "aria-label": "Serviço" },
+      SERVICOS.map((s) => el("button", { type: "button", class: "servico", "aria-pressed": String(escolha.servico === s.id),
+        on: { click: () => { escolha.servico = s.id; escolha.idx = null; renderCliente(); } } },
+        el("strong", {}, s.nome), el("span", {}, s.tempo), el("b", { class: "preco num" }, reais(s.preco)))));
+
+    const barbeiros = el("div", { class: "chips", role: "group", "aria-label": "Barbeiro" },
+      el("button", { type: "button", class: "chip sem-avatar", "aria-pressed": String(escolha.barbeiro === "qualquer"),
+        on: { click: () => { escolha.barbeiro = "qualquer"; escolha.idx = null; renderCliente(); } } }, "Quem estiver livre"),
+      BARBEIROS.map((b) => el("button", { type: "button", class: "chip", "aria-pressed": String(escolha.barbeiro === b.id),
+        on: { click: () => { escolha.barbeiro = b.id; escolha.idx = null; renderCliente(); } } }, el("i", { "aria-hidden": "true" }, b.nome[0]), b.nome)));
+
+    const dias = diasCliente();
+    if (!escolha.dia || !dias.includes(escolha.dia)) escolha.dia = dias[0] ?? null;
+    const faixa = el("div", { class: "dias", role: "group", "aria-label": "Dia" },
+      dias.map((d) => { const dt = deIso(d); return el("button", { type: "button", class: "dia", "aria-pressed": String(escolha.dia === d), "aria-label": diaLongo(d),
+        on: { click: () => { escolha.dia = d; escolha.idx = null; renderCliente(); } } },
+        el("small", {}, d === hoje ? "hoje" : SEMANA[dt.getDay()]), el("strong", { class: "num" }, String(dt.getDate()))); }));
+
+    const lista = horariosLivres();
+    const horas = lista.some((x) => x.ok)
+      ? el("div", { class: "horas", role: "group", "aria-label": "Horário" }, lista.map((x) => el("button", { type: "button", class: "hora num", disabled: !x.ok,
+          "aria-pressed": String(escolha.idx === x.i), "aria-label": x.ok ? `${x.h}` : `${x.h}, ocupado`,
+          on: { click: () => { escolha.idx = x.i; renderCliente(); } } }, x.h)))
+      : el("p", { class: "vazio" }, "Esse dia já está cheio. Escolha outro dia.");
+
+    const nome = el("input", { type: "text", id: "cliente-nome", autocomplete: "given-name", placeholder: "Como te chamam", value: escolha.nome,
+      on: { input: (e) => { escolha.nome = e.target.value; atualizarBotao(); } } });
+    const tel = el("input", { type: "tel", id: "cliente-tel", inputmode: "tel", autocomplete: "tel", placeholder: "(22) 9 0000-0000", value: escolha.tel,
+      on: { input: (e) => { escolha.tel = e.target.value; atualizarBotao(); } } });
+    const campos = el("div", { class: "campos" },
+      el("label", { class: "campo", for: "cliente-nome" }, "Seu nome", nome),
+      el("label", { class: "campo", for: "cliente-tel" }, "WhatsApp", tel));
+
+    const botao = el("button", { type: "button", class: "botao", on: { click: confirmar } });
+    function atualizarBotao() {
+      const pronto = escolha.dia && escolha.idx != null && escolha.nome.trim().length >= 2;
+      botao.disabled = !pronto;
+      botao.textContent = escolha.idx != null && escolha.dia ? `Marcar ${diaCurto(escolha.dia)} às ${HORAS[escolha.idx]}` : "Escolha um horário";
+      if (escolha.idx != null && escolha.nome.trim().length < 2) botao.textContent = "Falta o seu nome";
+    }
+    atualizarBotao();
+
+    const s = SERVICOS.find((x) => x.id === escolha.servico);
+    fluxo.append(
+      passo(1, "Serviço", null, servicos),
+      passo(2, "Barbeiro", null, barbeiros),
+      passo(3, "Dia", escolha.dia ? diaLongo(escolha.dia) : null, faixa),
+      passo(4, "Horário", s.slots === 2 ? "ocupa 1 hora" : null, horas),
+      passo(5, "Seus dados", null, campos),
+      el("div", { class: "marcar" }, botao),
+    );
+  }
+
+  function confirmar() {
+    if (escolha.idx == null || !escolha.dia) return;
+    let barbeiro = escolha.barbeiro;
+    if (barbeiro === "qualquer") barbeiro = BARBEIROS.find((b) => livre(escolha.dia, b.id, escolha.idx, escolha.servico))?.id;
+    if (!barbeiro || !livre(escolha.dia, barbeiro, escolha.idx, escolha.servico)) { escolha.idx = null; renderCliente(); return; }
+    const m = { data: escolha.dia, barbeiro, idx: escolha.idx, servico: escolha.servico, nome: escolha.nome.trim(), tel: escolha.tel.trim() };
+    marcados.push(m); gravar("hm-marcados", marcados);
+    confirmado = m;
+    agendaEstado.dia = m.data; agendaEstado.barbeiro = m.barbeiro;
+    escolha.idx = null;
+    renderTudo();
+  }
+
+  // ---- Agenda do barbeiro ------------------------------------------------------------------
+  const agendaEstado = { dia: proximosDias(1)[0], barbeiro: "rafa" };
+  function renderAgenda() {
+    const dias = proximosDias(7);
+    const faixa = document.getElementById("agenda-dias");
+    faixa.replaceChildren(...dias.map((d) => { const dt = deIso(d); return el("button", { type: "button", class: "dia", "aria-pressed": String(agendaEstado.dia === d), "aria-label": diaLongo(d),
+      on: { click: () => { agendaEstado.dia = d; renderAgenda(); } } }, el("small", {}, d === hoje ? "hoje" : SEMANA[dt.getDay()]), el("strong", { class: "num" }, String(dt.getDate()))); }));
+    document.getElementById("agenda-barbeiros").replaceChildren(...BARBEIROS.map((b) => el("button", { type: "button", "aria-pressed": String(agendaEstado.barbeiro === b.id),
+      on: { click: () => { agendaEstado.barbeiro = b.id; renderAgenda(); } } }, b.nome)));
+
+    const { dia, barbeiro } = agendaEstado;
+    const slots = diaCompleto(dia, barbeiro);
+    const clientes = slots.filter((s) => s && s.tipo === "cliente");
+    const livres = HORAS.filter((h, i) => !slots[i] && !passou(dia, i)).length;
+    const bloq = slots.filter((s) => s && s.tipo === "bloq").length;
+    const previsto = clientes.reduce((t, c) => t + SERVICOS.find((x) => x.id === c.servico).preco, 0);
+    document.getElementById("agenda-contagem").innerHTML =
+      `<span><b class="num">${clientes.length}</b> marcados</span><span><b class="num">${livres}</b> livres</span>${bloq ? `<span><b class="num">${bloq}</b> bloqueados</span>` : ""}<span>previsto <b class="num">${reais(previsto)}</b></span>`;
+
+    const linhas = [];
+    const m = minutosAgora();
+    let marcouAgora = dia !== hoje;
+    HORAS.forEach((h, i) => {
+      if (!marcouAgora && minutos(h) > m) {
+        marcouAgora = true;
+        linhas.push(el("div", { class: "agora", "aria-label": "Agora" }, el("span", { class: "num" }, `${String(Math.floor(m / 60)).padStart(2, "0")}:${String(m % 60).padStart(2, "0")}`), el("i", { "aria-hidden": "true" })));
+      }
+      const s = slots[i];
+      if (s && s.tipo === "cont") return;
+      let cartao;
+      if (!s) {
+        cartao = passou(dia, i)
+          ? el("div", { class: "cartao livre-cartao" }, "Ficou livre")
+          : el("div", { class: "cartao livre-cartao" }, el("span", { class: "quem" }, "Livre"),
+              el("button", { type: "button", class: "mini", on: { click: () => { bloqueios[`${dia}|${barbeiro}|${i}`] = true; gravar("hm-bloqueios", bloqueios); renderTudo(); } } }, "Bloquear"));
+      } else if (s.tipo === "almoco") {
+        if (h !== "12:00") return;
+        cartao = el("div", { class: "cartao almoco-cartao" }, "Almoço, das 12h às 13h");
+      } else if (s.tipo === "bloq") {
+        cartao = el("div", { class: "cartao bloq-cartao" }, el("span", { class: "quem" }, "Bloqueado"),
+          el("button", { type: "button", class: "mini", on: { click: () => { delete bloqueios[`${dia}|${barbeiro}|${i}`]; gravar("hm-bloqueios", bloqueios); renderTudo(); } } }, "Liberar"));
+      } else {
+        const sv = SERVICOS.find((x) => x.id === s.servico);
+        cartao = el("div", { class: `cartao cliente-cartao${passou(dia, i) ? " passou" : ""}` },
+          el("span", { class: "quem" }, el("strong", {}, s.nome), el("span", {}, `${sv.nome} · ${sv.tempo} · ${reais(sv.preco)}`)),
+          s.novo ? el("span", { class: "novo" }, "Novo") : null);
+      }
+      linhas.push(el("div", { class: "slot" }, el("time", { class: "num" }, h), cartao));
+    });
+    if (!marcouAgora) linhas.push(el("div", { class: "agora", "aria-label": "Agora" }, el("span", { class: "num" }, `${String(Math.floor(m / 60)).padStart(2, "0")}:${String(m % 60).padStart(2, "0")}`), el("i", { "aria-hidden": "true" })));
+    document.getElementById("linha-tempo").replaceChildren(...linhas);
+  }
+
+  // ---- Resumo do mês -----------------------------------------------------------------------
+  function renderResumo() {
+    const n = agora();
+    document.getElementById("mes").textContent = n.toLocaleDateString("pt-BR", { month: "long" });
+    const porDia = [0, 0, 0, 0, 0, 0, 0];
+    const porServico = Object.fromEntries(SERVICOS.map((s) => [s.id, 0]));
+    let total = 0, faturamento = 0;
+    const vistos = new Set(); let voltaram = 0;
+    for (let d = new Date(n.getFullYear(), n.getMonth(), 1); iso(d) <= hoje; d.setDate(d.getDate() + 1)) {
+      if (!abre(d)) continue;
+      const data = iso(d);
+      for (const b of BARBEIROS) {
+        diaCompleto(data, b.id).forEach((s, i) => {
+          // Hoje só conta o que já passou (e o que foi marcado agora, na demonstração).
+          if (!s || s.tipo !== "cliente" || (data === hoje && !passou(data, i) && !s.novo)) return;
+          const sv = SERVICOS.find((x) => x.id === s.servico);
+          total += 1; faturamento += sv.preco; porDia[d.getDay()] += 1; porServico[sv.id] += 1;
+          const quem = s.cliente ?? s.nome;
+          if (vistos.has(quem)) voltaram += 1; else vistos.add(quem);
+        });
+      }
+    }
+    const ticket = total ? faturamento / total : 0;
+    document.getElementById("numeros").innerHTML = `
+      <div class="numero largo"><div><small>Faturamento pela agenda</small><strong class="num">${reais(faturamento)}</strong></div><p>preços da tabela</p></div>
+      <div class="numero"><small>Atendimentos</small><strong class="num">${total}</strong><p>${BARBEIROS.length} barbeiros</p></div>
+      <div class="numero"><small>Clientes que voltaram</small><strong class="num">${total ? Math.round((voltaram / total) * 100) : 0}%</strong><p>ticket médio ${reais(ticket)}</p></div>`;
+    const dias = [1, 2, 3, 4, 5, 6];
+    const maior = Math.max(1, ...dias.map((d) => porDia[d]));
+    document.getElementById("barras").innerHTML = dias.map((d) => `
+      <div class="barra${porDia[d] === maior ? " topo-semana" : ""}" role="img" aria-label="${SEMANA[d]}: ${porDia[d]} atendimentos">
+        <b class="num">${porDia[d]}</b><div><i style="height:${Math.max(3, (porDia[d] / maior) * 100)}%"></i></div><small>${SEMANA[d]}</small>
+      </div>`).join("");
+    const ordem = SERVICOS.slice().sort((a, b) => porServico[b.id] - porServico[a.id]);
+    const top = Math.max(1, porServico[ordem[0].id]);
+    document.getElementById("total-servicos").textContent = `${total} no mês`;
+    document.getElementById("ranking").innerHTML = ordem.map((s) => `
+      <li><strong>${s.nome}</strong><span class="num">${porServico[s.id]} · ${reais(porServico[s.id] * s.preco)}</span>
+      <div class="trilho"><i style="width:${(porServico[s.id] / top) * 100}%"></i></div></li>`).join("");
+  }
+
+  // ---- Abas (celular) e endereço -----------------------------------------------------------
+  const TELAS = ["cliente", "agenda", "resumo"];
+  function mostrar(nome) {
+    if (!TELAS.includes(nome)) nome = "cliente";
+    TELAS.forEach((t) => (document.getElementById(t).hidden = t !== nome));
+    document.querySelectorAll(".abas a").forEach((a) => { if (a.dataset.aba === nome) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
+  }
+  window.addEventListener("hashchange", () => { mostrar(location.hash.slice(1)); window.scrollTo(0, 0); });
+
+  function renderTudo() { renderCliente(); renderAgenda(); renderResumo(); }
+  renderTudo();
+  mostrar(location.hash.slice(1));
+})();
+</script>
