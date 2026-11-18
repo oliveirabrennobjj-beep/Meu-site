@@ -382,8 +382,8 @@ const TEMAS: Record<RamoId, Tema> = {
 export const temaDe = (lead: Lead) => TEMAS[ramoDe(lead).id];
 
 const nota = (n: number) => n.toLocaleString("pt-BR", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
-const arquivo = (nome: string) =>
-  `previa-${nome.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "").toLowerCase() || "site"}.jpg`;
+export const arquivo = (nome: string, tipo = "previa") =>
+  `${tipo}-${nome.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "").toLowerCase() || "site"}.jpg`;
 
 // Formas orgânicas atrás das fotos, como na referência.
 const BOLHA = "62% 38% 46% 54% / 55% 44% 56% 45%";
@@ -391,7 +391,7 @@ const BOLHA2 = "38% 62% 55% 45% / 46% 58% 42% 54%";
 
 // Fontes da prévia, servidas junto com o painel. A tela e a foto usam os mesmos arquivos:
 // a foto não enxerga as fontes do Google, e com letras diferentes o texto quebraria em outro lugar.
-const TEXTO = "Roboto Demo";
+export const TEXTO = "Roboto Demo";
 const FONTES: Record<string, [arquivo: string, peso: number, estilo?: "italic"][]> = {
   [TEXTO]: [["roboto-400", 400], ["roboto-500", 500], ["roboto-700", 700]],
   Caveat: [["caveat-600", 600]],
@@ -407,7 +407,7 @@ const face = (familia: string, peso: number, estilo: string | undefined, url: st
   `@font-face{font-family:"${familia}";font-weight:${peso};font-style:${estilo ?? "normal"};font-display:swap;src:url(${url}) format("woff2")}`;
 
 /** As fontes da prévia para a tela (arquivos ao lado do painel). */
-const FONTES_NA_TELA = Object.entries(FONTES)
+export const FONTES_NA_TELA = Object.entries(FONTES)
   .flatMap(([familia, arquivos]) =>
     arquivos.map(([arquivo, peso, estilo]) => face(familia, peso, estilo, `img/demo/fontes/${arquivo}.woff2`)),
   )
@@ -422,7 +422,7 @@ const comoDataUrl = (blob: Blob) =>
   });
 
 /** `@font-face` com os arquivos embutidos; vazio se não conseguir ler (a foto sai com a letra padrão). */
-async function cssDasFontes(familias: string[]) {
+export async function cssDasFontes(familias: string[]) {
   try {
     const faces = await Promise.all(
       familias.flatMap((familia) =>
@@ -441,6 +441,37 @@ async function cssDasFontes(familias: string[]) {
 }
 
 type Downloads = { save: (r: { filename: string; data: Blob }) => Promise<unknown> };
+
+/**
+ * Manda a foto pro WhatsApp: 1º o compartilhar do celular (foto e texto juntos); 2º salva no celular;
+ * 3º devolve a foto para o Brenno segurar e salvar na mão.
+ */
+export async function compartilharFoto(
+  dataUrl: string,
+  nome: string,
+  mensagem: string,
+): Promise<"compartilhou" | "cancelou" | { url: string; salva: boolean }> {
+  const blob = await (await fetch(dataUrl)).blob();
+  const file = new File([blob], nome, { type: "image/jpeg" });
+  if (navigator.canShare?.({ files: [file] })) {
+    try {
+      await navigator.share({ files: [file], text: mensagem });
+      return "compartilhou";
+    } catch (e) {
+      if ((e as DOMException)?.name === "AbortError") return "cancelou";
+    }
+  }
+  const downloads = (await window.claude?.use?.("downloads").catch(() => null)) as Downloads | null;
+  if (downloads) {
+    try {
+      await downloads.save({ filename: nome, data: blob });
+      return { url: dataUrl, salva: true };
+    } catch {
+      /* recusou ou não deu: mostra a foto para salvar na mão */
+    }
+  }
+  return { url: dataUrl, salva: false };
+}
 
 /** Tela cheia com a prévia do site; "Mandar foto" gera a imagem e abre o compartilhar do celular. */
 export function Demonstracao({
@@ -496,33 +527,9 @@ export function Demonstracao({
     if (gerando) return;
     setGerando(true);
     try {
-      const dataUrl = await gerarFoto();
-      const blob = await (await fetch(dataUrl)).blob();
-      const nome = arquivo(lead.nome);
-      const file = new File([blob], nome, { type: "image/jpeg" });
-      // 1º: compartilhar do celular (a foto e o texto vão juntos pro WhatsApp).
-      if (navigator.canShare?.({ files: [file] })) {
-        try {
-          await navigator.share({ files: [file], text: mensagem });
-          setAviso("Escolha o WhatsApp e a conversa da loja.");
-          return;
-        } catch (e) {
-          if ((e as DOMException)?.name === "AbortError") return;
-        }
-      }
-      // 2º: salvar a foto no celular e abrir a conversa com o texto pronto.
-      const downloads = (await window.claude?.use?.("downloads").catch(() => null)) as Downloads | null;
-      if (downloads) {
-        try {
-          await downloads.save({ filename: nome, data: blob });
-          setFoto({ url: dataUrl, salva: true });
-          return;
-        } catch {
-          /* recusou ou não deu: mostra a foto para salvar na mão */
-        }
-      }
-      // 3º: mostra a foto para tocar e segurar.
-      setFoto({ url: dataUrl, salva: false });
+      const r = await compartilharFoto(await gerarFoto(), arquivo(lead.nome), mensagem);
+      if (r === "compartilhou") setAviso("Escolha o WhatsApp e a conversa da loja.");
+      else if (r !== "cancelou") setFoto(r);
     } catch {
       setAviso("Não consegui gerar a foto. Tire um print da tela e mande.");
     } finally {

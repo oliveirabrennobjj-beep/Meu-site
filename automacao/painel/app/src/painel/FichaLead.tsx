@@ -6,6 +6,7 @@ import {
   ExternalLink,
   Handshake,
   Instagram,
+  LayoutDashboard,
   MapPin,
   MessageCircle,
   MonitorSmartphone,
@@ -25,6 +26,7 @@ import { SegmentedControl, type SegmentOption } from "@/components/ui/dashboard-
 import { cn } from "@/lib/utils";
 import { Anotar } from "./Anotar";
 import { Demonstracao } from "./Demonstracao";
+import { SistemaPrevia } from "./SistemaPrevia";
 import { StatusChip } from "./TabelaLeads";
 import {
   MOTIVO_TIRADA,
@@ -47,7 +49,8 @@ import {
   linkWhatsApp,
   motivoTirada,
   ENVIOS,
-  ofereceAgenda,
+  sistemaDe,
+  textosSistema,
   ofertaInicial,
   proximaOferta,
   paginaDe,
@@ -74,11 +77,12 @@ const DESFECHOS: [Status, string][] = [
 ];
 
 const OFERTA: Record<Envio, { nome: string; oferecer: string; enviada: string; feito: string }> = {
+  // O sistema da loja (horário marcado ou controle de alunos); o nome no botão vem de textosSistema.
   agenda: {
-    nome: "Horário",
-    oferecer: "Oferecer horário marcado online",
-    enviada: "Horário marcado: mensagem já enviada",
-    feito: "Mensagem do horário marcado enviada",
+    nome: "Sistema",
+    oferecer: "Oferecer o sistema",
+    enviada: "Sistema: mensagem já enviada",
+    feito: "Mensagem do sistema enviada",
   },
   placa: {
     nome: "Placa",
@@ -187,8 +191,10 @@ function Conteudo({
   const corrigir = !daqui && recebeuPedidoDeVisita(lead) && !lead.corrigidoEm;
   const [escolhida, setOferta] = useState<Oferta>(() => ofertaInicial(lead));
   const [demo, setDemo] = useState(false);
-  // Fora de Casimiro a oferta é o site; barbearia também pode receber o horário marcado.
-  const agendaOk = ofereceAgenda(lead);
+  const [verSistema, setVerSistema] = useState(false);
+  // Fora de Casimiro a oferta é o site; nos ramos com sistema, também o sistema.
+  const agendaOk = sistemaDe(lead) !== null;
+  const sis = textosSistema(lead);
   const oferta: Oferta = !daqui ? (agendaOk && escolhida === "agenda" ? "agenda" : "site") : escolhida;
   const site = dataEnvio(lead, "site");
   const placa = dataEnvio(lead, "placa");
@@ -205,11 +211,12 @@ function Conteudo({
     ...(["placa", "site", "dono"] as const).map(opcao),
     ...(agendaOk ? [opcao("agenda")] : []),
   ];
-  // Barbearia de distrito ou de fora: só WhatsApp, com site ou horário marcado.
+  // Loja de distrito ou de fora: só WhatsApp, com site ou sistema.
   const opcoesFora = [opcao("agenda"), opcao("site")];
 
   function opcao(id: Envio): SegmentOption<Oferta> {
     const feita = dataEnvio(lead, id) !== null;
+    if (id === "agenda") return { id, label: `${sis.botao}${feita ? " ✓" : ""}`, long: feita ? OFERTA.agenda.enviada : sis.oferecer };
     return {
       id,
       label: `${OFERTA[id].nome.toUpperCase()}${feita ? " ✓" : ""}`,
@@ -354,6 +361,19 @@ function Conteudo({
         {demo && (
           <Demonstracao lead={lead} mensagem={textoPrevia(lead)} onFechar={() => setDemo(false)} onRamo={mudarRamo} />
         )}
+        {agendaOk && (
+          <BlockButton variant="secondary" size="lg" className="w-full" onClick={() => setVerSistema(true)}>
+            <LayoutDashboard aria-hidden="true" />
+            Mostrar o sistema ({sis.nome})
+          </BlockButton>
+        )}
+        {verSistema && (
+          <SistemaPrevia
+            lead={lead}
+            mensagem={`Olha como ficaria o sistema de ${sis.nome} pra ${lead.nome}, no notebook e no celular. Posso te mostrar como funciona?`}
+            onFechar={() => setVerSistema(false)}
+          />
+        )}
         <label className="-mt-1 flex flex-wrap items-center justify-between gap-x-3 gap-y-1.5">
           <span className="text-[13px] font-medium">
             Ramo da loja
@@ -446,13 +466,13 @@ function Conteudo({
               <h3 className={rotuloCampo}>
                 {!daqui
                   ? continuacao
-                    ? "Continuação da conversa, sem repetir o oi (horário marcado)"
-                    : `Mensagem pronta (${oferta === "agenda" ? "horário marcado" : "site"})`
+                    ? `Continuação da conversa, sem repetir o oi (${sis.nome})`
+                    : `Mensagem pronta (${oferta === "agenda" ? sis.nome : "site"})`
                   : continuacao
                     ? `Continuação da conversa, sem repetir o oi (${OFERTA[oferta === "ambas" ? "site" : oferta].nome.toLowerCase()})`
                     : oferta === "dono"
                       ? "Mensagem pedindo para falar com o dono"
-                      : `Mensagem para marcar a visita (${oferta === "ambas" ? "site e placa" : oferta === "agenda" ? "horário marcado" : oferta})`}
+                      : `Mensagem para marcar a visita (${oferta === "ambas" ? "site e placa" : oferta === "agenda" ? sis.nome : oferta})`}
               </h3>
               <p className="max-h-[210px] select-text overflow-y-auto whitespace-pre-wrap rounded-[12px] border border-[color:var(--bjork-border)] bg-[var(--bjork-field-inset)] p-3 text-[13.5px] leading-relaxed text-[color:var(--bjork-text-medium)] [overflow-wrap:anywhere]">
                 {mensagem}

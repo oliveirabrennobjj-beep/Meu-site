@@ -57,7 +57,12 @@ Atualizado em 14/11/2026 (tarde).
   - `assistente/conversa`: o chat.
 
 ## Horário marcado (novidade de 18/11)
-- Oferta "Horário" na ficha de barbearia (visita, WhatsApp e continuação). Barbearia sem contato já abre nela.
+- Oferta do sistema na ficha (botão HORÁRIO ou ALUNOS, conforme o ramo):
+  - Horário marcado: barbearia, salão, estética, massagem, pet shop (banho e tosa) e lava-jato.
+  - Controle de alunos e mensalidade: pilates, yoga, dança, natação, CrossFit, luta e academia.
+  - Barbearia sem contato já abre no sistema. Loja desses ramos que já recebeu mensagem também abre nele (texto de continuação, sem novo "oi").
+- Filtro "Oferecer sistema" na lista: quem já recebeu mensagem, é de ramo com sistema e ainda não ouviu falar dele.
+- Botão "Mostrar o sistema" na ficha: a loja no notebook e no celular, com "Mandar foto" (em `src/painel/SistemaPrevia.tsx`).
 - 18/11: entraram 16 barbearias de Casimiro, Barra de São João e Rio Dourado (Google Maps). Sem telefone no Google, só indo lá: KING BARBER e Seu Orlando (Barra), Niilo Barbeiro, Léo do Corte e Barbearia Pirulito (Casimiro), Tesoura de Ouro e Barberia do Zé (Rio Dourado).
 - Demonstração para mostrar ao barbeiro: https://claude.ai/artifact/Wd4vVWKcnP8NRG6qcT8ZUY (fonte em `automacao/horario-marcado/`). "Trocar nome" põe o nome da barbearia antes de mostrar. Dados de exemplo; o sistema de verdade só depois de 2 ou 3 barbearias toparem.
 

@@ -606,9 +606,9 @@ export const TEXTOS_INFO: Record<ChaveTexto, { curto: string; longo: string }> =
   depoisSite: { curto: "2ª: site", longo: "Site depois da placa, sem repetir o oi" },
   casimiroDono: { curto: "Visita: dono", longo: "Pedindo visita: falar com o dono" },
   depoisDono: { curto: "2ª: dono", longo: "Pedir para falar com o dono depois de já ter mandado mensagem" },
-  casimiroAgenda: { curto: "Visita: horário", longo: "Pedindo visita: horário marcado online (barbearia)" },
-  foraAgenda: { curto: "WhatsApp: horário", longo: "Horário marcado online por WhatsApp, para barbearia onde não dá pra ir" },
-  depoisAgenda: { curto: "2ª: horário", longo: "Horário marcado depois de outra mensagem, sem repetir o oi" },
+  casimiroAgenda: { curto: "Visita: sistema", longo: "Pedindo visita: sistema (horário marcado ou controle de alunos)" },
+  foraAgenda: { curto: "WhatsApp: sistema", longo: "Sistema por WhatsApp, para loja onde não dá pra ir" },
+  depoisAgenda: { curto: "2ª: sistema", longo: "Sistema para quem já recebeu mensagem, sem repetir o oi" },
   gostou: { curto: "Gostou", longo: "Quando a pessoa gostou: oferecer a demonstração" },
 };
 
@@ -629,11 +629,11 @@ export const TEXTOS_PADRAO: Textos = {
   casimiroDono: `${APRESENTACAO_CASIMIRO}\nQueria mostrar pra {nome} um trabalho que faço pro comércio aqui da cidade: site e uma plaquinha de avaliação pro balcão.\nConsigo falar com o dono ou a dona? É rapidinho. Qual horário costuma ser melhor pra encontrar? Ou, se preferir, me passa o contato.`,
   depoisDono:
     "Ah, e quem eu procuro aí pra conversar sobre isso? Se puder ser o dono ou a dona, melhor, já mostro tudo pessoalmente.\nQual horário costuma ser melhor pra encontrar? Ou, se preferir, me passa o contato.",
-  casimiroAgenda: `${APRESENTACAO_CASIMIRO}\nTô começando um sistema de horário marcado pra barbearia aqui da cidade: o cliente escolhe o serviço e o horário pelo celular, e já fica marcado na sua agenda.\nVocê não precisa parar o corte pra responder mensagem.\nPosso passar aí pra te mostrar como funciona? É rapidinho. ${VISITA}`,
+  casimiroAgenda: `${APRESENTACAO_CASIMIRO}\nTô começando {sistemaUm} pra {sistemaQuem} aqui da cidade: {sistemaFrase}.\n{sistemaGanho}\nPosso passar aí pra te mostrar como funciona? É rapidinho. ${VISITA}`,
   foraAgenda:
-    "Oi, {saudacao}, tudo certo? Aqui é o Brenno, da BN Digital. Sou de Casimiro{pertinho}.\nTô começando um sistema de horário marcado pra barbearia: o cliente escolhe o serviço e o horário pelo celular, e já fica marcado na sua agenda, sem você parar o corte pra responder mensagem.\nQuer que eu te mostre como funciona? Se não for a hora, tranquilo, é só falar.",
+    "Oi, {saudacao}, tudo certo? Aqui é o Brenno, da BN Digital. Sou de Casimiro{pertinho}.\nTô começando {sistemaUm} pra {sistemaQuem}: {sistemaFrase}.\n{sistemaGanho}\nQuer que eu te mande uma imagem de como ficaria pra {nome}? Se não for a hora, tranquilo, é só falar.",
   depoisAgenda:
-    "Ah, e aproveitando: tô começando um sistema de horário marcado pra barbearia. O cliente escolhe o horário pelo celular e já fica marcado na sua agenda.\nSe quiser, te mostro como funciona.",
+    "Ah, e aproveitando: tô começando {sistemaUm} pra {sistemaQuem}. {SistemaFrase}.\n{sistemaGanho}\nQuer que eu te mande uma imagem de como ficaria pra {nome}?",
   gostou:
     "Que bom que gostou! Consigo te fazer uma demonstração de design, de como vai ficar o site da {nome}, ainda hoje ou amanhã.\nPara você ter uma ideia, olha um que eu já fiz: {exemplo}\nPosso montar e te mandar por aqui?",
 };
@@ -652,8 +652,61 @@ export function produtoSugerido(lead: Lead): Produto {
   return lead.avaliacoes == null || lead.avaliacoes < 50 ? "placa" : "site";
 }
 
-/** Horário marcado online: por enquanto só para barbearia (de Casimiro, dos distritos ou de fora). */
-export const ofereceAgenda = (lead: Lead) => ramoDe(lead).id === "barbearia";
+/* Sistema (oferta "agenda"): horário marcado ou controle de alunos, conforme o ramo -------------- */
+
+export type SistemaId = "agenda" | "alunos";
+
+export const SISTEMAS: Record<SistemaId, { nome: string; um: string; botao: string; oferecer: string; frase: string; ganho: string }> = {
+  agenda: {
+    nome: "horário marcado",
+    um: "um sistema de horário marcado",
+    botao: "HORÁRIO",
+    oferecer: "Oferecer o sistema de horário marcado",
+    frase: "o cliente escolhe o serviço e o horário pelo celular, e já fica marcado na sua agenda",
+    ganho: "Você não precisa parar o atendimento pra responder mensagem.",
+  },
+  alunos: {
+    nome: "controle de alunos",
+    um: "um sistema de controle de alunos",
+    botao: "ALUNOS",
+    oferecer: "Oferecer o controle de alunos",
+    frase: "você vê quem tá com a mensalidade em dia, as turmas do dia e quem faltou, e o aluno marca ou remarca a aula pelo celular",
+    ganho: "Cobrar quem atrasou vira um toque no WhatsApp.",
+  },
+};
+
+// Ramos em que um sistema faz sentido; o resto fica com site e placa.
+const SISTEMA_DO_RAMO: Partial<Record<RamoId, SistemaId>> = {
+  barbearia: "agenda", salao: "agenda", estetica: "agenda", massagem: "agenda", pet: "agenda", lavajato: "agenda",
+  pilates: "alunos", yoga: "alunos", danca: "alunos", natacao: "alunos", crossfit: "alunos", luta: "alunos", academia: "alunos",
+};
+
+// Onde o texto padrão não combina com o ramo.
+const SISTEMA_NO_RAMO: Partial<Record<RamoId, { quem?: string; frase?: string; ganho?: string }>> = {
+  barbearia: { ganho: "Você não precisa parar o corte pra responder mensagem." },
+  pet: { frase: "o tutor escolhe banho ou tosa e o horário pelo celular, e já fica marcado na sua agenda" },
+  lavajato: {
+    frase: "o cliente escolhe a lavagem e o horário pelo celular, e já fica marcado na sua agenda",
+    ganho: "Sem fila na porta e sem ficar respondendo mensagem.",
+  },
+  massagem: { quem: "espaço de massagem" },
+};
+
+export const sistemaDe = (lead: Lead): SistemaId | null => SISTEMA_DO_RAMO[ramoDe(lead).id] ?? null;
+
+/** O sistema que serve para a loja, com os textos já no ramo dela. */
+export function textosSistema(lead: Lead) {
+  const ramo = ramoDe(lead);
+  const id = SISTEMA_DO_RAMO[ramo.id] ?? "agenda";
+  const extra = SISTEMA_NO_RAMO[ramo.id] ?? {};
+  return {
+    ...SISTEMAS[id],
+    id,
+    quem: extra.quem ?? ramo.quem ?? ramo.nome.toLowerCase(),
+    frase: extra.frase ?? SISTEMAS[id].frase,
+    ganho: extra.ganho ?? SISTEMAS[id].ganho,
+  };
+}
 
 /** Nada mandado ainda para essa loja (nem oferta, nem pedido para falar com o dono). */
 export const nadaEnviado = (lead: Lead) => ENVIOS.every((envio) => !dataEnvio(lead, envio));
@@ -664,7 +717,9 @@ export const nadaEnviado = (lead: Lead) => ENVIOS.every((envio) => !dataEnvio(le
  */
 export function ofertaInicial(lead: Lead): Oferta {
   // Barbearia sem contato nenhum começa pelo horário marcado (a novidade de 18/11).
-  if (ofereceAgenda(lead) && nadaEnviado(lead)) return "agenda";
+  if (ramoDe(lead).id === "barbearia" && nadaEnviado(lead)) return "agenda";
+  // Loja que já recebeu mensagem e ainda não ouviu falar do sistema: a ficha abre nele.
+  if (sistemaDe(lead) && !nadaEnviado(lead) && !dataEnvio(lead, "agenda")) return "agenda";
   if (!podeVisitar(lead)) return "site";
   if (nadaEnviado(lead)) return "ambas";
   return proximaOferta(lead, null);
@@ -716,6 +771,7 @@ export function preencher(textos: Textos, chave: Exclude<ChaveTexto, "gostou">, 
     lead.avaliacoes != null && lead.avaliacoes >= ELOGIO_A_PARTIR_DE
       ? ` (${lead.avaliacoes} avaliações, parabéns!)`
       : "";
+  const sistema = textosSistema(lead);
   return (textos[chave]?.trim() || TEXTOS_PADRAO[chave])
     .replaceAll("{saudacao}", saudacao(agora))
     .replaceAll("{nome}", lead.nome || "sua empresa")
@@ -725,6 +781,11 @@ export function preencher(textos: Textos, chave: Exclude<ChaveTexto, "gostou">, 
     .replaceAll("{nichoPlaca}", frasePlaca(lead, false))
     .replaceAll("{nicho}", TEXTOS_DE_PLACA.has(chave) ? frasePlaca(lead, true) : fraseSite(lead))
     .replaceAll("{elogio}", elogio)
+    .replaceAll("{sistemaUm}", sistema.um)
+    .replaceAll("{sistemaQuem}", sistema.quem)
+    .replaceAll("{sistemaFrase}", sistema.frase)
+    .replaceAll("{SistemaFrase}", sistema.frase.charAt(0).toUpperCase() + sistema.frase.slice(1))
+    .replaceAll("{sistemaGanho}", sistema.ganho)
     .replaceAll("{avaliacoes}", lead.avaliacoes != null ? String(lead.avaliacoes) : "várias");
 }
 

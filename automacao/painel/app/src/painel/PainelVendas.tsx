@@ -47,6 +47,8 @@ import {
   fmtInt,
   fmtPct,
   naLista,
+  dataEnvio,
+  sistemaDe,
   noEscopo,
   porCidade,
   porTipo,
@@ -58,7 +60,7 @@ import {
 import { usePainel } from "./usePainel";
 
 type Vista = "geral" | "agenda" | "funil" | "assistente" | "mensagens" | "importar";
-type Filtro = Status | "todos" | "tiradas";
+type Filtro = Status | "todos" | "tiradas" | "sistema";
 
 const ESCOPOS: SegmentOption<Escopo>[] = [
   { id: "todos", label: "TODOS", long: "Todos os comércios" },
@@ -127,16 +129,23 @@ export function PainelVendas() {
     );
   }, [doNicho, consulta]);
   const porSituacao = useMemo(() => contar(buscados), [buscados]);
+  // Já receberam mensagem, são de ramo com sistema e ainda não ouviram falar dele.
+  const paraSistema = useMemo(
+    () => buscados.filter((l) => sistemaDe(l) && statusDe(l) !== "novo" && !dataEnvio(l, "agenda")),
+    [buscados],
+  );
   const cidades = useMemo(
     () =>
       porCidade(
         filtro === "tiradas"
           ? noEscopo(tiradas, escopo)
+          : filtro === "sistema"
+            ? paraSistema
           : filtro === "todos"
             ? buscados
             : buscados.filter((l) => statusDe(l) === filtro),
       ),
-    [buscados, filtro, tiradas, escopo],
+    [buscados, filtro, tiradas, escopo, paraSistema],
   );
 
   const kpis = useMemo<KpiData[]>(() => {
@@ -598,6 +607,20 @@ export function PainelVendas() {
                         </span>
                       </button>
                     ))}
+                    {(paraSistema.length > 0 || filtro === "sistema") && (
+                      <button
+                        type="button"
+                        aria-pressed={filtro === "sistema"}
+                        aria-label={`Oferecer o sistema a quem já recebeu mensagem: ${paraSistema.length}`}
+                        onClick={() => setFiltro("sistema")}
+                        className={chip(filtro === "sistema")}
+                      >
+                        Oferecer sistema
+                        <span className="font-mono text-[11px] tabular-nums text-[color:var(--bjork-text-soft)]">
+                          {paraSistema.length}
+                        </span>
+                      </button>
+                    )}
                     {(tiradas.length > 0 || filtro === "tiradas") && (
                       <button
                         type="button"
@@ -622,6 +645,8 @@ export function PainelVendas() {
                     detalhe={
                       filtro === "tiradas"
                         ? "Fora da lista: abra a loja para trazer de volta"
+                        : filtro === "sistema"
+                          ? "Já receberam mensagem: abra e ofereça o sistema"
                         : grupo.casimiro
                           ? "Pessoalmente ou contato do dono"
                           : "WhatsApp · site"

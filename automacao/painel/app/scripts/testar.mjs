@@ -293,7 +293,7 @@ try {
     await p.getByRole("button", { name: "Barbearia Exemplo 16" }).first().click();
     const barbearia = p.getByRole("dialog");
     assert.equal(
-      await barbearia.getByRole("radio", { name: "Oferecer horário marcado online" }).getAttribute("aria-checked"),
+      await barbearia.getByRole("radio", { name: "Oferecer o sistema de horário marcado" }).getAttribute("aria-checked"),
       "true",
     );
     const textoHorario = decodeURIComponent(
@@ -303,6 +303,20 @@ try {
     assert.doesNotMatch(textoHorario, /R\$|\{/);
     await p.waitForTimeout(300);
     await p.screenshot({ path: path.join(saida, "celular-horario.png") });
+    // O sistema no notebook e no celular, nos dois tipos: horário marcado e controle de alunos.
+    for (const [ramo, nomeSistema, arquivoFoto] of [
+      [null, "horário marcado", "celular-sistema.png"],
+      ["pilates", "controle de alunos", "celular-sistema-alunos.png"],
+    ]) {
+      if (ramo) await barbearia.getByLabel("Ramo da loja").selectOption(ramo);
+      await barbearia.getByRole("button", { name: `Mostrar o sistema (${nomeSistema})` }).click();
+      const sistema = p.getByRole("dialog", { name: `Sistema de ${nomeSistema} de Barbearia Exemplo 16` });
+      await sistema.getByRole("heading", { level: 1 }).waitFor();
+      await p.waitForTimeout(500);
+      await p.screenshot({ path: path.join(saida, arquivoFoto) });
+      await sistema.getByRole("button", { name: "Fechar sistema" }).click();
+      await sistema.waitFor({ state: "detached" });
+    }
     await barbearia.getByRole("button", { name: "Fechar ficha" }).click();
     await barbearia.waitFor({ state: "detached" });
   }
@@ -451,6 +465,8 @@ try {
 
   const primeira = p.getByRole("region", { name: "Casimiro de Abreu" }).locator("tbody tr button").first();
   const nome = await primeira.innerText();
+  // Salão e pet shop também têm o sistema (horário marcado): um botão a mais na ficha.
+  const comSistema = /^(Salão de Beleza|Pet Shop|Barbearia) Exemplo/.test(nome);
   await primeira.click();
   const ficha = p.getByRole("dialog");
   await ficha.getByRole("link", { name: "Enviar no WhatsApp" }).waitFor();
@@ -497,7 +513,7 @@ try {
   );
   assert.match(textoSemVisita, /Sou de Casimiro também/);
   assert.doesNotMatch(textoSemVisita, /passar aí|dono/);
-  assert.equal(await ficha.getByRole("radiogroup", { name: "O que oferecer" }).count(), 0);
+  assert.equal(await ficha.getByRole("radiogroup", { name: "O que oferecer" }).count(), comSistema ? 1 : 0);
   assert.equal((await p.evaluate(() => window.__escritas)).at(-1).dados.visita, false);
   await ficha.getByRole("radio", { name: "Dá pra ir: mensagem pedindo visita" }).click();
   assert.equal((await p.evaluate(() => window.__escritas)).at(-1).dados.visita, true);
@@ -507,8 +523,8 @@ try {
     await ficha.getByRole("radio", { name: "Oferecer site e placa na mesma mensagem" }).getAttribute("aria-checked"),
     "true",
   );
-  // Antes de mandar, quatro opções: as duas, placa, site e dono.
-  assert.equal(await ficha.getByRole("radiogroup", { name: "O que oferecer" }).getByRole("radio").count(), 4);
+  // Antes de mandar, quatro opções: as duas, placa, site e dono (mais o sistema, quando o ramo tem).
+  assert.equal(await ficha.getByRole("radiogroup", { name: "O que oferecer" }).getByRole("radio").count(), comSistema ? 5 : 4);
   const textoAmbas = decodeURIComponent(
     await ficha.getByRole("link", { name: "Enviar no WhatsApp" }).getAttribute("href"),
   );
@@ -559,7 +575,7 @@ try {
   ]);
   await outraAba.close();
   await ficha.getByRole("button", { name: /^Próximo:/ }).waitFor();
-  assert.equal(await ficha.getByRole("radio", { name: /^Oferecer/ }).count(), 0);
+  assert.equal(await ficha.getByRole("radio", { name: /^Oferecer/ }).count(), comSistema ? 1 : 0);
   const segunda = (await p.evaluate(() => window.__escritas)).at(-1).dados;
   assert.ok(segunda.enviados.placa && segunda.enviados.site, "as duas ofertas ficam marcadas");
   assert.equal(segunda.status, undefined, "a segunda oferta não muda a situação");
