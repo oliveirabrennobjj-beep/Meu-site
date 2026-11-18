@@ -1,16 +1,19 @@
 # Canal de GTA 6 (BN Digital): textos do YouTube
 
-## Descrição do canal (aba "Sobre")
+## Descrição do canal (aba "Sobre", 917 de 1000 caracteres)
 
 ```
-GTA 6 todo dia: cortes, curiosidades e notícias. 🌴🎮
+Tudo sobre GTA 6 em um só lugar. 🌴🎮
 
-Os melhores momentos das lives de GTA 6 dos maiores streamers, os detalhes escondidos nos trailers e tudo o que muda em Leonida e Vice City. Vídeos curtos e direto ao ponto, para assistir na fila, no ônibus ou no intervalo.
+Aqui você encontra os melhores momentos das lives de GTA 6 dos maiores streamers, os detalhes escondidos nos trailers, as teorias da comunidade e as notícias da Rockstar assim que saem. Tudo em português e direto ao ponto.
 
-📍 Antes do lançamento: notícias, teorias e segredos dos trailers.
-🎮 Depois do lançamento (19/11): cortes das lives, gameplays e dicas do mapa.
+▶️ Shorts: cortes engraçados, reações e curiosidades em menos de 1 minuto, quase todo dia.
+🎬 Vídeos: análises completas, compilados dos melhores momentos e gameplays comentadas.
 
-Shorts novos todos os dias. Ativa o 🔔 para não perder nenhum.
+📍 Antes do lançamento: trailers, mapa de Leonida, Lucia, Jason e tudo o que já foi confirmado.
+🎮 Depois do lançamento (19/11): cortes das lives, segredos do mapa, dicas e easter eggs.
+
+Curte GTA? Se inscreve e ativa o 🔔 para não perder nenhum vídeo. Comenta o que você quer ver no próximo.
 
 BN Digital é um canal de fãs, sem ligação com a Rockstar Games ou a Take-Two. GTA e Grand Theft Auto são marcas registradas de seus donos. Cada corte credita o criador do vídeo original.
 ```
