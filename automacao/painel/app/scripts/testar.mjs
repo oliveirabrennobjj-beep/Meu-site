@@ -288,6 +288,25 @@ try {
   await p.screenshot({ path: path.join(saida, "celular-geral.png") });
   await p.screenshot({ path: path.join(saida, "celular-inteiro.png"), fullPage: false });
 
+  // Barbearia sem contato: a ficha já abre no horário marcado, com mensagem sem preço.
+  if (leads.some((l) => l.nome === "Barbearia Exemplo 16")) {
+    await p.getByRole("button", { name: "Barbearia Exemplo 16" }).first().click();
+    const barbearia = p.getByRole("dialog");
+    assert.equal(
+      await barbearia.getByRole("radio", { name: "Oferecer horário marcado online" }).getAttribute("aria-checked"),
+      "true",
+    );
+    const textoHorario = decodeURIComponent(
+      await barbearia.getByRole("link", { name: "Enviar no WhatsApp" }).getAttribute("href"),
+    );
+    assert.match(textoHorario, /horário marcado/);
+    assert.doesNotMatch(textoHorario, /R\$|\{/);
+    await p.waitForTimeout(300);
+    await p.screenshot({ path: path.join(saida, "celular-horario.png") });
+    await barbearia.getByRole("button", { name: "Fechar ficha" }).click();
+    await barbearia.waitFor({ state: "detached" });
+  }
+
   // Nicho: tocar em um deixa só ele nas tabelas; tocar de novo volta tudo.
   const nicho = p.getByRole("region", { name: "Nichos" }).getByRole("button").first();
   const nomeNicho = await nicho.locator("span span").first().innerText();

@@ -1,8 +1,8 @@
 export type Status = "novo" | "enviado" | "respondeu" | "fechou" | "depois" | "nao";
 export type Escopo = "todos" | "casimiro" | "fora";
 export type Produto = "site" | "placa";
-/** Cada mensagem que fica registrada na loja: as duas ofertas e o pedido para falar com o dono. */
-export type Envio = Produto | "dono";
+/** Cada mensagem que fica registrada na loja: as ofertas (site, placa, horário marcado) e o pedido para falar com o dono. */
+export type Envio = Produto | "agenda" | "dono";
 
 export interface Lead {
   id: string;
@@ -113,7 +113,7 @@ export function dataEnvio(lead: Lead, produto: Envio): string | null {
   return antigo && lead.enviadoEm ? lead.enviadoEm : null;
 }
 
-export const ENVIOS: Envio[] = ["site", "placa", "dono"];
+export const ENVIOS: Envio[] = ["site", "placa", "agenda", "dono"];
 
 /** Comércios contatados hoje: a mesma loja conta uma vez, mesmo com site, placa e dono no mesmo dia. */
 export function contatosHoje(leads: Lead[], agora = new Date()) {
@@ -591,6 +591,9 @@ export type ChaveTexto =
   | "depoisSite"
   | "casimiroDono"
   | "depoisDono"
+  | "casimiroAgenda"
+  | "foraAgenda"
+  | "depoisAgenda"
   | "gostou";
 export type Textos = Record<ChaveTexto, string>;
 
@@ -603,6 +606,9 @@ export const TEXTOS_INFO: Record<ChaveTexto, { curto: string; longo: string }> =
   depoisSite: { curto: "2ª: site", longo: "Site depois da placa, sem repetir o oi" },
   casimiroDono: { curto: "Visita: dono", longo: "Pedindo visita: falar com o dono" },
   depoisDono: { curto: "2ª: dono", longo: "Pedir para falar com o dono depois de já ter mandado mensagem" },
+  casimiroAgenda: { curto: "Visita: horário", longo: "Pedindo visita: horário marcado online (barbearia)" },
+  foraAgenda: { curto: "WhatsApp: horário", longo: "Horário marcado online por WhatsApp, para barbearia onde não dá pra ir" },
+  depoisAgenda: { curto: "2ª: horário", longo: "Horário marcado depois de outra mensagem, sem repetir o oi" },
   gostou: { curto: "Gostou", longo: "Quando a pessoa gostou: oferecer a demonstração" },
 };
 
@@ -623,6 +629,11 @@ export const TEXTOS_PADRAO: Textos = {
   casimiroDono: `${APRESENTACAO_CASIMIRO}\nQueria mostrar pra {nome} um trabalho que faço pro comércio aqui da cidade: site e uma plaquinha de avaliação pro balcão.\nConsigo falar com o dono ou a dona? É rapidinho. Qual horário costuma ser melhor pra encontrar? Ou, se preferir, me passa o contato.`,
   depoisDono:
     "Ah, e quem eu procuro aí pra conversar sobre isso? Se puder ser o dono ou a dona, melhor, já mostro tudo pessoalmente.\nQual horário costuma ser melhor pra encontrar? Ou, se preferir, me passa o contato.",
+  casimiroAgenda: `${APRESENTACAO_CASIMIRO}\nTô começando um sistema de horário marcado pra barbearia aqui da cidade: o cliente escolhe o serviço e o horário pelo celular, e já fica marcado na sua agenda.\nVocê não precisa parar o corte pra responder mensagem.\nPosso passar aí pra te mostrar como funciona? É rapidinho. ${VISITA}`,
+  foraAgenda:
+    "Oi, {saudacao}, tudo certo? Aqui é o Brenno, da BN Digital. Sou de Casimiro{pertinho}.\nTô começando um sistema de horário marcado pra barbearia: o cliente escolhe o serviço e o horário pelo celular, e já fica marcado na sua agenda, sem você parar o corte pra responder mensagem.\nQuer que eu te mostre como funciona? Se não for a hora, tranquilo, é só falar.",
+  depoisAgenda:
+    "Ah, e aproveitando: tô começando um sistema de horário marcado pra barbearia. O cliente escolhe o horário pelo celular e já fica marcado na sua agenda.\nSe quiser, te mostro como funciona.",
   gostou:
     "Que bom que gostou! Consigo te fazer uma demonstração de design, de como vai ficar o site da {nome}, ainda hoje ou amanhã.\nPara você ter uma ideia, olha um que eu já fiz: {exemplo}\nPosso montar e te mandar por aqui?",
 };
@@ -641,6 +652,9 @@ export function produtoSugerido(lead: Lead): Produto {
   return lead.avaliacoes == null || lead.avaliacoes < 50 ? "placa" : "site";
 }
 
+/** Horário marcado online: por enquanto só para barbearia (de Casimiro, dos distritos ou de fora). */
+export const ofereceAgenda = (lead: Lead) => ramoDe(lead).id === "barbearia";
+
 /** Nada mandado ainda para essa loja (nem oferta, nem pedido para falar com o dono). */
 export const nadaEnviado = (lead: Lead) => ENVIOS.every((envio) => !dataEnvio(lead, envio));
 
@@ -649,6 +663,8 @@ export const nadaEnviado = (lead: Lead) => ENVIOS.every((envio) => !dataEnvio(le
  * Depois: a oferta que falta e, com as duas mandadas, o pedido para falar com o dono.
  */
 export function ofertaInicial(lead: Lead): Oferta {
+  // Barbearia sem contato nenhum começa pelo horário marcado (a novidade de 18/11).
+  if (ofereceAgenda(lead) && nadaEnviado(lead)) return "agenda";
   if (!podeVisitar(lead)) return "site";
   if (nadaEnviado(lead)) return "ambas";
   return proximaOferta(lead, null);
@@ -667,16 +683,18 @@ export function proximaOferta(lead: Lead, acabou: Oferta | null): Oferta {
 const ABERTURA: Record<Envio, Exclude<ChaveTexto, "gostou">> = {
   placa: "casimiroPlaca",
   site: "casimiroSite",
+  agenda: "casimiroAgenda",
   dono: "casimiroDono",
 };
 const CONTINUACAO: Record<Envio, Exclude<ChaveTexto, "gostou">> = {
   placa: "depoisPlaca",
   site: "depoisSite",
+  agenda: "depoisAgenda",
   dono: "depoisDono",
 };
 
 export function chaveTexto(lead: Lead, oferta: Oferta): Exclude<ChaveTexto, "gostou"> {
-  if (!podeVisitar(lead)) return "fora";
+  if (!podeVisitar(lead) && oferta !== "agenda") return "fora";
   if (oferta === "ambas") return "casimiroAmbas";
   const dataEsta = dataEnvio(lead, oferta);
   const antes = ENVIOS.filter((envio) => envio !== oferta)
@@ -684,7 +702,9 @@ export function chaveTexto(lead: Lead, oferta: Oferta): Exclude<ChaveTexto, "gos
     .filter((data): data is string => Boolean(data))
     .sort()[0];
   // Outra mensagem já abriu a conversa: esta entra como continuação, sem novo "oi".
-  return antes && (!dataEsta || antes < dataEsta) ? CONTINUACAO[oferta] : ABERTURA[oferta];
+  const continua = Boolean(antes && (!dataEsta || antes < dataEsta));
+  if (!podeVisitar(lead)) return continua ? "depoisAgenda" : "foraAgenda";
+  return continua ? CONTINUACAO[oferta] : ABERTURA[oferta];
 }
 
 const ELOGIO_A_PARTIR_DE = 30;

@@ -46,6 +46,8 @@ import {
   linkMaps,
   linkWhatsApp,
   motivoTirada,
+  ENVIOS,
+  ofereceAgenda,
   ofertaInicial,
   proximaOferta,
   paginaDe,
@@ -72,6 +74,12 @@ const DESFECHOS: [Status, string][] = [
 ];
 
 const OFERTA: Record<Envio, { nome: string; oferecer: string; enviada: string; feito: string }> = {
+  agenda: {
+    nome: "Horário",
+    oferecer: "Oferecer horário marcado online",
+    enviada: "Horário marcado: mensagem já enviada",
+    feito: "Mensagem do horário marcado enviada",
+  },
   placa: {
     nome: "Placa",
     oferecer: "Oferecer a placa de avaliações",
@@ -179,28 +187,35 @@ function Conteudo({
   const corrigir = !daqui && recebeuPedidoDeVisita(lead) && !lead.corrigidoEm;
   const [escolhida, setOferta] = useState<Oferta>(() => ofertaInicial(lead));
   const [demo, setDemo] = useState(false);
-  // Fora de Casimiro a oferta é sempre o site.
-  const oferta: Oferta = !daqui ? "site" : escolhida;
+  // Fora de Casimiro a oferta é o site; barbearia também pode receber o horário marcado.
+  const agendaOk = ofereceAgenda(lead);
+  const oferta: Oferta = !daqui ? (agendaOk && escolhida === "agenda" ? "agenda" : "site") : escolhida;
   const site = dataEnvio(lead, "site");
   const placa = dataEnvio(lead, "placa");
   // "As duas" conta como enviada quando site e placa já foram (juntas ou uma de cada vez).
   const ambasEnviada = site && placa ? (site > placa ? site : placa) : null;
   const enviada = oferta === "ambas" ? ambasEnviada : dataEnvio(lead, oferta);
   const chave = chaveTexto(lead, oferta);
-  const continuacao = chave === "depoisPlaca" || chave === "depoisSite" || chave === "depoisDono";
+  const continuacao =
+    chave === "depoisPlaca" || chave === "depoisSite" || chave === "depoisDono" || chave === "depoisAgenda";
   const mensagem = textoMensagem(textos, lead, oferta);
   const opcoes: SegmentOption<Oferta>[] = [
     // Fica sempre na lista: se o WhatsApp não abrir, dá para voltar nela e mandar de novo.
     ambasEnviada ? { id: "ambas", label: "AS DUAS ✓", long: "As duas: mensagem já enviada" } : AS_DUAS,
-    ...(["placa", "site", "dono"] as const).map((id) => {
-      const feita = dataEnvio(lead, id) !== null;
-      return {
-        id,
-        label: `${OFERTA[id].nome.toUpperCase()}${feita ? " ✓" : ""}`,
-        long: feita ? OFERTA[id].enviada : OFERTA[id].oferecer,
-      };
-    }),
+    ...(["placa", "site", "dono"] as const).map(opcao),
+    ...(agendaOk ? [opcao("agenda")] : []),
   ];
+  // Barbearia de distrito ou de fora: só WhatsApp, com site ou horário marcado.
+  const opcoesFora = [opcao("agenda"), opcao("site")];
+
+  function opcao(id: Envio): SegmentOption<Oferta> {
+    const feita = dataEnvio(lead, id) !== null;
+    return {
+      id,
+      label: `${OFERTA[id].nome.toUpperCase()}${feita ? " ✓" : ""}`,
+      long: feita ? OFERTA[id].enviada : OFERTA[id].oferecer,
+    };
+  }
 
   const copiar = async () => {
     try {
@@ -214,9 +229,9 @@ function Conteudo({
   const registrarContato = (canal: "whatsapp" | "pessoal") => {
     const agora = new Date().toISOString();
     const enviados: Partial<Record<Envio, string>> = {};
-    for (const id of ["site", "placa", "dono"] as const) {
+    for (const id of ENVIOS) {
       const anterior = dataEnvio(lead, id);
-      if ((oferta === "ambas" && id !== "dono") || oferta === id) enviados[id] = agora;
+      if ((oferta === "ambas" && (id === "site" || id === "placa")) || oferta === id) enviados[id] = agora;
       else if (anterior) enviados[id] = anterior;
     }
     onSalvar(lead.id, {
@@ -236,7 +251,7 @@ function Conteudo({
     onSalvar(
       lead.id,
       para === "novo"
-        ? { status: para, enviadoEm: "", enviados: { site: "", placa: "", dono: "" } }
+        ? { status: para, enviadoEm: "", enviados: { site: "", placa: "", agenda: "", dono: "" } }
         : { status: para },
     );
     avisar(`${lead.nome}: ${STATUS[para].label.toLowerCase()}`);
@@ -407,10 +422,11 @@ function Conteudo({
                 <p className="text-[13px] text-[color:var(--bjork-text-medium)]">
                   {novo
                     ? "É daqui: vale ir falar com o dono."
-                    : (["placa", "site", "dono"] as const)
+                    : (["placa", "site", "agenda", "dono"] as const)
                         .flatMap((id) => {
                           const data = dataEnvio(lead, id);
                           if (id === "dono") return data ? [`Dono: pedido ${quando(data)}`] : [];
+                          if (id === "agenda" && !agendaOk) return [];
                           return [`${OFERTA[id].nome}: ${data ? `enviada ${quando(data)}` : "falta enviar"}`];
                         })
                         .join(" · ")}
@@ -423,15 +439,20 @@ function Conteudo({
                 />
               </div>
             )}
+            {!daqui && agendaOk && (
+              <SegmentedControl value={oferta} onChange={setOferta} options={opcoesFora} label="O que oferecer" />
+            )}
             <div>
               <h3 className={rotuloCampo}>
                 {!daqui
-                  ? "Mensagem pronta (site)"
+                  ? continuacao
+                    ? "Continuação da conversa, sem repetir o oi (horário marcado)"
+                    : `Mensagem pronta (${oferta === "agenda" ? "horário marcado" : "site"})`
                   : continuacao
                     ? `Continuação da conversa, sem repetir o oi (${OFERTA[oferta === "ambas" ? "site" : oferta].nome.toLowerCase()})`
                     : oferta === "dono"
                       ? "Mensagem pedindo para falar com o dono"
-                      : `Mensagem para marcar a visita (${oferta === "ambas" ? "site e placa" : oferta})`}
+                      : `Mensagem para marcar a visita (${oferta === "ambas" ? "site e placa" : oferta === "agenda" ? "horário marcado" : oferta})`}
               </h3>
               <p className="max-h-[210px] select-text overflow-y-auto whitespace-pre-wrap rounded-[12px] border border-[color:var(--bjork-border)] bg-[var(--bjork-field-inset)] p-3 text-[13.5px] leading-relaxed text-[color:var(--bjork-text-medium)] [overflow-wrap:anywhere]">
                 {mensagem}
