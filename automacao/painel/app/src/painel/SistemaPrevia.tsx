@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { toJpeg } from "html-to-image";
-import { CalendarCheck, Loader2, MessageCircle, Send, Smartphone, Laptop, Wallet, X } from "lucide-react";
+import { CalendarCheck, Check, Clock, Laptop, Loader2, MessageCircle, Send, Smartphone, Wallet, X } from "lucide-react";
+import { useElementWidth } from "@/components/ui/app-dashboard-shell-utils/app-block-kit";
 import { FONTES_NA_TELA, TEXTO, arquivo, compartilharFoto, cssDasFontes, temaDe } from "./Demonstracao";
 import { cidadeDe, ramoDe, textosSistema, type Lead, type RamoId } from "./leads";
 
@@ -11,32 +12,11 @@ import { cidadeDe, ramoDe, textosSistema, type Lead, type RamoId } from "./leads
 /** Demonstração que dá pra clicar (horário marcado de barbearia), para mostrar pessoalmente. */
 const DEMO_AGENDA = "https://claude.ai/artifact/Wd4vVWKcnP8NRG6qcT8ZUY";
 
-type Servico = [nome: string, preco: number];
-const SERVICOS: Partial<Record<RamoId, Servico[]>> = {
-  barbearia: [["Corte", 35], ["Corte + barba", 55], ["Barba", 25]],
-  salao: [["Escova", 45], ["Manicure", 30], ["Corte", 60]],
-  estetica: [["Limpeza de pele", 120], ["Drenagem", 90], ["Sobrancelha", 40]],
-  massagem: [["Relaxante", 100], ["Terapêutica", 120], ["Drenagem", 90]],
-  pet: [["Banho", 50], ["Banho e tosa", 80], ["Tosa higiênica", 40]],
-  lavajato: [["Lavagem simples", 40], ["Lavagem completa", 70], ["Polimento", 180]],
-};
-const AULAS: Partial<Record<RamoId, string[]>> = {
-  pilates: ["Reformer", "Solo", "Reformer"],
-  yoga: ["Hatha", "Vinyasa", "Meditação"],
-  danca: ["Balé infantil", "Ritmos", "Jazz"],
-  natacao: ["Infantil", "Adultos", "Hidroginástica"],
-  crossfit: ["CrossFit", "Funcional", "Iniciantes"],
-  luta: ["Muay thai", "Jiu-jitsu", "Kids"],
-  academia: ["Funcional", "Spinning", "Musculação"],
-};
-const CLIENTES = ["Lucas", "Mariana", "João Pedro", "Carla", "Rafael", "Bianca", "Diego", "Fernanda"];
-const SEMANA = ["seg", "ter", "qua", "qui", "sex", "sáb"];
 const reais = (v: number) => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 });
 
 export function SistemaPrevia({ lead, mensagem, onFechar }: { lead: Lead; mensagem: string; onFechar: () => void }) {
   const t = temaDe(lead);
   const sis = textosSistema(lead);
-  const ramo = ramoDe(lead);
   const fechar = useRef<HTMLButtonElement>(null);
   const cena = useRef<HTMLElement>(null);
   const [aviso, setAviso] = useState("");
@@ -66,7 +46,7 @@ export function SistemaPrevia({ lead, mensagem, onFechar }: { lead: Lead; mensag
         pixelRatio: 2.5,
         quality: 0.92,
         backgroundColor: t.fundo,
-        fontEmbedCSS: await cssDasFontes([TEXTO, ...(doTitulo ? [doTitulo] : [])]),
+        fontEmbedCSS: await cssDasFontes([TEXTO, "Fraunces", ...(doTitulo ? [doTitulo] : [])]),
       });
       const r = await compartilharFoto(dataUrl, arquivo(lead.nome, "sistema"), mensagem);
       if (r === "compartilhou") setAviso("Escolha o WhatsApp e a conversa da loja.");
@@ -144,13 +124,13 @@ export function SistemaPrevia({ lead, mensagem, onFechar }: { lead: Lead; mensag
 
           <div className="mt-5">
             <Notebook>
-              {agenda ? <PainelAgenda lead={lead} servicos={SERVICOS[ramo.id] ?? SERVICOS.barbearia!} /> : <PainelAlunos lead={lead} aulas={AULAS[ramo.id] ?? AULAS.academia!} />}
+              <Escala largura={1200} altura={750}><PaginaDesktop lead={lead} /></Escala>
             </Notebook>
           </div>
 
           <div className="mt-6 flex items-start gap-4">
             <Celular>
-              {agenda ? <AppCliente lead={lead} servicos={SERVICOS[ramo.id] ?? SERVICOS.barbearia!} /> : <AppAluno lead={lead} aulas={AULAS[ramo.id] ?? AULAS.academia!} />}
+              <Escala largura={390} altura={800}><PaginaCelular lead={lead} /></Escala>
             </Celular>
             <ul className="grid min-w-0 flex-1 gap-4 pt-2">
               {beneficios.map(([Icone, nome, linha]) => (
@@ -225,7 +205,7 @@ function Notebook({ children }: { children: ReactNode }) {
   return (
     <div aria-hidden="true">
       <div className="rounded-[14px] p-[7px]" style={{ background: "#0c0c0d", boxShadow: "0 0 0 1px #2c2c30, 0 26px 40px -20px rgba(0,0,0,.6)" }}>
-        <div className="overflow-hidden rounded-[7px]" style={{ aspectRatio: "16 / 10" }}>{children}</div>
+        <div className="overflow-hidden rounded-[7px]">{children}</div>
       </div>
       <div className="mx-[-5%] h-[11px] rounded-b-[14px]" style={{ background: "linear-gradient(180deg, #d5d8dc, #9da2a8)" }} />
     </div>
@@ -235,190 +215,283 @@ function Notebook({ children }: { children: ReactNode }) {
 function Celular({ children }: { children: ReactNode }) {
   return (
     <div aria-hidden="true" className="w-[168px] shrink-0 rounded-[26px] p-[6px]" style={{ background: "#0c0c0d", boxShadow: "0 0 0 1px #2c2c30, 0 22px 36px -18px rgba(0,0,0,.6)" }}>
-      <div className="relative overflow-hidden rounded-[20px]" style={{ aspectRatio: "9 / 18.5" }}>
-        <span className="absolute left-1/2 top-[6px] z-10 h-[10px] w-[46px] -translate-x-1/2 rounded-full" style={{ background: "#0c0c0d" }} />
+      <div className="relative overflow-hidden rounded-[20px]">
+        <span className="absolute left-1/2 top-[5px] z-10 h-[9px] w-[44px] -translate-x-1/2 rounded-full" style={{ background: "#0c0c0d" }} />
         {children}
       </div>
     </div>
   );
 }
 
-/* Telas -------------------------------------------------------------------------------------- */
+/** Desenha a página no tamanho de verdade (computador ou celular) e encolhe para caber na moldura. */
+function Escala({ largura, altura, children }: { largura: number; altura: number; children: ReactNode }) {
+  const caixa = useRef<HTMLDivElement>(null);
+  const w = useElementWidth(caixa) || largura * 0.33;
+  const s = w / largura;
+  return (
+    <div ref={caixa} className="relative w-full overflow-hidden" style={{ height: altura * s }}>
+      <div className="absolute left-0 top-0" style={{ width: largura, height: altura, transform: `scale(${s})`, transformOrigin: "top left" }}>
+        {children}
+      </div>
+    </div>
+  );
+}
 
-function useTela(lead: Lead) {
+/* Conteúdo da página por ramo ----------------------------------------------------------------- */
+
+type Item = [nome: string, preco: number, tempo: string];
+type Pessoa = [nome: string, faz: string, foto?: string];
+
+const SERVICOS: Partial<Record<RamoId, Item[]>> = {
+  barbearia: [["Corte", 35, "30 min"], ["Barba", 25, "30 min"], ["Corte + barba", 55, "1 hora"], ["Sobrancelha", 10, "15 min"]],
+  salao: [["Escova", 45, "45 min"], ["Corte feminino", 60, "1 hora"], ["Manicure", 30, "40 min"], ["Coloração", 120, "2 horas"]],
+  estetica: [["Limpeza de pele", 120, "1 hora"], ["Drenagem", 90, "50 min"], ["Design de sobrancelha", 40, "30 min"], ["Peeling", 150, "1 hora"]],
+  massagem: [["Relaxante", 100, "1 hora"], ["Terapêutica", 120, "1 hora"], ["Drenagem", 90, "50 min"], ["Pedras quentes", 140, "1h15"]],
+  pet: [["Banho", 50, "1 hora"], ["Banho e tosa", 80, "2 horas"], ["Tosa higiênica", 40, "40 min"], ["Hidratação", 35, "30 min"]],
+  lavajato: [["Lavagem simples", 40, "40 min"], ["Lavagem completa", 70, "1h30"], ["Polimento", 180, "3 horas"], ["Higienização", 150, "2 horas"]],
+};
+const PROFISSIONAIS: Partial<Record<RamoId, Pessoa[]>> = {
+  barbearia: [["Rafa Souza", "Degradê e navalhado", "img/demo/barbeiro-1.webp"], ["Thiago Lima", "Barba e bigode", "img/demo/barbeiro-2.webp"], ["Diego Alves", "Corte social e infantil", "img/demo/barbeiro-3.webp"]],
+  salao: [["Carla Mendes", "Corte e coloração"], ["Bia Rocha", "Unhas"], ["Juliana Paz", "Escova e penteado"]],
+  estetica: [["Ana Lima", "Pele e limpeza"], ["Paula Reis", "Corporal"], ["Bruna Dias", "Sobrancelha"]],
+  massagem: [["Renata Costa", "Relaxante"], ["Marcos Silva", "Terapêutica"], ["Lívia Prado", "Drenagem"]],
+  pet: [["Camila", "Banho e secagem"], ["Rodrigo", "Tosa na tesoura"], ["Patrícia", "Tosa na máquina"]],
+  lavajato: [["Box 1", "Lavagem rápida"], ["Box 2", "Lavagem completa"], ["Box 3", "Polimento e cera"]],
+};
+const AULAS: Partial<Record<RamoId, [aula: string, linha: string][]>> = {
+  pilates: [["Reformer", "50 min · até 4 alunos"], ["Solo", "50 min · até 8 alunos"], ["Cadillac", "50 min · individual"], ["Aula experimental", "Primeira aula"]],
+  yoga: [["Hatha", "1 hora · todos os níveis"], ["Vinyasa", "1 hora · intermediário"], ["Meditação", "30 min"], ["Aula experimental", "Primeira aula"]],
+  danca: [["Balé infantil", "50 min · 4 a 10 anos"], ["Ritmos", "1 hora · adulto"], ["Jazz", "1 hora · teen"], ["Aula experimental", "Primeira aula"]],
+  natacao: [["Infantil", "45 min · 4 a 12 anos"], ["Adultos", "45 min · iniciante"], ["Hidroginástica", "45 min"], ["Aula experimental", "Primeira aula"]],
+  crossfit: [["CrossFit", "1 hora · todos os níveis"], ["Funcional", "50 min"], ["Iniciantes", "1 hora"], ["Aula experimental", "Primeira aula"]],
+  luta: [["Muay thai", "1 hora · adulto"], ["Jiu-jitsu", "1h30 · adulto"], ["Kids", "50 min · 6 a 12 anos"], ["Aula experimental", "Primeira aula"]],
+  academia: [["Funcional", "50 min"], ["Spinning", "45 min"], ["Musculação", "Livre, com professor"], ["Aula experimental", "Primeira aula"]],
+};
+const MENSALIDADE: Partial<Record<RamoId, number>> = { pilates: 260, yoga: 180, danca: 150, natacao: 190, crossfit: 220, luta: 160, academia: 110 };
+const PROFESSORES: Pessoa[] = [["Prof. Ana", "Turmas da manhã"], ["Prof. Bruno", "Turmas da noite"], ["Prof. Carla", "Iniciantes"]];
+
+function conteudo(lead: Lead) {
+  const sis = textosSistema(lead);
+  const ramo = ramoDe(lead).id;
   const t = temaDe(lead);
+  const nota = typeof lead.nota === "number" && lead.nota > 0 ? lead.nota.toLocaleString("pt-BR", { minimumFractionDigits: 1 }) : "4,9";
+  const selo = lead.avaliacoes ? `${nota} · ${lead.avaliacoes} avaliações no Google` : `${nota} no Google`;
+  const foto = ramo === "barbearia" ? "img/demo/sistema-barbearia.webp" : `img/demo/${t.foto}-2.webp`;
+  if (sis.id === "alunos") {
+    const aulas = AULAS[ramo] ?? AULAS.academia!;
+    const preco = MENSALIDADE[ramo] ?? 150;
+    return {
+      sis, t, foto, selo,
+      titulo: ["Sua aula,", "do seu jeito."] as const,
+      chamada: "Veja as turmas, marque e remarque a aula pelo celular. A mensalidade fica em dia sem ninguém precisar cobrar.",
+      agendar: "Agende sua aula",
+      passos: [["Aula", "Escolha a turma"], ["Professor", "Quem dá a aula"], ["Data e hora", "Dia e horário"], ["Confirmar", "Revise e confirme"]],
+      colunas: ["Escolha a aula", "Escolha o professor", "Escolha a data"],
+      itens: aulas.map(([nome, linha]) => ({ nome, linha })),
+      pessoas: PROFESSORES,
+      resumo: [["Aula", aulas[0][0]], ["Professor", "Prof. Ana"], ["Data", "quinta, 19 de novembro"], ["Horário", "18:00"], ["Plano", "2x por semana"]] as [string, string][],
+      total: [`${reais(preco)}/mês`, "Mensalidade"] as const,
+      botao: "Confirmar aula",
+      recursos: [["Aula marcada pelo celular", "O aluno escolhe e remarca sozinho."], ["Mensalidade em dia", "Quem atrasou aparece na hora."], ["Cobrança no WhatsApp", "Um toque e a mensagem vai."], ["Turmas cheias", "Vaga sobrando vira aviso."]] as [string, string][],
+      horario: "Seg a sex 6h às 21h · sáb 8h às 12h",
+    };
+  }
+  const servicos = SERVICOS[ramo] ?? SERVICOS.barbearia!;
+  const titulos: Partial<Record<RamoId, readonly [string, string]>> = {
+    barbearia: ["Corte na régua,", "hora marcada."],
+    salao: ["Beleza com", "hora marcada."],
+    pet: ["Banho e tosa", "com hora marcada."],
+    lavajato: ["Carro limpo,", "sem fila na porta."],
+  };
   return {
-    t,
-    titulo: { fontFamily: t.fonte, textTransform: t.maiusculo ? "uppercase" : undefined } as CSSProperties,
-    caixa: { background: t.cartao, boxShadow: `inset 0 0 0 1px color-mix(in srgb, ${t.tinta} 9%, transparent)` } as CSSProperties,
+    sis, t, foto, selo,
+    titulo: titulos[ramo] ?? (["Seu momento,", "com hora marcada."] as const),
+    chamada: "Escolha o serviço, o profissional e o horário pelo celular. A gente te espera na hora certa, sem fila.",
+    agendar: "Agende seu horário",
+    passos: [["Serviço", "Escolha o serviço"], [ramo === "barbearia" ? "Barbeiro" : "Profissional", "Quem vai atender"], ["Data e hora", "Dia e horário"], ["Confirmar", "Revise e confirme"]],
+    colunas: ["Escolha o serviço", ramo === "barbearia" ? "Escolha o barbeiro" : "Escolha o profissional", "Escolha a data"],
+    itens: servicos.map(([nome, preco, tempo]) => ({ nome, linha: `${reais(preco)} · ${tempo}` })),
+    pessoas: PROFISSIONAIS[ramo] ?? PROFISSIONAIS.salao!,
+    resumo: [["Serviço", servicos[0][0]], [ramo === "barbearia" ? "Barbeiro" : "Profissional", (PROFISSIONAIS[ramo] ?? PROFISSIONAIS.salao!)[0][0]], ["Data", "quinta, 19 de novembro"], ["Horário", "16:00"], ["Duração", servicos[0][2]]] as [string, string][],
+    total: [reais(servicos[0][1]), "Total"] as const,
+    botao: "Confirmar agendamento",
+    recursos: [["Agenda em 1 minuto", "Sem ligar e sem esperar resposta."], ["Confirmação no WhatsApp", "Com dia, hora e profissional."], ["Profissionais avaliados", "Nota de quem já foi atendido."], ["Paga na hora", "Pix, cartão ou dinheiro."]] as [string, string][],
+    horario: "Seg a sáb · 9h às 20h",
   };
 }
 
-/** Notebook do dono: agenda de hoje, números do dia e a semana. */
-function PainelAgenda({ lead, servicos }: { lead: Lead; servicos: Servico[] }) {
-  const { t, titulo, caixa } = useTela(lead);
-  const hoje: [hora: string, quem: string, servico: number][] = [
-    ["09:00", CLIENTES[0], 0], ["09:30", CLIENTES[2], 1], ["10:30", CLIENTES[4], 0], ["11:00", CLIENTES[6], 2], ["14:00", CLIENTES[1], 0],
-  ];
-  const previsto = [...hoje, ["15:00", "", 1], ["16:00", "", 0], ["17:00", "", 1]].reduce((s, [, , i]) => s + servicos[i as number][1], 0);
-  const semana = [8, 10, 9, 12, 15, 18];
-  const maior = Math.max(...semana);
+const SERIF_SISTEMA = `"Fraunces", Georgia, serif`;
+const iniciais = (nome: string) => nome.replace(/^Prof\.\s*/, "").split(/\s+/).map((p) => p[0]).slice(0, 2).join("").toUpperCase();
+
+function Avatar({ pessoa, tamanho, t }: { pessoa: Pessoa; tamanho: number; t: ReturnType<typeof temaDe> }) {
+  const [nome, , foto] = pessoa;
+  return foto ? (
+    <img src={foto} alt="" width={tamanho} height={tamanho} className="shrink-0 rounded-full object-cover" style={{ width: tamanho, height: tamanho, boxShadow: `0 0 0 1px ${t.destaque}55` }} />
+  ) : (
+    <span className="grid shrink-0 place-items-center rounded-full font-bold" style={{ width: tamanho, height: tamanho, background: t.mancha, color: t.escuro ? t.destaque : t.tinta, fontSize: tamanho * 0.36 }}>
+      {iniciais(nome)}
+    </span>
+  );
+}
+
+function Marcado({ t, tamanho = 20 }: { t: ReturnType<typeof temaDe>; tamanho?: number }) {
   return (
-    <div className="flex h-full flex-col gap-[7px] p-[9px] text-[8.5px] leading-tight" style={{ background: t.fundo, color: t.tinta }}>
-      <div className="flex items-center gap-1.5">
-        <span className="size-[14px] rounded-[4px]" style={{ background: t.destaque }} />
-        <span className="min-w-0 flex-1 truncate text-[10.5px] font-bold" style={titulo}>{lead.nome}</span>
-        <span style={{ color: t.suave }}>Hoje, quarta</span>
+    <span className="grid shrink-0 place-items-center rounded-full" style={{ width: tamanho, height: tamanho, background: t.destaque, color: t.noDestaque }}>
+      <Check className="size-[60%]" strokeWidth={3} />
+    </span>
+  );
+}
+
+/** A página no computador (1200 x 750): menu, abertura com foto e o agendamento em 4 colunas. */
+function PaginaDesktop({ lead }: { lead: Lead }) {
+  const c = conteudo(lead);
+  const { t } = c;
+  const Marca = t.servicos[0][2];
+  const linha = `color-mix(in srgb, ${t.tinta} 12%, transparent)`;
+  const caixa: CSSProperties = { background: t.cartao, boxShadow: `inset 0 0 0 1px ${linha}` };
+  const dias = Array.from({ length: 35 }, (_, i) => i - 6);
+  return (
+    <div className="flex h-full w-full flex-col" style={{ background: t.fundo, color: t.tinta, fontFamily: `"${TEXTO}", "Roboto", sans-serif` }}>
+      <div className="flex h-[58px] shrink-0 items-center gap-6 px-12" style={{ borderBottom: `1px solid ${linha}` }}>
+        <span className="grid size-[34px] place-items-center rounded-[9px]" style={{ boxShadow: `inset 0 0 0 1px ${t.destaque}`, color: t.destaque }}><Marca className="size-[18px]" /></span>
+        <span className="text-[19px] font-semibold" style={{ fontFamily: SERIF_SISTEMA }}>{lead.nome}</span>
+        <span className="ml-auto flex gap-6 text-[13px]" style={{ color: t.suave }}><span>Início</span><span>Serviços</span><span>Equipe</span><span>Contato</span></span>
+        <span className="rounded-[9px] px-4 py-2 text-[13px] font-bold" style={{ boxShadow: `inset 0 0 0 1px ${t.destaque}`, color: t.destaque }}>{c.agendar.split(" ")[0]}</span>
       </div>
-      <div className="grid grid-cols-3 gap-[6px]">
-        {([["Marcados hoje", "8"], ["Horários livres", "6"], ["Previsto hoje", reais(previsto)]] as const).map(([nome, valor], i) => (
-          <div key={nome} className="rounded-[6px] px-[7px] py-[5px]" style={i === 2 ? { background: t.destaque, color: t.noDestaque } : caixa}>
-            <span className="block text-[7.5px] opacity-75">{nome}</span>
-            <span className="block text-[14px] font-bold tabular-nums" style={titulo}>{valor}</span>
-          </div>
-        ))}
+      <div className="relative h-[226px] shrink-0 overflow-hidden">
+        <img src={c.foto} alt="" className="absolute inset-y-0 right-0 h-full w-[62%] object-cover" style={{ objectPosition: "center 30%" }} />
+        <div className="absolute inset-0" style={{ background: `linear-gradient(90deg, ${t.fundo} 36%, ${t.fundo}cc 50%, ${t.fundo}00 80%), linear-gradient(0deg, ${t.fundo} 0%, ${t.fundo}00 35%)` }} />
+        <div className="relative flex h-full max-w-[560px] flex-col justify-center px-12">
+          <span className="self-start rounded-full px-3 py-1 text-[12px]" style={{ ...caixa, color: t.suave }}><b style={{ color: t.destaque }}>★</b> {c.selo}</span>
+          <h1 className="mt-3 text-[44px] font-semibold leading-[1.02]" style={{ fontFamily: SERIF_SISTEMA }}>
+            {c.titulo[0]} <em className="block font-semibold" style={{ color: t.destaque }}>{c.titulo[1]}</em>
+          </h1>
+          <p className="mt-2 max-w-[440px] text-[13.5px] leading-snug" style={{ color: t.suave }}>{c.chamada}</p>
+        </div>
       </div>
-      <div className="grid min-h-0 flex-1 grid-cols-[1.35fr_1fr] gap-[6px]">
-        <div className="flex min-h-0 flex-col gap-[3px] rounded-[6px] p-[6px]" style={caixa}>
-          <span className="mb-[2px] text-[8px] font-bold">Agenda de hoje</span>
-          {hoje.map(([hora, quem, s]) => (
-            <div key={hora} className="flex items-center gap-[5px] rounded-[4px] py-[2px] pl-[4px]" style={{ borderLeft: `2px solid ${t.destaque}` }}>
-              <span className="w-[24px] tabular-nums" style={{ color: t.suave }}>{hora}</span>
-              <span className="min-w-0 flex-1 truncate font-semibold">{quem}</span>
-              <span className="truncate" style={{ color: t.suave }}>{servicos[s][0]}</span>
+      <div className="mx-12 mt-2 flex min-h-0 flex-1 flex-col rounded-[18px] p-5" style={{ ...caixa, background: `color-mix(in srgb, ${t.cartao} 70%, ${t.fundo})` }}>
+        <div className="flex items-end justify-between">
+          <h2 className="text-[26px] font-semibold leading-none" style={{ fontFamily: SERIF_SISTEMA }}>{c.agendar}</h2>
+          <span className="flex items-center gap-2 text-[12px]" style={{ color: t.suave }}><Clock className="size-5" style={{ color: t.destaque }} />{c.horario}</span>
+        </div>
+        <div className="mt-4 grid grid-cols-4 gap-3">
+          {c.passos.map(([nome, linhaPasso], i) => (
+            <div key={nome} className="flex items-center gap-2.5">
+              {i < 2 ? <Marcado t={t} tamanho={28} /> : (
+                <span className="grid size-[28px] shrink-0 place-items-center rounded-full text-[13px] font-bold" style={i === 2 ? { background: t.destaque, color: t.noDestaque } : { boxShadow: `inset 0 0 0 1px ${linha}`, color: t.suave }}>{i + 1}</span>
+              )}
+              <span className="min-w-0"><span className="block text-[13px] font-semibold">{nome}</span><span className="block text-[11px]" style={{ color: t.suave }}>{linhaPasso}</span></span>
+              {i < 3 && <span className="h-px flex-1" style={{ background: linha }} />}
             </div>
           ))}
         </div>
-        <div className="flex flex-col rounded-[6px] p-[6px]" style={caixa}>
-          <span className="text-[8px] font-bold">Atendimentos na semana</span>
-          <div className="mt-[4px] grid flex-1 grid-cols-6 items-end gap-[3px]">
-            {semana.map((n, i) => (
-              <div key={SEMANA[i]} className="flex h-full flex-col items-center justify-end gap-[2px]">
-                <span className="text-[6.5px] tabular-nums" style={{ color: t.suave }}>{n}</span>
-                <span className="w-full rounded-[2px]" style={{ height: `${(n / maior) * 70}%`, background: n === maior ? t.destaque : `color-mix(in srgb, ${t.destaque} 38%, transparent)` }} />
-                <span className="text-[6.5px]" style={{ color: t.suave }}>{SEMANA[i]}</span>
+        <div className="mt-4 grid min-h-0 flex-1 grid-cols-4 gap-3">
+          <div className="flex flex-col gap-2 rounded-[13px] p-3" style={caixa}>
+            <span className="text-[13px] font-bold">{c.colunas[0]}</span>
+            {c.itens.slice(0, 4).map((item, i) => (
+              <div key={item.nome} className="flex items-center justify-between rounded-[9px] px-3 py-2" style={i === 0 ? { background: t.mancha, boxShadow: `inset 0 0 0 1px ${t.destaque}` } : { boxShadow: `inset 0 0 0 1px ${linha}` }}>
+                <span><span className="block text-[13px] font-semibold">{item.nome}</span><span className="block text-[11px]" style={{ color: t.suave }}>{item.linha}</span></span>
+                {i === 0 ? <Marcado t={t} /> : <span className="size-[18px] rounded-full" style={{ boxShadow: `inset 0 0 0 1.5px ${linha}` }} />}
               </div>
             ))}
           </div>
+          <div className="flex flex-col gap-2 rounded-[13px] p-3" style={caixa}>
+            <span className="text-[13px] font-bold">{c.colunas[1]}</span>
+            {c.pessoas.map((p, i) => (
+              <div key={p[0]} className="flex items-center gap-2.5 rounded-[9px] px-2.5 py-2" style={i === 0 ? { background: t.mancha, boxShadow: `inset 0 0 0 1px ${t.destaque}` } : { boxShadow: `inset 0 0 0 1px ${linha}` }}>
+                <Avatar pessoa={p} tamanho={36} t={t} />
+                <span className="min-w-0 flex-1"><span className="block truncate text-[13px] font-semibold">{p[0]}</span><span className="block truncate text-[11px]" style={{ color: t.suave }}><b style={{ color: t.destaque }}>★ 4,{9 - (i % 2)}</b> · {p[1]}</span></span>
+                {i === 0 && <Marcado t={t} />}
+              </div>
+            ))}
+          </div>
+          <div className="flex flex-col rounded-[13px] p-3" style={caixa}>
+            <span className="text-[13px] font-bold">{c.colunas[2]}</span>
+            <span className="mt-1.5 text-center text-[12px] font-semibold">Novembro 2026</span>
+            <div className="mt-1 grid grid-cols-7 gap-y-0.5 text-center text-[10.5px] tabular-nums">
+              {["D", "S", "T", "Q", "Q", "S", "S"].map((d, i) => <span key={i} style={{ color: t.suave }}>{d}</span>)}
+              {dias.map((d) => (
+                <span key={d} className="mx-auto grid size-[19px] place-items-center rounded-full" style={d === 19 ? { background: t.destaque, color: t.noDestaque, fontWeight: 700 } : d < 18 || d > 30 ? { opacity: d < 1 || d > 30 ? 0 : 0.35 } : undefined}>
+                  {d >= 1 && d <= 30 ? d : ""}
+                </span>
+              ))}
+            </div>
+            <span className="mt-1.5 text-[11.5px] font-bold">Horários</span>
+            <div className="mt-1 grid grid-cols-3 gap-1 text-[11px] font-semibold tabular-nums">
+              {["09:00", "10:00", "11:00", "14:00", "15:00", "16:00"].map((h) => (
+                <span key={h} className="rounded-[6px] py-1 text-center" style={h === "16:00" ? { background: t.destaque, color: t.noDestaque } : h === "10:00" || h === "14:00" ? { color: t.suave, textDecoration: "line-through", opacity: 0.5 } : { boxShadow: `inset 0 0 0 1px ${linha}` }}>{h}</span>
+              ))}
+            </div>
+          </div>
+          <div className="flex flex-col rounded-[13px] p-3" style={caixa}>
+            <span className="text-[13px] font-bold">Resumo</span>
+            <div className="mt-2 grid gap-1.5">
+              {c.resumo.map(([rotulo, valor]) => (
+                <span key={rotulo}><span className="block text-[10px]" style={{ color: t.suave }}>{rotulo}</span><span className="block text-[12.5px] font-semibold">{valor}</span></span>
+              ))}
+            </div>
+            <div className="mt-auto flex items-baseline justify-between pt-2" style={{ borderTop: `1px solid ${linha}` }}>
+              <span className="text-[12px] font-bold">{c.total[1]}</span>
+              <span className="text-[20px] font-semibold" style={{ fontFamily: SERIF_SISTEMA, color: t.destaque }}>{c.total[0]}</span>
+            </div>
+            <span className="mt-2 rounded-[9px] py-2 text-center text-[12.5px] font-bold" style={{ background: t.destaque, color: t.noDestaque }}>{c.botao}</span>
+          </div>
+        </div>
+        <div className="mt-3 grid grid-cols-4 gap-3">
+          {c.recursos.map(([titulo, linhaRecurso]) => (
+            <span key={titulo} className="flex items-center gap-2"><CalendarCheck className="size-5 shrink-0" style={{ color: t.destaque }} /><span><span className="block text-[12px] font-bold">{titulo}</span><span className="block text-[10.5px]" style={{ color: t.suave }}>{linhaRecurso}</span></span></span>
+          ))}
         </div>
       </div>
+      <div className="h-4 shrink-0" />
     </div>
   );
 }
 
-/** Celular do cliente: escolhe serviço, dia e horário. */
-function AppCliente({ lead, servicos }: { lead: Lead; servicos: Servico[] }) {
-  const { t, titulo, caixa } = useTela(lead);
-  const horas = ["09:00", "10:00", "10:30", "13:00", "14:30", "15:00", "16:00", "17:00", "18:00"];
-  const ocupadas = new Set(["10:00", "13:00", "16:00"]);
+/** A página no celular (390 x 800): abertura com foto, etapas e a primeira escolha. */
+function PaginaCelular({ lead }: { lead: Lead }) {
+  const c = conteudo(lead);
+  const { t } = c;
+  const Marca = t.servicos[0][2];
+  const linha = `color-mix(in srgb, ${t.tinta} 12%, transparent)`;
   return (
-    <div className="flex h-full flex-col gap-[6px] px-[9px] pb-[9px] pt-[22px] text-[8px] leading-tight" style={{ background: t.fundo, color: t.tinta }}>
-      <span className="truncate text-[9.5px] font-bold" style={titulo}>{lead.nome}</span>
-      <span className="text-[12px] font-bold leading-[1.05]" style={titulo}>Marque seu horário</span>
-      {servicos.map(([nome, preco], i) => (
-        <div key={nome} className="flex items-center justify-between rounded-[6px] px-[6px] py-[5px]" style={i === 0 ? { background: t.mancha, boxShadow: `inset 0 0 0 1px ${t.destaque}` } : caixa}>
-          <span className="truncate font-semibold">{nome}</span>
-          <span className="font-bold tabular-nums">{reais(preco)}</span>
+    <div className="flex h-full w-full flex-col" style={{ background: t.fundo, color: t.tinta, fontFamily: `"${TEXTO}", "Roboto", sans-serif` }}>
+      <div className="flex h-[64px] shrink-0 items-center gap-2.5 px-5 pt-3" style={{ borderBottom: `1px solid ${linha}` }}>
+        <span className="grid size-[32px] place-items-center rounded-[9px]" style={{ boxShadow: `inset 0 0 0 1px ${t.destaque}`, color: t.destaque }}><Marca className="size-[17px]" /></span>
+        <span className="min-w-0 flex-1 truncate text-[18px] font-semibold" style={{ fontFamily: SERIF_SISTEMA }}>{lead.nome}</span>
+      </div>
+      <div className="relative h-[330px] shrink-0 overflow-hidden">
+        <img src={c.foto} alt="" className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: "center 30%" }} />
+        <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, ${t.fundo}33 0%, ${t.fundo}aa 45%, ${t.fundo} 100%)` }} />
+        <div className="absolute inset-x-5 bottom-5">
+          <span className="rounded-full px-3 py-1 text-[12px]" style={{ background: t.cartao, color: t.suave }}><b style={{ color: t.destaque }}>★</b> {c.selo}</span>
+          <h1 className="mt-3 text-[36px] font-semibold leading-[1.03]" style={{ fontFamily: SERIF_SISTEMA }}>
+            {c.titulo[0]} <em className="block font-semibold" style={{ color: t.destaque }}>{c.titulo[1]}</em>
+          </h1>
+          <span className="mt-4 inline-block rounded-[12px] px-5 py-3 text-[15px] font-bold" style={{ background: t.destaque, color: t.noDestaque }}>{c.agendar}</span>
         </div>
-      ))}
-      <div className="grid grid-cols-4 gap-[4px]">
-        {["qua 18", "qui 19", "sex 20", "sáb 21"].map((d, i) => (
-          <span key={d} className="rounded-[5px] py-[3px] text-center text-[7px] font-semibold" style={i === 1 ? { background: t.destaque, color: t.noDestaque } : caixa}>{d}</span>
-        ))}
       </div>
-      <div className="grid grid-cols-3 gap-[4px]">
-        {horas.map((h) => (
-          <span
-            key={h}
-            className="rounded-[5px] py-[3px] text-center text-[7.5px] font-semibold tabular-nums"
-            style={h === "15:00" ? { background: t.destaque, color: t.noDestaque } : ocupadas.has(h) ? { color: t.suave, textDecoration: "line-through", opacity: 0.6 } : caixa}
-          >
-            {h}
-          </span>
-        ))}
-      </div>
-      <span className="mt-auto rounded-[7px] py-[6px] text-center text-[8.5px] font-bold" style={{ background: t.destaque, color: t.noDestaque }}>
-        Marcar qui 19 às 15:00
-      </span>
-    </div>
-  );
-}
-
-/** Notebook do studio: alunos, mensalidades e aulas do dia. */
-function PainelAlunos({ lead, aulas }: { lead: Lead; aulas: string[] }) {
-  const { t, titulo, caixa } = useTela(lead);
-  const turmas: [hora: string, aula: string, vagas: string][] = [["07:00", aulas[0], "6/8"], ["09:00", aulas[1], "8/8"], ["18:00", aulas[2], "5/8"], ["19:00", aulas[0], "7/8"]];
-  const atrasadas: [nome: string, venceu: string][] = [["Mariana", "venceu dia 10"], ["Rafael", "venceu dia 12"], ["Bianca", "venceu dia 15"]];
-  return (
-    <div className="flex h-full flex-col gap-[7px] p-[9px] text-[8.5px] leading-tight" style={{ background: t.fundo, color: t.tinta }}>
-      <div className="flex items-center gap-1.5">
-        <span className="size-[14px] rounded-[4px]" style={{ background: t.destaque }} />
-        <span className="min-w-0 flex-1 truncate text-[10.5px] font-bold" style={titulo}>{lead.nome}</span>
-        <span style={{ color: t.suave }}>Novembro</span>
-      </div>
-      <div className="grid grid-cols-3 gap-[6px]">
-        {([["Alunos ativos", "86"], ["Mensalidade em dia", "92%"], ["Atrasadas", "7"]] as const).map(([nome, valor], i) => (
-          <div key={nome} className="rounded-[6px] px-[7px] py-[5px]" style={i === 1 ? { background: t.destaque, color: t.noDestaque } : caixa}>
-            <span className="block text-[7.5px] opacity-75">{nome}</span>
-            <span className="block text-[14px] font-bold tabular-nums" style={titulo}>{valor}</span>
+      <div className="flex flex-1 flex-col gap-2.5 px-5 pt-4">
+        <div className="flex items-center gap-2">
+          {c.passos.map(([nome], i) => (
+            <span key={nome} className="flex flex-1 items-center gap-2">
+              {i < 2 ? <Marcado t={t} tamanho={26} /> : <span className="grid size-[26px] place-items-center rounded-full text-[12px] font-bold" style={i === 2 ? { background: t.destaque, color: t.noDestaque } : { boxShadow: `inset 0 0 0 1px ${linha}`, color: t.suave }}>{i + 1}</span>}
+              {i < 3 && <span className="h-px flex-1" style={{ background: linha }} />}
+            </span>
+          ))}
+        </div>
+        <span className="mt-1 text-[16px] font-bold">{c.colunas[0]}</span>
+        {c.itens.slice(0, 3).map((item, i) => (
+          <div key={item.nome} className="flex items-center justify-between rounded-[12px] px-4 py-3" style={i === 0 ? { background: t.mancha, boxShadow: `inset 0 0 0 1.5px ${t.destaque}` } : { background: t.cartao, boxShadow: `inset 0 0 0 1px ${linha}` }}>
+            <span><span className="block text-[15px] font-semibold">{item.nome}</span><span className="block text-[12.5px]" style={{ color: t.suave }}>{item.linha}</span></span>
+            {i === 0 ? <Marcado t={t} tamanho={22} /> : <span className="size-[20px] rounded-full" style={{ boxShadow: `inset 0 0 0 1.5px ${linha}` }} />}
           </div>
         ))}
       </div>
-      <div className="grid min-h-0 flex-1 grid-cols-2 gap-[6px]">
-        <div className="flex flex-col gap-[3px] rounded-[6px] p-[6px]" style={caixa}>
-          <span className="mb-[2px] text-[8px] font-bold">Aulas de hoje</span>
-          {turmas.map(([hora, aula, vagas]) => (
-            <div key={hora} className="flex items-center gap-[5px] rounded-[4px] py-[2px] pl-[4px]" style={{ borderLeft: `2px solid ${t.destaque}` }}>
-              <span className="w-[24px] tabular-nums" style={{ color: t.suave }}>{hora}</span>
-              <span className="min-w-0 flex-1 truncate font-semibold">{aula}</span>
-              <span className="tabular-nums" style={{ color: t.suave }}>{vagas}</span>
-            </div>
-          ))}
-        </div>
-        <div className="flex flex-col gap-[3px] rounded-[6px] p-[6px]" style={caixa}>
-          <span className="mb-[2px] text-[8px] font-bold">Mensalidade atrasada</span>
-          {atrasadas.map(([nome, venceu]) => (
-            <div key={nome} className="flex items-center gap-[4px] py-[2px]">
-              <span className="min-w-0 flex-1">
-                <span className="block truncate font-semibold">{nome}</span>
-                <span className="block text-[7px]" style={{ color: t.suave }}>{venceu}</span>
-              </span>
-              <span className="rounded-full px-[5px] py-[2px] text-[7px] font-bold" style={{ background: "#25d366", color: "#ffffff" }}>Cobrar</span>
-            </div>
-          ))}
-        </div>
+      <div className="mx-5 mb-5 flex items-center justify-between rounded-[14px] px-4 py-3" style={{ background: t.cartao, boxShadow: `inset 0 0 0 1px ${linha}` }}>
+        <span><span className="block text-[15px] font-bold">{c.total[0]}</span><span className="block text-[12px]" style={{ color: t.suave }}>qui 19 às {c.resumo[3][1]}</span></span>
+        <span className="rounded-[10px] px-4 py-2.5 text-[14px] font-bold" style={{ background: t.destaque, color: t.noDestaque }}>Confirmar</span>
       </div>
-    </div>
-  );
-}
-
-/** Celular do aluno: próxima aula, mensalidade e remarcar. */
-function AppAluno({ lead, aulas }: { lead: Lead; aulas: string[] }) {
-  const { t, titulo, caixa } = useTela(lead);
-  return (
-    <div className="flex h-full flex-col gap-[6px] px-[9px] pb-[9px] pt-[22px] text-[8px] leading-tight" style={{ background: t.fundo, color: t.tinta }}>
-      <span className="truncate text-[9.5px] font-bold" style={titulo}>{lead.nome}</span>
-      <span className="text-[12px] font-bold leading-[1.05]" style={titulo}>Oi, Carla</span>
-      <div className="rounded-[7px] p-[7px]" style={{ background: t.destaque, color: t.noDestaque }}>
-        <span className="block text-[7px] opacity-80">Sua próxima aula</span>
-        <span className="block text-[10px] font-bold">{aulas[0]} · qui 19, 18:00</span>
-        <span className="mt-[5px] block rounded-[5px] py-[3px] text-center text-[7.5px] font-bold" style={{ background: t.noDestaque, color: t.destaque }}>Confirmar presença</span>
-      </div>
-      <div className="flex items-center justify-between rounded-[6px] px-[6px] py-[5px]" style={caixa}>
-        <span>Mensalidade de novembro</span>
-        <span className="font-bold" style={{ color: "#1f9d55" }}>Paga</span>
-      </div>
-      <span className="mt-[2px] text-[8.5px] font-bold">Remarcar aula</span>
-      <div className="grid grid-cols-2 gap-[4px]">
-        {["sex 20 · 07:00", "sex 20 · 18:00", "sáb 21 · 09:00", "seg 23 · 19:00"].map((h, i) => (
-          <span key={h} className="rounded-[5px] py-[4px] text-center text-[7px] font-semibold tabular-nums" style={i === 2 ? { color: t.suave, textDecoration: "line-through", opacity: 0.6 } : caixa}>
-            {h}
-          </span>
-        ))}
-      </div>
-      <span className="mt-auto rounded-[7px] py-[6px] text-center text-[8.5px] font-bold" style={caixa}>
-        Minhas aulas do mês: 7
-      </span>
     </div>
   );
 }
