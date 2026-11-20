@@ -65,7 +65,7 @@ import {
   Zap,
   type LucideIcon,
 } from "lucide-react";
-import { RAMOS_ESCOLHA, cidadeDe, fmtInt, ramoDe, subnichoDe, type Lead, type RamoId } from "./leads";
+import { RAMOS_ESCOLHA, SUBNICHOS, cidadeDe, fmtInt, ramoDe, subnichoDe, type Lead, type RamoId } from "./leads";
 import { SUBTEMAS } from "./subtemas";
 
 // Prévia de como ficaria o site da loja, no nível de um site pronto (referência: shots do
@@ -159,12 +159,12 @@ const TEMAS: Record<RamoId, Tema> = {
   hamburgueria: {
     foto: "hamburgueria", fundo: "#fffaf5", cartao: "#ffffff", tinta: "#2a1310", suave: "#2a1310a8",
     destaque: "#d62828", noDestaque: "#ffffff", mancha: "#fbdcd5", capa: "#9c1212", noCapa: "#ffd23f", fonte: `"Anton", sans-serif`, maiusculo: true,
-    destaques: [["Lanches", "Os mais pedidos"], ["Porções", "Pra dividir"]],
-    roteiro: "Feito na hora", titulo: ["Hambúrguer", "de verdade"],
+    destaques: [["Salgados", "Saindo agora"], ["Lanches", "Feitos na hora"]],
+    roteiro: "Feito na hora", titulo: ["Lanche gostoso,", "suco geladinho"],
     chamada: "Escolha no cardápio e peça pelo WhatsApp.", botao: "Pedir agora",
-    servicos: [["Lanches", "Os mais pedidos", Utensils], ["Combos", "Pra matar a fome", BadgeCheck],
-      ["Porções", "Pra dividir", Utensils], ["Bebidas", "Geladas", CupSoda]],
-    sobre: ["Feito na chapa,", "do jeito certo"], cta: ["Bateu a fome?", "Escolha no cardápio e peça pelo WhatsApp."],
+    servicos: [["Lanches", "Misto, natural e mais", Utensils], ["Salgados", "Fritos e assados", Croissant],
+      ["Sucos", "Da fruta", CupSoda], ["Combos", "Pra matar a fome", BadgeCheck]],
+    sobre: ["Lanche feito", "na hora"], cta: ["Bateu a fome?", "Escolha no cardápio e peça pelo WhatsApp."],
   },
   padaria: {
     foto: "padaria", fundo: "#faf4ea", cartao: "#ffffff", tinta: "#2e1b10", suave: "#2e1b10a8",
@@ -179,10 +179,10 @@ const TEMAS: Record<RamoId, Tema> = {
   restaurante: {
     foto: "restaurante", escuro: true, fundo: "#14100c", cartao: "#1f1913", tinta: "#f4ead9", suave: "#f4ead9a8",
     destaque: "#d39a3d", noDestaque: "#14100c", mancha: "#d39a3d2b", capa: "#14100c", fonte: SERIF, maiusculo: true,
-    destaques: [["Pratos do dia", "O cardápio de hoje"], ["Carnes", "No ponto certo"]],
+    destaques: [["Prato do dia", "Comida caseira"], ["Feijão fresquinho", "Feito todo dia"]],
     roteiro: "Seja bem-vindo", titulo: ["Comida boa,", "clima melhor"],
     chamada: "Veja o cardápio do dia e peça pelo WhatsApp.", botao: "Ver cardápio",
-    servicos: [["Pratos do dia", "O cardápio de hoje", Utensils], ["Carnes", "No ponto certo", Utensils],
+    servicos: [["Pratos do dia", "O cardápio de hoje", Utensils], ["Quentinhas", "Pra levar", Store],
       ["Sobremesas", "Pra fechar", CakeSlice], ["Bebidas", "Pra acompanhar", CupSoda]],
     sobre: ["Mesa posta,", "comida no ponto"], cta: ["Bora almoçar?", "Veja o cardápio e peça pelo WhatsApp."],
   },
@@ -542,7 +542,8 @@ export function Demonstracao({
   mensagem: string;
   onFechar: () => void;
   /** O Brenno trocou o ramo: muda o estilo e as fotos da prévia (e o texto das mensagens). */
-  onRamo: (ramo: RamoId) => void;
+  /** "ramo" ou "ramo/sub-nicho". */
+  onRamo: (valor: string) => void;
 }) {
   const t = temaDe(lead);
   const fechar = useRef<HTMLButtonElement>(null);
@@ -674,15 +675,27 @@ export function Demonstracao({
       <label className="flex shrink-0 items-center gap-2.5 border-b border-[color:var(--bjork-border)] bg-[var(--bjork-panel)] px-3 py-2 text-[13px] text-[color:var(--bjork-text-muted)]">
         <span className="shrink-0">Estilo da prévia</span>
         <select
-          value={ramoDaLoja.id}
-          onChange={(e) => onRamo(e.target.value as RamoId)}
+          value={sub ? `${ramoDaLoja.id}/${sub.id}` : ramoDaLoja.id}
+          onChange={(e) => onRamo(e.target.value)}
           className="h-9 min-w-0 flex-1 cursor-pointer rounded-[9px] border border-[color:var(--bjork-border-strong)] bg-[var(--bjork-field)] px-2.5 text-[13.5px] font-medium text-[color:var(--bjork-text)] focus-visible:border-[color:var(--bjork-accent)] focus-visible:outline-none"
         >
-          {RAMOS_ESCOLHA.map((r) => (
-            <option key={r.id} value={r.id}>
-              {r.opcao ?? r.nome}
-            </option>
-          ))}
+          {RAMOS_ESCOLHA.map((r) => {
+            const subs = SUBNICHOS.filter((x) => x.ramo === r.id || x.outrosRamos?.includes(r.id));
+            return subs.length ? (
+              <optgroup key={r.id} label={r.opcao ?? r.nome}>
+                <option value={r.id}>{r.nome} (geral)</option>
+                {subs.map((x) => (
+                  <option key={x.id} value={`${r.id}/${x.id}`}>
+                    {x.nome}
+                  </option>
+                ))}
+              </optgroup>
+            ) : (
+              <option key={r.id} value={r.id}>
+                {r.opcao ?? r.nome}
+              </option>
+            );
+          })}
         </select>
       </label>
 

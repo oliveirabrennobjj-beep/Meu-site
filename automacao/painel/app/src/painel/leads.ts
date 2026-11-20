@@ -36,6 +36,8 @@ export interface Lead {
   canal?: "whatsapp" | "pessoal";
   /** Ramo que o Brenno escolheu na ficha (id de RAMOS); vale mais que o tipo vindo do Google. */
   ramo?: string;
+  /** Sub-nicho escolhido na prévia: id de SUBNICHOS, "" para usar o estilo geral do ramo, null/ausente para detectar sozinho. */
+  subnicho?: string | null;
   /** Loja tirada da lista porque não dá para falar com ela; null quando o Brenno traz de volta. */
   tirada?: { motivo: MotivoTirada; em: string } | null;
   /** Outro celular que o Google mostra para a loja, para tentar quando o principal não dá certo. */
@@ -666,6 +668,8 @@ export function ramoDe(lead: Pick<Lead, "nome" | "tipo" | "ramo">): Ramo {
 export interface Subnicho {
   id: string;
   ramo: RamoId;
+  /** Outros ramos onde o mesmo produto aparece ("Churros e batata" cadastrado como restaurante). */
+  outrosRamos?: RamoId[];
   /** Nome curto que aparece na ficha. */
   nome: string;
   /** Reconhece pelo tipo do Google. */
@@ -748,17 +752,37 @@ export const SUBNICHOS: Subnicho[] = [
     quem: "depósito de gás e água", noSite: "o preço do gás e da água, a região que entrega e um botão pra pedir pelo WhatsApp", ondePlaca: " na hora da entrega" },
   { id: "peixaria", ramo: "mercado", nome: "Peixaria", tipo: /peixar|pescad|frutos do mar/i, nomeLoja: /peixaria|pescado|frutos do mar/i,
     quem: "peixaria", noSite: `os peixes do dia com foto e ${PEDIDO_ZAP}` },
-  // Restaurante
+  // Restaurante: o produto que a loja vende vai na capa (frango assado não leva foto de costela)
+  { id: "frango", ramo: "restaurante", outrosRamos: ["hamburgueria"], nome: "Frango assado", tipo: /frango|galeto|galinha|assados/i, nomeLoja: /frango|galeto|\bassad|rotisserie|\bchicken\b/i,
+    quem: "casa de frango assado", noSite: `o frango assado, as quentinhas e ${PEDIDO_ZAP}` },
+  { id: "crepe", ramo: "restaurante", nome: "Creperia", tipo: /crep/i, nomeLoja: /\bcrep/i, quem: "creperia" },
+  { id: "massas", ramo: "restaurante", nome: "Massas", tipo: /massas|italian|cantina/i, nomeLoja: /\bmassas\b|lasanh|\bcantina|\bnonna|trattoria|italian/i, quem: "restaurante de massas" },
   { id: "japones", ramo: "restaurante", nome: "Japonês", tipo: /japon|sushi|temaki|oriental/i, nomeLoja: /sushi|temaki|japon|\bnikkei|oriental/i, quem: "restaurante japonês" },
   { id: "frutosdomar", ramo: "restaurante", nome: "Frutos do mar", tipo: /frutos do mar|peixe|camar|marisc/i, nomeLoja: /frutos do mar|\bcamar[aã]o|peixe|marisc/i, quem: "restaurante de frutos do mar" },
   { id: "churrascaria", ramo: "restaurante", nome: "Churrascaria", tipo: /churras|steak|carnes|espeto|grill/i, nomeLoja: /churras|steak|\bespeto|\bgrill\b/i, quem: "churrascaria" },
+  { id: "marmita", ramo: "restaurante", outrosRamos: ["hamburgueria"], nome: "Quentinha", tipo: /self.?service|marmit|quentinh|comida caseira|comida para viagem|\bpf\b/i, nomeLoja: /quentinh|marmit|self.?service|comida caseira|\bpf\b|prato feito|\bbuffet\b|tempero/i,
+    quem: "restaurante de comida caseira", noSite: `as quentinhas do dia com foto, os preços e ${PEDIDO_ZAP}` },
   { id: "bar", ramo: "restaurante", nome: "Bar", tipo: /\bbar\b|\bbares\b|boteco|petisc|\bpub\b|chop/i, nomeLoja: /\bbar\b|boteco|botequim|petiscaria|\bpub\b|choperia/i, quem: "bar" },
+  // Lanchonete: só mostra hambúrguer quem vende hambúrguer
+  { id: "churros", ramo: "hamburgueria", outrosRamos: ["restaurante", "acai"], nome: "Churros", tipo: /churro/i, nomeLoja: /churro/i, quem: "loja de churros",
+    noSite: `os sabores de churros com foto e ${PEDIDO_ZAP}` },
+  { id: "batatafrita", ramo: "hamburgueria", outrosRamos: ["restaurante"], nome: "Batata frita", tipo: /batata|fritas/i, nomeLoja: /batata|\bfritas\b|\bfries\b/i, quem: "casa de batata frita",
+    noSite: `as porções de batata com foto e ${PEDIDO_ZAP}` },
+  { id: "pastel", ramo: "hamburgueria", outrosRamos: ["restaurante"], nome: "Pastelaria", tipo: /pastel|pastéis|pasteis|pastelaria/i, nomeLoja: /pastel|past[eé]is/i, quem: "pastelaria",
+    noSite: `os sabores de pastel com foto e ${PEDIDO_ZAP}` },
+  { id: "cachorroquente", ramo: "hamburgueria", outrosRamos: ["restaurante"], nome: "Cachorro-quente", tipo: /hot ?dog|cachorro/i, nomeLoja: /hot ?dog|cachorr[aã]o|cachorro.quente|\bdog\b/i, quem: "carrinho de cachorro-quente",
+    noSite: `os lanches com foto e ${PEDIDO_ZAP}` },
+  { id: "hamburguer", ramo: "hamburgueria", nome: "Hamburgueria", tipo: /hamb|burg|smash/i, nomeLoja: /hamb[uú]rg|burg|smash/i, quem: "hamburgueria" },
+  { id: "salgados", ramo: "hamburgueria", outrosRamos: ["restaurante", "padaria"], nome: "Salgados", tipo: /salgad|coxinha|esfi/i, nomeLoja: /salgad|coxinha|esfi[hr]|\bkibe/i, quem: "casa de salgados",
+    noSite: `os salgados com foto, as encomendas pra festa e ${PEDIDO_ZAP}` },
   // Padaria
   { id: "confeitaria", ramo: "padaria", nome: "Confeitaria", tipo: /confeit|doceria|doces|bolo|brigad/i, nomeLoja: /confeitaria|doceria|\bcake|\bbolos\b|brigadeir/i,
     quem: "confeitaria", noSite: "os bolos e doces com foto e um botão pra encomendar pelo WhatsApp" },
   { id: "cafeteria", ramo: "padaria", nome: "Cafeteria", tipo: /cafeteria|caf[eé]\b|torrefa/i, nomeLoja: /cafeteria|coffee/i, quem: "cafeteria", noSite: `o cardápio com foto e ${PEDIDO_ZAP}`, ondePlaca: " na mesa" },
   // Açaí
   { id: "sorveteria", ramo: "acai", nome: "Sorveteria", tipo: /sorvet|gelat|picol/i, nomeLoja: /^(?!.*a[cç]a[ií]).*(sorvet|gelat|picol)/i, quem: "sorveteria" },
+  { id: "hortifruti", ramo: "mercado", nome: "Hortifrúti", tipo: /hortifr|sacol[aã]o|frutas e vegetais|verdur/i, nomeLoja: /hortifr|sacol[aã]o|\bfeira|verdur|\bfrutas\b/i,
+    quem: "hortifrúti", noSite: `as frutas e verduras do dia, as ofertas e ${PEDIDO_ZAP}` },
   // Moda
   { id: "calcados", ramo: "moda", nome: "Calçados", tipo: /cal[cç]ad|sapat|t[eê]nis/i, nomeLoja: /cal[cç]ados|sapat|\bshoes?\b/i, quem: "loja de calçados",
     noSite: "os modelos novos com foto, a numeração e um botão que já abre o WhatsApp pra reservar o par" },
@@ -786,7 +810,12 @@ export const SUBNICHOS: Subnicho[] = [
   // Papelaria
   { id: "grafica", ramo: "papelaria", nome: "Gráfica", tipo: /gr[aá]fic|impress|personaliz|camiseta|brinde/i, nomeLoja: /gr[aá]fica|impress|personaliz|\bbrindes|\bprint/i, quem: "gráfica",
     noSite: `os produtos com foto, os prazos e ${ORCAMENTO}`, ondePlaca: " na hora de buscar a encomenda" },
+  // Farmácia
+  { id: "cosmeticos", ramo: "farmacia", nome: "Cosméticos", tipo: /cosm[eé]tic|perfum|maquiag|beleza/i, nomeLoja: /cosm[eé]tic|perfum|\bmake|maquiag|beauty|\bbeleza/i,
+    quem: "loja de cosméticos", noSite: `os produtos com foto, as novidades e ${PEDIDO_ZAP}`, ondePlaca: " no caixa" },
   // Outros comércios
+  { id: "pousada", ramo: "geral", nome: "Pousada", tipo: /pousada|hotel|hospedag|hostel|f[eé]rias|alojamento/i, nomeLoja: /pousada|hotel|hostel|su[ií]tes|chal[eé]/i,
+    quem: "pousada", noSite: "os quartos com foto, a localização e um botão pra reservar pelo WhatsApp", ondePlaca: " na recepção" },
   { id: "moveis", ramo: "geral", nome: "Móveis", tipo: /m[oó]veis|sof[aá]|colch|estofad|planejad/i, nomeLoja: /m[oó]veis|\bsof[aá]s?\b|colch|estofad/i, quem: "loja de móveis",
     noSite: "os móveis com foto, os preços e um botão que já abre o WhatsApp", ondePlaca: " no caixa" },
   { id: "floricultura", ramo: "geral", nome: "Floricultura", tipo: /flor/i, nomeLoja: /\bflor(es|icultura)?\b/i, quem: "floricultura",
@@ -794,9 +823,11 @@ export const SUBNICHOS: Subnicho[] = [
 ];
 
 /** O sub-nicho da loja dentro do ramo dela. O nome da loja vale mais que o tipo do Google. */
-export function subnichoDe(lead: Pick<Lead, "nome" | "tipo" | "ramo">): Subnicho | null {
+export function subnichoDe(lead: Pick<Lead, "nome" | "tipo" | "ramo" | "subnicho">): Subnicho | null {
   const ramo = ramoDe(lead).id;
-  const doRamo = SUBNICHOS.filter((s) => s.ramo === ramo);
+  const doRamo = SUBNICHOS.filter((s) => s.ramo === ramo || s.outrosRamos?.includes(ramo));
+  // A escolha do Brenno na prévia vale mais que a detecção ("" = estilo geral do ramo).
+  if (typeof lead.subnicho === "string") return doRamo.find((s) => s.id === lead.subnicho) ?? null;
   return (
     doRamo.find((s) => s.nomeLoja?.test(lead.nome)) ?? doRamo.find((s) => s.tipo?.test(lead.tipo ?? "")) ?? null
   );

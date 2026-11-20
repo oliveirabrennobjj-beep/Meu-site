@@ -35,6 +35,7 @@ import {
   MOTIVO_TIRADA,
   RAMOS,
   RAMOS_ESCOLHA,
+  SUBNICHOS,
   STATUS,
   buscaInstagram,
   chaveTexto,
@@ -67,7 +68,6 @@ import {
   type Lead,
   type MotivoTirada,
   type Oferta,
-  type RamoId,
   type Status,
   type Textos,
 } from "./leads";
@@ -302,15 +302,21 @@ function Conteudo({
   };
 
   const ramo = ramoDe(lead);
-  const mudarRamo = (id: RamoId) => {
+  /** "ramo" escolhido na ficha (sub-nicho volta a ser detectado) ou, na prévia, "ramo/sub-nicho" e "ramo" puro (estilo geral). */
+  const mudarRamo = (valor: string, daPrevia = false) => {
+    const [id, subId] = valor.split("/");
     const novoRamo = RAMOS.find((r) => r.id === id);
-    if (!novoRamo || novoRamo.id === ramo.id) return;
+    if (!novoRamo) return;
+    const subnicho = subId ?? (daPrevia ? "" : null);
+    if (novoRamo.id === ramo.id && (lead.subnicho ?? null) === subnicho) return;
     onSalvar(lead.id, {
       ramo: novoRamo.id,
+      subnicho,
       // O tipo do Google fica quando já é desse ramo (ex.: "Muay Thai" numa academia de luta).
       ...(novoRamo.id === "geral" || novoRamo.tipo.test(lead.tipo ?? "") ? {} : { tipo: novoRamo.nome }),
     });
-    avisar(`${lead.nome}: ${(novoRamo.opcao ?? novoRamo.nome).toLowerCase()}`);
+    const sub = SUBNICHOS.find((x) => x.id === subId);
+    avisar(`${lead.nome}: ${(sub?.nome ?? novoRamo.opcao ?? novoRamo.nome).toLowerCase()}`);
   };
 
   const tirada = motivoTirada(lead);
@@ -403,7 +409,7 @@ function Conteudo({
           Mostrar demonstração do site
         </BlockButton>
         {demo && (
-          <Demonstracao lead={lead} mensagem={textoPrevia(lead)} onFechar={() => setDemo(false)} onRamo={mudarRamo} />
+          <Demonstracao lead={lead} mensagem={textoPrevia(lead)} onFechar={() => setDemo(false)} onRamo={(v) => mudarRamo(v, true)} />
         )}
         {agendaOk && (
           <BlockButton variant="secondary" size="lg" className="w-full" onClick={() => setVerSistema(true)}>
@@ -427,7 +433,7 @@ function Conteudo({
           </span>
           <select
             value={ramo.id}
-            onChange={(e) => mudarRamo(e.target.value as RamoId)}
+            onChange={(e) => mudarRamo(e.target.value)}
             className="h-10 min-w-0 max-w-full cursor-pointer rounded-[10px] border border-[color:var(--bjork-border-strong)] bg-[var(--bjork-field)] px-3 text-[13.5px] font-medium text-[color:var(--bjork-text)] focus-visible:border-[color:var(--bjork-accent)] focus-visible:outline-none"
           >
             {RAMOS_ESCOLHA.map((r) => (

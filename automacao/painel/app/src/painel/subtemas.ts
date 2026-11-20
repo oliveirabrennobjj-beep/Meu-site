@@ -5,7 +5,8 @@ import {
   Clock, Coffee, CupSoda, Droplets, Dumbbell, Fish, Flame, Flower2, Footprints, Gem, Gift, GlassWater, Guitar, Hammer,
   HeartPulse, House, IceCreamCone, KeyRound, Languages, Laptop, Leaf, Music, Package, PawPrint, Pencil,
   Printer, Ruler, Scale, Scissors, Shield, Shirt, Smartphone, Snowflake, Sofa, Sparkles, Stethoscope, Store, SunMedium,
-  Swords, Syringe, Tractor, Trophy, Truck, Users, Utensils, Wheat, Wrench, Zap, type LucideIcon,
+  Swords, Syringe, Tractor, Trophy, Truck, Users, Utensils, Wheat, Wrench, Zap, Drumstick, Cookie, Carrot, BedDouble,
+  Palette, Sandwich, Soup, Wifi, Croissant, Salad, type LucideIcon,
 } from "lucide-react";
 
 type Servico = [nome: string, linha: string, icone: LucideIcon];
@@ -447,6 +448,113 @@ export const SUBTEMAS: Record<string, SubTema> = {
       ["Plantas", "Pra casa", Leaf], ["Entrega", "Surpresa na porta", Truck]],
     sobre: ["Flores frescas,", "todo dia"], cta: ["Vai surpreender alguém?", "Encomende pelo WhatsApp."],
   },
+
+  // Comida: a capa mostra o que a loja vende de verdade.
+  frango: {
+    destaques: [["Quentinha", "Frango, arroz e fritas"], ["Na brasa", "Assado devagar"]],
+    roteiro: "Saindo agora", titulo: ["Frango assado", "douradinho"],
+    chamada: "Peça o frango e a quentinha pelo WhatsApp.", botao: "Pedir agora",
+    servicos: [["Frango assado", "Inteiro ou meio", Drumstick], ["Quentinhas", "Arroz, feijão e farofa", Soup],
+      ["Acompanhamentos", "Batata, maionese e farofa", Utensils], ["Bebidas", "Geladas", CupSoda]],
+    sobre: ["Feito na brasa,", "com tempero de casa"], cta: ["Bateu a fome?", "Peça seu frango pelo WhatsApp."],
+  },
+  marmita: {
+    destaques: [["Quentinha", "Pra levar quentinha"], ["Prato feito", "Arroz, feijão e mistura"]],
+    roteiro: "Comida caseira", titulo: ["Comida de casa,", "todo dia"],
+    chamada: "Veja o cardápio do dia e peça sua quentinha pelo WhatsApp.", botao: "Ver cardápio",
+    servicos: [["Quentinhas", "P, M e G", Soup], ["Prato do dia", "Muda todo dia", Utensils],
+      ["Salada", "Fresquinha", Salad], ["Entrega", "No bairro", Truck]],
+    sobre: ["Tempero", "de comida caseira"], cta: ["Já pediu o almoço?", "Peça sua quentinha pelo WhatsApp."],
+  },
+  crepe: {
+    destaques: [["Salgados", "Frango, carne e queijo"], ["Doces", "Chocolate e frutas"]],
+    roteiro: "Feito na hora", titulo: ["Crepe quentinho,", "do seu jeito"],
+    chamada: "Escolha o sabor e peça pelo WhatsApp.", botao: "Ver cardápio",
+    servicos: [["Crepes salgados", "Recheio caprichado", Utensils], ["Crepes doces", "Chocolate e frutas", CakeSlice],
+      ["Bebidas", "Sucos e refri", CupSoda], ["Entrega", "Combine pelo WhatsApp", Truck]],
+    sobre: ["Massa fininha,", "recheio caprichado"], cta: ["Bateu a vontade?", "Peça seu crepe pelo WhatsApp."],
+  },
+  massas: {
+    destaques: [["Lasanha", "Gratinada no forno"], ["Massas", "Molho da casa"]],
+    roteiro: "Mamma mia", titulo: ["Massa caseira,", "molho de verdade"],
+    chamada: "Veja o cardápio e peça pelo WhatsApp.", botao: "Ver cardápio",
+    servicos: [["Lasanhas", "Bolonhesa e frango", Utensils], ["Massas", "Do dia", Utensils],
+      ["Molhos", "Feitos na casa", Flame], ["Entrega", "Combine pelo WhatsApp", Truck]],
+    sobre: ["Massa feita", "com carinho"], cta: ["Bateu a fome?", "Peça sua massa pelo WhatsApp."],
+  },
+  churros: {
+    destaques: [["Recheados", "Doce de leite e chocolate"], ["Carrinho", "Quentinho na hora"]],
+    roteiro: "Docinho!", titulo: ["Churros quentinho,", "recheio de verdade"],
+    chamada: "Escolha o recheio e peça pelo WhatsApp.", botao: "Pedir agora",
+    servicos: [["Churros recheado", "Doce de leite e chocolate", Cookie], ["Tradicional", "Açúcar e canela", Sparkles],
+      ["Pra festa", "Por encomenda", Gift], ["Bebidas", "Pra acompanhar", CupSoda]],
+    sobre: ["Feito na hora,", "sequinho por fora"], cta: ["Bateu a vontade de doce?", "Peça seu churros pelo WhatsApp."],
+  },
+  batatafrita: {
+    destaques: [["Porções", "Pra dividir"], ["Molhos", "Do jeito que você gosta"]],
+    roteiro: "Crocante!", titulo: ["Batata frita", "sequinha e crocante"],
+    chamada: "Escolha a porção e peça pelo WhatsApp.", botao: "Pedir agora",
+    servicos: [["Batata frita", "P, M e G", Utensils], ["Com cobertura", "Cheddar e bacon", Flame],
+      ["Molhos", "Da casa", Droplets], ["Bebidas", "Geladas", CupSoda]],
+    sobre: ["Frita na hora,", "do jeito certo"], cta: ["Bateu a fome?", "Peça sua batata pelo WhatsApp."],
+  },
+  pastel: {
+    destaques: [["Frito na hora", "Sequinho e crocante"], ["Sabores", "Carne, queijo e mais"]],
+    roteiro: "Saindo agora", titulo: ["Pastel crocante,", "recheio caprichado"],
+    chamada: "Escolha o sabor e peça pelo WhatsApp.", botao: "Pedir agora",
+    servicos: [["Pastéis", "Carne, queijo, frango e mais", Utensils], ["Doces", "Banana e chocolate", CakeSlice],
+      ["Caldo de cana", "Geladinho", CupSoda], ["Combos", "Pastel e bebida", BadgeCheck]],
+    sobre: ["O pastel", "do seu bairro"], cta: ["Bateu a fome?", "Peça seu pastel pelo WhatsApp."],
+  },
+  cachorroquente: {
+    destaques: [["Completo", "Com batata palha"], ["Na chapa", "Feito na hora"]],
+    roteiro: "Completão!", titulo: ["Cachorro-quente", "caprichado"],
+    chamada: "Monte o seu e peça pelo WhatsApp.", botao: "Pedir agora",
+    servicos: [["Tradicional", "Salsicha e molho", Sandwich], ["Completo", "Purê, milho e batata palha", BadgeCheck],
+      ["Adicionais", "Queijo, bacon e mais", Sparkles], ["Bebidas", "Geladas", CupSoda]],
+    sobre: ["Feito na hora,", "do jeito que você gosta"], cta: ["Bateu a fome?", "Peça seu dogão pelo WhatsApp."],
+  },
+  hamburguer: {
+    destaques: [["Lanches", "Os mais pedidos"], ["Porções", "Pra dividir"]],
+    roteiro: "Feito na hora", titulo: ["Hambúrguer", "de verdade"],
+    chamada: "Escolha no cardápio e peça pelo WhatsApp.", botao: "Pedir agora",
+    servicos: [["Lanches", "Os mais pedidos", Utensils], ["Combos", "Pra matar a fome", BadgeCheck],
+      ["Porções", "Pra dividir", Utensils], ["Bebidas", "Geladas", CupSoda]],
+    sobre: ["Feito na chapa,", "do jeito certo"], cta: ["Bateu a fome?", "Escolha no cardápio e peça pelo WhatsApp."],
+  },
+  salgados: {
+    destaques: [["Coxinha", "A queridinha"], ["Pra festa", "Cento por encomenda"]],
+    roteiro: "Saindo agora", titulo: ["Salgado quentinho,", "toda hora"],
+    chamada: "Peça pelo WhatsApp ou encomende o cento pra festa.", botao: "Pedir agora",
+    servicos: [["Salgados fritos", "Coxinha, kibe e mais", Croissant], ["Assados", "Esfiha e enroladinho", Croissant],
+      ["Cento pra festa", "Por encomenda", Gift], ["Bebidas", "Sucos e refri", CupSoda]],
+    sobre: ["Massa feita", "aqui todo dia"], cta: ["Tem festa chegando?", "Encomende o cento pelo WhatsApp."],
+  },
+  hortifruti: {
+    destaques: [["Verduras", "Colhidas cedo"], ["Legumes", "Fresquinhos"]],
+    roteiro: "Direto da roça", titulo: ["Fruta e verdura", "fresquinha todo dia"],
+    chamada: "Veja as ofertas do dia e peça pelo WhatsApp.", botao: "Ver ofertas",
+    servicos: [["Frutas", "Da estação", Apple], ["Verduras", "Colhidas cedo", Leaf],
+      ["Legumes", "Fresquinhos", Carrot], ["Entrega", "Combine pelo WhatsApp", Truck]],
+    sobre: ["Fresquinho", "todo dia"], cta: ["Bora fazer a feira?", "Mande a lista pelo WhatsApp que a gente separa."],
+  },
+  cosmeticos: {
+    destaques: [["Maquiagem", "As marcas que você ama"], ["Esmaltes", "Cores da estação"]],
+    roteiro: "Pra se cuidar", titulo: ["Beleza em tudo", "que você usa"],
+    chamada: "Veja as novidades e peça pelo WhatsApp.", botao: "Ver novidades",
+    servicos: [["Maquiagem", "Base, batom e mais", Palette], ["Cabelo", "Shampoo e tratamento", Sparkles],
+      ["Perfumes", "Pra todos os gostos", Gem], ["Entrega", "Combine pelo WhatsApp", Truck]],
+    sobre: ["Atendimento", "que entende de beleza"], cta: ["Gostou de algum produto?", "Mande o print que a gente separa."],
+  },
+  pousada: {
+    destaques: [["Área de lazer", "Piscina e jardim"], ["Quartos", "Limpos e confortáveis"]],
+    roteiro: "Bem-vindo", titulo: ["Seu descanso", "perto do mar"],
+    chamada: "Veja os quartos e reserve pelo WhatsApp.", botao: "Reservar",
+    servicos: [["Quartos", "Casal e família", BedDouble], ["Café da manhã", "Incluso", Coffee],
+      ["Wi-Fi", "Em todos os quartos", Wifi], ["Localização", "Perto de tudo", House]],
+    sobre: ["Hospedagem", "com cara de casa"], cta: ["Vai viajar?", "Reserve seu quarto pelo WhatsApp."],
+  },
+
 };
 
 /* Sistema por sub-nicho (SistemaPrevia) ------------------------------------------------------- */

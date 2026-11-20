@@ -103,7 +103,9 @@ const CT = "CT Teste";
 const DENTISTA = "Dra. Deise Barbosa Teste";
 // Caso real de 20/11: loja de aquário cadastrada como "Fornecedor" saía com prévia de banho e tosa.
 const AQUARIO = "Aquarismo Peixes Teste - casa de ração";
-for (const [i, nome, tipo] of [[3, MASSO, "Salão de beleza"], [4, CT, "Academia"], [5, DENTISTA, "Dentista"], [6, AQUARIO, "Loja de ração"]]) {
+// Caso real de 20/11: vende frango assado e quentinha, e a prévia mostrava costela.
+const FRANGO = "Frango Assado Teste e Quentinha";
+for (const [i, nome, tipo] of [[3, MASSO, "Salão de beleza"], [4, CT, "Academia"], [5, DENTISTA, "Dentista"], [6, AQUARIO, "Loja de ração"], [7, FRANGO, "Restaurante"]]) {
   leads.push({
     id: `w552290000000${i}`,
     nome,
@@ -387,6 +389,7 @@ try {
     [CT, "Academia de luta em Cidade de Teste", "luta-1.webp"],
     [DENTISTA, "Dentista em Cidade de Teste", "dentista-1.webp"],
     [AQUARIO, "Aquarismo em Cidade de Teste", "aquario-1.webp"],
+    [FRANGO, "Frango assado em Cidade de Teste", "frango-1.webp"],
   ]) {
     await p.getByRole("button", { name: loja, exact: true }).click();
     await p.getByRole("dialog").first().getByRole("button", { name: "Mostrar demonstração do site" }).click();
@@ -414,6 +417,12 @@ try {
       await previa.getByLabel("Estilo da prévia").selectOption("luta");
       await previa.locator('img[src$="luta-1.webp"]').waitFor();
       assert.equal((await p.evaluate(() => window.__escritas)).at(-1).dados.tipo, "Academia de luta");
+      await previa.getByRole("button", { name: "Fechar demonstração" }).click();
+    } else if (loja === FRANGO) {
+      // O Brenno pode escolher o sub-nicho na prévia: grava e troca as fotos.
+      await previa.getByLabel("Estilo da prévia").selectOption("restaurante/marmita");
+      await previa.locator('img[src$="marmita-1.webp"]').waitFor();
+      assert.equal((await p.evaluate(() => window.__escritas)).at(-1).dados.subnicho, "marmita");
       await previa.getByRole("button", { name: "Fechar demonstração" }).click();
     } else {
       await previa.getByRole("button", { name: "Fechar demonstração" }).click();
