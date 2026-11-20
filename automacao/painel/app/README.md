@@ -42,6 +42,9 @@ prévia do site ficam em `automacao/painel/img/demo/` e vão como arquivos de ap
   `Assistente.tsx` + `conhecimento.ts`: chat com foto (regras de abordagem e lista de lojas vão no início de cada pedido;
   a resposta pode terminar num bloco ```painel com mudanças que o Brenno confirma). Conversa em `assistente/conversa`.
   Publicar com `capabilities: {db: {}, user: {}, sample: {images: true}, downloads: true}`.
-- `src/painel/usePainel.ts`: leitura e gravação no banco do Artifact.
+- `src/painel/usePainel.ts`: leitura e gravação no banco do Artifact. Também importa sozinho o lote da
+  pesquisa (`pesquisa/lote.json`, publicado junto; ver `automacao/pesquisa-maps/README.md`).
+  Lojas da pesquisa trazem `endereco` e `maps` (ficha exata); o filtro "Chegaram agora" mostra quem
+  entrou nos últimos 3 dias e ainda não recebeu mensagem.
 - `src/painel/PainelVendas.tsx`: a tela; `TabelaLeads`, `FichaLead` e `Ferramentas` são as partes.
 - `src/components/ui/`: casca e blocos visuais, sem regra de negócio.

@@ -40,8 +40,10 @@ import {
   META_DIA,
   STATUS,
   STATUS_ORDEM,
+  chegouAgora,
   cidadeDe,
   contar,
+  DIAS_CHEGADA,
   ehCasimiro,
   contatosHoje,
   fmtInt,
@@ -60,7 +62,7 @@ import {
 import { usePainel } from "./usePainel";
 
 type Vista = "geral" | "agenda" | "funil" | "assistente" | "mensagens" | "importar";
-type Filtro = Status | "todos" | "tiradas" | "sistema";
+type Filtro = Status | "todos" | "tiradas" | "sistema" | "chegaram";
 
 const ESCOPOS: SegmentOption<Escopo>[] = [
   { id: "todos", label: "TODOS", long: "Todos os comércios" },
@@ -125,10 +127,11 @@ export function PainelVendas() {
     const q = consulta.trim().toLowerCase();
     if (!q) return doNicho;
     return doNicho.filter((l) =>
-      [l.nome, l.tipo, cidadeDe(l)].some((campo) => campo?.toLowerCase().includes(q)),
+      [l.nome, l.tipo, cidadeDe(l), l.endereco].some((campo) => campo?.toLowerCase().includes(q)),
     );
   }, [doNicho, consulta]);
   const porSituacao = useMemo(() => contar(buscados), [buscados]);
+  const chegaram = useMemo(() => buscados.filter((l) => chegouAgora(l)), [buscados]);
   // Já receberam mensagem, são de ramo com sistema e ainda não ouviram falar dele.
   const paraSistema = useMemo(
     () => buscados.filter((l) => sistemaDe(l) && statusDe(l) !== "novo" && !dataEnvio(l, "agenda")),
@@ -141,11 +144,13 @@ export function PainelVendas() {
           ? noEscopo(tiradas, escopo)
           : filtro === "sistema"
             ? paraSistema
+          : filtro === "chegaram"
+            ? chegaram
           : filtro === "todos"
             ? buscados
             : buscados.filter((l) => statusDe(l) === filtro),
       ),
-    [buscados, filtro, tiradas, escopo, paraSistema],
+    [buscados, filtro, tiradas, escopo, paraSistema, chegaram],
   );
 
   const kpis = useMemo<KpiData[]>(() => {
@@ -607,6 +612,21 @@ export function PainelVendas() {
                         </span>
                       </button>
                     ))}
+                    {(chegaram.length > 0 || filtro === "chegaram") && (
+                      <button
+                        type="button"
+                        aria-pressed={filtro === "chegaram"}
+                        aria-label={`Chegaram nos últimos ${DIAS_CHEGADA} dias e ainda não receberam mensagem: ${chegaram.length}`}
+                        onClick={() => setFiltro("chegaram")}
+                        className={chip(filtro === "chegaram")}
+                      >
+                        <Sparkles aria-hidden="true" className="size-3 text-[color:var(--bjork-accent)]" />
+                        Chegaram agora
+                        <span className="font-mono text-[11px] tabular-nums text-[color:var(--bjork-text-soft)]">
+                          {chegaram.length}
+                        </span>
+                      </button>
+                    )}
                     {(paraSistema.length > 0 || filtro === "sistema") && (
                       <button
                         type="button"
@@ -647,6 +667,8 @@ export function PainelVendas() {
                         ? "Fora da lista: abra a loja para trazer de volta"
                         : filtro === "sistema"
                           ? "Já receberam mensagem: abra e ofereça o sistema"
+                        : filtro === "chegaram"
+                          ? "Lote novo da pesquisa, ainda sem mensagem"
                         : grupo.casimiro
                           ? "Pessoalmente ou contato do dono"
                           : "WhatsApp · site"

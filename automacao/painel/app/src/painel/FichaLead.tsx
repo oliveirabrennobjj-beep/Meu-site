@@ -38,6 +38,7 @@ import {
   cidadeDe,
   dataEnvio,
   ehCasimiro,
+  enderecoCurto,
   podeVisitar,
   ramoDe,
   recebeuPedidoDeVisita,
@@ -296,6 +297,11 @@ function Conteudo({
           <p className="mt-0.5 text-[13px] text-[color:var(--bjork-text-muted)]">
             {tipoDe(lead)} · {cidadeDe(lead)}
           </p>
+          {enderecoCurto(lead) && (
+            <p className="mt-0.5 text-[12px] leading-snug text-[color:var(--bjork-text-soft)] [overflow-wrap:anywhere]">
+              {enderecoCurto(lead)}
+            </p>
+          )}
         </div>
         <IconButton label="Fechar ficha" onClick={onFechar}>
           <X />

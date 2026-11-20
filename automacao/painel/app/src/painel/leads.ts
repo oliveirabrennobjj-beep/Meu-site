@@ -40,6 +40,14 @@ export interface Lead {
   tirada?: { motivo: MotivoTirada; em: string } | null;
   /** Outro celular que o Google mostra para a loja, para tentar quando o principal não dá certo. */
   outroWhatsapp?: string;
+  /** Quando a loja entrou no painel (pesquisa diária ou importação). */
+  criado?: string;
+  /** Endereço da ficha do Google Maps (rua, bairro, cidade). */
+  endereco?: string;
+  /** Link da ficha exata da loja no Google Maps. */
+  maps?: string;
+  /** De onde veio a loja (Google Maps, Instagram…). */
+  fonte?: string;
 }
 
 export const STATUS: Record<
@@ -180,7 +188,15 @@ export function noEscopo(leads: Lead[], escopo: Escopo) {
 }
 
 // Da mais perto de Casimiro para a mais longe; cidade nova entra no fim, em ordem alfabética.
-const ORDEM_CIDADES = [CASIMIRO, ...DISTRITOS.map(([nome]) => nome), "Rio das Ostras", "Macaé"];
+const ORDEM_CIDADES = [
+  CASIMIRO,
+  ...DISTRITOS.map(([nome]) => nome),
+  "Rio das Ostras",
+  "Silva Jardim",
+  "Unamar",
+  "Macaé",
+  "Cabo Frio",
+];
 
 export function porCidade(leads: Lead[]) {
   const mapa = new Map<string, Lead[]>();
@@ -831,9 +847,21 @@ export const linkSeguro = (url?: string) => (url && /^https?:\/\//i.test(url) ? 
 
 /* Sobre a loja --------------------------------------------------------------------------------- */
 
-// O painel não guarda endereço: a busca por nome e cidade abre a ficha da loja no Google Maps.
+// Abre a ficha exata quando a pesquisa guardou o link; senão, a busca por nome e cidade.
 export const linkMaps = (lead: Lead) =>
+  (lead.maps && /^https:\/\/www\.google\.com\/maps\//.test(lead.maps) ? lead.maps : null) ??
   `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${lead.nome} ${cidadeDe(lead)} RJ`)}`;
+
+/** Rua, número e bairro: o Google escreve "R. X, 12 - Bairro, Cidade - RJ, CEP, Brasil". */
+export const enderecoCurto = (lead: Lead) => (lead.endereco ?? "").split(/,\s*[^,]+ - RJ\b/)[0].trim();
+
+/** Entrou nos últimos dias e ninguém falou com ela ainda: o lote novo da pesquisa. */
+export const DIAS_CHEGADA = 3;
+export function chegouAgora(lead: Lead, agora = new Date()) {
+  if (!lead.criado || statusDe(lead) !== "novo") return false;
+  const quando = new Date(lead.criado).getTime();
+  return Number.isFinite(quando) && agora.getTime() - quando < DIAS_CHEGADA * 864e5;
+}
 
 const NAO_E_PERFIL = new Set(["p", "reel", "reels", "explore", "stories"]);
 
@@ -897,6 +925,9 @@ export function lerImportacao(texto: string, existentes: Iterable<string>): Lead
       nota: typeof x.nota === "number" ? x.nota : null,
       avaliacoes: typeof x.avaliacoes === "number" ? x.avaliacoes : null,
       link: String(x.link ?? ""),
+      ...(x.endereco ? { endereco: String(x.endereco) } : {}),
+      ...(x.maps ? { maps: String(x.maps) } : {}),
+      ...(x.fonte ? { fonte: String(x.fonte) } : {}),
       status: "novo",
       criado: agora,
     });

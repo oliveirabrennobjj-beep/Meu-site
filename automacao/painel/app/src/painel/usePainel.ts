@@ -58,6 +58,8 @@ export function usePainel(avisar: (texto: string) => void) {
   const [textos, setTextos] = useState<Textos>(TEXTOS_PADRAO);
   const [fase, setFase] = useState<Fase>("carregando");
   const [lento, setLento] = useState(false);
+  // A lista veio do servidor (não do cache): só então dá para saber quem ainda não está no banco.
+  const [doServidor, setDoServidor] = useState(false);
   const [erro, setErro] = useState("");
   const dbRef = useRef<Db | null>(null);
   const filas = useRef(new Map<string, Promise<unknown>>());
@@ -106,7 +108,10 @@ export function usePainel(avisar: (texto: string) => void) {
       parar.push(
         db.collection("leads").onSnapshot(
           (snap) => {
-            if (!snap.metadata?.fromCache) chegou();
+            if (!snap.metadata?.fromCache) {
+              chegou();
+              setDoServidor(true);
+            }
             setLeads(snap.docs.map(lerLead));
             setFase("pronto");
           },
@@ -178,6 +183,61 @@ export function usePainel(avisar: (texto: string) => void) {
     },
     [leads],
   );
+
+  // Pesquisa automática: o Claude publica `pesquisa/lote.json` junto do painel ({lote, leads}).
+  // Na primeira carga completa, entra no banco quem ainda não está (pelo WhatsApp, inclusive as
+  // tiradas) e `config/pesquisa` guarda o lote, para não rodar de novo.
+  const pesquisaFeita = useRef(false);
+  useEffect(() => {
+    const db = dbRef.current;
+    if (fase !== "pronto" || !doServidor || !db || pesquisaFeita.current) return;
+    pesquisaFeita.current = true;
+    (async () => {
+      let arquivo: { lote?: unknown; leads?: unknown };
+      try {
+        const resposta = await fetch("pesquisa/lote.json", { cache: "no-store" });
+        if (!resposta.ok) return;
+        arquivo = await resposta.json();
+      } catch {
+        return;
+      }
+      const lote = String(arquivo.lote ?? "");
+      if (!lote || !Array.isArray(arquivo.leads)) return;
+      const jaFeito = await new Promise<string | null>((fim) => {
+        let parar: (() => void) | null = null;
+        let acabou = false;
+        const terminar = (valor: string | null) => {
+          if (acabou) return;
+          acabou = true;
+          window.setTimeout(() => parar?.(), 0);
+          fim(valor);
+        };
+        parar = db.doc("config/pesquisa").onSnapshot(
+          (snap) => {
+            if (snap.metadata?.fromCache) return;
+            terminar(snap.exists ? String(snap.data()?.lote ?? "") : "");
+          },
+          () => terminar(null),
+        );
+      });
+      if (jaFeito === null || jaFeito === lote) return;
+      const novos = lerImportacao(
+        JSON.stringify(arquivo.leads),
+        leads.map((l) => l.whatsapp),
+      );
+      try {
+        for (let i = 0; i < novos.length; i += 20) {
+          await Promise.all(
+            novos.slice(i, i + 20).map((lead) => db.collection("leads").doc(`w${lead.whatsapp}`).set(lead)),
+          );
+        }
+        await db.doc("config/pesquisa").set({ lote, em: new Date().toISOString(), entraram: novos.length });
+        if (novos.length) avisar(`${novos.length} empresas novas da pesquisa entraram no painel`);
+      } catch (e) {
+        avisar(`A pesquisa nova não entrou toda: ${motivo(e)}`);
+      }
+    })();
+  }, [fase, doServidor, leads, avisar]);
 
   /** Guarda a conversa com o assistente (só as últimas 40 falas). */
   const salvarConversa = useCallback(

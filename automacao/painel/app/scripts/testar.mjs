@@ -225,6 +225,10 @@ async function abrir(browser, opcoes) {
       body: moldura(readFileSync(path.join(raiz, "../vendas.html"), "utf8")),
     }),
   );
+  // Sem lote de pesquisa novo neste teste (o painel ignora lote vazio).
+  await pagina.route("http://painel.teste/pesquisa/**", (rota) =>
+    rota.fulfill({ contentType: "application/json", body: '{"lote":"","leads":[]}' }),
+  );
   await pagina.goto("http://painel.teste/");
   await pagina.getByRole("region", { name: "Casimiro de Abreu" }).waitFor();
   await pagina.waitForTimeout(900);
