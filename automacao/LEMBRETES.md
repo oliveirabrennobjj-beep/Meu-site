@@ -18,6 +18,8 @@ O resumo das 06:17 sugere um item destes por dia. Para incluir: fale "ideia pro 
 - [x] Painel: trazer os 139 comércios de Casimiro do "Mapa da Plaquinha" (13/11: 103 com WhatsApp entraram; 34 sem WhatsApp ficaram de fora).
 - [ ] Painel: salvar o Instagram dos 58 comércios sem @ (precisa liberar a busca paga do Firecrawl).
 - [ ] Painel: parte de marketing para perfis (mais pra frente, quando decidir).
+- [ ] Portfólio: demo do "Kit Mesa" NFC (chamar garçom, cardápio com foto/vídeo, pedir conta, Wi-Fi, Pix) pra bar e restaurante. Catálogo completo em `automacao/produtos-nfc.md`.
+- [ ] Portfólio: demos dos outros produtos NFC (cartão de visita, fidelidade, fila de espera, pesquisa de satisfação), um por vez.
 
 ## Pendentes (decisão do Brenno)
 - [ ] Conectar Instagram/TikTok no Metricool (link em `automacao/PLANO.md`, seção 2).
