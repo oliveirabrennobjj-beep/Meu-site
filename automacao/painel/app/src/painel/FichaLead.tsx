@@ -85,7 +85,9 @@ function DonoDoCnpj({ lead }: { lead: Lead }) {
       <UserRound aria-hidden="true" className="mt-px size-4 shrink-0" />
       <span>
         {dono.whatsapp
-          ? `Celular do dono${dono.nome ? `, ${dono.nome},` : ""} no cadastro do CNPJ: ${numero}.`
+          ? dono.nome
+            ? `Celular do dono, ${dono.nome}, no cadastro do CNPJ: ${numero}.`
+            : `Outro celular no cadastro do CNPJ da loja: ${numero}. Costuma ser do dono ou do responsável.`
           : `Esse WhatsApp é o do dono${dono.nome ? ` (${dono.nome})` : ""} no cadastro do CNPJ.`}
         <span className="block text-[12px] text-[color:var(--bjork-text-medium)]">
           {dono.whatsapp ? "Pode estar desatualizado: se não responder, mande pra loja." : "Pode falar direto com ele por aqui."}
@@ -575,7 +577,9 @@ function Conteudo({
                 className={buttonClass(enviada ? "secondary" : "primary", "lg", "w-full")}
               >
                 <Send aria-hidden="true" />
-                {enviada ? "Enviar de novo pro dono" : `Enviar pro dono${lead.dono?.nome ? ` (${lead.dono.nome})` : ""}`}
+                {lead.dono?.nome
+                  ? enviada ? "Enviar de novo pro dono" : `Enviar pro dono (${lead.dono.nome})`
+                  : enviada ? "Enviar de novo pro celular do CNPJ" : "Enviar pro celular do CNPJ"}
               </a>
             )}
             <a
