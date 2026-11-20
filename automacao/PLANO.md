@@ -29,10 +29,34 @@ usar **B** só num número secundário se quiser ler/responder conversas pelo Cl
 **Falta:** você criar a conta Meta Business e me passar o acesso (o Claude pede a chave num formulário seguro).
 
 ## 1b. Vendas no automático (prospecção)
-- **Painel de vendas:** https://claude.ai/artifact/LMpGydYCibdZoLEf3eNBNo (só você abre). Fonte: `automacao/painel/vendas.html`.
-  76 comércios reais da região sem site próprio (Google Maps, 09/11): pizzaria, barbearia, açaí, padaria, salão, lanchonete, pet shop. Placar: a enviar, enviados, responderam,
-  fecharam, mais pra frente, não querem. Botão "Enviar no WhatsApp" abre a conversa com a mensagem pronta (1 toque).
-- **Todo dia 06:17:** o resumo lembra a meta (15 mensagens) e traz 10 comércios novos em JSON para "Importar".
+- **Painel de vendas:** https://claude.ai/artifact/LMpGydYCibdZoLEf3eNBNo (só você abre). Fonte: `automacao/painel/app/` (ver o README de lá).
+  76 comércios reais da região sem site próprio (Google Maps, 09/11): pizzaria, barbearia, açaí, padaria, salão, lanchonete, pet shop.
+  Desde 12/11 tem o visual escuro da referência do 21st.dev, focado em vender **site** e **placa NFC**:
+  - Uma tabela por cidade (Casimiro, Barra de São João, Rio das Ostras, Macaé), com nota e número de avaliações.
+  - "Nichos": todos os ramos, um por um; tocar em um filtra as tabelas. Botão "Mais/Menos avaliados" em cada tabela.
+  - **Casimiro:** mensagem pede para passar lá e falar com o dono (placa para quem tem menos de 50 avaliações, senão site),
+    botão "Falei pessoalmente" e roteiro curto. **Fora:** mensagem de site pelo WhatsApp. Nenhum texto cita preço.
+  - **Visita só na cidade de Casimiro:** a mensagem pede conversa pessoal ou o contato de quem resolve.
+    Barra de São João, Rio Dourado, Professor Souza, Rio das Ostras e Macaé: só WhatsApp, sem pedir visita.
+    O Google às vezes põe "Casimiro de Abreu" em loja de distrito: na ficha, "Dá pra ir lá pessoalmente?" → NÃO.
+    Loja longe que já recebeu pedido de visita mostra "Mandar a correção".
+  - Com SIM, a ficha abre com "AS DUAS" (site e placa numa mensagem só). Se mandar uma oferta só, a outra
+    vira continuação ("Ah, esqueci de falar…"), sem repetir o oi. Cada envio fica marcado com a data.
+    A meta do dia conta mensagens, não lojas.
+  - Em Casimiro também tem a opção DONO: mensagem pedindo para falar com o dono (com "oi" se for a primeira,
+    como continuação se já mandou algo). Depois de cada envio a ficha já pula para a próxima opção que falta.
+  - A saudação muda pela hora do celular: bom dia, boa tarde ou boa noite.
+  - **Assistente (menu → Assistente):** chat com o Claude dentro do painel. Sabe as regras de abordagem, lê o print da
+    conversa do WhatsApp, escreve a resposta pronta e propõe atualizar a loja (botão "Salvar no painel").
+    As regras ficam em `automacao/painel/app/src/painel/conhecimento.ts`.
+  - **Assistente de anotação:** na ficha, "Conta o que aconteceu" do seu jeito; o Claude do próprio painel entende e mostra
+    a situação, o compromisso (dia e hora) e um resumo para você conferir e salvar. Gasta um pouco do seu uso do Claude.
+    Os compromissos aparecem em "Próximos passos", no topo do painel, e na linha da loja.
+  - A ficha tem "Sobre a loja": atalhos para o Google Maps, o Instagram (com o @) e o WhatsApp do comércio.
+  - Quando a pessoa gosta (situação "Respondeu"), o botão manda a oferta de demonstração do site para hoje ou amanhã.
+  - Os 4 textos são editáveis em "Mensagens". Depois de enviar aparece "Próximo" para seguir a lista.
+- **Todo dia 06:17:** o resumo lembra a meta (30 comércios contatados), sugere 1 melhoria do dia (lista "Ideias para o painel
+  e o portfólio" em `automacao/LEMBRETES.md`) e traz 10 comércios novos em JSON para "Importar".
 - **Por que não 100% sozinho ainda:** mandar mensagem fria em massa por número comum pode bloquear o número.
   Mandar aos poucos (15/dia) pelo painel é seguro. Com a Evolution API (~R$ 30/mês, decisão com seu pai) o envio
   e as respostas viram automáticos; com a API oficial da Meta, só com modelo de mensagem aprovado.
