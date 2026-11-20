@@ -19,7 +19,12 @@ export interface SubTema {
   servicos: Servico[];
   sobre: [string, string];
   cta: [string, string];
+  /** Paleta e fonte próprias quando a do ramo não combina (cosméticos não usam o vermelho da farmácia). */
+  fundo?: string; cartao?: string; tinta?: string; suave?: string; destaque?: string; noDestaque?: string; mancha?: string;
+  fonte?: string; italico?: boolean; maiusculo?: boolean; escuro?: boolean;
 }
+
+const ELEGANTE = `"Cormorant Garamond", serif`;
 
 const EXPERIMENTAL = "Agende sua aula experimental pelo WhatsApp.";
 
@@ -337,6 +342,8 @@ export const SUBTEMAS: Record<string, SubTema> = {
     sobre: ["Estilo", "pra quem se mexe"], cta: ["Gostou de alguma peça?", "Mande o print que a gente separa o seu tamanho."],
   },
   joalheria: {
+    fundo: "#f6f2ec", cartao: "#ffffff", tinta: "#1d1b18", suave: "#1d1b18a8", destaque: "#a8834a", noDestaque: "#ffffff", mancha: "#e9dfcf",
+    fonte: ELEGANTE, italico: false, maiusculo: false, escuro: false,
     destaques: [["Anéis", "Ouro e prata"], ["Colares", "Peças pra presentear"]],
     roteiro: "Pra brilhar", titulo: ["Joias que", "marcam momentos"],
     chamada: "Veja as peças e reserve pelo WhatsApp.", botao: "Ver peças",
@@ -441,6 +448,8 @@ export const SUBTEMAS: Record<string, SubTema> = {
     sobre: ["Qualidade", "que cabe no bolso"], cta: ["Gostou de algum móvel?", "Mande o print que a gente te passa o preço."],
   },
   floricultura: {
+    fundo: "#f7f3ee", cartao: "#ffffff", tinta: "#2e3b2c", suave: "#2e3b2ca8", destaque: "#b5546b", noDestaque: "#ffffff", mancha: "#ecd9d6",
+    fonte: ELEGANTE, italico: false, maiusculo: false, escuro: false,
     destaques: [["Arranjos", "Feitos na hora"], ["Presente", "Surpresa na porta"]],
     roteiro: "Com amor", titulo: ["Flores que", "dizem tudo"],
     chamada: "Escolha o buquê e encomende pelo WhatsApp.", botao: "Encomendar",
@@ -539,6 +548,8 @@ export const SUBTEMAS: Record<string, SubTema> = {
     sobre: ["Fresquinho", "todo dia"], cta: ["Bora fazer a feira?", "Mande a lista pelo WhatsApp que a gente separa."],
   },
   cosmeticos: {
+    fundo: "#fbf4f2", cartao: "#ffffff", tinta: "#1f3a2e", suave: "#1f3a2ea8", destaque: "#b4626a", noDestaque: "#ffffff", mancha: "#f2dcd8",
+    fonte: ELEGANTE, italico: false, maiusculo: false, escuro: false,
     destaques: [["Maquiagem", "As marcas que você ama"], ["Esmaltes", "Cores da estação"]],
     roteiro: "Pra se cuidar", titulo: ["Beleza em tudo", "que você usa"],
     chamada: "Veja as novidades e peça pelo WhatsApp.", botao: "Ver novidades",

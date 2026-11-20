@@ -1,9 +1,8 @@
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { toJpeg } from "html-to-image";
 import {
   Activity,
-  ArrowRight,
   Baby,
   Backpack,
   BadgeCheck,
@@ -25,10 +24,8 @@ import {
   Hammer,
   HeartPulse,
   IceCreamCone,
-  Instagram,
   Leaf,
   Loader2,
-  MapPin,
   MessageCircle,
   Music,
   PaintBucket,
@@ -65,8 +62,9 @@ import {
   Zap,
   type LucideIcon,
 } from "lucide-react";
-import { RAMOS_ESCOLHA, SUBNICHOS, cidadeDe, fmtInt, ramoDe, subnichoDe, type Lead, type RamoId } from "./leads";
+import { RAMOS_ESCOLHA, SUBNICHOS, cidadeDe, ramoDe, subnichoDe, type Lead, type RamoId } from "./leads";
 import { SUBTEMAS } from "./subtemas";
+import { ESCRITA, PaginaPremium, familiaDe } from "./SitePremium";
 
 // Prévia de como ficaria o site da loja, no nível de um site pronto (referência: shots do
 // Pinterest que o Brenno mandou). Só usa o que é verdade (nome, ramo, cidade, nota do Google);
@@ -75,7 +73,7 @@ import { SUBTEMAS } from "./subtemas";
 
 type Servico = [nome: string, linha: string, icone: LucideIcon];
 
-interface Tema {
+export interface Tema {
   foto: string;
   escuro?: boolean;
   fundo: string;
@@ -438,13 +436,8 @@ export const temaDe = (lead: Lead): Tema => {
   return extra ? { ...base, ...extra, foto: sub.id } : base;
 };
 
-const nota = (n: number) => n.toLocaleString("pt-BR", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 export const arquivo = (nome: string, tipo = "previa") =>
   `${tipo}-${nome.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "").toLowerCase() || "site"}.jpg`;
-
-// Formas orgânicas atrás das fotos, como na referência.
-const BOLHA = "62% 38% 46% 54% / 55% 44% 56% 45%";
-const BOLHA2 = "38% 62% 55% 45% / 46% 58% 42% 54%";
 
 // Fontes da prévia, servidas junto com o painel. A tela e a foto usam os mesmos arquivos:
 // a foto não enxerga as fontes do Google, e com letras diferentes o texto quebraria em outro lugar.
@@ -458,6 +451,9 @@ const FONTES: Record<string, [arquivo: string, peso: number, estilo?: "italic"][
   "Archivo Black": [["archivo-black-400", 400]],
   "Bricolage Grotesque": [["bricolage-700", 700]],
   Anton: [["anton-400", 400]],
+  Yellowtail: [["yellowtail-400", 400]],
+  "Kaushan Script": [["kaushan-400", 400]],
+  Outfit: [["outfit-800", 800]],
 };
 
 const face = (familia: string, peso: number, estilo: string | undefined, url: string) =>
@@ -546,6 +542,7 @@ export function Demonstracao({
   onRamo: (valor: string) => void;
 }) {
   const t = temaDe(lead);
+  const familia = familiaDe(ramoDe(lead).id, subnichoDe(lead));
   const [fotoReal, setFotoReal] = useState(true);
   const fechar = useRef<HTMLButtonElement>(null);
   const pagina = useRef<HTMLElement>(null);
@@ -577,7 +574,7 @@ export function Demonstracao({
       pixelRatio: 2,
       quality: 0.9,
       backgroundColor: t.fundo,
-      fontEmbedCSS: await cssDasFontes([TEXTO, "Caveat", ...(doTitulo ? [doTitulo] : [])]),
+      fontEmbedCSS: await cssDasFontes([TEXTO, ESCRITA[familia], ...(doTitulo ? [doTitulo] : [])]),
       filter: (no: HTMLElement) => !(no instanceof HTMLElement && no.dataset.foraDaFoto !== undefined),
     });
   }
@@ -604,47 +601,7 @@ export function Demonstracao({
   const tipo = lead.tipo?.trim();
   const sub = subnichoDe(lead);
   const ramo = sub?.nome ?? (tipo && (ramoDaLoja.id === "geral" || ramoDaLoja.tipo.test(tipo)) ? tipo : ramoDaLoja.nome);
-  const temNota = typeof lead.nota === "number" && lead.nota > 0;
-  const titulo: CSSProperties = { fontFamily: t.fonte, textTransform: t.maiusculo ? "uppercase" : undefined };
-  const destaqueTitulo: CSSProperties = { ...titulo, color: t.destaque, fontStyle: t.italico ? "italic" : undefined };
-  const roteiro: CSSProperties = { fontFamily: `"Caveat", cursive`, color: t.destaque };
   const demo = (oque: string) => () => setAviso(`No site de verdade, ${oque}`);
-  const pill = "inline-flex min-h-[46px] cursor-pointer items-center justify-center gap-2 rounded-full px-5 text-[14.5px] font-semibold";
-  const Marca = t.servicos[0][2];
-  const servicos = t.destaques ? t.servicos.filter(([nome]) => !t.destaques!.some(([d]) => d === nome)) : t.servicos;
-  const acento = t.noCapa ?? t.destaque;
-
-  const cabecalho = (sobreCapa: boolean) => (
-    <header className="flex items-center gap-2.5">
-      <span
-        className="grid size-9 place-items-center rounded-[11px]"
-        style={sobreCapa ? { background: acento, color: t.capa } : { background: t.destaque, color: t.noDestaque }}
-      >
-        <Marca aria-hidden="true" className="size-5" />
-      </span>
-      <span className="min-w-0 flex-1 truncate text-[16px] font-bold" style={titulo}>{lead.nome}</span>
-      <button
-        type="button"
-        onClick={demo("este botão abre o WhatsApp da loja.")}
-        className="rounded-full px-3.5 py-2 text-[12px] font-semibold"
-        style={sobreCapa ? { background: "#ffffff26", color: "#ffffff" } : { background: t.tinta, color: t.fundo }}
-      >
-        {t.botao.split(" ")[0]}
-      </button>
-    </header>
-  );
-
-  const selo = (classe: string, estilo: CSSProperties, corSuave: string) => (
-    <div className={`flex items-center gap-2.5 rounded-[16px] px-3.5 py-2.5 shadow-[0_14px_30px_-12px_rgba(0,0,0,.35)] ${classe}`} style={estilo}>
-      <span className="flex gap-0.5" aria-hidden="true">
-        {[0, 1, 2, 3, 4].map((i) => <Star key={i} className="size-3.5" fill="#f5b301" stroke="none" />)}
-      </span>
-      <span className="text-[12.5px] font-semibold">
-        {temNota ? `${nota(lead.nota!)} no Google` : "Avalie no Google"}
-        {temNota && lead.avaliacoes ? <span className="block text-[11px] font-normal" style={{ color: corSuave }}>{fmtInt(lead.avaliacoes)} avaliações</span> : null}
-      </span>
-    </div>
-  );
 
   return createPortal(
     <div
@@ -709,210 +666,16 @@ export function Demonstracao({
           style={{ background: t.fundo, color: t.tinta, fontFamily: `"${TEXTO}", "Roboto", system-ui, sans-serif` }}
         >
           <style>{FONTES_NA_TELA}</style>
-          {t.capa ? (
-            /* Capa: a foto ocupa o topo e o texto vai por cima */
-            <section className="relative overflow-hidden" style={{ color: "#ffffff" }}>
-              <img
-                src={capa}
-                crossOrigin="anonymous"
-                onError={() => setFotoReal(false)}
-                alt=""
-                width={720}
-                height={900}
-                className="absolute inset-0 h-full w-full object-cover"
-                style={{ objectPosition: "center 78%" }}
-              />
-              <div
-                aria-hidden="true"
-                className="absolute inset-0"
-                style={{ background: `linear-gradient(180deg, ${t.capa} 0%, ${t.capa}f2 36%, ${t.capa}8c 60%, ${t.capa}1a 100%)` }}
-              />
-              <div className="relative flex min-h-[680px] flex-col px-5 pb-6 pt-5">
-                {cabecalho(true)}
-                <span className="mt-9 inline-flex items-center gap-1.5 self-start rounded-full px-3 py-1 text-[12px] font-semibold" style={{ background: "#ffffff1f", color: acento }}>
-                  <MapPin aria-hidden="true" className="size-3.5" /> {ramo} em {cidade}
-                </span>
-                <h1 className="mt-4 text-[44px] font-bold leading-[1.02] tracking-[-0.01em] [overflow-wrap:anywhere]" style={titulo}>
-                  {t.titulo[0]}
-                  <span className="block" style={{ ...titulo, color: acento }}>{t.titulo[1]}</span>
-                </h1>
-                <p className="mt-4 max-w-[32ch] text-[15.5px] leading-relaxed" style={{ color: "#ffffffd9" }}>{t.chamada}</p>
-                <div className="mt-6 flex flex-wrap gap-2.5">
-                  <button type="button" onClick={demo(`este botão abre a conversa com a ${lead.nome} no WhatsApp.`)} className={pill} style={{ background: acento, color: t.capa }}>
-                    {t.botao} <ArrowRight aria-hidden="true" className="size-4" />
-                  </button>
-                  <button type="button" onClick={demo("este botão mostra a rota no Google Maps.")} className={pill} style={{ background: "#ffffff1f", color: "#ffffff", boxShadow: "inset 0 0 0 1px #ffffff59" }}>
-                    <MapPin aria-hidden="true" className="size-4" /> Como chegar
-                  </button>
-                </div>
-                <p aria-hidden="true" className="mt-7 rotate-[-6deg] self-end text-[32px] leading-none" style={{ ...roteiro, color: acento }}>{t.roteiro}</p>
-                {selo("mt-auto self-start", { background: "#ffffff", color: "#1c1c1c" }, "#1c1c1c99")}
-              </div>
-            </section>
-          ) : (
-            <>
-              <div className="px-5 pt-5">{cabecalho(false)}</div>
-              <section className="relative px-5 pb-10 pt-8">
-                <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[12px] font-semibold" style={{ background: t.mancha, color: t.tinta }}>
-                  <MapPin aria-hidden="true" className="size-3.5" /> {ramo} em {cidade}
-                </span>
-                <h1 className="mt-4 text-[42px] font-bold leading-[1.02] tracking-[-0.01em] [overflow-wrap:anywhere]" style={titulo}>
-                  {t.titulo[0]}
-                  <span className="block" style={destaqueTitulo}>{t.titulo[1]}</span>
-                </h1>
-                <p className="mt-4 max-w-[32ch] text-[15.5px] leading-relaxed" style={{ color: t.suave }}>{t.chamada}</p>
-                <div className="mt-6 flex flex-wrap gap-2.5">
-                  <button type="button" onClick={demo(`este botão abre a conversa com a ${lead.nome} no WhatsApp.`)} className={pill} style={{ background: t.tinta, color: t.fundo }}>
-                    {t.botao} <ArrowRight aria-hidden="true" className="size-4" />
-                  </button>
-                  <button type="button" onClick={demo("este botão mostra a rota no Google Maps.")} className={pill} style={{ background: t.cartao, color: t.tinta, boxShadow: "0 6px 18px rgba(0,0,0,.08)" }}>
-                    <MapPin aria-hidden="true" className="size-4" style={{ color: t.destaque }} /> Como chegar
-                  </button>
-                </div>
-
-                <div className="relative mt-10 h-[340px]">
-                  <div aria-hidden="true" className="absolute inset-x-2 inset-y-4" style={{ background: t.mancha, borderRadius: BOLHA2, transform: "rotate(-8deg)" }} />
-                  <img
-                    src={capa}
-                    crossOrigin="anonymous"
-                    onError={() => setFotoReal(false)}
-                    alt=""
-                    width={720}
-                    height={900}
-                    className="absolute inset-x-6 bottom-0 top-0 h-full w-[calc(100%-3rem)] object-cover"
-                    style={{ borderRadius: BOLHA, boxShadow: "0 24px 50px -20px rgba(0,0,0,.45)" }}
-                  />
-                  <p aria-hidden="true" className="absolute -top-4 right-2 rotate-[-8deg] text-[30px] leading-none" style={roteiro}>{t.roteiro}</p>
-                  <Sparkles aria-hidden="true" className="absolute left-1 top-8 size-6" style={{ color: t.destaque }} />
-                  <Sparkles aria-hidden="true" className="absolute bottom-10 right-0 size-5" style={{ color: t.destaque }} />
-                  {selo("absolute -bottom-5 left-3", { background: t.cartao }, t.suave)}
-                </div>
-              </section>
-            </>
-          )}
-
-          {/* Serviços */}
-          <section className="px-5 pb-10 pt-6">
-            <p className="text-center text-[11px] font-bold tracking-[0.18em]" style={{ color: t.destaque }}>— O QUE A GENTE FAZ —</p>
-            <h2 className="mt-2 text-center text-[28px] font-bold leading-tight" style={titulo}>Nossos serviços</h2>
-            {t.destaques && (
-              <ul className="mt-6 grid grid-cols-2 gap-3">
-                {t.destaques.map(([nome, linha], i) => (
-                  <li key={nome} className="overflow-hidden rounded-[18px] shadow-[0_14px_30px_-18px_rgba(0,0,0,.5)]" style={{ background: t.cartao }}>
-                    <img src={`img/demo/${t.foto}-${i + 3}.webp`} alt="" width={480} height={480} className="aspect-square w-full object-cover" />
-                    <span className="block px-3 pb-3 pt-2.5">
-                      <span className="block text-[14.5px] font-bold leading-tight">{nome}</span>
-                      <span className="mt-0.5 block text-[12px]" style={{ color: t.suave }}>{linha}</span>
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            )}
-            <ul className={`${t.destaques ? "mt-3" : "mt-6"} grid grid-cols-2 gap-3`}>
-              {servicos.map(([nome, linha, Icone]) => (
-                <li key={nome} className="flex flex-col rounded-[18px] p-3.5 shadow-[0_10px_26px_-18px_rgba(0,0,0,.4)]" style={{ background: t.cartao }}>
-                  <Icone aria-hidden="true" className="size-7" style={{ color: t.destaque }} strokeWidth={1.6} />
-                  <span className="mt-3 text-[14.5px] font-bold leading-tight">{nome}</span>
-                  <span className="mt-1 flex-1 text-[12px] leading-snug" style={{ color: t.suave }}>{linha}</span>
-                  <span className="mt-3 grid size-7 place-items-center self-end rounded-full" style={{ background: t.mancha, color: t.escuro ? t.destaque : t.tinta }}>
-                    <ArrowRight aria-hidden="true" className="size-3.5" />
-                  </span>
-                </li>
-              ))}
-            </ul>
-            <p className="mt-3 text-center text-[12px]" style={{ color: t.suave }}>Aqui entram as fotos e os preços de vocês.</p>
-          </section>
-
-          {/* Sobre */}
-          <section className="px-5 pb-12">
-            <div className="relative">
-              <div aria-hidden="true" className="absolute -left-8 top-6 h-40 w-40" style={{ background: t.mancha, borderRadius: BOLHA }} />
-              <img
-                src={`img/demo/${t.foto}-2.webp`}
-                alt=""
-                width={640}
-                height={640}
-                loading="eager"
-                className="relative aspect-[4/3] w-full rounded-[26px] object-cover shadow-[0_24px_50px_-24px_rgba(0,0,0,.5)]"
-              />
-              <span className="absolute -bottom-4 left-4 inline-flex items-center gap-2 rounded-[14px] px-3.5 py-2.5 text-[12.5px] font-semibold shadow-[0_14px_30px_-12px_rgba(0,0,0,.35)]" style={{ background: t.cartao }}>
-                <ShieldCheck aria-hidden="true" className="size-5" style={{ color: t.destaque }} />
-                <span>Em {cidade}<span className="block text-[11px] font-normal" style={{ color: t.suave }}>{ramo}</span></span>
-              </span>
-            </div>
-            <span className="mt-9 inline-flex rounded-full px-3 py-1 text-[12px] font-semibold" style={{ background: t.mancha, color: t.escuro ? t.destaque : t.tinta }}>Sobre a {lead.nome}</span>
-            <h2 className="mt-3 text-[30px] font-bold leading-[1.05]" style={titulo}>
-              {t.sobre[0]}
-              <span className="block" style={destaqueTitulo}>{t.sobre[1]}</span>
-            </h2>
-            <p className="mt-3 text-[14.5px] leading-relaxed" style={{ color: t.suave }}>
-              Veja tudo o que a gente oferece, confira os horários e fale com a gente sem precisar ligar.
-            </p>
-            <ul className="mt-5 grid gap-3">
-              {([
-                ["Atendimento pelo WhatsApp", "Resposta rápida, direto no celular", MessageCircle],
-                ["Fácil de achar no Google", "Rota até a porta em um toque", MapPin],
-                ["Avaliação na plaquinha", "Encostou o celular, avaliou", Star],
-              ] as Servico[]).map(([nome, linha, Icone]) => (
-                <li key={nome} className="flex items-center gap-3">
-                  <span className="grid size-11 shrink-0 place-items-center rounded-full" style={{ background: t.mancha, color: t.escuro ? t.destaque : t.tinta }}>
-                    <Icone aria-hidden="true" className="size-5" />
-                  </span>
-                  <span>
-                    <span className="block text-[14px] font-bold">{nome}</span>
-                    <span className="block text-[12.5px]" style={{ color: t.suave }}>{linha}</span>
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </section>
-
-          {/* Avaliações (só a nota real; os comentários vêm do Google) */}
-          <section className="px-5 pb-12">
-            <p className="text-center text-[11px] font-bold tracking-[0.18em]" style={{ color: t.destaque }}>— AVALIAÇÕES —</p>
-            <h2 className="mt-2 text-center text-[28px] font-bold leading-tight" style={titulo}>O que dizem no Google</h2>
-            <div className="mt-6 rounded-[22px] p-5 text-center shadow-[0_14px_34px_-20px_rgba(0,0,0,.45)]" style={{ background: t.cartao }}>
-              <p className="text-[48px] font-bold leading-none" style={{ fontFamily: t.fonte }}>{temNota ? nota(lead.nota!) : "★"}</p>
-              <span className="mt-2 flex justify-center gap-1" aria-hidden="true">
-                {[0, 1, 2, 3, 4].map((i) => <Star key={i} className="size-5" fill="#f5b301" stroke="none" />)}
-              </span>
-              <p className="mt-2 text-[13.5px] font-semibold">
-                {temNota && lead.avaliacoes ? `${fmtInt(lead.avaliacoes)} avaliações no Google` : "Seja o primeiro a avaliar"}
-              </p>
-              <p className="mx-auto mt-2 max-w-[30ch] text-[12.5px] leading-snug" style={{ color: t.suave }}>
-                Os comentários de quem já foi aparecem aqui, direto do Google.
-              </p>
-            </div>
-          </section>
-
-          {/* Chamada final */}
-          <section className="mx-4 mb-10 flex flex-col items-start gap-4 rounded-[24px] p-6" style={{ background: t.escuro ? t.destaque : t.capa ?? t.tinta, color: t.escuro ? t.noDestaque : t.fundo }}>
-            <Marca aria-hidden="true" className="size-9" strokeWidth={1.6} />
-            <div>
-              <h2 className="text-[24px] font-bold leading-tight" style={titulo}>{t.cta[0]}</h2>
-              <p className="mt-1.5 text-[13.5px] leading-relaxed opacity-80">{t.cta[1]}</p>
-            </div>
-            <button type="button" onClick={demo(`este botão abre a conversa com a ${lead.nome} no WhatsApp.`)} className={pill} style={{ background: t.escuro ? t.noDestaque : t.fundo, color: t.escuro ? t.destaque : t.capa ?? t.tinta }}>
-              {t.botao} <ArrowRight aria-hidden="true" className="size-4" />
-            </button>
-          </section>
-
-          {/* Rodapé */}
-          <footer className="border-t px-5 pb-8 pt-6" style={{ borderColor: `color-mix(in srgb, ${t.tinta} 12%, transparent)` }}>
-            <div className="flex items-center gap-2.5">
-              <span className="grid size-8 place-items-center rounded-[10px]" style={{ background: t.destaque, color: t.noDestaque }}>
-                <Marca aria-hidden="true" className="size-4" />
-              </span>
-              <span className="min-w-0 flex-1 truncate text-[15px] font-bold" style={titulo}>{lead.nome}</span>
-              <span className="flex gap-2" aria-hidden="true" style={{ color: t.destaque }}>
-                <Instagram className="size-5" /><MessageCircle className="size-5" /><MapPin className="size-5" />
-              </span>
-            </div>
-            <p className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-[12.5px]" style={{ color: t.suave }}>
-              <span>Início</span><span>Serviços</span><span>Sobre</span><span>Contato</span>
-            </p>
-            <p className="mt-4 text-[11.5px]" style={{ color: t.suave }}>{cidade} · Site feito por BN Digital</p>
-          </footer>
+          <PaginaPremium
+            lead={lead}
+            t={t}
+            familia={familia}
+            capa={capa}
+            onCapaErro={() => setFotoReal(false)}
+            ramoNome={ramo}
+            cidade={cidade}
+            demo={demo}
+          />
 
           <button
             type="button"

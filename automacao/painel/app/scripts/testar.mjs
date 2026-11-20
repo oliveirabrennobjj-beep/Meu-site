@@ -395,7 +395,7 @@ try {
     await p.getByRole("dialog").first().getByRole("button", { name: "Mostrar demonstração do site" }).click();
     const previa = p.getByRole("dialog", { name: `Demonstração do site de ${loja}` });
     await previa.getByText(rotulo).first().waitFor();
-    assert.equal(await previa.locator(`img[src$="${foto}"]`).count(), 1, `${loja} usa a foto ${foto}`);
+    assert.ok((await previa.locator(`img[src$="${foto}"]`).count()) >= 1, `${loja} usa a foto ${foto}`);
     if (loja === MASSO) {
       await p.waitForTimeout(500);
       await p.screenshot({ path: path.join(saida, "celular-previa-massagem.png") });
@@ -411,17 +411,17 @@ try {
       await p.screenshot({ path: path.join(saida, "celular-previa-luta.png") });
       // Trocar o estilo na prévia grava o ramo escolhido e muda as fotos na hora.
       await previa.getByLabel("Estilo da prévia").selectOption("academia");
-      await previa.locator('img[src$="academia-1.webp"]').waitFor();
+      await previa.locator('img[src$="academia-1.webp"]').first().waitFor();
       const troca = (await p.evaluate(() => window.__escritas)).at(-1).dados;
       assert.equal(troca.ramo, "academia");
       await previa.getByLabel("Estilo da prévia").selectOption("luta");
-      await previa.locator('img[src$="luta-1.webp"]').waitFor();
+      await previa.locator('img[src$="luta-1.webp"]').first().waitFor();
       assert.equal((await p.evaluate(() => window.__escritas)).at(-1).dados.tipo, "Academia de luta");
       await previa.getByRole("button", { name: "Fechar demonstração" }).click();
     } else if (loja === FRANGO) {
       // O Brenno pode escolher o sub-nicho na prévia: grava e troca as fotos.
       await previa.getByLabel("Estilo da prévia").selectOption("restaurante/marmita");
-      await previa.locator('img[src$="marmita-1.webp"]').waitFor();
+      await previa.locator('img[src$="marmita-1.webp"]').first().waitFor();
       assert.equal((await p.evaluate(() => window.__escritas)).at(-1).dados.subnicho, "marmita");
       await previa.getByRole("button", { name: "Fechar demonstração" }).click();
     } else {
