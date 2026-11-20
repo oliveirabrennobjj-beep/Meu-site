@@ -31,8 +31,8 @@
   },
   {
    "n": 5,
-   "ini": 3981,
-   "fim": 3995,
+   "ini": 3982.6,
+   "fim": 4001,
    "gancho": "TEM TIGRE NO GTA 6",
    "teaser": ""
   },
@@ -73,7 +73,7 @@
   },
   {
    "n": 11,
-   "ini": 5444,
+   "ini": 5446.5,
    "fim": 5499,
    "gancho": "A REAÇÃO DELE AO MAPA DO GTA 6",
    "teaser": "Olha o tamanho do mapa"
@@ -84,9 +84,93 @@
    "fim": 6112,
    "gancho": "ELIMINOU OS TRÊS DO NADA",
    "teaser": "eliminei os três"
+  },
+  {
+   "n": 13,
+   "ini": 6334,
+   "fim": 6391,
+   "gancho": "VESTIU O JASON DE GALÃ",
+   "teaser": "esse cara é bonito hein"
+  },
+  {
+   "n": 14,
+   "ini": 6718,
+   "fim": 6775.5,
+   "gancho": "REPAROU NA ESTRELA DA POLÍCIA?",
+   "teaser": "a bolinha vai ficando menos vermelha"
+  },
+  {
+   "n": 15,
+   "ini": 6893,
+   "fim": 6922,
+   "gancho": "ATROPELOU A SENHORA DANDO BOM DIA",
+   "teaser": "desculpa senhora"
+  },
+  {
+   "n": 16,
+   "ini": 7146,
+   "fim": 7197,
+   "gancho": "O CÓDIGO DO COFRE É UMA REFERÊNCIA",
+   "teaser": "Horário da maconha"
+  },
+  {
+   "n": 17,
+   "ini": 8426,
+   "fim": 8478,
+   "gancho": "ANDOU ARMADO E FOI DEDURADO",
+   "teaser": "Me denunciaram viado"
+  },
+  {
+   "n": 18,
+   "ini": 9418,
+   "fim": 9482,
+   "gancho": "PINTOU O CARRO PRA FUGIR DA POLÍCIA",
+   "teaser": "vermelho estava procurado"
+  },
+  {
+   "n": 19,
+   "ini": 0.5,
+   "fim": 108.8,
+   "gancho": "CHUTOU O CACHORRO E FOI DENUNCIADO",
+   "teaser": "me denunciaram pra polícia"
+  },
+  {
+   "n": 20,
+   "ini": 10755,
+   "fim": 10801,
+   "gancho": "VOCÊ CAIRIA NO GOLPE DA MANDY?",
+   "teaser": "Jamais casado"
+  },
+  {
+   "n": 21,
+   "ini": 11392,
+   "fim": 11482,
+   "gancho": "A MISSÃO MAIS CINEMATOGRÁFICA DO GTA 6",
+   "teaser": "Cinematográfico"
+  },
+  {
+   "n": 22,
+   "ini": 12236,
+   "fim": 12313,
+   "gancho": "O JASON É FRACO NO SUPINO",
+   "teaser": "ele é muito ruim de supino"
+  },
+  {
+   "n": 23,
+   "ini": 12998,
+   "fim": 13085,
+   "gancho": "O FUNDO DO MAR DO GTA 6",
+   "teaser": ""
+  },
+  {
+   "n": 24,
+   "ini": 13403,
+   "fim": 13470,
+   "gancho": "APARECEU UM TUBARÃO NO MERGULHO",
+   "teaser": "Tubarão"
   }
  ],
  "vod": "2932201544",
  "youtube": "https://youtu.be/Q9ZqVAdtASE",
- "obs": "ini/fim em segundos da VOD da Twitch. Cortes 3, 6 e 12 com --com-pausas (ação sem fala)."
+ "obs": "ini/fim em segundos da VOD da Twitch (19: arquivo emendado, sem o telefonema). Câmera: 0.819,0.15,0.978,0.419 nos cortes 1-12 e 0.80,0.228,0.994,0.46 nos 13-24. Com --com-pausas: 3, 5, 6, 12, 19, 21, 23, 24."
 }
