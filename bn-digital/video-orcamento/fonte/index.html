@@ -1,0 +1,638 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>BN Digital — vídeo do orçamento</title>
+<style>
+  @font-face { font-family: "PF"; src: url("assets/fonts/playfair-display-latin-wght-normal.woff2") format("woff2"); font-weight: 400 900; }
+  @font-face { font-family: "PF"; src: url("assets/fonts/playfair-display-latin-wght-italic.woff2") format("woff2"); font-weight: 400 900; font-style: italic; }
+  @font-face { font-family: "IN"; src: url("assets/fonts/inter-latin-wght-normal.woff2") format("woff2"); font-weight: 100 900; }
+  @font-face { font-family: "MO"; src: url("assets/fonts/jetbrains-mono-latin-wght-normal.woff2") format("woff2"); font-weight: 100 800; }
+  :root { --blue: #0a66e8; --blue-l: #4da3ff; --ink: #0a0f1c; --soft: #5a6172; --soft-d: #9fb0cc; --wa: #25d366; --paper: #fbfaf6; --navy: #050d22; }
+  html, body { margin: 0; background: #000; }
+  #stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #000; font-family: "IN", sans-serif; -webkit-font-smoothing: antialiased; }
+  .scene { position: absolute; inset: 0; overflow: hidden; visibility: hidden; }
+  .abs { position: absolute; }
+  .serif { font-family: "PF", serif; font-weight: 800; letter-spacing: -0.025em; line-height: 1.05; }
+  .it { font-style: italic; }
+  .cx { left: 0; right: 0; text-align: center; }
+  .word { display: inline-block; }
+  .navy-bg { background: radial-gradient(120% 70% at 50% 0%, #0d2a66 0%, #071635 45%, #030a1c 100%); }
+  .grid-bg { background-color: #f3f5fa;
+    background-image: radial-gradient(70% 45% at 50% 42%, rgba(255,255,255,.95), rgba(255,255,255,0)),
+      linear-gradient(rgba(12,40,100,.07) 2px, transparent 2px), linear-gradient(90deg, rgba(12,40,100,.07) 2px, transparent 2px);
+    background-size: 100% 100%, 72px 72px, 72px 72px; background-position: 0 0, -2px -2px, -2px -2px; }
+  .eyebrow { font-size: 28px; font-weight: 700; letter-spacing: .18em; color: var(--blue); }
+  .chip { display: inline-flex; align-items: center; gap: 14px; padding: 16px 28px; border-radius: 999px; font-size: 32px; font-weight: 600; white-space: nowrap; }
+
+  /* impressora */
+  .printer { position: absolute; width: 680px; height: 420px; transform-origin: 0 0; }
+  .pr-shadow { position: absolute; left: -70px; top: 380px; width: 820px; height: 90px; border-radius: 50%; background: rgba(0,0,0,.75); filter: blur(28px); }
+  .pr-top { position: absolute; left: 0; top: 50px; width: 680px; height: 100px; clip-path: polygon(50px 0, 630px 0, 680px 100px, 0 100px);
+            background: linear-gradient(180deg, #3a4560 0%, #252e44 55%, #1b2234 100%); }
+  .pr-top::after { content: ""; position: absolute; inset: 0; background: radial-gradient(60% 120% at 50% 0%, rgba(160,200,255,.22), transparent 70%); }
+  .pr-front { position: absolute; left: 0; top: 150px; width: 680px; height: 250px; border-radius: 0 0 46px 46px;
+              background: linear-gradient(180deg, #1a2030 0%, #10141f 60%, #0a0d15 100%);
+              box-shadow: inset 0 2px 0 rgba(255,255,255,.14), inset 18px 0 30px -20px rgba(255,255,255,.08), inset -18px 0 30px -20px rgba(0,0,0,.6); }
+  .pr-brand { position: absolute; left: 0; right: 0; top: 108px; text-align: center; font-size: 22px; font-weight: 700; letter-spacing: .42em; color: rgba(255,255,255,.32); }
+  .pr-led { position: absolute; left: 590px; top: 72px; width: 18px; height: 18px; border-radius: 50%; background: #4da3ff; }
+  .pr-btn { position: absolute; left: 70px; top: 64px; width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(180deg, #2b3348, #151a26); box-shadow: inset 0 1px 0 rgba(255,255,255,.15), 0 2px 4px rgba(0,0,0,.5); }
+  .pr-grille { position: absolute; left: 230px; right: 230px; top: 170px; height: 34px; background: repeating-linear-gradient(90deg, rgba(0,0,0,.55) 0 6px, transparent 6px 14px); border-radius: 6px; opacity: .7; }
+  .pr-slot { position: absolute; left: 130px; top: 88px; width: 420px; height: 14px; border-radius: 7px; background: linear-gradient(180deg, #000 0%, #05070c 70%, #1d2437 100%); }
+  .pr-tear { position: absolute; left: 118px; top: 102px; width: 444px; height: 12px; border-radius: 2px;
+             background: linear-gradient(180deg, #e6ebf2, #8a93a3 60%, #4b5263);
+             -webkit-mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / 12px 100%;
+             mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / 12px 100%; }
+  .pr-paper { position: absolute; left: 140px; bottom: 325px; width: 400px; height: 0; overflow: hidden; transform-origin: 50% 100%;
+              background: var(--paper); }
+  .pr-paper .shade { position: absolute; inset: 0; pointer-events: none;
+              background: linear-gradient(0deg, rgba(0,0,0,.28) 0px, rgba(0,0,0,0) 70px), linear-gradient(90deg, rgba(0,0,0,.06), transparent 12%, transparent 88%, rgba(0,0,0,.08)); }
+  .pr-paper .gleam { position: absolute; left: -60%; top: 0; bottom: 0; width: 26%; opacity: 0; background: linear-gradient(100deg, transparent, rgba(255,255,255,.85), transparent); }
+
+  /* cupom */
+  .rc { position: absolute; left: 0; top: 0; width: 400px; box-sizing: border-box; padding: 34px 26px 0; color: #1b1c20; font-family: "MO", monospace; text-align: center; }
+  .rc-logo { width: 84px; height: 84px; border-radius: 50%; display: block; margin: 0 auto 12px; filter: grayscale(1) contrast(1.15); }
+  .rc-brand { font-size: 32px; font-weight: 800; letter-spacing: .12em; }
+  .rc-s { font-size: 18px; line-height: 26px; color: #3a3b40; }
+  .rc-div { border-top: 2px dashed #a9a9ae; margin: 14px 0; }
+  .rc-row { display: flex; justify-content: space-between; font-size: 22px; font-weight: 800; }
+  .rc-item { font-size: 24px; font-weight: 800; line-height: 30px; text-align: left; }
+  .rc-s2 { font-size: 19px; line-height: 28px; text-align: left; color: #3a3b40; }
+  .rc-c { text-align: center; }
+  .rc-price { font-size: 76px; font-weight: 800; letter-spacing: -0.04em; line-height: 90px; }
+  .rc-price small { font-size: 28px; letter-spacing: 0; margin-left: 4px; }
+
+  /* lista impressa */
+  .ls { position: absolute; left: 0; top: 0; width: 400px; color: #16171b; }
+  .ls-head { height: 80px; box-sizing: border-box; padding-top: 16px; text-align: center; font-family: "MO", monospace; border-bottom: 2px dashed #a9a9ae; margin: 0 22px; }
+  .ls-head b { display: block; font-size: 22px; letter-spacing: .14em; }
+  .ls-head span { display: block; font-size: 14px; letter-spacing: .2em; color: #4a4b52; margin-top: 4px; }
+  .ls-row { height: 78px; display: flex; align-items: center; gap: 12px; margin: 0 22px; border-bottom: 1px solid #e4e3dd; }
+  .ls-row p { flex: 1; margin: 0; font-size: 21px; line-height: 26px; font-weight: 650; }
+  .ls-ck { flex: none; width: 38px; height: 38px; border-radius: 50%; background: var(--blue); display: grid; place-items: center; transform: scale(0); }
+
+  /* celular e navegador */
+  .phone { position: absolute; border-radius: 64px; background: #16181d; padding: 14px; box-sizing: border-box;
+           box-shadow: 0 0 0 2px rgba(255,255,255,.18) inset, 0 2px 0 3px #2a2d35; transform-origin: 0 0; }
+  .screen { position: relative; width: 100%; height: 100%; border-radius: 50px; overflow: hidden; background: #000; }
+  .screen img { position: absolute; left: 0; top: 0; width: 100%; }
+  .notch { position: absolute; left: 50%; top: 14px; width: 32%; height: 32px; transform: translateX(-50%); border-radius: 20px; background: #000; z-index: 5; }
+  .browser { position: absolute; border-radius: 22px; overflow: hidden; background: #fff;
+             box-shadow: 0 50px 100px -30px rgba(10,30,80,.45), 0 0 0 1px rgba(10,30,80,.1); }
+  .b-bar { position: absolute; left: 0; right: 0; top: 0; height: 56px; background: #eceff4; display: flex; align-items: center; gap: 12px; padding: 0 20px; box-sizing: border-box; }
+  .b-dot { width: 16px; height: 16px; border-radius: 50%; }
+  .b-tab { margin-left: 22px; height: 40px; align-self: flex-end; background: #fff; border-radius: 12px 12px 0 0; padding: 0 22px; display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 600; color: #333; min-width: 230px; }
+  .b-url { flex: 1; height: 34px; margin-left: 12px; border-radius: 17px; background: #fff; display: flex; align-items: center; padding: 0 16px; font-size: 18px; color: #7a8090; gap: 8px; }
+  .b-view { position: absolute; left: 0; right: 0; top: 56px; bottom: 0; overflow: hidden; background: #fff; }
+  .b-view img { position: absolute; left: 0; top: 0; width: 100%; }
+
+  .tap { position: absolute; width: 92px; height: 92px; margin: -46px 0 0 -46px; border-radius: 50%; background: rgba(255,255,255,.45); border: 4px solid #fff; box-shadow: 0 6px 20px rgba(0,0,0,.35); opacity: 0; z-index: 40; }
+  .card { position: absolute; border-radius: 34px; background: #fff; box-shadow: 0 30px 60px -24px rgba(10,30,80,.35), 0 0 0 1px rgba(10,30,80,.06); }
+  .zig { -webkit-mask: conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg) top / 22px 51% repeat-x, conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / 22px 51% repeat-x;
+         mask: conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg) top / 22px 51% repeat-x, conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / 22px 51% repeat-x; }
+  .zig-b { -webkit-mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / 18px 100%;
+           mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / 18px 100%; }
+  .skel { height: 18px; border-radius: 9px; background: #e7eaf0; }
+</style>
+</head>
+<body>
+<div id="stage">
+
+  <!-- 1. IMPRESSORA IMPRIMINDO O ORÇAMENTO -->
+  <section class="scene navy-bg" id="s1">
+    <div class="abs" id="s1-cam" style="inset:0; transform-origin:540px 1230px">
+      <div class="abs" style="left:-100px; right:-100px; top:-200px; height:1700px; background:radial-gradient(45% 55% at 50% 30%, rgba(77,163,255,.20), transparent 70%)"></div>
+      <div class="abs" style="left:90px; top:1000px; width:900px; height:600px; background:radial-gradient(closest-side, rgba(255,255,255,.09), transparent)"></div>
+      <div class="abs" style="left:0; right:0; top:1760px; height:160px; background:linear-gradient(180deg, rgba(77,163,255,.06), transparent)"></div>
+      <div id="s1-dust"></div>
+      <div class="abs cx serif" id="s1-h" style="top:230px; font-size:96px; color:#fff; padding:0 60px"></div>
+      <div id="s1-pr-host"></div>
+    </div>
+  </section>
+
+  <!-- 2 + 3. CELULAR E SITES (mesmo fundo quadriculado) -->
+  <section class="scene grid-bg" id="s23">
+    <div class="abs cx serif" id="s2-h" style="top:190px; font-size:92px; color:var(--ink); padding:0 60px"></div>
+    <div class="abs cx" id="s3-eyebrow" style="top:170px"><span class="eyebrow" id="s3-eyebrow-t"></span></div>
+    <div class="abs cx serif" id="s3-h" style="top:225px; font-size:92px; color:var(--ink); padding:0 60px"></div>
+
+    <svg class="abs" id="s2-svg" width="1080" height="1920" style="left:0; top:0; overflow:visible">
+      <defs><mask id="s2-mask"><path id="s2-path-m" fill="none" stroke="#fff" stroke-width="12"/></mask></defs>
+      <path id="s2-path" fill="none" stroke="#0a66e8" stroke-width="5" stroke-dasharray="12 12" stroke-linecap="round" mask="url(#s2-mask)"/>
+      <circle id="s2-dot" r="13" fill="#0a66e8"/>
+      <circle id="s2-dot2" r="24" fill="none" stroke="#0a66e8" stroke-width="3"/>
+    </svg>
+    <div class="abs zig-b" id="s2-rc" style="left:0; top:0; width:400px; height:660px; background:var(--paper); transform-origin:0 0; filter:drop-shadow(0 24px 30px rgba(10,30,80,.25))"></div>
+
+    <!-- navegador -->
+    <div class="browser" id="s3-browser" style="left:50px; top:520px; width:980px; height:700px; transform-origin:85% 90%">
+      <div class="b-bar"><span class="b-dot" style="background:#ff5f57"></span><span class="b-dot" style="background:#febc2e"></span><span class="b-dot" style="background:#28c840"></span>
+        <span class="b-tab"><i id="s3-fav" style="width:18px; height:18px; border-radius:50%; background:#0a66e8"></i><span id="s3-tab"></span></span>
+        <span class="b-url"><svg width="16" height="16" viewBox="0 0 24 24" fill="#7a8090"><path d="M6 10V8a6 6 0 1 1 12 0v2h1a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V11a1 1 0 0 1 1-1zm2 0h8V8a4 4 0 1 0-8 0z"/></svg><span style="width:180px" class="skel"></span></span>
+      </div>
+      <div class="b-view" id="s3-view"></div>
+    </div>
+    <div class="abs" id="s2-shadow" style="left:480px; top:1650px; width:440px; height:60px; border-radius:50%; background:rgba(10,30,80,.35); filter:blur(22px)"></div>
+    <div class="abs" id="s2-persp" style="inset:0; perspective:2200px; perspective-origin:690px 1100px">
+      <div class="phone" id="ph" style="left:0; top:0; width:520px; height:1060px">
+        <div class="screen" id="ph-screen"><div class="notch"></div></div>
+      </div>
+    </div>
+    <div class="abs" id="s2-chip1" style="left:60px; top:1330px"><span class="chip" style="background:#fff; color:var(--ink); box-shadow:0 14px 30px -12px rgba(10,30,80,.3)"><i style="width:18px; height:18px; border-radius:50%; background:var(--wa)"></i><span id="s2-chip1-t"></span></span></div>
+    <div class="abs" id="s2-chip2" style="left:60px; top:1440px"><span class="chip" style="background:#fff; color:var(--ink); box-shadow:0 14px 30px -12px rgba(10,30,80,.3)"><i style="width:18px; height:18px; border-radius:50%; background:var(--blue)"></i><span id="s2-chip2-t"></span></span></div>
+    <div class="abs" style="left:70px; top:1290px; width:680px; height:200px" id="s3-caps"></div>
+    <div class="abs" id="s3-resp" style="left:70px; top:1650px; font-size:38px; color:var(--soft); font-weight:500"></div>
+  </section>
+
+  <!-- 4. O QUE VEM NO SITE: LISTA IMPRESSA -->
+  <section class="scene navy-bg" id="s4">
+    <div class="abs" style="left:-100px; right:-100px; top:300px; height:1500px; background:radial-gradient(40% 50% at 50% 50%, rgba(77,163,255,.18), transparent 70%)"></div>
+    <div class="abs cx serif" id="s4-h" style="top:170px; font-size:100px; color:#fff; padding:0 60px"></div>
+    <div class="abs" id="s4-cam" style="inset:0; transform-origin:540px 1000px"><div id="s4-pr-host"></div></div>
+  </section>
+
+  <!-- 5. GOOGLE -->
+  <section class="scene grid-bg" id="s5">
+    <div class="abs cx serif" id="s5-h" style="top:220px; font-size:96px; color:var(--ink); padding:0 60px"></div>
+    <div class="abs" id="s5-bar" style="left:70px; top:560px; width:940px; height:124px; border-radius:62px; background:#fff; box-shadow:0 20px 50px -20px rgba(10,30,80,.35), 0 0 0 2px #e3e7ef; display:flex; align-items:center; padding:0 40px; box-sizing:border-box; gap:26px">
+      <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="#5f6675" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg>
+      <span style="font-size:40px; color:#1d2230; white-space:nowrap"><span id="s5-q"></span><span id="s5-caret" style="display:inline-block; width:3px; height:46px; background:#0a66e8; vertical-align:-8px; margin-left:3px"></span></span>
+    </div>
+    <div class="card" id="s5-res" style="left:70px; top:730px; width:940px; height:640px; padding:44px 46px; box-sizing:border-box">
+      <div id="s5-r1" style="position:relative; padding:26px 28px; margin:-26px -28px 0; border-radius:26px">
+        <div style="display:flex; align-items:center; gap:20px">
+          <div style="width:60px; height:60px; border-radius:50%; background:linear-gradient(135deg,#4da3ff,#0a66e8); color:#fff; display:grid; place-items:center; font-family:'PF',serif; font-weight:800; font-size:32px">S</div>
+          <div><div style="font-size:30px; color:#202124; font-weight:600" id="s5-name"></div><div style="font-size:24px; color:#5f6675" id="s5-url"></div></div>
+        </div>
+        <div style="font-size:40px; color:#1a3dc0; margin-top:20px; line-height:1.25; font-weight:500" id="s5-title"></div>
+        <div style="font-size:28px; color:#4d5260; margin-top:12px; line-height:1.45" id="s5-desc"></div>
+        <div class="tap" id="s5-tap" style="left:0; top:0"></div>
+      </div>
+      <div id="s5-sk1" style="margin-top:56px"><div class="skel" style="width:46%"></div><div class="skel" style="width:78%; height:26px; margin-top:16px"></div><div class="skel" style="width:92%; margin-top:14px"></div></div>
+      <div id="s5-sk2" style="margin-top:44px"><div class="skel" style="width:40%"></div><div class="skel" style="width:70%; height:26px; margin-top:16px"></div><div class="skel" style="width:86%; margin-top:14px"></div></div>
+    </div>
+    <div class="abs cx" id="s5-foot" style="top:1450px">
+      <div style="font-size:34px; font-weight:700; letter-spacing:.14em; color:var(--blue)" id="s5-foot1"></div>
+      <div class="serif" style="font-size:76px; color:var(--ink); margin-top:18px" id="s5-foot2"></div>
+    </div>
+  </section>
+
+  <!-- 6. DOMÍNIO E CADEADO -->
+  <section class="scene navy-bg" id="s6">
+    <div class="abs cx serif" id="s6-h" style="top:220px; font-size:100px; color:#fff; padding:0 60px"></div>
+    <div class="abs" id="s6-cam" style="inset:0; transform-origin:150px 678px">
+      <div class="browser" style="left:90px; top:600px; width:900px; height:940px; box-shadow:0 60px 120px -30px rgba(0,0,0,.7), 0 0 0 1px rgba(255,255,255,.12)">
+        <div class="b-bar" style="height:46px"><span class="b-dot" style="background:#ff5f57"></span><span class="b-dot" style="background:#febc2e"></span><span class="b-dot" style="background:#28c840"></span></div>
+        <div class="abs" style="left:0; right:0; top:46px; height:64px; background:#eceff4; padding:0 24px; box-sizing:border-box">
+          <div style="height:52px; border-radius:26px; background:#fff; display:flex; align-items:center; gap:14px; padding:0 20px; box-shadow:0 0 0 2px rgba(10,102,232,0)" id="s6-url">
+            <svg id="s6-lock" width="34" height="34" viewBox="0 0 24 24" style="overflow:visible"><g id="s6-shackle"><path d="M7.5 11V8a4.5 4.5 0 0 1 9 0v3" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></g><rect x="5" y="10.5" width="14" height="10.5" rx="2.2" fill="currentColor"/></svg>
+            <span style="font-size:30px; color:#1d2230; white-space:nowrap"><span style="color:#8a90a0" id="s6-https">https://</span><span id="s6-dom"></span><span id="s6-caret" style="display:inline-block; width:3px; height:34px; background:#0a66e8; vertical-align:-6px; margin-left:2px"></span></span>
+          </div>
+        </div>
+        <!-- site de exemplo -->
+        <div class="abs" style="left:0; right:0; top:110px; bottom:0; background:#fbf6ee; overflow:hidden">
+          <div style="display:flex; align-items:center; gap:16px; padding:28px 40px">
+            <i style="width:46px; height:46px; border-radius:50%; background:linear-gradient(135deg,#e0a052,#b5651d)"></i>
+            <b class="serif" style="font-size:30px; color:#2a1d12" id="s6-site-name"></b>
+            <span style="flex:1"></span><span class="skel" style="width:80px; background:#eadfce"></span><span class="skel" style="width:80px; background:#eadfce"></span>
+            <span style="background:var(--wa); color:#fff; border-radius:999px; padding:12px 22px; font-size:20px; font-weight:700">WhatsApp</span>
+          </div>
+          <div style="display:flex; gap:34px; padding:40px 40px 0">
+            <div style="flex:1.1">
+              <div style="font-size:18px; letter-spacing:.2em; color:#b5651d; font-weight:700" id="s6-site-city"></div>
+              <div class="serif" style="font-size:64px; color:#2a1d12; margin-top:16px">O seu negócio,<br><span class="it" style="color:#b5651d">na internet.</span></div>
+              <div class="skel" style="margin-top:28px; width:92%; background:#eadfce"></div><div class="skel" style="margin-top:14px; width:74%; background:#eadfce"></div>
+              <div style="margin-top:34px; display:inline-block; background:var(--wa); color:#fff; border-radius:999px; padding:20px 34px; font-size:26px; font-weight:800">Pedir pelo WhatsApp</div>
+            </div>
+            <div style="flex:.9; height:430px; border-radius:30px; background:radial-gradient(60% 60% at 40% 35%, #f3c27a, #c96f2a 70%, #8a3f14); box-shadow:inset 0 0 0 10px rgba(255,255,255,.35)"></div>
+          </div>
+          <div style="display:flex; gap:22px; padding:40px">
+            <i style="flex:1; height:150px; border-radius:22px; background:linear-gradient(135deg,#f6d3a0,#e2a35c)"></i><i style="flex:1; height:150px; border-radius:22px; background:linear-gradient(135deg,#efc9b8,#c97a5a)"></i><i style="flex:1; height:150px; border-radius:22px; background:linear-gradient(135deg,#f2e2b9,#d1a44f)"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="abs cx" id="s6-badge" style="top:1600px"><span class="chip" style="background:rgba(52,211,153,.14); color:#c9f7e3; font-size:34px; box-shadow:0 0 0 2px rgba(52,211,153,.45) inset">
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="#34d399"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5zm-1.2 14.2-3.9-3.9 1.4-1.4 2.5 2.5 5-5 1.4 1.4z"/></svg><span id="s6-badge-t"></span></span></div>
+  </section>
+
+  <!-- 7. EXTRAS -->
+  <section class="scene grid-bg" id="s7">
+    <div class="abs cx serif" id="s7-h" style="top:200px; font-size:96px; color:var(--ink); padding:0 60px"></div>
+    <svg class="abs" width="1080" height="1920" style="left:0; top:0">
+      <path id="s7-l0" fill="none" stroke="#0a66e8" stroke-width="5" stroke-linecap="round"/>
+      <path id="s7-l1" fill="none" stroke="#0a66e8" stroke-width="5" stroke-linecap="round"/>
+      <path id="s7-l2" fill="none" stroke="#0a66e8" stroke-width="5" stroke-linecap="round"/>
+    </svg>
+    <div class="abs" style="left:0; right:0; top:0; bottom:0; perspective:1800px">
+      <div class="abs" id="s7-main" style="left:200px; top:540px; width:680px; height:260px; border-radius:40px; background:linear-gradient(135deg,#1f7bff 0%,#0a4fc0 55%,#082c78 100%); box-shadow:0 40px 80px -30px rgba(10,80,200,.65), inset 0 2px 0 rgba(255,255,255,.25); color:#fff; padding:46px 54px; box-sizing:border-box; transform-origin:50% 100%">
+        <div style="font-size:26px; font-weight:800; letter-spacing:.26em; color:#bcd9ff" id="s7-eyebrow"></div>
+        <div class="serif" style="font-size:58px; margin-top:16px; line-height:1.1" id="s7-title"></div>
+        <svg class="abs" style="right:44px; top:44px" width="70" height="70" viewBox="0 0 24 24" fill="none" stroke="#bcd9ff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v9H4v-9M2 7h20v5H2zM12 21V7M12 7H7.5a2.5 2.5 0 1 1 0-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 1 0 0-5C13 2 12 7 12 7z"/></svg>
+      </div>
+      <div id="s7-cards"></div>
+    </div>
+    <div class="abs cx" id="s7-note" style="top:1420px; font-size:42px; line-height:1.4; color:var(--soft); font-weight:500; padding:0 80px"></div>
+  </section>
+
+  <!-- 8. PREÇO -->
+  <section class="scene navy-bg" id="s8">
+    <div class="abs" style="left:-100px; right:-100px; top:200px; height:1500px; background:radial-gradient(40% 45% at 50% 50%, rgba(77,163,255,.22), transparent 70%)"></div>
+    <div class="abs cx serif" id="s8-h" style="top:220px; font-size:104px; color:#fff"></div>
+    <div class="abs" id="s8-shake" style="inset:0">
+      <div class="abs" style="inset:0; perspective:1800px">
+        <div class="abs" id="s8-card-w" style="left:190px; top:460px; width:700px; height:880px; transform-origin:50% 100%; filter:drop-shadow(0 50px 60px rgba(0,0,0,.6))">
+          <div class="zig" style="position:absolute; inset:0; background:var(--paper); font-family:'MO',monospace; color:#16171b; text-align:center; padding:66px 56px; box-sizing:border-box">
+            <img src="assets/logo-bn-digital.webp" style="width:96px; height:96px; border-radius:50%; filter:grayscale(1) contrast(1.15)">
+            <div style="font-size:30px; font-weight:800; letter-spacing:.14em; margin-top:12px" id="s8-brand"></div>
+            <div style="border-top:3px dashed #a9a9ae; margin:26px 0"></div>
+            <div style="font-size:30px; font-weight:800; letter-spacing:.06em" id="s8-label"></div>
+            <div id="s8-pr" style="overflow:hidden">
+              <div style="font-size:156px; font-weight:800; letter-spacing:-0.05em; line-height:1.1; margin-top:18px" id="s8-p1"></div>
+              <div style="font-size:72px; font-weight:800; letter-spacing:-0.03em; line-height:1" id="s8-p2"></div>
+              <div style="font-size:38px; margin-top:16px; color:#3a3b40" id="s8-p3"></div>
+            </div>
+            <div style="border-top:3px dashed #a9a9ae; margin:30px 0 24px"></div>
+            <div style="font-size:27px; line-height:1.45; color:#3a3b40" id="s8-note"></div>
+          </div>
+          <div class="abs" id="s8-stamp" style="right:-50px; top:-40px; width:230px; height:230px; border-radius:50%; border:8px solid rgba(10,102,232,.85); color:rgba(10,102,232,.9); display:grid; place-items:center; text-align:center; font-family:'MO',monospace; font-weight:800; font-size:30px; line-height:1.15; letter-spacing:.08em; box-shadow:inset 0 0 0 5px rgba(255,255,255,.0), inset 0 0 0 12px rgba(10,102,232,.0)">
+            <div><div style="font-size:22px">BN DIGITAL</div><div style="border-top:4px solid; margin:8px 14px"></div><div id="s8-stamp-t"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. CHAMADA FINAL -->
+  <section class="scene" id="s9" style="background:linear-gradient(180deg,#0b3aa8 0%,#06215f 55%,#020a1f 100%)">
+    <div class="abs" style="left:180px; top:-260px; width:720px; height:720px; border-radius:50%; background:radial-gradient(closest-side, rgba(77,163,255,.6), transparent)"></div>
+    <img id="s9-logo" class="abs" src="assets/logo-bn-digital.webp" style="left:440px; top:380px; width:200px; height:200px; border-radius:50%; box-shadow:0 0 0 8px rgba(255,255,255,.12)">
+    <div class="abs cx" id="s9-pre" style="top:650px; font-size:42px; line-height:1.4; color:rgba(255,255,255,.85); font-weight:500; padding:0 90px"></div>
+    <div class="abs cx serif" id="s9-h" style="top:820px; font-size:116px; color:#fff; padding:0 50px"></div>
+    <div class="abs cx" id="s9-btn-w" style="top:1210px">
+      <div id="s9-btn" style="position:relative; display:inline-flex; align-items:center; gap:24px; background:var(--wa); color:#fff; border-radius:999px; padding:34px 64px; font-size:60px; font-weight:800; overflow:hidden; box-shadow:0 24px 50px -16px rgba(37,211,102,.6)">
+        <svg viewBox="0 0 24 24" width="70" height="70" fill="#fff"><use href="#wa"/></svg><span id="s9-btn-t"></span>
+        <i id="s9-shine" style="position:absolute; top:0; bottom:0; width:120px; left:-200px; background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent)"></i>
+      </div>
+      <div class="tap" id="s9-tap" style="left:540px; top:80px"></div>
+    </div>
+    <div class="abs cx" id="s9-num" style="top:1420px; font-size:58px; color:#fff; font-weight:800"></div>
+    <div class="abs cx" id="s9-ig" style="top:1515px; font-size:40px; color:#fff; font-weight:600"></div>
+    <div class="abs cx" id="s9-city" style="top:1585px; font-size:32px; color:rgba(255,255,255,.7)"></div>
+  </section>
+</div>
+
+<svg width="0" height="0" style="position:absolute"><defs><path id="wa" d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.69.25-1.29.17-1.41-.07-.12-.27-.2-.57-.35M12.05 21.5h-.01a9.43 9.43 0 0 1-4.8-1.32l-.35-.2-3.57.93.95-3.48-.22-.36a9.4 9.4 0 0 1-1.44-5.02c0-5.2 4.24-9.44 9.45-9.44 2.52 0 4.89.99 6.67 2.77a9.37 9.37 0 0 1 2.76 6.68c0 5.21-4.24 9.44-9.44 9.44m8.04-17.48A11.3 11.3 0 0 0 12.05.7C5.78.7.68 5.8.68 12.06c0 2 .52 3.96 1.52 5.68L.6 23.3l5.7-1.5a11.33 11.33 0 0 0 5.74 1.47h.01c6.26 0 11.36-5.1 11.37-11.37 0-3.03-1.18-5.89-3.33-8.03"/></defs></svg>
+
+<script src="textos.js"></script>
+<script>
+const C = window.TEXTOS;
+const $ = (id) => document.getElementById(id);
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const prog = (t, a, b) => clamp((t - a) / (b - a));
+const outCubic = (x) => 1 - Math.pow(1 - x, 3);
+const outQuint = (x) => 1 - Math.pow(1 - x, 5);
+const outBack = (x, c = 1.5) => 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2);
+const inOut = (x) => x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const lerp = (a, b, x) => a + (b - a) * x;
+// texto com *destaque* em itálico azul; "|" quebra a linha
+function rich(s, color = "var(--blue-l)") {
+  return s.split("|").map((line) => line.trim().split(" ").map((w) => w).join(" ")).join("<br>")
+    .replace(/\*([^*]+)\*/g, `<span class="it" style="color:${color}">$1</span>`);
+}
+// mesmo texto, palavra por palavra (cada palavra num span .word)
+function words(el, s, color = "var(--blue-l)") {
+  let html = "", inHi = false;
+  s.split("|").forEach((line, li) => {
+    if (li) html += "<br>";
+    line.trim().split(" ").forEach((w, wi) => {
+      const start = w.startsWith("*"), end = w.endsWith("*");
+      if (start) inHi = true;
+      const clean = w.replace(/\*/g, "");
+      html += (wi ? " " : "") + `<span class="word${inHi ? " it" : ""}"${inHi ? ` style="color:${color}"` : ""}>${clean}</span>`;
+      if (end) inHi = false;
+    });
+  });
+  el.innerHTML = html;
+  return [...el.querySelectorAll(".word")];
+}
+function enter(el, t, at, dur = 0.5, dy = 50, ease = outCubic) {
+  const p = ease(prog(t, at, at + dur));
+  el.style.opacity = clamp(prog(t, at, at + dur * 0.7));
+  el.style.transform = `translateY(${(1 - p) * dy}px)`;
+}
+function exitK(t, at, dur = 0.3) { return 1 - prog(t, at, at + dur); }
+function wordsIn(ws, t, at, step = 0.09, dur = 0.45, dy = 60) { ws.forEach((w, i) => enter(w, t, at + i * step, dur, dy)); }
+function tapAt(el, t, x, y, at) {
+  el.style.left = x + "px"; el.style.top = y + "px";
+  const a = prog(t, at - 0.25, at - 0.05), press = prog(t, at, at + 0.15), gone = prog(t, at + 0.25, at + 0.45);
+  el.style.opacity = clamp(a) * (1 - gone);
+  el.style.transform = `scale(${lerp(1.25, 1, a) - 0.18 * Math.sin(Math.PI * press)})`;
+}
+// revela a cena: círculo, cortina de cima, de baixo, da direita ou fade
+function reveal(el, t, a, d, kind, x = 540, y = 960) {
+  const p = inOut(prog(t, a, a + d));
+  if (kind === "fade") { el.style.opacity = p; el.style.clipPath = "none"; return; }
+  el.style.opacity = 1;
+  if (p >= 1) { el.style.clipPath = "none"; return; }
+  if (kind === "circle") el.style.clipPath = `circle(${p * 2300}px at ${x}px ${y}px)`;
+  if (kind === "down") el.style.clipPath = `inset(0 0 ${(1 - p) * 100}% 0)`;
+  if (kind === "up") el.style.clipPath = `inset(${(1 - p) * 100}% 0 0 0)`;
+  if (kind === "left") el.style.clipPath = `inset(0 0 0 ${(1 - p) * 100}%)`;
+}
+function show(el, t, a, b) { el.style.visibility = t >= a && t < b ? "visible" : "hidden"; return t >= a && t < b; }
+// alimentação da impressora: passos curtos, como papel térmico saindo
+function feed(t, t0, step, px, max) {
+  if (t < t0) return 0;
+  const s = (t - t0) / step, i = Math.floor(s), f = s - i;
+  return Math.min(max, (i + outCubic(Math.min(1, f / 0.6))) * px);
+}
+// gerador pseudoaleatório com semente fixa
+function rng(seed) { let s = seed; return () => (s = (s * 16807) % 2147483647) / 2147483647; }
+
+// ---------- MONTAGEM ----------
+function printerHTML(id, paperInner) {
+  return `<div class="printer" id="${id}">
+    <div class="pr-shadow"></div>
+    <div class="pr-top"></div>
+    <div class="pr-front"><div class="pr-btn"></div><div class="pr-led" id="${id}-led"></div><div class="pr-brand">BN DIGITAL</div><div class="pr-grille"></div></div>
+    <div class="pr-paper" id="${id}-paper">${paperInner}<div class="shade"></div><div class="gleam" id="${id}-gleam"></div></div>
+    <div class="pr-slot"></div><div class="pr-tear"></div>
+  </div>`;
+}
+function receiptHTML() {
+  return `<div class="rc">
+    <img class="rc-logo" src="assets/logo-bn-digital.webp">
+    <div class="rc-brand">${C.marca}</div>
+    <div class="rc-s">${C.slogan}</div>
+    <div class="rc-s">${C.cidade}</div>
+    <div class="rc-div"></div>
+    <div class="rc-row"><span>ORÇAMENTO</span><span>Nº ${C.numeroOrcamento}</span></div>
+    <div class="rc-div"></div>
+    <div class="rc-item">${C.servico}</div>
+    <div class="rc-s2">${C.modelo}</div>
+    <div class="rc-div"></div>
+    <div class="rc-s2 rc-c">A PARTIR DE</div>
+    <div class="rc-price">${C.precoMin}<small>${C.periodo}</small></div>
+    <div class="rc-div"></div>
+  </div>`;
+}
+const CHECK = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>`;
+function listHTML() {
+  return `<div class="ls"><div class="ls-head"><b>${C.marca}</b><span>${C.listaTitulo}</span></div>` +
+    C.inclusos.map((s, i) => `<div class="ls-row"><p>${s}</p><span class="ls-ck" id="ck${i}">${CHECK}</span></div>`).join("") + `</div>`;
+}
+
+// cena 1
+$("s1-pr-host").innerHTML = printerHTML("p1", receiptHTML());
+$("p1").style.left = "132px"; $("p1").style.top = "1240px";
+const s1Words = words($("s1-h"), C.gancho);
+const dust = []; { const r = rng(42); for (let i = 0; i < 28; i++) { const d = document.createElement("i"); d.className = "abs";
+  const sz = 2 + r() * 4; d.style.cssText = `width:${sz}px; height:${sz}px; border-radius:50%; background:#cfe3ff; filter:blur(${r() * 1.5}px)`;
+  $("s1-dust").appendChild(d); dust.push({ el: d, x: r() * 1080, y: r() * 1920, v: 12 + r() * 30, ph: r() * 6.28, o: 0.08 + r() * 0.25 }); } }
+
+// cena 2 + 3
+$("s2-rc").innerHTML = receiptHTML();
+const s2Words = words($("s2-h"), C.celularTitulo, "var(--blue)");
+$("s2-chip1-t").textContent = C.celularChips[0]; $("s2-chip2-t").textContent = C.celularChips[1];
+$("s3-eyebrow-t").textContent = C.sitesSobretitulo;
+const s3Words = words($("s3-h"), C.sitesTitulo, "var(--blue)");
+$("s3-resp").textContent = C.sitesRodape;
+const SITES = C.sites;
+const phScreen = $("ph-screen"), view = $("s3-view");
+const mobImgs = [], deskImgs = [], caps = [];
+[{ img: C.celularSite }, ...SITES].forEach((s, i) => {
+  const m = document.createElement("img"); m.src = `assets/full-${s.img}-mob.jpg`; phScreen.insertBefore(m, phScreen.querySelector(".notch")); mobImgs.push(m);
+});
+SITES.forEach((s) => {
+  const d = document.createElement("img"); d.src = `assets/full-${s.img}-desk.jpg`; view.appendChild(d); deskImgs.push(d);
+  const c = document.createElement("div"); c.className = "abs"; c.style.cssText = "left:0; top:0; opacity:0";
+  c.innerHTML = `<div class="serif" style="font-size:62px; color:var(--ink)">${s.nome}</div>
+    <div style="margin-top:18px"><span class="chip" style="background:rgba(10,102,232,.1); color:#0a3f9a; font-size:30px">${s.tipo}</span></div>`;
+  $("s3-caps").appendChild(c); caps.push(c);
+});
+// cena 4
+$("s4-pr-host").innerHTML = printerHTML("p4", listHTML());
+$("p4").style.left = "-4px"; $("p4").style.top = "1448px"; $("p4").style.transform = "scale(1.6)";
+const s4Words = words($("s4-h"), C.listaChamada);
+// cena 5
+const s5Words = words($("s5-h"), C.buscaTitulo, "var(--blue)");
+$("s5-name").textContent = C.negocioExemplo; $("s5-url").textContent = "https://" + C.dominio;
+$("s5-title").textContent = C.buscaResultadoTitulo; $("s5-desc").textContent = C.buscaResultadoTexto;
+$("s5-foot1").textContent = C.seoSobretitulo; $("s5-foot2").innerHTML = rich(C.seoTitulo, "var(--blue)");
+// cena 6
+const s6Words = words($("s6-h"), C.dominioTitulo);
+$("s6-site-name").textContent = C.negocioExemplo; $("s6-site-city").textContent = C.cidade.toUpperCase();
+$("s6-badge-t").textContent = C.dominioSelo;
+// cena 7
+const s7Words = words($("s7-h"), C.extrasTitulo, "var(--blue)");
+$("s7-eyebrow").textContent = C.extrasEtiqueta; $("s7-title").innerHTML = rich(C.extrasCartao, "#bcd9ff");
+const ICONS = [
+  `<path d="M4 3h12a2 2 0 0 1 2 2v16l-3-2-3 2-3-2-3 2V5a2 2 0 0 1 2-2zM8 8h6M8 12h6M8 16h3"/>`,
+  `<rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4M8 14h3v3H8z"/>`,
+  `<path d="M5 8h14l-1.2 12.2a1 1 0 0 1-1 .8H7.2a1 1 0 0 1-1-.8zM9 8V6a3 3 0 0 1 6 0v2"/>`,
+];
+const s7Cards = C.extras.map((txt, i) => {
+  const c = document.createElement("div"); c.className = "card";
+  c.style.cssText = `left:${80 + i * 315}px; top:960px; width:290px; height:330px; padding:40px 30px; box-sizing:border-box; transform-origin:50% 0`;
+  c.innerHTML = `<div style="width:92px; height:92px; border-radius:26px; background:rgba(10,102,232,.1); display:grid; place-items:center">
+      <svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="#0a66e8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ICONS[i % 3]}</svg></div>
+    <div style="font-size:36px; font-weight:700; color:var(--ink); line-height:1.2; margin-top:30px">${txt}</div>`;
+  $("s7-cards").appendChild(c); return c;
+});
+const s7Paths = [0, 1, 2].map((i) => { const p = $("s7-l" + i); const x2 = 225 + i * 315, dir = Math.sign(x2 - 540);
+  p.setAttribute("d", dir === 0 ? "M540 800 L540 958" : `M540 800 L540 850 Q540 880 ${540 + dir * 30} 880 L${x2 - dir * 30} 880 Q${x2} 880 ${x2} 910 L${x2} 958`);
+  const L = p.getTotalLength(); p.style.strokeDasharray = L; return { p, L }; });
+$("s7-note").innerHTML = rich(C.extrasNota, "var(--blue)");
+// cena 8
+const s8Words = words($("s8-h"), C.precoChamada);
+$("s8-brand").textContent = C.marca + " · ORÇAMENTO"; $("s8-label").textContent = C.precoRotulo;
+$("s8-p1").textContent = C.precoMin; $("s8-p2").textContent = "a " + C.precoMax; $("s8-p3").textContent = C.precoPeriodoExtenso;
+$("s8-note").innerHTML = rich(C.precoNota); $("s8-stamp-t").innerHTML = C.carimbo;
+// cena 9
+$("s9-pre").innerHTML = rich(C.finalFrase); const s9Words = words($("s9-h"), C.finalChamada);
+$("s9-btn-t").textContent = C.botao; $("s9-num").textContent = C.whatsapp; $("s9-ig").textContent = C.instagram; $("s9-city").textContent = C.cidade;
+
+// ---------- LINHA DO TEMPO ----------
+const T = window.T = { s1: [0, 6.3], s23: [5.75, 18.85], s4: [18.45, 25.95], s5: [25.6, 31.15], s6: [30.75, 35.6], s7: [35.25, 40.25], s8: [39.85, 45.15], s9: [44.75, 50.5] };
+window.DURATION = 50.5;
+const SITE_AT = [11.2, 13.05, 14.9, 16.75], SITE_DUR = 1.85;
+const S4 = { t0: 18.95, step: 0.1, px: 13, max: 680 };
+window.CK_TIMES = C.inclusos.map((_, i) => S4.t0 + (80 + 78 * (i + 1) + 4) / (S4.px / S4.step));
+
+window.render = function (t) {
+  // ===== 1. impressora =====
+  if (show($("s1"), t, ...T.s1)) {
+    const cam = lerp(1, 1.06, prog(t, 0, 4.6)) * lerp(1, 1.24, inOut(prog(t, 4.75, 5.95)));
+    $("s1-cam").style.transform = `scale(${cam}) translateY(${-18 * inOut(prog(t, 4.75, 5.95))}px)`;
+    wordsIn(s1Words, t, 0.12, 0.09, 0.45, 60);
+    dust.forEach((d) => { const y = (((d.y - t * d.v) % 1920) + 1920) % 1920;
+      d.el.style.transform = `translate(${d.x + Math.sin(t * 0.7 + d.ph) * 24}px, ${y}px)`; d.el.style.opacity = d.o; });
+    const L = feed(t, 0.75, 0.1, 20, 660);
+    const printing = t > 0.7 && t < 4.1;
+    $("p1").style.transform = `scale(1.2) translateY(${printing ? Math.sin(t * 95) * 0.9 : 0}px)`;
+    $("p1-led").style.boxShadow = `0 0 ${printing ? 26 + 10 * Math.sin(t * 20) : 16}px ${printing ? 8 : 3}px rgba(77,163,255,${printing ? 0.7 : 0.4})`;
+    // rasgo do papel
+    const tear = prog(t, 4.45, 4.62), settle = outBack(prog(t, 4.62, 5.0), 2.2);
+    const lift = tear > 0 ? lerp(-16 * tear, -8, settle) : 0, rot = tear > 0 ? lerp(-2.2 * tear, -1, settle) : 0;
+    const pp = $("p1-paper"); pp.style.height = L + "px";
+    pp.style.transform = `perspective(1100px) translateY(${lift}px) rotateX(7deg) rotateZ(${0.5 * Math.sin(t * 1.4) + rot}deg)`;
+    const g = prog(t, 4.05, 4.7); $("p1-gleam").style.opacity = g > 0 && g < 1 ? 0.55 : 0; $("p1-gleam").style.transform = `translateX(${g * 420}%)`;
+  }
+
+  // ===== 2 + 3. celular, cupom, navegador =====
+  if (show($("s23"), t, ...T.s23)) {
+    reveal($("s23"), t, 5.75, 0.55, "circle", 540, 1200);
+    // título da cena 2
+    wordsIn(s2Words, t, 6.3, 0.08, 0.45, 50);
+    const out2 = exitK(t, 10.25, 0.3);
+    $("s2-h").style.opacity = out2; $("s2-h").style.marginTop = `${(1 - out2) * -30}px`;
+    // cupom: do centro para o canto, depois sai pela esquerda
+    { const p = outQuint(prog(t, 6.08, 6.95)), q = inOut(prog(t, 10.15, 10.7));
+      const x = lerp(225, 60, p) - q * 520, y = lerp(316, 560, p) + q * 80, s = lerp(1.577, 0.58, p), r = lerp(-1, -7, p) - q * 16;
+      $("s2-rc").style.transform = `translate(${x}px, ${y}px) rotate(${r + Math.sin(t * 1.3) * 0.6}deg) scale(${s})`; }
+    // linha ligando o cupom ao celular
+    { const fl = Math.sin(t * 1.6) * 10;
+      const d = `M150 955 C150 1140, 260 ${1150 + fl}, 418 ${1150 + fl}`;
+      $("s2-path").setAttribute("d", d); $("s2-path-m").setAttribute("d", d);
+      const len = $("s2-path").getTotalLength(), p = inOut(prog(t, 6.9, 7.6));
+      $("s2-path-m").style.strokeDasharray = len; $("s2-path-m").style.strokeDashoffset = len * (1 - p);
+      $("s2-path").style.strokeDashoffset = -t * 40;
+      const pt = $("s2-path").getPointAtLength(len * p);
+      const dotOn = t > 6.9 && t < 10.3;
+      $("s2-dot").setAttribute("cx", pt.x); $("s2-dot").setAttribute("cy", pt.y); $("s2-dot").style.opacity = dotOn ? 1 : 0;
+      const pulse = prog(t, 7.6, 8.3); $("s2-dot2").setAttribute("cx", pt.x); $("s2-dot2").setAttribute("cy", pt.y);
+      $("s2-dot2").setAttribute("r", 14 + pulse * 40); $("s2-dot2").style.opacity = t > 7.6 && t < 8.3 ? (1 - pulse) : 0;
+      $("s2-svg").style.opacity = exitK(t, 10.1, 0.25); }
+    enter($("s2-chip1"), t, 7.8, 0.45, 30); enter($("s2-chip2"), t, 8.05, 0.45, 30);
+    { const k = exitK(t, 10.1, 0.25); $("s2-chip1").style.opacity *= k; $("s2-chip2").style.opacity *= k; }
+    // celular: entra em 3D, flutua, depois encolhe para o canto do navegador
+    { const pin = outCubic(prog(t, 6.15, 7.05)), m = inOut(prog(t, 10.45, 11.15)), fl = Math.sin(t * 1.6) * 10 * (1 - m);
+      const x = lerp(430, 760, m), y = lerp(600, 960, m) + (1 - pin) * 620 + fl, s = lerp(1, 0.54, m);
+      const ry = lerp(lerp(38, -7, pin), 0, m), rz = lerp(lerp(8, 0, pin), 4, m);
+      $("ph").style.transform = `translate(${x}px, ${y}px) rotateY(${ry}deg) rotateZ(${rz}deg) scale(${s})`;
+      $("ph").style.opacity = clamp(pin * 2);
+      $("ph").style.boxShadow = `0 0 0 2px rgba(255,255,255,.18) inset, 0 2px 0 3px #2a2d35, 0 ${lerp(70, 30, m)}px ${lerp(110, 50, m)}px -30px rgba(10,30,80,.55)`;
+      $("s2-shadow").style.opacity = pin * (1 - m) * (0.9 - fl / 60);
+      $("s2-shadow").style.transform = `scale(${1 - fl / 120})`; }
+    // telas do celular: açaí rolando, depois os sites da cena 3
+    mobImgs.forEach((im, i) => {
+      if (i === 0) { im.style.transform = `translateY(${-lerp(0, 620, inOut(prog(t, 7.5, 10.2)))}px)`; return; }
+      const a = SITE_AT[i - 1], inP = inOut(prog(t, a - 0.05, a + 0.4));
+      const sc = -lerp(0, 160, inOut(prog(t, a + 0.4, a + SITE_DUR)));
+      im.style.transform = `translateY(${(1 - inP) * 1100 + sc}px)`; im.style.visibility = t > a - 0.05 ? "visible" : "hidden";
+    });
+    // navegador
+    { const p = outBack(prog(t, 10.7, 11.25), 1.2), o = prog(t, 10.7, 10.95);
+      $("s3-browser").style.opacity = o; $("s3-browser").style.transform = `translateY(${(1 - p) * 60}px) scale(${lerp(0.55, 1, p)})`; }
+    let cur = 0; SITE_AT.forEach((a, i) => { if (t >= a + 0.15) cur = i; });
+    $("s3-tab").textContent = SITES[cur].nome; $("s3-fav").style.background = SITES[cur].cor;
+    deskImgs.forEach((im, i) => {
+      const a = SITE_AT[i], inP = i === 0 ? 1 : inOut(prog(t, a, a + 0.5)), next = SITE_AT[i + 1];
+      const outP = next ? inOut(prog(t, next, next + 0.5)) : 0;
+      const sc = -lerp(0, 300, inOut(prog(t, a + 0.45, a + SITE_DUR + 0.3))) * (i === 0 ? 1 : 1);
+      im.style.transform = `translate(${(1 - inP) * 980 - outP * 300}px, ${sc}px)`;
+      im.style.filter = outP > 0 ? `brightness(${1 - outP * 0.5})` : "none";
+      im.style.visibility = (i === 0 || t > a) && outP < 1 ? "visible" : "hidden";
+    });
+    caps.forEach((c, i) => { const a = SITE_AT[i], b = SITE_AT[i + 1] || 99;
+      const pin = outCubic(prog(t, a + 0.15, a + 0.55)), pout = prog(t, b - 0.05, b + 0.15);
+      c.style.opacity = Math.min(prog(t, a + 0.15, a + 0.45), 1 - pout); c.style.transform = `translateY(${(1 - pin) * 36 - pout * 20}px)`; });
+    $("s3-eyebrow").style.opacity = prog(t, 10.85, 11.2); enter($("s3-eyebrow"), t, 10.85, 0.4, 20);
+    wordsIn(s3Words, t, 10.95, 0.08, 0.45, 50);
+    enter($("s3-resp"), t, 11.7, 0.5, 24);
+  }
+
+  // ===== 4. lista impressa =====
+  if (show($("s4"), t, ...T.s4)) {
+    reveal($("s4"), t, 18.45, 0.4, "down");
+    wordsIn(s4Words, t, 18.75, 0.09, 0.45, 50);
+    $("s4-cam").style.transform = `scale(${lerp(1.0, 1.035, prog(t, 18.5, 25.9))})`;
+    const L = feed(t, S4.t0, S4.step, S4.px, S4.max), printing = t > S4.t0 && t < 24.05;
+    $("p4").style.transform = `scale(1.6) translateY(${printing ? Math.sin(t * 95) * 0.6 : 0}px)`;
+    $("p4-led").style.boxShadow = `0 0 ${printing ? 26 + 10 * Math.sin(t * 20) : 16}px ${printing ? 8 : 3}px rgba(77,163,255,${printing ? 0.7 : 0.4})`;
+    $("p4-paper").style.height = L + "px";
+    $("p4-paper").style.transform = `perspective(1100px) rotateX(5deg) rotateZ(${0.35 * Math.sin(t * 1.2)}deg)`;
+    $("p4-paper").style.boxShadow = `0 0 80px rgba(77,163,255,${0.18 * prog(t, 19, 20)})`;
+    window.CK_TIMES.forEach((ct, i) => { const p = prog(t, ct, ct + 0.35); $("ck" + i).style.transform = `scale(${p > 0 ? outBack(p, 2.4) : 0})`; });
+  }
+
+  // ===== 5. busca no Google =====
+  if (show($("s5"), t, ...T.s5)) {
+    reveal($("s5"), t, 25.6, 0.42, "up");
+    wordsIn(s5Words, t, 25.85, 0.09, 0.45, 50);
+    { const p = outBack(prog(t, 26.15, 26.65), 1.3); $("s5-bar").style.opacity = prog(t, 26.15, 26.4); $("s5-bar").style.transform = `scale(${lerp(0.8, 1, p)})`; }
+    { const q = C.busca, n = Math.floor(clamp(prog(t, 26.55, 27.85)) * q.length); $("s5-q").textContent = q.slice(0, n);
+      $("s5-caret").style.opacity = t > 26.45 && t < 28.0 ? (Math.floor(t * 4) % 2 ? 1 : 0.15) : 0;
+      $("s5-bar").style.boxShadow = `0 20px 50px -20px rgba(10,30,80,.35), 0 0 0 ${t > 27.95 && t < 28.2 ? 5 : 2}px ${t > 27.95 && t < 28.2 ? "#0a66e8" : "#e3e7ef"}`; }
+    { const p = outCubic(prog(t, 28.05, 28.5)); $("s5-res").style.opacity = prog(t, 28.05, 28.3); $("s5-res").style.transform = `translateY(${(1 - p) * 60}px)`; }
+    enter($("s5-sk1"), t, 28.25, 0.4, 20); enter($("s5-sk2"), t, 28.35, 0.4, 20);
+    { const h = prog(t, 28.75, 29.0); $("s5-r1").style.background = `rgba(10,102,232,${0.07 * h})`; $("s5-r1").style.boxShadow = `0 0 0 ${3 * h}px rgba(10,102,232,${0.55 * h})`;
+      tapAt($("s5-tap"), t, 330, 160, 28.95); }
+    enter($("s5-foot"), t, 29.2, 0.5, 40);
+  }
+
+  // ===== 6. domínio e cadeado =====
+  if (show($("s6"), t, ...T.s6)) {
+    reveal($("s6"), t, 30.75, 0.5, "circle", 140, 820);
+    const z = inOut(prog(t, 32.75, 33.45));
+    $("s6-cam").style.transform = `translateY(${(1 - z) * 300}px) scale(${lerp(1.8, 1, z)})`;
+    { const q = C.dominio, n = Math.floor(clamp(prog(t, 31.3, 32.3)) * q.length); $("s6-dom").textContent = q.slice(0, n);
+      $("s6-caret").style.opacity = t > 31.2 && t < 32.45 ? (Math.floor(t * 4) % 2 ? 1 : 0.15) : 0; }
+    { const c = prog(t, 32.4, 32.55), col = c >= 1 ? "#16a34a" : "#8a90a0";
+      $("s6-lock").style.color = col; $("s6-shackle").style.transform = `translateY(${(1 - outBack(c, 3)) * -5}px)`;
+      $("s6-url").style.boxShadow = `0 0 0 ${c >= 1 ? 3 + 3 * Math.max(0, 1 - prog(t, 32.55, 33.2)) : 0}px rgba(22,163,74,${c >= 1 ? 0.6 : 0})`;
+      $("s6-https").style.color = c >= 1 ? "#16a34a" : "#8a90a0"; }
+    wordsIn(s6Words, t, 31.05, 0.09, 0.45, 50);
+    { const p = prog(t, 33.6, 34.05); $("s6-badge").style.opacity = clamp(p * 2); $("s6-badge").style.transform = `scale(${lerp(0.8, 1, outBack(p, 2))})`; }
+  }
+
+  // ===== 7. extras =====
+  if (show($("s7"), t, ...T.s7)) {
+    reveal($("s7"), t, 35.25, 0.45, "left");
+    wordsIn(s7Words, t, 35.5, 0.09, 0.45, 50);
+    { const p = prog(t, 35.85, 36.5); $("s7-main").style.opacity = clamp(p * 2);
+      $("s7-main").style.transform = `rotateX(${(1 - outBack(p, 1.4)) * 70}deg) translateY(${Math.sin(t * 1.5) * 6}px)`; }
+    s7Paths.forEach(({ p, L }, i) => { p.style.strokeDashoffset = L * (1 - inOut(prog(t, 36.35 + i * 0.08, 36.85 + i * 0.08))); });
+    s7Cards.forEach((c, i) => { const p = prog(t, 36.75 + i * 0.15, 37.3 + i * 0.15);
+      c.style.opacity = clamp(p * 2); c.style.transform = `rotateX(${(1 - outBack(p, 1.6)) * -80}deg) translateY(${Math.sin(t * 1.5 + i) * 5}px)`; });
+    enter($("s7-note"), t, 37.55, 0.5, 30);
+    const k = exitK(t, 39.6, 0.25); $("s7-h").style.opacity = k; ["s7-main", "s7-note"].forEach((id) => $(id).style.opacity *= k); s7Cards.forEach((c) => c.style.opacity *= k); s7Paths.forEach(({ p }) => p.style.opacity = k);
+  }
+
+  // ===== 8. preço =====
+  if (show($("s8"), t, ...T.s8)) {
+    reveal($("s8"), t, 39.85, 0.4, "down");
+    wordsIn(s8Words, t, 40.1, 0.1, 0.45, 50);
+    { const p = prog(t, 40.25, 41.0); $("s8-card-w").style.opacity = clamp(p * 2.5);
+      $("s8-card-w").style.transform = `translateY(${(1 - outBack(p, 1.2)) * 500}px) rotateX(${(1 - outCubic(p)) * 40}deg) rotateZ(${lerp(-8, -1.5, outCubic(p)) + Math.sin(t * 1.2) * 0.5}deg)`; }
+    { const r = inOut(prog(t, 41.0, 41.6)); $("s8-pr").style.clipPath = `inset(0 0 ${(1 - r) * 100}% 0)`; }
+    { const p = prog(t, 41.95, 42.12); $("s8-stamp").style.opacity = p > 0 ? 1 : 0;
+      $("s8-stamp").style.transform = `rotate(-14deg) scale(${lerp(2.2, 1, outCubic(p))})`;
+      const sh = prog(t, 42.12, 42.45); $("s8-shake").style.transform = sh > 0 && sh < 1 ? `translate(${Math.sin(sh * 50) * 10 * (1 - sh)}px, ${Math.cos(sh * 44) * 8 * (1 - sh)}px)` : "none"; }
+  }
+
+  // ===== 9. chamada final =====
+  if (show($("s9"), t, T.s9[0], T.s9[1] + 1)) {
+    reveal($("s9"), t, 44.75, 0.55, "circle", 760, 640);
+    { const p = prog(t, 45.0, 45.55); $("s9-logo").style.opacity = clamp(p * 2); $("s9-logo").style.transform = `scale(${lerp(0.7, 1, outBack(p))})`; }
+    enter($("s9-pre"), t, 45.25, 0.5, 30);
+    wordsIn(s9Words, t, 45.8, 0.08, 0.45, 50);
+    { const p = prog(t, 46.5, 47.0); $("s9-btn-w").style.opacity = clamp(p * 1.6); $("s9-btn-w").style.transform = `scale(${lerp(0.85, 1, outBack(p, 2))})`;
+      const pr = Math.sin(Math.PI * prog(t, 47.75, 47.9)); $("s9-btn").style.transform = `scale(${1 - 0.05 * pr + (t > 48 ? 0.025 * Math.sin((t - 48) * 5) : 0)})`;
+      $("s9-shine").style.left = `${lerp(-200, 900, prog(t, 47.1, 47.6))}px`; }
+    tapAt($("s9-tap"), t, 540, 92, 47.75);
+    enter($("s9-num"), t, 46.85, 0.45, 26); enter($("s9-ig"), t, 47.0, 0.45, 26); enter($("s9-city"), t, 47.15, 0.45, 26);
+  }
+};
+
+window.ready = (async () => {
+  for (const f of ['800 100px "PF"', 'italic 800 100px "PF"', '600 40px "IN"', '800 40px "MO"', '400 40px "MO"']) await document.fonts.load(f);
+  await document.fonts.ready;
+  await Promise.all([...document.images].map((im) => im.decode().catch(() => {})));
+  window.render(0);
+  return true;
+})();
+</script>
+</body>
+</html>
