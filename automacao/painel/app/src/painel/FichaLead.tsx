@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import {
   ArrowRight,
+  BadgeCheck,
   Check,
+  CircleHelp,
+  TriangleAlert,
   Copy,
   ExternalLink,
   Handshake,
@@ -40,6 +43,7 @@ import {
   ehCasimiro,
   enderecoCurto,
   podeVisitar,
+  situacaoZap,
   ramoDe,
   recebeuPedidoDeVisita,
   textoCorrecao,
@@ -67,6 +71,38 @@ import {
   type Status,
   type Textos,
 } from "./leads";
+
+/** O que a página pública do WhatsApp Business disse sobre o número (ver `zap` em leads.ts). */
+function ConferenciaZap({ lead }: { lead: Lead }) {
+  const situacao = situacaoZap(lead);
+  if (!situacao) return null;
+  const nome = lead.zap?.nome ?? "";
+  const [cor, fundo, Icone, texto] =
+    situacao === "conferido"
+      ? (["var(--blk-success)", "var(--blk-success-soft)", BadgeCheck, `WhatsApp conferido: a conta se chama "${nome}".`] as const)
+      : situacao === "outroNome"
+        ? ([
+            "var(--blk-warning)",
+            "var(--blk-warning-soft)",
+            TriangleAlert,
+            `No WhatsApp esse número aparece como "${nome}". Pode ser de outra pessoa: confira no Instagram antes de mandar.`,
+          ] as const)
+        : ([
+            "var(--bjork-text-muted)",
+            "var(--bjork-surface)",
+            CircleHelp,
+            "Esse número não tem WhatsApp Business. Pode ser WhatsApp comum ou número errado: se não entregar, veja o Instagram.",
+          ] as const);
+  return (
+    <p
+      className="flex items-start gap-2 rounded-[10px] px-3 py-2 text-[12.5px] leading-snug"
+      style={{ background: fundo, color: cor }}
+    >
+      <Icone aria-hidden="true" className="mt-px size-4 shrink-0" />
+      <span className="[overflow-wrap:anywhere]">{texto}</span>
+    </p>
+  );
+}
 
 const DESFECHOS: [Status, string][] = [
   ["respondeu", "Respondeu"],
@@ -339,6 +375,8 @@ function Conteudo({
             </div>
           )}
         </dl>
+
+        <ConferenciaZap lead={lead} />
 
         {tirada && (
           <div className="flex flex-col gap-2 rounded-[12px] border border-[color:var(--bjork-border-strong)] bg-[var(--bjork-surface)] p-3">

@@ -24,6 +24,8 @@ import {
   fmtInt,
   fmtNota,
   motivoTirada,
+  pesoZap,
+  situacaoZap,
   statusDe,
   tipoDe,
   type Lead,
@@ -132,8 +134,9 @@ export function TabelaLeads({
       if (ordem.chave === "nome") return a.nome.localeCompare(b.nome, "pt-BR") * dir;
       const av = a[ordem.chave];
       const bv = b[ordem.chave];
-      // Quem não tem o número fica sempre no fim.
-      if (av == null || bv == null) return av == null ? (bv == null ? 0 : 1) : -1;
+      // Quem não tem o número fica sempre no fim; entre esses, WhatsApp conferido primeiro.
+      if (av == null || bv == null)
+        return av == null ? (bv == null ? pesoZap(a) - pesoZap(b) : 1) : -1;
       return (av - bv) * dir || a.nome.localeCompare(b.nome, "pt-BR");
     });
   }, [leads, ordem]);
@@ -253,6 +256,16 @@ export function TabelaLeads({
                     </button>
                     <p className="truncate text-[11.5px] leading-tight text-[color:var(--bjork-text-muted)]">
                       {tipoDe(lead)}
+                      {situacaoZap(lead) === "conferido" && (
+                        <span className="font-medium" style={{ color: "var(--blk-success)" }}>
+                          {" "}· WhatsApp ✓
+                        </span>
+                      )}
+                      {situacaoZap(lead) === "outroNome" && (
+                        <span className="font-medium" style={{ color: "var(--blk-warning)" }}>
+                          {" "}· conferir número
+                        </span>
+                      )}
                       {motivoTirada(lead) && ` · ${MOTIVO_TIRADA[motivoTirada(lead)!].frase}`}
                       {lead.compromisso && (
                         <span

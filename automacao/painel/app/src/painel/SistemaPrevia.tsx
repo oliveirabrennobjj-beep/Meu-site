@@ -248,6 +248,7 @@ const SERVICOS: Partial<Record<RamoId, Item[]>> = {
   estetica: [["Limpeza de pele", 120, "1 hora"], ["Drenagem", 90, "50 min"], ["Design de sobrancelha", 40, "30 min"], ["Peeling", 150, "1 hora"]],
   massagem: [["Relaxante", 100, "1 hora"], ["Terapêutica", 120, "1 hora"], ["Drenagem", 90, "50 min"], ["Pedras quentes", 140, "1h15"]],
   pet: [["Banho", 50, "1 hora"], ["Banho e tosa", 80, "2 horas"], ["Tosa higiênica", 40, "40 min"], ["Hidratação", 35, "30 min"]],
+  saude: [["Primeira consulta", 180, "50 min"], ["Retorno", 150, "50 min"], ["Consulta online", 150, "50 min"], ["Avaliação", 120, "40 min"]],
   lavajato: [["Lavagem simples", 40, "40 min"], ["Lavagem completa", 70, "1h30"], ["Polimento", 180, "3 horas"], ["Higienização", 150, "2 horas"]],
 };
 const PROFISSIONAIS: Partial<Record<RamoId, Pessoa[]>> = {
@@ -256,6 +257,7 @@ const PROFISSIONAIS: Partial<Record<RamoId, Pessoa[]>> = {
   estetica: [["Ana Lima", "Pele e limpeza"], ["Paula Reis", "Corporal"], ["Bruna Dias", "Sobrancelha"]],
   massagem: [["Renata Costa", "Relaxante"], ["Marcos Silva", "Terapêutica"], ["Lívia Prado", "Drenagem"]],
   pet: [["Camila", "Banho e secagem"], ["Rodrigo", "Tosa na tesoura"], ["Patrícia", "Tosa na máquina"]],
+  saude: [["Dra. Ana", "Adultos"], ["Dr. Bruno", "Crianças e adolescentes"], ["Dra. Carla", "Atendimento online"]],
   lavajato: [["Box 1", "Lavagem rápida"], ["Box 2", "Lavagem completa"], ["Box 3", "Polimento e cera"]],
 };
 const AULAS: Partial<Record<RamoId, [aula: string, linha: string][]>> = {
@@ -265,9 +267,10 @@ const AULAS: Partial<Record<RamoId, [aula: string, linha: string][]>> = {
   natacao: [["Infantil", "45 min · 4 a 12 anos"], ["Adultos", "45 min · iniciante"], ["Hidroginástica", "45 min"], ["Aula experimental", "Primeira aula"]],
   crossfit: [["CrossFit", "1 hora · todos os níveis"], ["Funcional", "50 min"], ["Iniciantes", "1 hora"], ["Aula experimental", "Primeira aula"]],
   luta: [["Muay thai", "1 hora · adulto"], ["Jiu-jitsu", "1h30 · adulto"], ["Kids", "50 min · 6 a 12 anos"], ["Aula experimental", "Primeira aula"]],
+  escola: [["Turma da manhã", "1 hora · iniciante"], ["Turma da tarde", "1 hora · intermediário"], ["Turma da noite", "1 hora · adulto"], ["Aula experimental", "Primeira aula"]],
   academia: [["Funcional", "50 min"], ["Spinning", "45 min"], ["Musculação", "Livre, com professor"], ["Aula experimental", "Primeira aula"]],
 };
-const MENSALIDADE: Partial<Record<RamoId, number>> = { pilates: 260, yoga: 180, danca: 150, natacao: 190, crossfit: 220, luta: 160, academia: 110 };
+const MENSALIDADE: Partial<Record<RamoId, number>> = { pilates: 260, yoga: 180, danca: 150, natacao: 190, crossfit: 220, luta: 160, academia: 110, escola: 200 };
 const PROFESSORES: Pessoa[] = [["Prof. Ana", "Turmas da manhã"], ["Prof. Bruno", "Turmas da noite"], ["Prof. Carla", "Iniciantes"]];
 
 function conteudo(lead: Lead) {
@@ -302,6 +305,7 @@ function conteudo(lead: Lead) {
     salao: ["Beleza com", "hora marcada."],
     pet: ["Banho e tosa", "com hora marcada."],
     lavajato: ["Carro limpo,", "sem fila na porta."],
+    saude: ["Sua consulta,", "com hora marcada."],
   };
   return {
     sis, t, foto, selo,

@@ -48,6 +48,38 @@ export interface Lead {
   maps?: string;
   /** De onde veio a loja (Google Maps, Instagram…). */
   fonte?: string;
+  /**
+   * Conferência do número na página pública do WhatsApp Business: `nome` é o nome da conta ("" quando
+   * o número não tem WhatsApp Business) e `confere` diz se esse nome bate com o da loja.
+   */
+  zap?: { nome: string; confere: boolean; em: string };
+}
+
+/* Conferência do WhatsApp ---------------------------------------------------------------------- */
+
+export type SituacaoZap = "conferido" | "outroNome" | "semBusiness";
+
+export function situacaoZap(lead: Lead): SituacaoZap | null {
+  if (!lead.zap) return null;
+  if (!lead.zap.nome) return "semBusiness";
+  return lead.zap.confere ? "conferido" : "outroNome";
+}
+
+/** Na fila, número conferido vem antes; número com nome de outra conta vai pro fim. */
+const PESO_ZAP: Record<SituacaoZap | "naoConferido", number> = {
+  conferido: 0,
+  naoConferido: 1,
+  semBusiness: 2,
+  outroNome: 3,
+};
+export const pesoZap = (lead: Lead) => PESO_ZAP[situacaoZap(lead) ?? "naoConferido"];
+
+/** Valida a conferência vinda de fora (lote da pesquisa). */
+export function lerZap(valor: unknown): Lead["zap"] | null {
+  if (!valor || typeof valor !== "object") return null;
+  const z = valor as Record<string, unknown>;
+  if (typeof z.nome !== "string" || typeof z.confere !== "boolean" || typeof z.em !== "string") return null;
+  return { nome: z.nome, confere: z.confere, em: z.em };
 }
 
 export const STATUS: Record<
@@ -262,6 +294,11 @@ export type RamoId =
   | "pet"
   | "oficina"
   | "dentista"
+  | "saude"
+  | "escola"
+  | "escritorio"
+  | "servicos"
+  | "festa"
   | "geral";
 
 export interface Ramo {
@@ -364,6 +401,24 @@ export const RAMOS: Ramo[] = [
     ondePlaca: " depois da aula",
   },
   {
+    id: "escola",
+    nome: "Escola e cursos",
+    opcao: "Escola e cursos (idiomas, música, autoescola)",
+    tipo: /escola|curso|idioma|ingl[eê]s|aulas? particular|refor[cç]o escolar|creche|jardim de inf|m[uú]sica|educa[cç][aã]o/i,
+    nomeLoja: /\bescola|\bcol[eé]gio|\bcursos?\b|\bidiomas?|\bingl[eê]s|\benglish|\bcreche|\bm[uú]sica/i,
+    noSite: "os cursos, os horários das turmas e um botão pra fazer a matrícula pelo WhatsApp",
+    ondePlaca: " depois da aula",
+  },
+  {
+    id: "festa",
+    nome: "Festas e eventos",
+    opcao: "Festas, eventos e fotografia",
+    tipo: /festa|evento|buffet|cerimon|fot[oó]graf|decora[cç][aã]o|entretenimento|\bdj\b/i,
+    nomeLoja: /\bfestas?\b|\beventos?\b|\bbuffet|\bfotografia|\bdecora/i,
+    noSite: "as fotos das festas, os pacotes e um botão pra pedir orçamento pelo WhatsApp",
+    ondePlaca: " no fim da festa",
+  },
+  {
     id: "lavajato",
     nome: "Lava-jato",
     opcao: "Lava-jato e estética automotiva",
@@ -397,7 +452,7 @@ export const RAMOS: Ramo[] = [
     nome: "Clínica de fisioterapia",
     tipo: /fisiot|quiropr|osteop|reabilita/i,
     nomeLoja: /\bfisio/i,
-    certeza: { padrao: /\bfisio/i, corrige: ["salao", "estetica", "massagem", "academia", "geral"] },
+    certeza: { padrao: /\bfisio/i, corrige: ["salao", "estetica", "massagem", "academia", "saude", "geral"] },
     noSite: "os tratamentos, os horários e um botão pra agendar avaliação pelo WhatsApp",
     ondePlaca: " depois da sessão",
   },
@@ -453,7 +508,7 @@ export const RAMOS: Ramo[] = [
     id: "hamburgueria",
     nome: "Lanchonete",
     opcao: "Lanchonete e hamburgueria",
-    tipo: /hamb|burg|lanch|hot ?dog|pastel|salgad/i,
+    tipo: /hamb|burg|lanch|hot ?dog|pastel|salgad|pipoca/i,
     nomeLoja: /hamb[uú]rg|\bburg|\blanch|\bsmash/i,
     noSite: CARDAPIO,
     ondePlaca: " enquanto espera o pedido",
@@ -470,7 +525,7 @@ export const RAMOS: Ramo[] = [
   {
     id: "restaurante",
     nome: "Restaurante",
-    tipo: /restaur|churras|grill|marmit|gastronom|steak|self.?service/i,
+    tipo: /restaur|churras|grill|marmit|gastronom|steak|self.?service|\bbar\b|\bbares\b|boteco|petisc|quiosque|kiosque|crep|esfi[hr]|catering|frango|comida|\bdelivery\b/i,
     nomeLoja: /\brestaurante|\bchurrasc|\bgrill\b|\bmarmit|\bgastronomia|\bsteak/i,
     noSite: CARDAPIO,
     ondePlaca: " enquanto espera o pedido",
@@ -479,15 +534,15 @@ export const RAMOS: Ramo[] = [
     id: "pet",
     nome: "Pet shop",
     opcao: "Pet shop e veterinária",
-    tipo: /\bpet|veterin|ra[cç][oõ]es|agropecu/i,
-    nomeLoja: /\bpet\b|\bpetshop|\bveterin|\bra[cç][oõ]es/i,
+    tipo: /\bpet|veterin|ra[cç](?:[oõ]es|[aã]o)|agropecu|pecu[aá]ri|agr[ií]col|criador|cria[cç][aã]o de/i,
+    nomeLoja: /\bpet\b|\bpetshop|\bveterin|\bra[cç](?:[oõ]es|[aã]o)/i,
     noSite: "os serviços, os horários e um botão pra agendar pelo WhatsApp",
     ondePlaca: " quando busca o bichinho",
   },
   {
     id: "oficina",
     nome: "Oficina mecânica",
-    tipo: /oficina|mec[aâ]nic|auto|diesel|motor|lanterna|funilaria|radiador|pneu|borrach|moto|lava.?jato/i,
+    tipo: /oficina|mec[aâ]nic|auto|diesel|motor|lanterna|funilaria|radiador|pneu|borrach|moto|lava.?jato|reboque|guincho|som (para|pra) carro|som automotivo|bicicleta|\bbikes?\b/i,
     nomeLoja: /\boficina|\bmec[aâ]nica|\bauto\b|\bautomotiv|\bdiesel|\bmotos?\b|\bpneus?\b|lava.?jato|lanternagem/i,
     noSite: "os serviços, o horário, o mapa e um botão pra pedir orçamento pelo WhatsApp",
     ondePlaca: " na hora de buscar o carro",
@@ -501,10 +556,28 @@ export const RAMOS: Ramo[] = [
     ondePlaca: " na recepção",
   },
   {
+    id: "saude",
+    nome: "Consultório",
+    opcao: "Consultório (psicólogo, nutricionista, médico)",
+    tipo: /psic|nutri|terapeut|terapia|m[eé]dic|cl[ií]nica|consult[oó]rio|psiquiat|psican|fonoaud|oftalm|ginec|pediatr|cardiol|ortoped|pod[oó]log|laborat|diagn[oó]stico|sa[uú]de|acupunt/i,
+    nomeLoja: /\bpsic[oó]log|\bnutri|\bconsult[oó]rio|\bcl[ií]nica\b|\bterapia|\bterapeut/i,
+    noSite: "as especialidades, os horários e um botão pra marcar consulta pelo WhatsApp",
+    ondePlaca: " depois da consulta",
+  },
+  {
+    id: "escritorio",
+    nome: "Escritório",
+    opcao: "Escritório (contabilidade, advocacia, imóveis)",
+    tipo: /contab|contador|advoga|advocacia|jur[ií]dic|imobili|im[oó]ve|corretor|despachante|seguro|arquitet|engenhar|consultor|certificad/i,
+    nomeLoja: /\bcontab|\badvoga|\badvocacia|\bim[oó]veis|\bimobili|\bcorretor|\bdespachante|\bseguros/i,
+    noSite: "os serviços, quem atende e um botão pra marcar uma conversa pelo WhatsApp",
+    ondePlaca: " depois do atendimento",
+  },
+  {
     id: "moda",
     nome: "Loja de roupas",
     opcao: "Roupas, calçados e acessórios",
-    tipo: /roupa|\bmoda\b|vestu[aá]rio|boutique|cal[cç]ados?\b|sapat|lingerie|\bnoivas?\b|bijuter|acess[oó]rios femininos|loja infantil|moda infantil|confec[cç]/i,
+    tipo: /roupa|\bmoda\b|vestu[aá]rio|boutique|cal[cç]ados?\b|sapat|lingerie|\bnoivas?\b|bijuter|acess[oó]rios femininos|loja infantil|moda infantil|confec[cç]|joalh|\bjoias?\b|rel[oó]gio|relojoar|tecido|brech[oó]|bazar|artigos esportivos|costur|vestimenta|\bbolsas?\b/i,
     nomeLoja: /\bmodas?\b|\bboutique|\bcal[cç]ados|\bconfec[cç]/i,
     noSite: "as novidades com foto, os tamanhos e um botão que já abre o WhatsApp pra reservar a peça",
     ondePlaca: " no caixa",
@@ -512,7 +585,7 @@ export const RAMOS: Ramo[] = [
   {
     id: "papelaria",
     nome: "Papelaria",
-    tipo: /papelar|livrar|armarinho/i,
+    tipo: /papelar|livrar|armarinho|gr[aá]fic|c[oó]pias?\b|impress|presente|personalizad/i,
     nomeLoja: /\bpapelaria|\bpapel\b|\blivraria/i,
     noSite: "os produtos, a lista de material escolar e um botão pra pedir pelo WhatsApp",
     ondePlaca: " no caixa",
@@ -530,16 +603,25 @@ export const RAMOS: Ramo[] = [
     id: "construcao",
     nome: "Material de construção",
     opcao: "Construção, tintas e vidraçaria",
-    tipo: /constru|\btintas?\b|madeireir|ferragen|ferrament|el[eé]tric[oa] e hidr|hidr[aá]ulic|vidra[cç]|marmor|serralher|home ?center/i,
+    tipo: /constru|\btintas?\b|madeireir|ferragen|ferrament|el[eé]tric[oa] e hidr|hidr[aá]ulic|vidra[cç]|marmor|serralher|serralhar|home ?center|gesso|drywall|marcen|carpint|moveleir|serrari|reforma|empreiteir/i,
     nomeLoja: /\bconstru|\btintas\b|\bmadeireira|\bferragens|\bvidra[cç]aria|\bmateriais/i,
     noSite: "os produtos, o horário, o mapa e um botão pra pedir orçamento pelo WhatsApp",
+    ondePlaca: " no balcão",
+  },
+  {
+    id: "servicos",
+    nome: "Assistência e serviços",
+    opcao: "Assistência técnica e serviços (celular, elétrica, ar)",
+    tipo: /celular|dispositivos m[oó]veis|eletr[oô]nic|inform[aá]tic|assist[eê]ncia t[eé]cnica|conserto|eletricista|chaveir|chaves|ar condicionado|climatiza|refrigera|desentup|dedetiz|limpeza|televis|faz.tudo|pedreiro|jardineir|energia solar|piscina|mudan[cç]|transporte|equipamentos el[eé]tricos|internet|saneamento/i,
+    nomeLoja: /\bcelular|\bcell\b|\binform[aá]tica|\bassist[eê]ncia|\beletricista|\bchaveiro|\brefrigera|\bclimatiza|\bdesentup|\bdedetiz/i,
+    noSite: "os serviços com foto, a região que atende e um botão pra pedir orçamento pelo WhatsApp",
     ondePlaca: " no balcão",
   },
   {
     id: "mercado",
     nome: "Mercado",
     opcao: "Mercado, mercearia e hortifrúti",
-    tipo: /mercad|mercearia|hortifr|sacol[aã]o|atacad|a[cç]ougue|frutar|emp[oó]rio/i,
+    tipo: /mercad|mercearia|hortifr|sacol[aã]o|atacad|a[cç]ougue|frutar|emp[oó]rio|bebida|cerveja|distribuid|dep[oó]sito|armaz[eé]m|\bg[aá]s\b|butano|peixar|produtos naturais|aliment|queijo|congelad|descart[aá]v|conveni[eê]ncia|fazenda|\baves\b/i,
     nomeLoja: /\bmercad|\bmercearia|\bhortifr|\bsacol[aã]o|\ba[cç]ougue/i,
     noSite: "as ofertas da semana, o horário e um botão pra fazer o pedido pelo WhatsApp",
     ondePlaca: " no caixa",
@@ -547,7 +629,7 @@ export const RAMOS: Ramo[] = [
   {
     id: "farmacia",
     nome: "Farmácia",
-    tipo: /farm[aá]c|drogaria|manipula/i,
+    tipo: /farm[aá]c|drogaria|manipula|suplement|vitamin|fitoter|perfum|cosm[eé]tic/i,
     nomeLoja: /\bfarma|\bdrogaria/i,
     noSite: "o horário, a entrega e um botão pra pedir pelo WhatsApp",
     ondePlaca: " no balcão",
@@ -694,7 +776,8 @@ export const SISTEMAS: Record<SistemaId, { nome: string; um: string; botao: stri
 // Ramos em que um sistema faz sentido; o resto fica com site e placa.
 const SISTEMA_DO_RAMO: Partial<Record<RamoId, SistemaId>> = {
   barbearia: "agenda", salao: "agenda", estetica: "agenda", massagem: "agenda", pet: "agenda", lavajato: "agenda",
-  pilates: "alunos", yoga: "alunos", danca: "alunos", natacao: "alunos", crossfit: "alunos", luta: "alunos", academia: "alunos",
+  saude: "agenda",
+  pilates: "alunos", yoga: "alunos", escola: "alunos", danca: "alunos", natacao: "alunos", crossfit: "alunos", luta: "alunos", academia: "alunos",
 };
 
 // Onde o texto padrão não combina com o ramo.
@@ -706,6 +789,11 @@ const SISTEMA_NO_RAMO: Partial<Record<RamoId, { quem?: string; frase?: string; g
     ganho: "Sem fila na porta e sem ficar respondendo mensagem.",
   },
   massagem: { quem: "espaço de massagem" },
+  saude: {
+    quem: "consultório",
+    frase: "o paciente escolhe o dia e o horário da consulta pelo celular, e já fica marcado na sua agenda",
+    ganho: "Você não precisa parar a consulta pra responder mensagem.",
+  },
 };
 
 export const sistemaDe = (lead: Lead): SistemaId | null => SISTEMA_DO_RAMO[ramoDe(lead).id] ?? null;
@@ -928,6 +1016,7 @@ export function lerImportacao(texto: string, existentes: Iterable<string>): Lead
       ...(x.endereco ? { endereco: String(x.endereco) } : {}),
       ...(x.maps ? { maps: String(x.maps) } : {}),
       ...(x.fonte ? { fonte: String(x.fonte) } : {}),
+      ...(lerZap(x.zap) ? { zap: lerZap(x.zap)! } : {}),
       status: "novo",
       criado: agora,
     });

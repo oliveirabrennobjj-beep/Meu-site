@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Mensagem } from "./assistente";
-import { TEXTOS_PADRAO, lerImportacao, type ChaveTexto, type Lead, type Textos } from "./leads";
+import { TEXTOS_PADRAO, lerImportacao, lerZap, type ChaveTexto, type Lead, type Textos } from "./leads";
 
 interface DocSnap {
   id: string;
@@ -193,7 +193,7 @@ export function usePainel(avisar: (texto: string) => void) {
     if (fase !== "pronto" || !doServidor || !db || pesquisaFeita.current) return;
     pesquisaFeita.current = true;
     (async () => {
-      let arquivo: { lote?: unknown; leads?: unknown };
+      let arquivo: { lote?: unknown; leads?: unknown; conferencia?: unknown };
       try {
         const resposta = await fetch("pesquisa/lote.json", { cache: "no-store" });
         if (!resposta.ok) return;
@@ -225,13 +225,32 @@ export function usePainel(avisar: (texto: string) => void) {
         JSON.stringify(arquivo.leads),
         leads.map((l) => l.whatsapp),
       );
+      // Conferência do WhatsApp das lojas que já estavam no painel ({whatsapp: zap}).
+      const conferencia =
+        arquivo.conferencia && typeof arquivo.conferencia === "object"
+          ? (arquivo.conferencia as Record<string, unknown>)
+          : {};
+      const conferir = leads.flatMap((l) => {
+        const zap = lerZap(conferencia[l.whatsapp]);
+        return zap && zap.em !== l.zap?.em ? [{ id: l.id, zap }] : [];
+      });
       try {
         for (let i = 0; i < novos.length; i += 20) {
           await Promise.all(
             novos.slice(i, i + 20).map((lead) => db.collection("leads").doc(`w${lead.whatsapp}`).set(lead)),
           );
         }
-        await db.doc("config/pesquisa").set({ lote, em: new Date().toISOString(), entraram: novos.length });
+        for (let i = 0; i < conferir.length; i += 20) {
+          await Promise.all(
+            conferir.slice(i, i + 20).map(({ id, zap }) => db.collection("leads").doc(id).update({ zap })),
+          );
+        }
+        await db.doc("config/pesquisa").set({
+          lote,
+          em: new Date().toISOString(),
+          entraram: novos.length,
+          conferidas: conferir.length,
+        });
         if (novos.length) avisar(`${novos.length} empresas novas da pesquisa entraram no painel`);
       } catch (e) {
         avisar(`A pesquisa nova não entrou toda: ${motivo(e)}`);
