@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Mensagem } from "./assistente";
-import { TEXTOS_PADRAO, lerFoto, lerImportacao, lerZap, type ChaveTexto, type Lead, type Textos } from "./leads";
+import { TEXTOS_PADRAO, lerDono, lerFoto, lerImportacao, lerZap, type ChaveTexto, type Lead, type Textos } from "./leads";
 
 interface DocSnap {
   id: string;
@@ -193,7 +193,7 @@ export function usePainel(avisar: (texto: string) => void) {
     if (fase !== "pronto" || !doServidor || !db || pesquisaFeita.current) return;
     pesquisaFeita.current = true;
     (async () => {
-      let arquivo: { lote?: unknown; leads?: unknown; conferencia?: unknown; fotos?: unknown };
+      let arquivo: { lote?: unknown; leads?: unknown; conferencia?: unknown; fotos?: unknown; donos?: unknown };
       try {
         const resposta = await fetch("pesquisa/lote.json", { cache: "no-store" });
         if (!resposta.ok) return;
@@ -232,12 +232,16 @@ export function usePainel(avisar: (texto: string) => void) {
           : {};
       // Foto real da ficha do Maps das lojas que já estavam no painel ({whatsapp: url}).
       const fotos = arquivo.fotos && typeof arquivo.fotos === "object" ? (arquivo.fotos as Record<string, unknown>) : {};
+      // Contato do dono achado no cadastro do CNPJ ({whatsapp da loja: {nome, whatsapp, mesmo}}).
+      const donos = arquivo.donos && typeof arquivo.donos === "object" ? (arquivo.donos as Record<string, unknown>) : {};
       const conferir = leads.flatMap((l) => {
         const zap = lerZap(conferencia[l.whatsapp]);
         const foto = lerFoto(fotos[l.whatsapp]);
+        const dono = lerDono(donos[l.whatsapp]);
         const mudanca: Partial<Lead> = {
           ...(zap && zap.em !== l.zap?.em ? { zap } : {}),
           ...(foto && foto !== l.foto ? { foto } : {}),
+          ...(dono && dono.em !== l.dono?.em ? { dono } : {}),
         };
         return Object.keys(mudanca).length ? [{ id: l.id, mudanca }] : [];
       });

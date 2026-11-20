@@ -116,6 +116,9 @@ for (const [i, nome, tipo] of [[3, MASSO, "Salão de beleza"], [4, CT, "Academia
     nota: 5,
     avaliacoes: 999990 + i,
     status: "novo",
+    // Contato do dono pelo cadastro do CNPJ: celular dele (aquário) e WhatsApp da loja que já é dele (dentista).
+    ...(nome === AQUARIO ? { dono: { nome: "Ana", whatsapp: "5522988887777", em: "2026-11-20T00:00:00.000Z" } } : {}),
+    ...(nome === DENTISTA ? { dono: { nome: "Rui", mesmo: true, em: "2026-11-20T00:00:00.000Z" } } : {}),
   });
 }
 
@@ -434,6 +437,26 @@ try {
     await p.getByRole("dialog").getByRole("button", { name: "Fechar ficha" }).click();
   }
   await p.evaluate(() => (window.__escritas.length = 0));
+
+  // Dono pelo CNPJ: mensagem pro celular dele chamando pelo nome; a da loja fica como segunda opção.
+  {
+    await p.getByRole("button", { name: AQUARIO, exact: true }).click();
+    const ficha = p.getByRole("dialog");
+    await ficha.getByText("Celular do dono, Ana, no cadastro do CNPJ").waitFor();
+    const praDono = await ficha.getByRole("link", { name: "Enviar pro dono (Ana)" }).getAttribute("href");
+    assert.match(praDono, /^https:\/\/wa\.me\/5522988887777\?text=/);
+    assert.match(decodeURIComponent(praDono), /text=Oi, Ana, /);
+    const praLoja = decodeURIComponent(await ficha.getByRole("link", { name: "Mandar pra loja" }).getAttribute("href"));
+    assert.match(praLoja, /^https:\/\/wa\.me\/5522900000006\?text=Oi, (?!Ana)/);
+    await p.screenshot({ path: path.join(saida, "celular-dono-cnpj.png") });
+    await ficha.getByRole("button", { name: "Fechar ficha" }).click();
+
+    await p.getByRole("button", { name: DENTISTA, exact: true }).click();
+    await ficha.getByText("Esse WhatsApp é o do dono (Rui) no cadastro do CNPJ.").waitFor();
+    const mesmo = decodeURIComponent(await ficha.getByRole("link", { name: "Enviar no WhatsApp" }).getAttribute("href"));
+    assert.match(mesmo, /^https:\/\/wa\.me\/5522900000005\?text=Oi, Rui, /);
+    await ficha.getByRole("button", { name: "Fechar ficha" }).click();
+  }
 
   await p.getByRole("radio", { name: "Só Casimiro de Abreu" }).click();
   assert.equal(await p.locator("[data-tabelas] section[aria-labelledby]").count(), 1);

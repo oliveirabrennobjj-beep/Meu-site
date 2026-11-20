@@ -6,6 +6,7 @@ import {
   CircleHelp,
   TriangleAlert,
   Copy,
+  UserRound,
   ExternalLink,
   Handshake,
   Instagram,
@@ -41,6 +42,7 @@ import {
   chaveTexto,
   cidadeDe,
   dataEnvio,
+  donoConhecido,
   ehCasimiro,
   enderecoCurto,
   podeVisitar,
@@ -60,6 +62,7 @@ import {
   ofertaInicial,
   proximaOferta,
   paginaDe,
+  paraODono,
   statusDe,
   textoGostou,
   textoMensagem,
@@ -71,6 +74,26 @@ import {
   type Status,
   type Textos,
 } from "./leads";
+
+/** De onde veio o contato do dono: cadastro público do CNPJ (ver `dono` em leads.ts). */
+function DonoDoCnpj({ lead }: { lead: Lead }) {
+  const dono = lead.dono;
+  if (!dono) return null;
+  const numero = dono.whatsapp ? dono.whatsapp.slice(2).replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3") : "";
+  return (
+    <p className="flex items-start gap-2 rounded-[12px] border border-[color:var(--bjork-border)] bg-[var(--bjork-accent-soft)] p-3 text-[13px] leading-snug">
+      <UserRound aria-hidden="true" className="mt-px size-4 shrink-0" />
+      <span>
+        {dono.whatsapp
+          ? `Celular do dono${dono.nome ? `, ${dono.nome},` : ""} no cadastro do CNPJ: ${numero}.`
+          : `Esse WhatsApp é o do dono${dono.nome ? ` (${dono.nome})` : ""} no cadastro do CNPJ.`}
+        <span className="block text-[12px] text-[color:var(--bjork-text-medium)]">
+          {dono.whatsapp ? "Pode estar desatualizado: se não responder, mande pra loja." : "Pode falar direto com ele por aqui."}
+        </span>
+      </span>
+    </p>
+  );
+}
 
 /** O que a página pública do WhatsApp Business disse sobre o número (ver `zap` em leads.ts). */
 function ConferenciaZap({ lead }: { lead: Lead }) {
@@ -241,11 +264,15 @@ function Conteudo({
   const chave = chaveTexto(lead, oferta);
   const continuacao =
     chave === "depoisPlaca" || chave === "depoisSite" || chave === "depoisDono" || chave === "depoisAgenda";
-  const mensagem = textoMensagem(textos, lead, oferta);
+  const textoLoja = textoMensagem(textos, lead, oferta);
+  // Com o dono conhecido (celular dele ou WhatsApp da loja que é dele), a mensagem já chama pelo nome.
+  const comDono = donoConhecido(lead);
+  const celularDono = lead.dono?.whatsapp ?? "";
+  const mensagem = comDono ? paraODono(textoLoja, lead) : textoLoja;
   const opcoes: SegmentOption<Oferta>[] = [
     // Fica sempre na lista: se o WhatsApp não abrir, dá para voltar nela e mandar de novo.
     ambasEnviada ? { id: "ambas", label: "AS DUAS ✓", long: "As duas: mensagem já enviada" } : AS_DUAS,
-    ...(["placa", "site", "dono"] as const).map(opcao),
+    ...(["placa", "site", "dono"] as const).filter((id) => id !== "dono" || !comDono || dataEnvio(lead, "dono")).map(opcao),
     ...(agendaOk ? [opcao("agenda")] : []),
   ];
   // Loja de distrito ou de fora: só WhatsApp, com site ou sistema.
@@ -270,7 +297,7 @@ function Conteudo({
     }
   };
 
-  const registrarContato = (canal: "whatsapp" | "pessoal") => {
+  const registrarContato = (canal: "whatsapp" | "pessoal", para?: "dono" | "loja") => {
     const agora = new Date().toISOString();
     const enviados: Partial<Record<Envio, string>> = {};
     for (const id of ENVIOS) {
@@ -286,6 +313,7 @@ function Conteudo({
       canal,
       enviados,
       ...(daqui ? { pediuVisita: true } : {}),
+      ...(para && celularDono ? { enviadoPara: para } : {}),
     });
     // Já deixa escolhida a próxima mensagem (a oferta que falta, depois o pedido para falar com o dono).
     setOferta(proximaOferta(lead, oferta));
@@ -537,17 +565,30 @@ function Conteudo({
                 {oferta === "ambas" ? "Mensagem das duas ofertas enviada" : OFERTA[oferta].feito} {quando(enviada)}.
               </p>
             )}
+            {comDono && <DonoDoCnpj lead={lead} />}
+            {celularDono && (
+              <a
+                href={linkWhatsApp(lead, mensagem, celularDono)}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => window.setTimeout(() => registrarContato("whatsapp", "dono"), 0)}
+                className={buttonClass(enviada ? "secondary" : "primary", "lg", "w-full")}
+              >
+                <Send aria-hidden="true" />
+                {enviada ? "Enviar de novo pro dono" : `Enviar pro dono${lead.dono?.nome ? ` (${lead.dono.nome})` : ""}`}
+              </a>
+            )}
             <a
-              href={linkWhatsApp(lead, mensagem)}
+              href={linkWhatsApp(lead, celularDono ? textoLoja : mensagem)}
               target="_blank"
               rel="noopener noreferrer"
               // Registrar troca a mensagem da tela, e com ela o endereço deste link. Fica para depois
               // do toque: assim o WhatsApp abre com o texto que o Brenno viu, não com o próximo.
-              onClick={() => window.setTimeout(() => registrarContato("whatsapp"), 0)}
-              className={buttonClass(enviada ? "secondary" : "primary", "lg", "w-full")}
+              onClick={() => window.setTimeout(() => registrarContato("whatsapp", "loja"), 0)}
+              className={buttonClass(enviada || celularDono ? "secondary" : "primary", "lg", "w-full")}
             >
               <Send aria-hidden="true" />
-              {enviada ? "Enviar de novo" : "Enviar no WhatsApp"}
+              {celularDono ? "Mandar pra loja" : enviada ? "Enviar de novo" : "Enviar no WhatsApp"}
             </a>
             <div className="flex flex-wrap gap-2">
               {daqui && !enviada && (

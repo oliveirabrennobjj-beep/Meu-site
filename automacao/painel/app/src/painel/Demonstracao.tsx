@@ -62,7 +62,7 @@ import {
   Zap,
   type LucideIcon,
 } from "lucide-react";
-import { RAMOS_ESCOLHA, SUBNICHOS, cidadeDe, ramoDe, subnichoDe, type Lead, type RamoId } from "./leads";
+import { RAMOS_ESCOLHA, SUBNICHOS, cidadeDe, ramoDe, subnichoDe, type Lead, type RamoId, numeroConversa } from "./leads";
 import { SUBTEMAS } from "./subtemas";
 import { ESCRITA, PaginaPremium, familiaDe } from "./SitePremium";
 
@@ -562,7 +562,7 @@ export function Demonstracao({
     return () => window.clearTimeout(timer);
   }, [aviso]);
 
-  const linkConversa = `https://wa.me/${lead.whatsapp.replace(/\D/g, "")}?text=${encodeURIComponent(mensagem)}`;
+  const linkConversa = `https://wa.me/${numeroConversa(lead).replace(/\D/g, "")}?text=${encodeURIComponent(mensagem)}`;
 
   /** Desenha a página inteira numa foto JPG (sem o botão flutuante). */
   async function gerarFoto() {

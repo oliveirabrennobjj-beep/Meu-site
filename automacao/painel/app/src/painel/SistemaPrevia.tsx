@@ -4,7 +4,7 @@ import { toJpeg } from "html-to-image";
 import { CalendarCheck, Check, Clock, Laptop, Loader2, MessageCircle, Send, Smartphone, Wallet, X } from "lucide-react";
 import { useElementWidth } from "@/components/ui/app-dashboard-shell-utils/app-block-kit";
 import { FONTES_NA_TELA, TEXTO, arquivo, compartilharFoto, cssDasFontes, temaDe } from "./Demonstracao";
-import { cidadeDe, ramoDe, subnichoDe, textosSistema, type Lead, type RamoId } from "./leads";
+import { cidadeDe, ramoDe, subnichoDe, textosSistema, type Lead, type RamoId, numeroConversa } from "./leads";
 import { SUB_SISTEMA } from "./subtemas";
 
 // Como ficaria o sistema da loja (horário marcado ou controle de alunos) num notebook e num celular.
@@ -60,7 +60,7 @@ export function SistemaPrevia({ lead, mensagem, onFechar }: { lead: Lead; mensag
   }
 
   const titulo: CSSProperties = { fontFamily: t.fonte, textTransform: t.maiusculo ? "uppercase" : undefined };
-  const linkConversa = `https://wa.me/${lead.whatsapp.replace(/\D/g, "")}?text=${encodeURIComponent(mensagem)}`;
+  const linkConversa = `https://wa.me/${numeroConversa(lead).replace(/\D/g, "")}?text=${encodeURIComponent(mensagem)}`;
   const agenda = sis.id === "agenda";
   const beneficios: [Icone: typeof Smartphone, titulo: string, linha: string][] = agenda
     ? [

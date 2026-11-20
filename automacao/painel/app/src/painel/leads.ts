@@ -57,6 +57,13 @@ export interface Lead {
    * o número não tem WhatsApp Business) e `confere` diz se esse nome bate com o da loja.
    */
   zap?: { nome: string; confere: boolean; em: string };
+  /**
+   * Dono achado no cadastro público do CNPJ (dados abertos da Receita): primeiro nome (só de empresário
+   * individual/MEI), celular do cadastro quando é outro número e `mesmo` quando o WhatsApp da loja já é o dele.
+   */
+  dono?: { nome?: string; whatsapp?: string; mesmo?: boolean; em: string };
+  /** Para quem foi a última mensagem quando a loja tem o celular do dono. */
+  enviadoPara?: "dono" | "loja";
 }
 
 /* Conferência do WhatsApp ---------------------------------------------------------------------- */
@@ -1019,7 +1026,9 @@ export function proximaOferta(lead: Lead, acabou: Oferta | null): Oferta {
     Boolean(dataEnvio(lead, envio)) || acabou === envio || (acabou === "ambas" && envio !== "dono");
   const sugerido = produtoSugerido(lead);
   const outro: Produto = sugerido === "placa" ? "site" : "placa";
-  return ([sugerido, outro, "dono"] as const).find((envio) => !mandou(envio)) ?? acabou ?? sugerido;
+  // Com o contato do dono em mãos, não precisa pedir pra falar com ele.
+  const ordem: Envio[] = donoConhecido(lead) ? [sugerido, outro] : [sugerido, outro, "dono"];
+  return ordem.find((envio) => !mandou(envio)) ?? acabou ?? sugerido;
 }
 
 const ABERTURA: Record<Envio, Exclude<ChaveTexto, "gostou">> = {
@@ -1080,8 +1089,8 @@ export function textoMensagem(textos: Textos, lead: Lead, oferta: Oferta, agora 
   return preencher(textos, chaveTexto(lead, oferta), lead, agora);
 }
 
-export function linkWhatsApp(lead: Lead, texto: string) {
-  const numero = String(lead.whatsapp ?? "").replace(/\D/g, "");
+export function linkWhatsApp(lead: Lead, texto: string, para: string = lead.whatsapp) {
+  const numero = String(para ?? "").replace(/\D/g, "");
   return `https://wa.me/${numero}?text=${encodeURIComponent(texto)}`;
 }
 
@@ -1172,6 +1181,35 @@ export type LeadNovo = Omit<Lead, "id"> & { criado: string };
 export const lerFoto = (v: unknown) =>
   typeof v === "string" && /^https:\/\/lh\d\.googleusercontent\.com\/[\w/-]+$/.test(v) ? v : null;
 
+/** Só aceita celular brasileiro (55 + DDD + 9 dígitos) e primeiro nome com letras. */
+export function lerDono(v: unknown): Lead["dono"] | null {
+  if (!v || typeof v !== "object") return null;
+  const x = v as Record<string, unknown>;
+  const whatsapp = String(x.whatsapp ?? "").replace(/\D/g, "");
+  const nomeBruto = String(x.nome ?? "").trim();
+  const nome = /^\p{L}{2,20}$/u.test(nomeBruto) ? nomeBruto.charAt(0).toUpperCase() + nomeBruto.slice(1).toLowerCase() : "";
+  const dono: NonNullable<Lead["dono"]> = {
+    ...(nome ? { nome } : {}),
+    ...(/^55\d{2}9\d{8}$/.test(whatsapp) ? { whatsapp } : {}),
+    ...(x.mesmo === true ? { mesmo: true } : {}),
+    em: typeof x.em === "string" ? x.em : new Date().toISOString(),
+  };
+  return dono.whatsapp || dono.mesmo ? dono : null;
+}
+
+/** Já se sabe como falar com o dono: o celular dele ou o WhatsApp da loja, que é o dele. */
+export const donoConhecido = (lead: Lead) => Boolean(lead.dono?.whatsapp || lead.dono?.mesmo);
+
+/** Número da conversa: o do dono quando a última mensagem foi pra ele. */
+export const numeroConversa = (lead: Lead) =>
+  (lead.enviadoPara === "dono" && lead.dono?.whatsapp) || lead.whatsapp;
+
+/** Mensagem falando com o dono pelo nome: "Oi, Ana, boa tarde…". */
+export function paraODono(texto: string, lead: Lead) {
+  const nome = lead.dono?.nome;
+  return nome ? texto.replace(/^Oi, /, `Oi, ${nome}, `) : texto;
+}
+
 export function lerImportacao(texto: string, existentes: Iterable<string>): LeadNovo[] {
   let lista: unknown;
   try {
@@ -1205,6 +1243,7 @@ export function lerImportacao(texto: string, existentes: Iterable<string>): Lead
       ...(x.fonte ? { fonte: String(x.fonte) } : {}),
       ...(lerZap(x.zap) ? { zap: lerZap(x.zap)! } : {}),
       ...(lerFoto(x.foto) ? { foto: lerFoto(x.foto)! } : {}),
+      ...(lerDono(x.dono) ? { dono: lerDono(x.dono)! } : {}),
       status: "novo",
       criado: agora,
     });
