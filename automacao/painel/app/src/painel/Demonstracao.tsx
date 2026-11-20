@@ -65,7 +65,8 @@ import {
   Zap,
   type LucideIcon,
 } from "lucide-react";
-import { RAMOS_ESCOLHA, cidadeDe, fmtInt, ramoDe, type Lead, type RamoId } from "./leads";
+import { RAMOS_ESCOLHA, cidadeDe, fmtInt, ramoDe, subnichoDe, type Lead, type RamoId } from "./leads";
+import { SUBTEMAS } from "./subtemas";
 
 // Prévia de como ficaria o site da loja, no nível de um site pronto (referência: shots do
 // Pinterest que o Brenno mandou). Só usa o que é verdade (nome, ramo, cidade, nota do Google);
@@ -429,7 +430,13 @@ const TEMAS: Record<RamoId, Tema> = {
 },
 };
 
-export const temaDe = (lead: Lead) => TEMAS[ramoDe(lead).id];
+/** Tema do ramo; com sub-nicho, as fotos e os textos são os dele (cores e fonte continuam as do ramo). */
+export const temaDe = (lead: Lead): Tema => {
+  const base = TEMAS[ramoDe(lead).id];
+  const sub = subnichoDe(lead);
+  const extra = sub && SUBTEMAS[sub.id];
+  return extra ? { ...base, ...extra, foto: sub.id } : base;
+};
 
 const nota = (n: number) => n.toLocaleString("pt-BR", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 export const arquivo = (nome: string, tipo = "previa") =>
@@ -591,7 +598,8 @@ export function Demonstracao({
   const ramoDaLoja = ramoDe(lead);
   // O tipo do Google só aparece quando é do ramo que está na tela.
   const tipo = lead.tipo?.trim();
-  const ramo = tipo && (ramoDaLoja.id === "geral" || ramoDaLoja.tipo.test(tipo)) ? tipo : ramoDaLoja.nome;
+  const sub = subnichoDe(lead);
+  const ramo = sub?.nome ?? (tipo && (ramoDaLoja.id === "geral" || ramoDaLoja.tipo.test(tipo)) ? tipo : ramoDaLoja.nome);
   const temNota = typeof lead.nota === "number" && lead.nota > 0;
   const titulo: CSSProperties = { fontFamily: t.fonte, textTransform: t.maiusculo ? "uppercase" : undefined };
   const destaqueTitulo: CSSProperties = { ...titulo, color: t.destaque, fontStyle: t.italico ? "italic" : undefined };

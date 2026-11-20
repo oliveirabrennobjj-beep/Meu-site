@@ -413,7 +413,7 @@ export const RAMOS: Ramo[] = [
     id: "festa",
     nome: "Festas e eventos",
     opcao: "Festas, eventos e fotografia",
-    tipo: /festa|evento|buffet|cerimon|fot[oó]graf|decora[cç][aã]o|entretenimento|\bdj\b/i,
+    tipo: /festa|evento|buffet|cerimon|fot[oó]gr[aá]f|decora[cç][aã]o|entretenimento|\bdj\b/i,
     nomeLoja: /\bfestas?\b|\beventos?\b|\bbuffet|\bfotografia|\bdecora/i,
     noSite: "as fotos das festas, os pacotes e um botão pra pedir orçamento pelo WhatsApp",
     ondePlaca: " no fim da festa",
@@ -542,7 +542,7 @@ export const RAMOS: Ramo[] = [
   {
     id: "oficina",
     nome: "Oficina mecânica",
-    tipo: /oficina|mec[aâ]nic|auto|diesel|motor|lanterna|funilaria|radiador|pneu|borrach|moto|lava.?jato|reboque|guincho|som (para|pra) carro|som automotivo|bicicleta|\bbikes?\b/i,
+    tipo: /oficina(?! de (?:reparos?|conserto) de (?:celular|eletr))|mec[aâ]nic|auto(?!.?escola)|diesel|motor|lanterna|funilaria|radiador|pneu|borrach|moto|lava.?jato|reboque|guincho|som (para|pra) carro|som automotivo|bicicleta|\bbikes?\b/i,
     nomeLoja: /\boficina|\bmec[aâ]nica|\bauto\b|\bautomotiv|\bdiesel|\bmotos?\b|\bpneus?\b|lava.?jato|lanternagem/i,
     noSite: "os serviços, o horário, o mapa e um botão pra pedir orçamento pelo WhatsApp",
     ondePlaca: " na hora de buscar o carro",
@@ -658,18 +658,163 @@ export function ramoDe(lead: Pick<Lead, "nome" | "tipo" | "ramo">): Ramo {
   );
 }
 
+/* Sub-nicho ------------------------------------------------------------------------------------ */
+// Dentro de um ramo há negócios que não podem ter a mesma prévia: aquário não é banho e tosa, judô
+// não é muay thai, tatuagem não é salão de cabelo. O sub-nicho troca fotos, textos, serviços e, quando
+// precisa, tira ou troca o sistema. Ele é calculado na hora (nada muda no banco).
+
+export interface Subnicho {
+  id: string;
+  ramo: RamoId;
+  /** Nome curto que aparece na ficha. */
+  nome: string;
+  /** Reconhece pelo tipo do Google. */
+  tipo?: RegExp;
+  /** Reconhece pelo nome da loja (vale mais que o tipo: "Aquarismo… casa de ração" é aquário). */
+  nomeLoja?: RegExp;
+  quem?: string;
+  noSite?: string;
+  ondePlaca?: string;
+  /** `null`: este sub-nicho não tem sistema, mesmo que o ramo tenha. */
+  sistema?: SistemaId | null;
+  sistemaTexto?: { quem?: string; frase?: string; ganho?: string };
+}
+
+const PEDIDO_ZAP = "um botão que já abre o pedido no WhatsApp";
+const ORCAMENTO = "um botão pra pedir orçamento pelo WhatsApp";
+
+export const SUBNICHOS: Subnicho[] = [
+  // Pet
+  { id: "aquario", ramo: "pet", nome: "Aquarismo", tipo: /aqu[aá]rio|aquaris|peix/i, nomeLoja: /aqu[aá]rio|aquaris|\bpeix|\bfish\b|\breef\b/i,
+    quem: "loja de aquarismo", noSite: `os peixes e os aquários com foto, o que chegou na semana e ${PEDIDO_ZAP}`, ondePlaca: " no caixa", sistema: null },
+  { id: "veterinario", ramo: "pet", nome: "Veterinária", tipo: /veterin/i, nomeLoja: /\bvet\b|veterin/i,
+    quem: "clínica veterinária", noSite: "os atendimentos, os horários e um botão pra marcar a consulta pelo WhatsApp", ondePlaca: " na recepção",
+    sistemaTexto: { quem: "clínica veterinária", frase: "o tutor escolhe a consulta ou a vacina e o horário pelo celular, e já fica marcado na sua agenda", ganho: "Você não precisa parar o atendimento pra responder mensagem." } },
+  { id: "agro", ramo: "pet", nome: "Agropecuária", tipo: /agropecu|agr[ií]col|pecu[aá]ri|cooperativa|criador|cavalo|equin|haras|selaria/i, nomeLoja: /\bagro|agropecu|selaria|\bharas\b|\brural\b|\bfazenda|\bcampo\b/i,
+    quem: "agropecuária", noSite: `as rações, os produtos pro campo e ${PEDIDO_ZAP}`, ondePlaca: " no balcão", sistema: null },
+  { id: "racao", ramo: "pet", nome: "Loja de ração", tipo: /ra[cç](?:[oõ]es|[aã]o)|suprimentos para animais/i,
+    quem: "loja de ração", noSite: `as rações e os acessórios com foto e ${PEDIDO_ZAP}`, ondePlaca: " no caixa", sistema: null },
+  // Luta: cada modalidade com a foto dela
+  { id: "jiujitsu", ramo: "luta", nome: "Jiu-jitsu", tipo: /jiu|bjj|grappling/i, nomeLoja: /\bjiu|\bbjj\b|gracie|\bjj\b/i, quem: "academia de jiu-jitsu" },
+  { id: "muaythai", ramo: "luta", nome: "Muay thai", tipo: /muay|thai|kick ?box/i, nomeLoja: /\bmuay|\bthai\b|kick ?box/i, quem: "academia de muay thai" },
+  { id: "judo", ramo: "luta", nome: "Judô", tipo: /jud[oô]/i, nomeLoja: /\bjud[oô]\b/i, quem: "academia de judô" },
+  { id: "taekwondo", ramo: "luta", nome: "Taekwondo", tipo: /taekwon|tae kwon/i, nomeLoja: /taekwon|tae kwon/i, quem: "academia de taekwondo" },
+  { id: "karate", ramo: "luta", nome: "Karatê", tipo: /karat|kung ?fu|aikid/i, nomeLoja: /\bkarat|kung ?fu|aikid/i, quem: "academia de karatê" },
+  { id: "boxe", ramo: "luta", nome: "Boxe", tipo: /\bbox(e|ing)\b|pugil/i, nomeLoja: /\bbox(e|ing)\b/i, quem: "academia de boxe" },
+  { id: "capoeira", ramo: "luta", nome: "Capoeira", tipo: /capoeira/i, nomeLoja: /capoeira/i, quem: "grupo de capoeira" },
+  // Salão
+  { id: "tatuagem", ramo: "salao", nome: "Tatuagem", tipo: /tatu|tattoo|piercing/i, nomeLoja: /\btatu|tattoo|\bink\b|piercing/i,
+    quem: "estúdio de tatuagem", noSite: `os trabalhos com foto, os estilos e ${ORCAMENTO}`, ondePlaca: " depois da sessão",
+    sistemaTexto: { quem: "estúdio de tatuagem", frase: "o cliente escolhe o tamanho e o horário da sessão pelo celular, e já fica marcado na sua agenda", ganho: "Você não precisa parar a tatuagem pra responder mensagem." } },
+  { id: "unhas", ramo: "salao", nome: "Unhas", tipo: /manicure|pedicure|\bunhas?\b|nail|esmalt/i, nomeLoja: /manicure|\bunhas?\b|\bnails?\b|esmalt/i,
+    quem: "manicure", noSite: "os serviços com foto dos trabalhos, os horários e um botão pra marcar pelo WhatsApp",
+    sistemaTexto: { quem: "manicure", ganho: "Você não precisa parar a unha pra responder mensagem." } },
+  { id: "cilios", ramo: "salao", nome: "Cílios e sobrancelha", tipo: /c[ií]lios|lash|sobrancel|brow/i, nomeLoja: /c[ií]lios|\blash|sobrancel|\bbrows?\b/i,
+    quem: "studio de cílios e sobrancelha" },
+  // Festas
+  { id: "fotografia", ramo: "festa", nome: "Fotografia", tipo: /fot[oó]gr[aá]f|photo|v[ií]deo/i, nomeLoja: /fot[oó]gr[aá]f|photo|\bfoto/i,
+    quem: "fotógrafo", noSite: `os ensaios com foto, os pacotes e ${ORCAMENTO}`, ondePlaca: " na entrega das fotos" },
+  // Oficina
+  { id: "moto", ramo: "oficina", nome: "Motos", tipo: /moto|scooter/i, nomeLoja: /\bmotos?\b|motoca|scooter/i,
+    quem: "oficina de motos", noSite: "os serviços, o horário e um botão pra pedir orçamento da moto pelo WhatsApp", ondePlaca: " na hora de buscar a moto" },
+  { id: "bicicleta", ramo: "oficina", nome: "Bicicletaria", tipo: /bicicl|\bbikes?\b|ciclo/i, nomeLoja: /bicicl|\bbikes?\b|\bbike\b|\bciclo/i,
+    quem: "bicicletaria", noSite: "as bikes, as peças, o conserto e um botão pra pedir orçamento pelo WhatsApp", ondePlaca: " na hora de buscar a bike" },
+  { id: "borracharia", ramo: "oficina", nome: "Borracharia", tipo: /borrach|pneu|alinhamento|balanceamento/i, nomeLoja: /borrach|\bpneus?\b/i,
+    quem: "borracharia", noSite: "os serviços, o horário e um botão que já chama no WhatsApp quando o pneu fura", ondePlaca: " enquanto troca o pneu" },
+  // Serviços
+  { id: "celular", ramo: "servicos", nome: "Celular", tipo: /celular|smartphone|iphone|dispositivos m[oó]veis|telefon/i, nomeLoja: /\bcelular|\bcell\b|\biphone|\bsmart/i,
+    quem: "assistência de celular", noSite: `os consertos com foto, o tempo de reparo e ${ORCAMENTO}`, ondePlaca: " na hora de buscar o celular" },
+  { id: "solar", ramo: "servicos", nome: "Energia solar", tipo: /solar|fotovolt/i, nomeLoja: /\bsolar|fotovolt/i,
+    quem: "empresa de energia solar", noSite: `as instalações com foto, quanto dá pra economizar e ${ORCAMENTO}` },
+  { id: "refrigeracao", ramo: "servicos", nome: "Ar-condicionado", tipo: /condicionado|climatiza|refrigera|geladeira|lavadora/i, nomeLoja: /refrigera|climatiza|\bar ?condicionado|\bfrio\b/i,
+    quem: "assistência de ar-condicionado", noSite: `os serviços com foto, a região que atende e ${ORCAMENTO}` },
+  { id: "informatica", ramo: "servicos", nome: "Informática", tipo: /inform[aá]tic|computador|notebook/i, nomeLoja: /inform[aá]tica|\bpc\b|notebook/i,
+    quem: "assistência de informática", noSite: `os consertos, os computadores à venda e ${ORCAMENTO}` },
+  { id: "eletricista", ramo: "servicos", nome: "Eletricista", tipo: /eletricist|el[eé]tric/i, nomeLoja: /eletricista|\bel[eé]trica\b/i,
+    quem: "eletricista", noSite: `os serviços com foto, a região que atende e ${ORCAMENTO}` },
+  // Construção
+  { id: "vidracaria", ramo: "construcao", nome: "Vidraçaria", tipo: /vidra|vidro|esquadria|janela/i, nomeLoja: /vidra[cç]|\bvidros?\b|esquadria/i,
+    quem: "vidraçaria", noSite: `os trabalhos com foto, box, janelas e espelhos, e ${ORCAMENTO}`, ondePlaca: " na hora de fechar o orçamento" },
+  { id: "serralheria", ramo: "construcao", nome: "Serralheria", tipo: /serralh|serralhar|metal[uú]rg|solda|constru[cç][oõ]es met/i, nomeLoja: /serralh|\bsolda|metal[uú]rg/i,
+    quem: "serralheria", noSite: `os portões e grades com foto e ${ORCAMENTO}`, ondePlaca: " na hora de fechar o orçamento" },
+  { id: "marcenaria", ramo: "construcao", nome: "Marcenaria", tipo: /marcen|carpint|moveleir|planejad/i, nomeLoja: /marcenaria|carpintaria|planejados/i,
+    quem: "marcenaria", noSite: `os móveis com foto e ${ORCAMENTO}`, ondePlaca: " na hora de fechar o orçamento" },
+  // Mercado
+  { id: "bebidas", ramo: "mercado", nome: "Bebidas", tipo: /bebida|cerveja|adega|chopp|conveni/i, nomeLoja: /bebidas|\badega|\bchopp|conveni[eê]ncia|\bgelada/i,
+    quem: "distribuidora de bebidas", noSite: "as bebidas geladas, os preços e um botão pra pedir a entrega pelo WhatsApp" },
+  { id: "acougue", ramo: "mercado", nome: "Açougue", tipo: /a[cç]ougue|carnes/i, nomeLoja: /a[cç]ougue|\bcarnes\b|\bbeef\b/i,
+    quem: "açougue", noSite: `os cortes do dia, as ofertas e ${PEDIDO_ZAP}` },
+  { id: "gasagua", ramo: "mercado", nome: "Gás e água", tipo: /\bg[aá]s\b|butano|[aá]gua/i, nomeLoja: /\bg[aá]s\b|\b[aá]gua\b|gal[aã]o/i,
+    quem: "depósito de gás e água", noSite: "o preço do gás e da água, a região que entrega e um botão pra pedir pelo WhatsApp", ondePlaca: " na hora da entrega" },
+  { id: "peixaria", ramo: "mercado", nome: "Peixaria", tipo: /peixar|pescad|frutos do mar/i, nomeLoja: /peixaria|pescado|frutos do mar/i,
+    quem: "peixaria", noSite: `os peixes do dia com foto e ${PEDIDO_ZAP}` },
+  // Restaurante
+  { id: "japones", ramo: "restaurante", nome: "Japonês", tipo: /japon|sushi|temaki|oriental/i, nomeLoja: /sushi|temaki|japon|\bnikkei|oriental/i, quem: "restaurante japonês" },
+  { id: "frutosdomar", ramo: "restaurante", nome: "Frutos do mar", tipo: /frutos do mar|peixe|camar|marisc/i, nomeLoja: /frutos do mar|\bcamar[aã]o|peixe|marisc/i, quem: "restaurante de frutos do mar" },
+  { id: "churrascaria", ramo: "restaurante", nome: "Churrascaria", tipo: /churras|steak|carnes|espeto|grill/i, nomeLoja: /churras|steak|\bespeto|\bgrill\b/i, quem: "churrascaria" },
+  { id: "bar", ramo: "restaurante", nome: "Bar", tipo: /\bbar\b|\bbares\b|boteco|petisc|\bpub\b|chop/i, nomeLoja: /\bbar\b|boteco|botequim|petiscaria|\bpub\b|choperia/i, quem: "bar" },
+  // Padaria
+  { id: "confeitaria", ramo: "padaria", nome: "Confeitaria", tipo: /confeit|doceria|doces|bolo|brigad/i, nomeLoja: /confeitaria|doceria|\bcake|\bbolos\b|brigadeir/i,
+    quem: "confeitaria", noSite: "os bolos e doces com foto e um botão pra encomendar pelo WhatsApp" },
+  { id: "cafeteria", ramo: "padaria", nome: "Cafeteria", tipo: /cafeteria|caf[eé]\b|torrefa/i, nomeLoja: /cafeteria|coffee/i, quem: "cafeteria", noSite: `o cardápio com foto e ${PEDIDO_ZAP}`, ondePlaca: " na mesa" },
+  // Açaí
+  { id: "sorveteria", ramo: "acai", nome: "Sorveteria", tipo: /sorvet|gelat|picol/i, nomeLoja: /^(?!.*a[cç]a[ií]).*(sorvet|gelat|picol)/i, quem: "sorveteria" },
+  // Moda
+  { id: "calcados", ramo: "moda", nome: "Calçados", tipo: /cal[cç]ad|sapat|t[eê]nis/i, nomeLoja: /cal[cç]ados|sapat|\bshoes?\b/i, quem: "loja de calçados",
+    noSite: "os modelos novos com foto, a numeração e um botão que já abre o WhatsApp pra reservar o par" },
+  { id: "esportiva", ramo: "moda", nome: "Moda esportiva", tipo: /esportiv|\bsports?\b|fitness|atl[eé]tic/i, nomeLoja: /\bsports?\b|esporte|fitness|\bfit\b/i, quem: "loja de artigos esportivos" },
+  { id: "joalheria", ramo: "moda", nome: "Joias e relógios", tipo: /joalh|j[oó]ias?|relojo|rel[oó]gio|bijuter|semijoi/i, nomeLoja: /joias|joalheria|relojoaria|semijoias|bijuterias|\bprata\b/i, quem: "joalheria",
+    noSite: "as peças com foto, os preços e um botão que já abre o WhatsApp pra reservar" },
+  { id: "costura", ramo: "moda", nome: "Costura", tipo: /costur|alfaiat|ajustes/i, nomeLoja: /costura|ateli[eê]|alfaiat|ajustes/i, quem: "ateliê de costura",
+    noSite: "os serviços de costura e ajuste, os prazos e um botão pra pedir orçamento pelo WhatsApp", ondePlaca: " na hora de buscar a peça" },
+  // Escola
+  { id: "autoescola", ramo: "escola", nome: "Autoescola", tipo: /auto.?escola|cfc|habilita/i, nomeLoja: /auto.?escola|\bcfc\b/i, quem: "autoescola",
+    noSite: "as categorias, os pacotes de aula e um botão pra fazer a matrícula pelo WhatsApp", ondePlaca: " depois da aula prática",
+    sistemaTexto: { quem: "autoescola", frase: "o aluno marca e remarca a aula prática pelo celular, e você vê quem já fez quantas aulas e quem tá com o pagamento em dia" } },
+  { id: "idiomas", ramo: "escola", nome: "Idiomas", tipo: /idioma|ingl[eê]s|english|espanhol|language/i, nomeLoja: /idiomas|ingl[eê]s|english|espanhol|\blanguage/i, quem: "escola de idiomas" },
+  { id: "musica", ramo: "escola", nome: "Música", tipo: /m[uú]sica|music|viol[aã]o|piano|canto/i, nomeLoja: /m[uú]sica|\bmusic|viol[aã]o|piano/i, quem: "escola de música" },
+  { id: "infantil", ramo: "escola", nome: "Educação infantil", tipo: /creche|infantil|jardim de inf|ber[cç]|pr[eé].?escola/i, nomeLoja: /creche|infantil|\bkids\b|ber[cç][aá]rio|\bbaby/i, quem: "escola infantil",
+    noSite: "a estrutura com foto, as turmas por idade e um botão pra marcar uma visita pelo WhatsApp", ondePlaca: " na hora da saída" },
+  // Consultório
+  { id: "nutricionista", ramo: "saude", nome: "Nutricionista", tipo: /nutri/i, nomeLoja: /\bnutri/i, quem: "nutricionista" },
+  { id: "psicologo", ramo: "saude", nome: "Psicologia", tipo: /psic|terapeut|terapia|sa[uú]de mental/i, nomeLoja: /psic[oó]log|psican|terapia|terapeut/i, quem: "consultório de psicologia" },
+  // Escritório
+  { id: "contabilidade", ramo: "escritorio", nome: "Contabilidade", tipo: /contab|contador/i, nomeLoja: /contab|contador/i, quem: "escritório de contabilidade" },
+  { id: "imobiliaria", ramo: "escritorio", nome: "Imobiliária", tipo: /imobili|im[oó]ve|corretor/i, nomeLoja: /im[oó]veis|imobili|corretor/i, quem: "imobiliária",
+    noSite: "os imóveis com foto, aluguel e venda separados e um botão pra marcar a visita pelo WhatsApp" },
+  { id: "advocacia", ramo: "escritorio", nome: "Advocacia", tipo: /advoga|advocacia|jur[ií]dic/i, nomeLoja: /advoga|advocacia|jur[ií]dic/i, quem: "escritório de advocacia" },
+  // Papelaria
+  { id: "grafica", ramo: "papelaria", nome: "Gráfica", tipo: /gr[aá]fic|impress|personaliz|camiseta|brinde/i, nomeLoja: /gr[aá]fica|impress|personaliz|\bbrindes|\bprint/i, quem: "gráfica",
+    noSite: `os produtos com foto, os prazos e ${ORCAMENTO}`, ondePlaca: " na hora de buscar a encomenda" },
+  // Outros comércios
+  { id: "moveis", ramo: "geral", nome: "Móveis", tipo: /m[oó]veis|sof[aá]|colch|estofad|planejad/i, nomeLoja: /m[oó]veis|\bsof[aá]s?\b|colch|estofad/i, quem: "loja de móveis",
+    noSite: "os móveis com foto, os preços e um botão que já abre o WhatsApp", ondePlaca: " no caixa" },
+  { id: "floricultura", ramo: "geral", nome: "Floricultura", tipo: /flor/i, nomeLoja: /\bflor(es|icultura)?\b/i, quem: "floricultura",
+    noSite: "os buquês e arranjos com foto e um botão pra encomendar pelo WhatsApp", ondePlaca: " no caixa" },
+];
+
+/** O sub-nicho da loja dentro do ramo dela. O nome da loja vale mais que o tipo do Google. */
+export function subnichoDe(lead: Pick<Lead, "nome" | "tipo" | "ramo">): Subnicho | null {
+  const ramo = ramoDe(lead).id;
+  const doRamo = SUBNICHOS.filter((s) => s.ramo === ramo);
+  return (
+    doRamo.find((s) => s.nomeLoja?.test(lead.nome)) ?? doRamo.find((s) => s.tipo?.test(lead.tipo ?? "")) ?? null
+  );
+}
+
 function fraseSite(lead: Lead) {
   const ramo = ramoDe(lead);
-  if (ramo.id === "geral") return `Eu monto o site com ${GERAL.noSite}.`;
+  const sub = subnichoDe(lead);
+  if (ramo.id === "geral" && !sub) return `Eu monto o site com ${GERAL.noSite}.`;
   const tipo = lead.tipo?.trim();
   // O tipo do Google só entra na frase quando é do mesmo ramo (a massoterapeuta não é "salão de beleza").
-  const quem = ramo.quem ?? (tipo && ramo.tipo.test(tipo) ? tipo : ramo.nome).toLowerCase();
-  return `Pra ${quem} eu monto o site com ${ramo.noSite}.`;
+  const quem = sub?.quem ?? ramo.quem ?? (tipo && ramo.tipo.test(tipo) ? tipo : ramo.nome).toLowerCase();
+  return `Pra ${quem} eu monto o site com ${sub?.noSite ?? ramo.noSite}.`;
 }
 
 /** `nela`: a frase vem logo depois de falar da plaquinha; senão ela se apresenta sozinha. */
 function frasePlaca(lead: Lead, nela: boolean) {
-  const onde = ramoDe(lead).ondePlaca;
+  const onde = subnichoDe(lead)?.ondePlaca ?? ramoDe(lead).ondePlaca;
   return nela
     ? `O cliente encosta o celular nela${onde} e avalia vocês no Google em 10 segundos.`
     : `Na plaquinha, o cliente encosta o celular${onde} e avalia vocês no Google em 10 segundos.`;
@@ -796,17 +941,22 @@ const SISTEMA_NO_RAMO: Partial<Record<RamoId, { quem?: string; frase?: string; g
   },
 };
 
-export const sistemaDe = (lead: Lead): SistemaId | null => SISTEMA_DO_RAMO[ramoDe(lead).id] ?? null;
+export const sistemaDe = (lead: Lead): SistemaId | null => {
+  const sub = subnichoDe(lead);
+  if (sub && sub.sistema !== undefined) return sub.sistema;
+  return SISTEMA_DO_RAMO[ramoDe(lead).id] ?? null;
+};
 
-/** O sistema que serve para a loja, com os textos já no ramo dela. */
+/** O sistema que serve para a loja, com os textos já no ramo (e no sub-nicho) dela. */
 export function textosSistema(lead: Lead) {
   const ramo = ramoDe(lead);
-  const id = SISTEMA_DO_RAMO[ramo.id] ?? "agenda";
-  const extra = SISTEMA_NO_RAMO[ramo.id] ?? {};
+  const sub = subnichoDe(lead);
+  const id = sistemaDe(lead) ?? "agenda";
+  const extra = { ...SISTEMA_NO_RAMO[ramo.id], ...sub?.sistemaTexto };
   return {
     ...SISTEMAS[id],
     id,
-    quem: extra.quem ?? ramo.quem ?? ramo.nome.toLowerCase(),
+    quem: sub?.sistemaTexto?.quem ?? sub?.quem ?? extra.quem ?? ramo.quem ?? ramo.nome.toLowerCase(),
     frase: extra.frase ?? SISTEMAS[id].frase,
     ganho: extra.ganho ?? SISTEMAS[id].ganho,
   };

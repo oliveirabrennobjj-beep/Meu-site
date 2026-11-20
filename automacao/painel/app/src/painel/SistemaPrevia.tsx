@@ -4,7 +4,8 @@ import { toJpeg } from "html-to-image";
 import { CalendarCheck, Check, Clock, Laptop, Loader2, MessageCircle, Send, Smartphone, Wallet, X } from "lucide-react";
 import { useElementWidth } from "@/components/ui/app-dashboard-shell-utils/app-block-kit";
 import { FONTES_NA_TELA, TEXTO, arquivo, compartilharFoto, cssDasFontes, temaDe } from "./Demonstracao";
-import { cidadeDe, ramoDe, textosSistema, type Lead, type RamoId } from "./leads";
+import { cidadeDe, ramoDe, subnichoDe, textosSistema, type Lead, type RamoId } from "./leads";
+import { SUB_SISTEMA } from "./subtemas";
 
 // Como ficaria o sistema da loja (horário marcado ou controle de alunos) num notebook e num celular.
 // É uma imagem para mostrar e mandar no WhatsApp: nomes e valores são de exemplo e a tela avisa.
@@ -277,15 +278,16 @@ function conteudo(lead: Lead) {
   const sis = textosSistema(lead);
   const ramo = ramoDe(lead).id;
   const t = temaDe(lead);
+  const sub = SUB_SISTEMA[subnichoDe(lead)?.id ?? ""] ?? {};
   const nota = typeof lead.nota === "number" && lead.nota > 0 ? lead.nota.toLocaleString("pt-BR", { minimumFractionDigits: 1 }) : "4,9";
   const selo = lead.avaliacoes ? `${nota} · ${lead.avaliacoes} avaliações no Google` : `${nota} no Google`;
   const foto = ramo === "barbearia" ? "img/demo/sistema-barbearia.webp" : `img/demo/${t.foto}-2.webp`;
   if (sis.id === "alunos") {
-    const aulas = AULAS[ramo] ?? AULAS.academia!;
-    const preco = MENSALIDADE[ramo] ?? 150;
+    const aulas = sub.aulas ?? AULAS[ramo] ?? AULAS.academia!;
+    const preco = sub.preco ?? MENSALIDADE[ramo] ?? 150;
     return {
       sis, t, foto, selo,
-      titulo: ["Sua aula,", "do seu jeito."] as const,
+      titulo: sub.titulo ?? (["Sua aula,", "do seu jeito."] as const),
       chamada: "Veja as turmas, marque e remarque a aula pelo celular. A mensalidade fica em dia sem ninguém precisar cobrar.",
       agendar: "Agende sua aula",
       passos: [["Aula", "Escolha a turma"], ["Professor", "Quem dá a aula"], ["Data e hora", "Dia e horário"], ["Confirmar", "Revise e confirme"]],
@@ -293,13 +295,14 @@ function conteudo(lead: Lead) {
       itens: aulas.map(([nome, linha]) => ({ nome, linha })),
       pessoas: PROFESSORES,
       resumo: [["Aula", aulas[0][0]], ["Professor", "Prof. Ana"], ["Data", "quinta, 19 de novembro"], ["Horário", "18:00"], ["Plano", "2x por semana"]] as [string, string][],
-      total: [`${reais(preco)}/mês`, "Mensalidade"] as const,
+      total: sub.total ?? ([`${reais(preco)}/mês`, "Mensalidade"] as const),
       botao: "Confirmar aula",
       recursos: [["Aula marcada pelo celular", "O aluno escolhe e remarca sozinho."], ["Mensalidade em dia", "Quem atrasou aparece na hora."], ["Cobrança no WhatsApp", "Um toque e a mensagem vai."], ["Turmas cheias", "Vaga sobrando vira aviso."]] as [string, string][],
       horario: "Seg a sex 6h às 21h · sáb 8h às 12h",
     };
   }
-  const servicos = SERVICOS[ramo] ?? SERVICOS.barbearia!;
+  const servicos = sub.servicos ?? SERVICOS[ramo] ?? SERVICOS.barbearia!;
+  const pessoas = sub.pessoas ?? PROFISSIONAIS[ramo] ?? PROFISSIONAIS.salao!;
   const titulos: Partial<Record<RamoId, readonly [string, string]>> = {
     barbearia: ["Corte na régua,", "hora marcada."],
     salao: ["Beleza com", "hora marcada."],
@@ -309,14 +312,14 @@ function conteudo(lead: Lead) {
   };
   return {
     sis, t, foto, selo,
-    titulo: titulos[ramo] ?? (["Seu momento,", "com hora marcada."] as const),
+    titulo: sub.titulo ?? titulos[ramo] ?? (["Seu momento,", "com hora marcada."] as const),
     chamada: "Escolha o serviço, o profissional e o horário pelo celular. A gente te espera na hora certa, sem fila.",
     agendar: "Agende seu horário",
     passos: [["Serviço", "Escolha o serviço"], [ramo === "barbearia" ? "Barbeiro" : "Profissional", "Quem vai atender"], ["Data e hora", "Dia e horário"], ["Confirmar", "Revise e confirme"]],
     colunas: ["Escolha o serviço", ramo === "barbearia" ? "Escolha o barbeiro" : "Escolha o profissional", "Escolha a data"],
     itens: servicos.map(([nome, preco, tempo]) => ({ nome, linha: `${reais(preco)} · ${tempo}` })),
-    pessoas: PROFISSIONAIS[ramo] ?? PROFISSIONAIS.salao!,
-    resumo: [["Serviço", servicos[0][0]], [ramo === "barbearia" ? "Barbeiro" : "Profissional", (PROFISSIONAIS[ramo] ?? PROFISSIONAIS.salao!)[0][0]], ["Data", "quinta, 19 de novembro"], ["Horário", "16:00"], ["Duração", servicos[0][2]]] as [string, string][],
+    pessoas,
+    resumo: [["Serviço", servicos[0][0]], [ramo === "barbearia" ? "Barbeiro" : "Profissional", pessoas[0][0]], ["Data", "quinta, 19 de novembro"], ["Horário", "16:00"], ["Duração", servicos[0][2]]] as [string, string][],
     total: [reais(servicos[0][1]), "Total"] as const,
     botao: "Confirmar agendamento",
     recursos: [["Agenda em 1 minuto", "Sem ligar e sem esperar resposta."], ["Confirmação no WhatsApp", "Com dia, hora e profissional."], ["Profissionais avaliados", "Nota de quem já foi atendido."], ["Paga na hora", "Pix, cartão ou dinheiro."]] as [string, string][],

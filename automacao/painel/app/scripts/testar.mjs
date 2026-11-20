@@ -101,7 +101,9 @@ leads.push({
 const MASSO = "Yasmim Teste - Massoterapeuta";
 const CT = "CT Teste";
 const DENTISTA = "Dra. Deise Barbosa Teste";
-for (const [i, nome, tipo] of [[3, MASSO, "Salão de beleza"], [4, CT, "Academia"], [5, DENTISTA, "Dentista"]]) {
+// Caso real de 20/11: loja de aquário cadastrada como "Fornecedor" saía com prévia de banho e tosa.
+const AQUARIO = "Aquarismo Peixes Teste - casa de ração";
+for (const [i, nome, tipo] of [[3, MASSO, "Salão de beleza"], [4, CT, "Academia"], [5, DENTISTA, "Dentista"], [6, AQUARIO, "Loja de ração"]]) {
   leads.push({
     id: `w552290000000${i}`,
     nome,
@@ -384,6 +386,7 @@ try {
     [MASSO, "Massoterapia em Cidade de Teste", "massagem-1.webp"],
     [CT, "Academia de luta em Cidade de Teste", "luta-1.webp"],
     [DENTISTA, "Dentista em Cidade de Teste", "dentista-1.webp"],
+    [AQUARIO, "Aquarismo em Cidade de Teste", "aquario-1.webp"],
   ]) {
     await p.getByRole("button", { name: loja, exact: true }).click();
     await p.getByRole("dialog").first().getByRole("button", { name: "Mostrar demonstração do site" }).click();
