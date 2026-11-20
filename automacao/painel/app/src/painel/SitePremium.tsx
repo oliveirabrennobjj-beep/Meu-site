@@ -41,6 +41,29 @@ const ROTULOS: Record<Familia, { aviso: string; nav: string[]; olho: string; tit
 
 export const ESCRITA: Record<Familia, string> = { comida: "Kaushan Script", loja: "Yellowtail", servico: "Yellowtail" };
 
+/** Luminância relativa de uma cor #rrggbb (0 = preto, 1 = branco). */
+function luz(cor: string): number {
+  const m = /^#([0-9a-f]{6})/i.exec(cor);
+  if (!m) return 1;
+  const [r, g, b] = [0, 2, 4].map((i) => {
+    const c = parseInt(m[1].slice(i, i + 2), 16) / 255;
+    return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+  });
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+
+/** Clareia a cor só o necessário pra ler bem sobre fundo quase preto (contraste perto de 5:1). */
+function realce(cor: string): string {
+  const m = /^#([0-9a-f]{6})/i.exec(cor);
+  if (!m) return cor;
+  const rgb = [0, 2, 4].map((i) => parseInt(m[1].slice(i, i + 2), 16));
+  for (let p = 0; p <= 0.9; p += 0.05) {
+    const hex = `#${rgb.map((c) => Math.round(c + (255 - c) * p).toString(16).padStart(2, "0")).join("")}`;
+    if (luz(hex) >= 0.22) return hex;
+  }
+  return "#ffffff";
+}
+
 export function PaginaPremium({
   lead, t, familia, capa, onCapaErro, ramoNome, cidade, demo,
 }: {
@@ -58,7 +81,8 @@ export function PaginaPremium({
   const display: CSSProperties = { fontFamily: t.fonte, textTransform: t.maiusculo ? "uppercase" : undefined };
   const escuroTopo = familia !== "loja" || !!t.capa || !!t.escuro;
   const base = t.capa ?? (t.escuro ? t.fundo : "#16120f");
-  const acento = t.noCapa ?? t.destaque;
+  // Nas faixas escuras, cor de destaque escura (roxo do açaí, azul-marinho, verde-escuro) some no fundo: clareia.
+  const acento = t.noCapa ?? realce(t.destaque);
   const temNota = typeof lead.nota === "number" && lead.nota > 0;
   const nota = temNota ? lead.nota!.toLocaleString("pt-BR", { minimumFractionDigits: 1, maximumFractionDigits: 1 }) : "";
   const fundoVitrine = t.escuro ? t.fundo : `color-mix(in srgb, ${t.mancha} 30%, ${t.fundo})`;
@@ -180,7 +204,8 @@ export function PaginaPremium({
           {cartoes.map((c, i) => (
             <li key={c.nome} className="flex flex-col overflow-hidden rounded-[18px] shadow-[0_16px_34px_-22px_rgba(0,0,0,.55)]" style={{ background: t.cartao }}>
               <span className="relative block">
-                <img src={c.foto} alt="" width={480} height={480} className="aspect-[4/3.4] w-full object-cover" />
+                <img src={c.foto} alt="" width={480} height={480} className="aspect-[4/3.4] w-full object-cover"
+                  onError={(e) => { const li = e.currentTarget.closest("li"); if (li) li.style.display = "none"; }} />
                 {i === 0 && (
                   <span className="absolute left-2 top-2 rounded-full px-2.5 py-1 text-[10.5px] font-bold" style={{ background: t.destaque, color: t.noDestaque }}>{r.selo}</span>
                 )}

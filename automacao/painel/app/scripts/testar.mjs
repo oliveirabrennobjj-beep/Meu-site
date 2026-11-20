@@ -268,11 +268,15 @@ try {
     await p.screenshot({ path: path.join(saida, "celular-demonstracao.png") });
     // RAMOS=crossfit,pilates troca o estilo da prévia e tira um print de cada (sem gerar a foto).
     if (process.env.RAMOS) {
+      // Tela bem alta: a prévia rola dentro do diálogo e o que fica fora da rolagem sai em branco no print.
+      await p.setViewportSize({ width: 412, height: 4200 });
       for (const id of process.env.RAMOS.split(",")) {
         await previa.getByLabel("Estilo da prévia").selectOption(id);
-        await previa.locator(`img[src*="img/demo/${id}-1"]`).first().waitFor();
-        await p.waitForTimeout(500);
-        await p.screenshot({ path: path.join(saida, `previa-${id}.png`) });
+        const foto = id.split("/").at(-1);
+        await previa.locator(`img[src*="img/demo/${foto}-"]`).first().waitFor();
+        await p.waitForTimeout(400);
+        // Página inteira da prévia (o artigo), não só a parte que cabe na tela.
+        await previa.locator("article").screenshot({ path: path.join(saida, `previa-${id.replace("/", "_")}.png`) });
       }
       assert.deepEqual(cel.erros, []);
       console.log(`Prévias de ${process.env.RAMOS} em ${saida}`);
