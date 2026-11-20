@@ -46,7 +46,9 @@ REF_LEGENDA_Y = 1640
 GAME_LAYOUT = {
     'game': {'topo_cam': 0, 'alt_cam': 730},          # tela cheia: câmera em cima, jogo embaixo (referência)
     'game-titulo': {'topo_cam': 260, 'alt_cam': 640},  # faixa preta com título em cima
+    'game-amarelo': {'topo_cam': 0, 'alt_cam': 730},   # câmera em cima, título amarelo fixo na emenda, jogo embaixo
 }
+AMARELO_LEGENDA_Y = 1400   # estilo game-amarelo: legenda no meio do jogo
 GAME_TOPO_CAM, GAME_ALT_CAM = 0, 730
 GAME_TOPO_JOGO = GAME_TOPO_CAM + GAME_ALT_CAM
 GAME_GANCHO_S = 3.0        # no estilo tela cheia, o gancho aparece só nos primeiros segundos
@@ -222,16 +224,47 @@ def detectar_camera(video, ini, dur, rosto):
     y1 = melhor(lin, range(int(fy + 0.9 * fh), int(fy + 0.5 * AN_A)), AN_A)
     if (x1 - x0) < 2.2 * fw or (y1 - y0) < 2.0 * fh:
         return None
+    if (x1 - x0) > 0.5 * AN_L or (y1 - y0) > 0.6 * AN_A:   # pegou a borda da tela, não a moldura da câmera
+        return None
     m = 2   # tira a linha da borda
     return ((x0 + m) / AN_L, (y0 + m) / AN_A, (x1 - m) / AN_L, (y1 - m) / AN_A)
+
+
+def faixas_pretas(video, ini, dur):
+    """Linhas (normalizadas) onde começa e termina a imagem do jogo, sem as faixas pretas da live."""
+    perfis = []
+    for k in range(5):
+        t = ini + dur * (k + 0.5) / 5
+        r = subprocess.run(['ffmpeg', '-v', 'error', '-ss', f'{t:.2f}', '-i', str(video), '-frames:v', '1',
+                            '-vf', f'scale={AN_L}:{AN_A}', '-f', 'rawvideo', '-pix_fmt', 'gray', '-'],
+                           capture_output=True)
+        if len(r.stdout) == AN_L * AN_A:
+            q = np.frombuffer(r.stdout, np.uint8).reshape(AN_A, AN_L)
+            perfis.append(np.median(q[:, int(AN_L * 0.3):int(AN_L * 0.7)], axis=1))   # centro: sem chat nem câmera
+    if not perfis:
+        return 0.0, 1.0
+    claro = np.max(perfis, axis=0) > 14
+    linhas = np.flatnonzero(claro)
+    if len(linhas) == 0:
+        return 0.0, 1.0
+    y0, y1 = linhas[0] / AN_A, (linhas[-1] + 1) / AN_A
+    if y1 - y0 < 0.6:   # tela quase toda escura: não confia
+        return 0.0, 1.0
+    return y0, y1
 
 
 def enquadrar_game(plano, w, h):
     """Live: câmera no canto + jogo, só câmera (just chatting) ou só jogo."""
     rostos = [r for r in plano['rostos'] if r[4] >= 0.5]
+    m = plano.get('camera_fixa')
+    if m:   # moldura conhecida: rosto fora dela é personagem do jogo, não o streamer
+        rostos = [r for r in rostos if m[0] - 0.03 <= r[0] <= m[2] + 0.03 and m[1] - 0.03 <= r[1] <= m[3] + 0.03]
+        plano['camera'] = m
+        if not rostos:   # streamer saiu do quadro: mantém a moldura da câmera
+            rostos = [((m[0] + m[2]) / 2, (m[1] + m[3]) / 2, 0.0, 0.1, 1.0)]
     if rostos:
         r = max(rostos, key=lambda x: x[3])
-        if r[3] >= 0.16:   # rosto grande: só câmera, recorte vertical no rosto
+        if r[3] >= 0.16 and not m:   # rosto grande: só câmera, recorte vertical no rosto
             lc = h * LARG / ALT
             x = min(max(r[0] * w - lc / 2, 0), w - lc)
             return {'modo': 'solo', 'recortes': [(int(x), 0, int(lc), h)]}
@@ -254,10 +287,12 @@ def enquadrar_game(plano, w, h):
             x = bx0
             y = min(max(r[1] * h - ac * 0.45, by0), by1 - ac)
         cam = (int(x), int(y), int(lc), int(ac))
-        # jogo: recorte central na proporção do painel de baixo
+        # jogo: recorte central na proporção do painel de baixo, sem as faixas pretas
+        b0, b1 = plano.get('barras', (0.0, 1.0))
+        yj, hj = int(b0 * h), int((b1 - b0) * h)
         aj = (ALT - GAME_TOPO_JOGO) / LARG
-        lj = min(w, h / aj)
-        jogo = (int((w - lj) / 2), 0, int(lj), h)
+        lj = min(w, hj / aj)
+        jogo = (int((w - lj) / 2), yj, int(lj), hj)
         return {'modo': 'game', 'recortes': [cam, jogo]}
     return {'modo': 'geral', 'recortes': []}
 
@@ -366,18 +401,19 @@ def paginas(palavras):
 
 
 class Legenda:
-    def __init__(self, palavras):
+    def __init__(self, palavras, fonte=FONTE_LEGENDA, tam=96):
         self.pags = paginas(palavras)
         self.cache = {}
+        self.fonte, self.tam = fonte, tam
 
     def _desenhar(self, i, ativa):
         chave = (i, ativa)
         if chave in self.cache:
             return self.cache[chave]
         textos = [p['texto'] for p in self.pags[i]['palavras']]
-        tam = 96
+        tam = self.tam
         while True:
-            fonte = ImageFont.truetype(str(FONTE_LEGENDA), tam)
+            fonte = ImageFont.truetype(str(self.fonte), tam)
             espaco = fonte.getlength(' ')
             largs = [fonte.getlength(t) for t in textos]
             total = sum(largs) + espaco * (len(textos) - 1)
@@ -455,6 +491,30 @@ def sprite_titulo(texto, credito):
         cw = f2.getlength(credito)
         d.text(((img.width - cw) / 2, alt + 26), credito, font=f2, fill=BRANCO + (235,),
                stroke_width=4, stroke_fill=PRETO + (220,))
+    return para_bgra(img)
+
+
+def sprite_titulo_amarelo(texto):
+    """Caixa amarela com texto preto condensado (estilo game-amarelo)."""
+    texto, tam = texto.upper(), 70
+    while ImageFont.truetype(str(FONTE_TITULO), tam).getlength(texto) > 960 and tam > 52:
+        tam -= 2
+    fonte = ImageFont.truetype(str(FONTE_TITULO), tam)
+    linhas = [texto]
+    if fonte.getlength(texto) > 960:   # não coube: duas linhas equilibradas
+        pal = texto.split()
+        k = min(range(1, len(pal)), key=lambda i: abs(fonte.getlength(' '.join(pal[:i])) - fonte.getlength(' '.join(pal[i:]))))
+        linhas = [' '.join(pal[:k]), ' '.join(pal[k:])]
+    alt_linha = int(tam * 1.18)
+    larg = int(max(fonte.getlength(l) for l in linhas)) + 56
+    alt = alt_linha * len(linhas) + 26
+    img = Image.new('RGBA', (larg + 16, alt + 16), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    d.rounded_rectangle((6, 10, larg + 6, alt + 10), 16, fill=(0, 0, 0, 120))
+    d.rounded_rectangle((2, 4, larg + 2, alt + 4), 16, fill=AMARELO + (255,))
+    for k, linha in enumerate(linhas):
+        lw = fonte.getlength(linha)
+        d.text((2 + (larg - lw) / 2, 4 + 10 + k * alt_linha), linha, font=fonte, fill=PRETO + (255,))
     return para_bgra(img)
 
 
@@ -574,28 +634,50 @@ def compor_ref(quadro):
 # ---------------------------------------------------------------- render
 
 def editar(video, ini, fim, palavras, titulo, saida, credito='', planos=None, zoom=1.0,
-           estilo='padrao', nome='', arroba='', legenda=True, teaser_s=0.0):
+           estilo='padrao', nome='', arroba='', legenda=True, teaser_s=0.0, camera=None):
     """Renderiza um corte. `palavras` usa tempos relativos ao início do corte."""
     dur = fim - ini
     w, h = sondar(video)
     ref = estilo == 'ref'
     game = estilo.startswith('game')
     faixa = estilo == 'game-titulo'
+    amarelo = estilo == 'game-amarelo'
     if game:
         usar_layout(estilo)
     if ref:
         planos = [{'t0': 0.0, 't1': dur + 1, 'modo': 'ref', 'rostos': []}]
     else:
         planos = planos or analisar(video, ini, dur)
+        barras = faixas_pretas(video, ini, dur) if game else None
         for p in planos:
-            if game:
+            if barras:
+                p['barras'] = barras
+            if game and not camera:
                 cand = [r for r in p['rostos'] if r[4] >= 0.5 and r[3] < 0.16]
                 if cand:
                     p['camera'] = detectar_camera(video, ini + p['t0'], min(p['t1'], dur) - p['t0'],
                                                   max(cand, key=lambda x: x[3]))
-            p.update(enquadrar_game(p, w, h) if game else enquadrar(p, w, h))
-    leg = Legenda([p for p in palavras if p['t1'] > 0 and p['t0'] < dur]) if legenda else None
-    if game:
+            if not game:
+                p.update(enquadrar(p, w, h))
+        if game:
+            achadas = [p['camera'] for p in planos if p.get('camera')]
+            fixa = camera or (achadas[0] if achadas else None)   # moldura informada vale para o corte todo
+            for p in planos:
+                if fixa and (camera or not p.get('camera')):
+                    p['camera_fixa'] = fixa
+                p.update(enquadrar_game(p, w, h))
+    leg_pal = [p for p in palavras if p['t1'] > 0 and p['t0'] < dur]
+    if not legenda:
+        leg = None
+    elif amarelo:
+        leg = Legenda(leg_pal, FONTE_TITULO, 112)
+    else:
+        leg = Legenda(leg_pal)
+    if amarelo:
+        titulo_img = sprite_titulo_amarelo(titulo) if titulo else None
+        nome_img = None
+        arroba_img = sprite_arroba(arroba) if arroba else None
+    elif game:
         titulo_img = sprite_caixa(titulo, 58, 2, raio=20, pad=(24, 10)) if titulo else None
         nome_img = sprite_caixa(nome, 40, 1, raio=14, pad=(18, 6)) if nome else None
         arroba_img = sprite_arroba(arroba) if arroba else None
@@ -625,7 +707,11 @@ def editar(video, ini, fim, palavras, titulo, saida, credito='', planos=None, zo
             m = cv2.getRotationMatrix2D((LARG / 2, ALT * 0.42), 0, z)
             tela = cv2.warpAffine(tela, m, (LARG, ALT), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REFLECT)
         if game:
-            if plano['modo'] == 'game':
+            if plano['modo'] == 'game' and amarelo:
+                if titulo_img is not None:   # título fixo na emenda câmera/jogo
+                    colar(tela, titulo_img, LARG / 2, GAME_TOPO_JOGO)
+                y_leg = AMARELO_LEGENDA_Y
+            elif plano['modo'] == 'game':
                 if titulo_img is not None and faixa:
                     colar(tela, titulo_img, LARG / 2, GAME_TOPO_CAM / 2)
                 mostrando_gancho = (not faixa and titulo_img is not None and t < GAME_GANCHO_S + teaser_s)
@@ -645,6 +731,8 @@ def editar(video, ini, fim, palavras, titulo, saida, credito='', planos=None, zo
                 colar(tela, arroba_img, LARG - 30 - arroba_img.shape[1] / 2, ALT - 60)
             if leg:
                 leg.aplicar(tela, t, y_leg)
+            if amarelo:   # barra de progresso amarela no rodapé
+                tela[ALT - 12:, :int(LARG * min(t / dur, 1.0))] = AMARELO[::-1]
         elif ref:
             if titulo_img is not None:   # título fixo, logo acima do vídeo
                 colar(tela, titulo_img, LARG / 2, REF_TOPO_VIDEO - 22 - titulo_img.shape[0] / 2)
@@ -733,7 +821,7 @@ def main():
     ap.add_argument('--credito', default='')
     ap.add_argument('--saida')
     ap.add_argument('--teaser', help='frase do clímax para abrir o corte')
-    ap.add_argument('--estilo', default='ref', choices=['ref', 'game', 'game-titulo', 'padrao'])
+    ap.add_argument('--estilo', default='ref', choices=['ref', 'game', 'game-titulo', 'game-amarelo', 'padrao'])
     ap.add_argument('--nome', default='', help='nome de quem fala (estilo ref)')
     ap.add_argument('--arroba', default='', help='@ do canal (estilo ref)')
     ap.add_argument('--sem-legenda', action='store_true')

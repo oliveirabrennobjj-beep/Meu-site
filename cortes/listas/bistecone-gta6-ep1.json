@@ -1,0 +1,92 @@
+{
+ "fonte": "Bistecone (twitch.tv/bisteconee)",
+ "cortes": [
+  {
+   "n": 1,
+   "ini": 2083,
+   "fim": 2141,
+   "gancho": "A REAÇÃO DELE QUANDO O GTA 6 ABRIU",
+   "teaser": "Eita porra começou"
+  },
+  {
+   "n": 2,
+   "ini": 2409,
+   "fim": 2498,
+   "gancho": "CHUTOU O CABO NA ESTREIA DO GTA 6",
+   "teaser": "encostei o pé no cabo ali"
+  },
+  {
+   "n": 3,
+   "ini": 3022,
+   "fim": 3090,
+   "gancho": "O PRIMEIRO ASSALTO DO GTA 6",
+   "teaser": "parece um filme viado"
+  },
+  {
+   "n": 4,
+   "ini": 3184,
+   "fim": 3238,
+   "gancho": "O DINHEIRO ERA UMA ARMADILHA",
+   "teaser": "o dinheiro era uma armadilha viado"
+  },
+  {
+   "n": 5,
+   "ini": 3981,
+   "fim": 3995,
+   "gancho": "TEM TIGRE NO GTA 6",
+   "teaser": ""
+  },
+  {
+   "n": 6,
+   "ini": 4267,
+   "fim": 4306,
+   "gancho": "FUGIU DE AVIÃO SEM SABER PILOTAR",
+   "teaser": "Eu não sei dirigir o avião"
+  },
+  {
+   "n": 7,
+   "ini": 4544,
+   "fim": 4616,
+   "gancho": "BISTECONE PERDEU A PACIÊNCIA COM O CHAT",
+   "teaser": "não assiste viado"
+  },
+  {
+   "n": 8,
+   "ini": 5218,
+   "fim": 5240.5,
+   "gancho": "O FILME VIROU GAMEPLAY SEM CORTE",
+   "teaser": ""
+  },
+  {
+   "n": 9,
+   "ini": 5309,
+   "fim": 5338,
+   "gancho": "A COBRA DO JASON COMEU UM RATO",
+   "teaser": "Ela comeu um rato viado"
+  },
+  {
+   "n": 10,
+   "ini": 5417,
+   "fim": 5444,
+   "gancho": "ATÉ A ÁGUA DA GARRAFA É REAL",
+   "teaser": ""
+  },
+  {
+   "n": 11,
+   "ini": 5444,
+   "fim": 5499,
+   "gancho": "A REAÇÃO DELE AO MAPA DO GTA 6",
+   "teaser": "Olha o tamanho do mapa"
+  },
+  {
+   "n": 12,
+   "ini": 6050,
+   "fim": 6112,
+   "gancho": "ELIMINOU OS TRÊS DO NADA",
+   "teaser": "eliminei os três"
+  }
+ ],
+ "vod": "2932201544",
+ "youtube": "https://youtu.be/Q9ZqVAdtASE",
+ "obs": "ini/fim em segundos da VOD da Twitch. Cortes 3, 6 e 12 com --com-pausas (ação sem fala)."
+}

@@ -1,1 +1,4 @@
 faster-whisper>=1.2
+opencv-python-headless
+pillow
+numpy

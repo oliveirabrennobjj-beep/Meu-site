@@ -55,10 +55,11 @@ def main():
             if not all(ok):
                 print(f"corte {c['n']}: faltaram pedaços, pulando", flush=True)
                 continue
-            (tmp / 'l.txt').write_text(''.join(f"file '{tmp / f'{n}.ts'}'\n" for n in nums))
+            # junta os bytes dos pedaços (o concat do ffmpeg se perde nas VODs com faixa timed_id3)
             junto = tmp / 'junto.ts'
-            subprocess.run(['ffmpeg', '-v', 'error', '-y', '-f', 'concat', '-safe', '0', '-i', str(tmp / 'l.txt'),
-                            '-c', 'copy', str(junto)], check=True)
+            with open(junto, 'wb') as f:
+                for n in nums:
+                    f.write((tmp / f'{n}.ts').read_bytes())
             nome = f"{c['n']:02d}.mp4"
             # recorta e normaliza para 30 fps (o editor trabalha em 30)
             subprocess.run(['ffmpeg', '-v', 'error', '-y', '-ss', f'{ini - primeiro * 10:.3f}', '-i', str(junto),

@@ -67,10 +67,11 @@ def main():
     ap.add_argument('--saida', default=str(AQUI / 'prontos'))
     ap.add_argument('--credito', default='')
     ap.add_argument('--lista', default=str(AQUI / 'lista.json'))
-    ap.add_argument('--estilo', default='ref', choices=['ref', 'game', 'game-titulo', 'padrao'])
+    ap.add_argument('--estilo', default='ref', choices=['ref', 'game', 'game-titulo', 'game-amarelo', 'padrao'])
     ap.add_argument('--nome', default='EDUARDA CAMPOPIANO', help='nome padrão de quem fala')
     ap.add_argument('--arroba', default='', help='@ do seu canal')
     ap.add_argument('--com-pausas', action='store_true', help='não tira os silêncios longos')
+    ap.add_argument('--camera', help='moldura padrão da câmera x0,y0,x1,y1 (0-1) quando o rosto some')
     a = ap.parse_args()
 
     brutos = Path(a.brutos)
@@ -108,14 +109,17 @@ def main():
         if teaser and teaser[0] < 2.5:   # clímax já está no começo: teaser não acrescenta nada
             teaser = None
         destino = Path(a.saida) / nome_arquivo(c['n'], c['gancho'])
-        if a.estilo == 'ref' or a.estilo.startswith('game'):
+        if a.estilo == 'game-amarelo':   # título curto e seco, sem emoji (fonte condensada)
+            titulo, nome = c['gancho'], ''
+        elif a.estilo == 'ref' or a.estilo.startswith('game'):
             fim_txt = '' if c['gancho'].rstrip().endswith(('?', '!', '...')) else '!'
             titulo = f"•{c['gancho']}{fim_txt} {c.get('emoji', '🤯')}"
             nome = f"•{c.get('nome', a.nome)} 🎙️🔥"
         else:
             titulo, nome = c['gancho'], ''
         r = editar.editar_com_teaser(video, ini, fim, rel, titulo, destino, credito, teaser,
-                                     estilo=a.estilo, nome=nome, arroba=a.arroba)
+                                     estilo=a.estilo, nome=nome, arroba=a.arroba,
+                                     camera=[float(x) for x in a.camera.split(',')] if a.camera else None)
         print(json.dumps({'n': c['n'], **r}, ensure_ascii=False)[:300], flush=True)
 
 
