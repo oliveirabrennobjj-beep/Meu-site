@@ -205,6 +205,20 @@
       "skillPath": "skills/migration/SKILL.md",
       "computedHash": "e7c6efc84ff8f85d0242e7f29f51c09fd333c294cc3123ef8ee4b2aca2a93192"
     },
+    "muapi-models": {
+      "source": "SamurAIGPT/muapi-skills",
+      "commit": "1dd7527a9d5e0477e18af8baf8c6915053585680",
+      "sourceType": "github",
+      "skillPath": "skills/muapi-models/SKILL.md",
+      "computedHash": "2495a23c1037db162a813a8080992c790e1763f1d46c1e1168e258336edfebdf"
+    },
+    "muapi-workflow": {
+      "source": "SamurAIGPT/muapi-skills",
+      "commit": "1dd7527a9d5e0477e18af8baf8c6915053585680",
+      "sourceType": "github",
+      "skillPath": "skills/library/workflow/SKILL.md",
+      "computedHash": "dddae0725df6cfbf9d92acfc1f43e62fa42e8b01f0cea21acf7ddae3459c9c88"
+    },
     "pdf": {
       "source": "anthropics/skills",
       "sourceType": "github",
@@ -312,6 +326,20 @@
       "sourceType": "github",
       "skillPath": "skills/seo-audit/SKILL.md",
       "computedHash": ""
+    },
+    "seo-project-setup": {
+      "source": "every-app/open-seo",
+      "commit": "af3f995fe3ebbe21298df152465a5436842354ee",
+      "sourceType": "github",
+      "skillPath": ".agents/skills/seo-project-setup/SKILL.md",
+      "computedHash": "1d89897c5e7359cd639ad1c291def935cfa4bcf3177fc885e7cee1ac9254edcd"
+    },
+    "seo-report": {
+      "source": "every-app/open-seo",
+      "commit": "af3f995fe3ebbe21298df152465a5436842354ee",
+      "sourceType": "github",
+      "skillPath": ".agents/skills/seo-report/SKILL.md",
+      "computedHash": "a44698347e8886fcdce5aa1db855aa2b31f2ff97876fdbe6ec3481a4b4d0e738"
     },
     "skill-creator": {
       "source": "anthropics/skills",
