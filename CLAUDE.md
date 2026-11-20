@@ -18,14 +18,14 @@ O Brenno instalou as skills para serem usadas em toda conversa. Regras:
 | Pedido | Carregar |
 |---|---|
 | Toda conversa | `caveman`; em conversa longa, também `context-optimization` |
-| Procurar coisa no código | `caveman-explore` ou `cavecrew` (economizam token) |
+| Procurar coisa no código | Antes, se existir `graphify-out/graph.json`: comando `graphify query "<pergunta>"` (ou `graphify explain "<nome>"`); não precisa carregar a skill `graphify`, ela é grande. Depois `caveman-explore` ou `cavecrew` (economizam token) |
 | Site, página, layout, qualquer coisa visual | `site-bn-digital` (se for cliente), `brainstorming`, `frontend-design`, `impeccable`, `ui-ux-pro-max`, `web-design-guidelines`, `ui-styling`, `design`, `design-system`, `brand`, `copywriting`, `design-taste-frontend` (anti cara de IA), `apple-design` (movimento e tipografia) |
 | Logo, marca, banner, post, arte | `brand`, `design`, `banner-design`, `ui-styling` |
 | Vídeo (editar, criar, legenda, divulgar) | `remotion-best-practices` + as `remotion-*` do caso (`remotion-create`, `remotion-markup`, `remotion-captions`, `remotion-multimedia`, `remotion-render`), `brag-slim` (vídeo de lançamento), `hyperframes` (vídeo em HTML), `copywriting` (roteiro); conectores Higgsfield, HyperFrames, ElevenLabs (voz) e vidIQ quando servirem. Método: `cerebro-obsidian/cofre/02 Padrões/Motion graphics com Claude Code em 5 passos.md` |
 | Assistir vídeo | `watch` |
 | Apresentação | `slides` ou `pptx`, mais `design` |
 | Textos de venda, títulos, legendas | `copywriting` |
-| Instagram (legenda, carrossel, hashtag, plano de Reels) | `instagram-marketing`, `copywriting` |
+| Instagram (legenda, carrossel, hashtag, plano de Reels) | `instagram-marketing`, `copywriting` + a `ig-*` do caso: `ig-reel` (roteiro e gancho), `ig-caption`, `ig-carousel`, `ig-story`, `ig-plan` (semana), `ig-profile` (bio), `ig-viral` (o que está dando certo no nicho), `ig-audit`, `ig-repurpose`, `ig-comment`, `ig-reply`, `ig-dm`, `ig-human` (tirar cara de IA) |
 | SEO, aparecer no Google | `seo-audit` |
 | Erro, bug, algo quebrado | `systematic-debugging`, `investigate-first` |
 | Mudança grande em código | `writing-plans`, `executing-plans`, `lean-build` |
@@ -41,7 +41,9 @@ Quando o Brenno mandar print de skill ou plugin: instalar em `.claude/skills/` c
 # Automação e lembretes
 
 - "Me lembra de …" → adicionar em `automacao/LEMBRETES.md` (commit + push).
+- "Ideia pro painel/portfólio: …" → seção "Ideias para o painel e o portfólio" de `automacao/LEMBRETES.md` (commit + push). O resumo das 06:17 sugere uma por dia e lê esse arquivo do branch `ccr-1d993679-yyz410`: se o trabalho mudar de branch, atualize o link na tarefa agendada.
 - Plano de automação (WhatsApp, vídeo, celular→PC, token, design): `automacao/PLANO.md`.
 - Tarefas agendadas: 02:43 pesquisa profunda, 06:17 resumo + lembretes, domingo 19:23 roteiros de vídeo (aviso no celular).
 - Vídeo rápido de lista/dicas: `fabrica-video/` (roteiro JSON → `./gerar.sh` → MP4 vertical).
-- Painel de vendas (prospecção WhatsApp): https://claude.ai/artifact/LMpGydYCibdZoLEf3eNBNo, fonte `automacao/painel/vendas.html`, dados no db do artifact (coleção `leads`).
+- Referência de venda (print/vídeo com o que falar quando o cliente diz X): acrescentar em "Objeções" de `automacao/painel/app/src/painel/conhecimento.ts`, rodar `npm run build` e republicar o painel.
+- Painel de vendas (prospecção WhatsApp): https://claude.ai/artifact/LMpGydYCibdZoLEf3eNBNo, fonte `automacao/painel/app/` (React; `npm run build` gera `automacao/painel/vendas.html`, que é o que se publica), dados no db do artifact (coleção `leads`).

@@ -1,0 +1,102 @@
+@import "tailwindcss" source(".");
+
+/* Layout: casca de painel (cabeçalho, 4 indicadores, gráfico, divisão por tipo, tabelas),
+   desenhada a 520px e encolhida para caber no celular, como na referência do Brenno. */
+@theme {
+  --font-sans: "Roboto", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, "Droid Sans Mono", "Roboto Mono", Menlo, Consolas, monospace;
+  --font-bjork-display: "Roboto", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+/* Visual único e escuro de propósito: o Brenno pediu igual à foto, em qualquer tema do aparelho. */
+:root {
+  color-scheme: dark;
+  --bjork-bg: #0e0907;
+  --bjork-surface: #16100d;
+  --bjork-surface-hover: #1e1612;
+  --bjork-surface-active: #2a1f18;
+  --bjork-panel: #0a0705;
+  --bjork-menu: rgba(22, 16, 13, 0.98);
+  --bjork-field: rgba(22, 16, 13, 0.95);
+  --bjork-field-inset: rgba(10, 7, 5, 0.75);
+  --bjork-text: #f7eee8;
+  --bjork-text-medium: rgba(237, 237, 237, 0.72);
+  --bjork-text-muted: rgba(237, 237, 237, 0.6);
+  --bjork-text-soft: rgba(237, 237, 237, 0.4);
+  --bjork-text-faint: rgba(237, 237, 237, 0.22);
+  --bjork-border: #2b201a;
+  --bjork-border-strong: #3f2f25;
+  --bjork-accent: #ff6a1f;
+  --bjork-accent-hover: #ff8240;
+  --bjork-accent-soft: rgba(255, 106, 31, 0.14);
+  --bjork-accent-line: rgba(255, 106, 31, 0.42);
+  --bjork-accent-gradient: linear-gradient(135deg, #ffa05c 0%, #ff6a1f 55%, #e2480f 100%);
+  --bjork-glow: radial-gradient(70% 55% at 100% 0%, rgba(255, 106, 31, 0.2), transparent 70%), radial-gradient(55% 45% at 0% 100%, rgba(255, 106, 31, 0.12), transparent 70%);
+  --bjork-shadow-surface: inset 0 7px 14px rgba(255, 255, 255, 0.03), inset 0 0.5px 0.5px rgba(255, 255, 255, 0.06), 0 14px 20px -6px rgba(0, 0, 0, 0.45);
+  --bjork-shadow-soft: inset 0 1px 0 rgba(255, 255, 255, 0.045);
+  --bjork-shadow-menu: inset 0 1px 0 rgba(255, 255, 255, 0.055), inset 0 12px 24px rgba(255, 255, 255, 0.018), inset 0 -18px 26px rgba(0, 0, 0, 0.24), 0 22px 42px -22px rgba(0, 0, 0, 0.9);
+  --bjork-shadow-inset: inset 0 1px 10px rgba(0, 0, 0, 0.45);
+  --bjork-ring-offset: #080808;
+  --blk-accent-ink: #ff9a5c;
+  --blk-accent-fill: #ff6a1f;
+  --blk-accent-fill-ink: #1a0b04;
+  --blk-success: #52c98c;
+  --blk-success-soft: rgba(82, 201, 140, 0.13);
+  --blk-warning: #e7b455;
+  --blk-warning-soft: rgba(231, 180, 85, 0.13);
+  --blk-error: #f2796b;
+  --blk-error-soft: rgba(242, 121, 107, 0.14);
+  --blk-chart-ghost: rgba(237, 237, 237, 0.42);
+  --blk-scrim: rgba(0, 0, 0, 0.62);
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  position: relative;
+  overflow: hidden;
+  background: var(--bjork-bg);
+  color: var(--bjork-text);
+  font-family: var(--font-sans);
+}
+
+@utility hide-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Laranja espalhado: preenchimento em degradê e fundo com brilho que se apaga. */
+.bjork-fill {
+  background-image: var(--bjork-accent-gradient);
+}
+.bjork-canvas {
+  background-color: var(--bjork-bg);
+  background-image: var(--bjork-glow);
+}
+
+@keyframes blk-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes blk-slide-left {
+  from {
+    transform: translateX(-100%);
+  }
+}
+@keyframes blk-slide-up {
+  from {
+    transform: translateY(100%);
+  }
+}
+@keyframes blk-toast-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 8px);
+  }
+}

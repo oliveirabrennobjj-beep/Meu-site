@@ -1,0 +1,10 @@
+# Fora do mapa do graphify: skills e bibliotecas de terceiros, saídas de build e mídia.
+.agents/
+.claude/
+awesome-design-md/
+node_modules/
+dist/
+.venv/
+graphify-out/
+cerebro-obsidian/cofre/
+como-funciona/minicurso/

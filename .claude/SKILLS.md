@@ -17,6 +17,8 @@ Instaladas em 2026-10-03 a partir das fontes abaixo.
 | impeccable + `.claude/agents/impeccable-*.md` | pbakaus/impeccable (`e103efe`, skill v4.5.0) | Cópia da build para Claude Code commitada no repositório da fonte (`.claude/skills/impeccable` e `.claude/agents/`). Ver observações |
 | brag, brag-slim | latent-spaces/brag (`069432c`, v0.4.0) | `npx skills add latent-spaces/brag -a claude-code --copy -y` (2026-10-14). Revisada antes: só instruções em Markdown, músicas/efeitos e um script Python de análise de batidas (`librosa`), sem acesso à rede nem hooks. No Opus 5.5 o `/brag` passa para o `/brag-slim`. As músicas incluídas não têm licença confirmada (o README da fonte avisa); o vídeo da BN Digital usa trilha original |
 | brainstorming, verification-before-completion | obra/superpowers (`bb92a77`, v7.0.0) | `npx skills add obra/superpowers --skill brainstorming --skill verification-before-completion -a claude-code --copy -y` (2026-10-14). Revisadas antes: o `brainstorming` traz um servidor local (só `localhost`, com token) para mostrar rascunhos no navegador |
+| graphify | PyPI `graphifyy` 0.9.99 (Graphify-Labs/graphify, Apache-2.0) | `pip install graphifyy==0.9.99` no `.venv` e `graphify install --project --platform claude` (2026-11-14). Revisada antes: sem telemetria; o mapa de código é feito no próprio computador (tree-sitter), só usa rede se configurar um modelo ou no `graphify add <url>`. Ver observações |
+| ig-reel, ig-caption, ig-carousel, ig-story, ig-plan, ig-profile, ig-viral, ig-audit, ig-repurpose, ig-comment, ig-reply, ig-dm, ig-human | Jakeschincariol/instagram-agent-skill (`d03c56b`, v1.0.0, MIT) | `npx skills add Jakeschincariol/instagram-agent-skill -a claude-code --copy -y` (2026-11-15). Revisadas antes: só instruções em Markdown e scripts Python da biblioteca padrão (pontuar gancho, conferir legenda, tirar marcas de IA), sem acesso à rede. As regras proíbem automatizar comentário e DM e pedir senha do Instagram. Fórmulas e lista de palavras estão em inglês: adaptar ao português |
 | site-bn-digital | Própria (criada em 2026-11-01 para a BN Digital) | Escrita neste repositório: `SKILL.md`, `references/ramos.md`, `references/checklist.md` e `scripts/capturas.mjs` (Playwright já instalado no ambiente). Uso: "faz um site pra <negócio>" |
 
 Pré-existentes e preservadas sem alteração: ui-ux-pro-max, banner-design, brand, design, design-system, slides, ui-styling.
@@ -34,6 +36,12 @@ Quando o projeto adotar React ou Next.js, instale com:
 (no repositório, a pasta é `skills/react-best-practices`, mas o nome da skill é `vercel-react-best-practices`).
 
 ## Observações
+
+- **graphify**: mapa do código em `graphify-out/` (fora do Git), para achar onde cada coisa está com `graphify query "<pergunta>"`, `graphify explain "<nome>"` e `graphify path "A" "B"`.
+  O `session-start.sh` chama `.claude/hooks/graphify-mapa.sh` em segundo plano: instala a versão fixa e monta o mapa só de código (uns 40 s, sem gastar token); o registro fica em `.venv/graphify-mapa.log`. Depois de mexer no código: `graphify update .`.
+  A versão é fixa porque o pacote sai quase todo dia. O Passo 1 da skill usa `uv` e pegaria a última versão: use o `graphify` do `.venv`. Para trocar de versão, revise o pacote novo e mude `GRAPHIFY_VERSION`.
+  O instalador também grava ganchos `PreToolUse` em `.claude/settings.json` (rodam a cada busca e leitura) e um bloco em inglês no `CLAUDE.md`. Os dois foram retirados: a linha "Procurar coisa no código" do `CLAUDE.md` faz o mesmo papel.
+  `.graphifyignore` deixa de fora skills, bibliotecas de terceiros e o cofre. Documentos e imagens não entram no mapa: isso usaria subagentes e gastaria token. O Graphify Cloud (pago) não foi instalado.
 
 - **Impeccable**: `npx impeccable install` falhou neste ambiente (o host `impeccable.style` está bloqueado pela política de rede, e o download do bundle assinado retornou 403).
   `npx skills add pbakaus/impeccable` instala a variante universal `.agents/`, cujos caminhos internos apontam para `.agents/skills/impeccable/...`, então foi substituída pela build específica do Claude.
