@@ -546,6 +546,7 @@ export function Demonstracao({
   onRamo: (valor: string) => void;
 }) {
   const t = temaDe(lead);
+  const [fotoReal, setFotoReal] = useState(true);
   const fechar = useRef<HTMLButtonElement>(null);
   const pagina = useRef<HTMLElement>(null);
   const [aviso, setAviso] = useState("");
@@ -596,6 +597,8 @@ export function Demonstracao({
   }
 
   const cidade = cidadeDe(lead);
+  // Capa: a foto da própria loja no Google Maps; se não carregar, a foto do sub-nicho.
+  const capa = lead.foto && fotoReal ? `${lead.foto}=w720-h900-k-no` : `img/demo/${t.foto}-1.webp`;
   const ramoDaLoja = ramoDe(lead);
   // O tipo do Google só aparece quando é do ramo que está na tela.
   const tipo = lead.tipo?.trim();
@@ -710,7 +713,9 @@ export function Demonstracao({
             /* Capa: a foto ocupa o topo e o texto vai por cima */
             <section className="relative overflow-hidden" style={{ color: "#ffffff" }}>
               <img
-                src={`img/demo/${t.foto}-1.webp`}
+                src={capa}
+                crossOrigin="anonymous"
+                onError={() => setFotoReal(false)}
                 alt=""
                 width={720}
                 height={900}
@@ -768,7 +773,9 @@ export function Demonstracao({
                 <div className="relative mt-10 h-[340px]">
                   <div aria-hidden="true" className="absolute inset-x-2 inset-y-4" style={{ background: t.mancha, borderRadius: BOLHA2, transform: "rotate(-8deg)" }} />
                   <img
-                    src={`img/demo/${t.foto}-1.webp`}
+                    src={capa}
+                    crossOrigin="anonymous"
+                    onError={() => setFotoReal(false)}
                     alt=""
                     width={720}
                     height={900}

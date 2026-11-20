@@ -38,6 +38,8 @@ export interface Lead {
   ramo?: string;
   /** Sub-nicho escolhido na prévia: id de SUBNICHOS, "" para usar o estilo geral do ramo, null/ausente para detectar sozinho. */
   subnicho?: string | null;
+  /** Foto principal da ficha da loja no Google Maps (lh3.googleusercontent.com, sem o sufixo de tamanho). */
+  foto?: string;
   /** Loja tirada da lista porque não dá para falar com ela; null quando o Brenno traz de volta. */
   tirada?: { motivo: MotivoTirada; em: string } | null;
   /** Outro celular que o Google mostra para a loja, para tentar quando o principal não dá certo. */
@@ -1166,6 +1168,10 @@ export const fmtPct = (parte: number, total: number) =>
 export type LeadNovo = Omit<Lead, "id"> & { criado: string };
 
 /** Lê a lista JSON da pesquisa diária e devolve só empresas válidas e ainda não cadastradas. */
+/** Só aceita foto do Google (a prévia carrega direto de lá). */
+export const lerFoto = (v: unknown) =>
+  typeof v === "string" && /^https:\/\/lh\d\.googleusercontent\.com\/[\w/-]+$/.test(v) ? v : null;
+
 export function lerImportacao(texto: string, existentes: Iterable<string>): LeadNovo[] {
   let lista: unknown;
   try {
@@ -1198,6 +1204,7 @@ export function lerImportacao(texto: string, existentes: Iterable<string>): Lead
       ...(x.maps ? { maps: String(x.maps) } : {}),
       ...(x.fonte ? { fonte: String(x.fonte) } : {}),
       ...(lerZap(x.zap) ? { zap: lerZap(x.zap)! } : {}),
+      ...(lerFoto(x.foto) ? { foto: lerFoto(x.foto)! } : {}),
       status: "novo",
       criado: agora,
     });
