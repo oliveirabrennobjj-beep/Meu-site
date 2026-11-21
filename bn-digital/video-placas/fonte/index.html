@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<title>BN Digital — placas de mesa</title>
+<title>BN Digital — placas NFC</title>
 <style>
   @font-face { font-family: "PF"; src: url("assets/fonts/playfair-display-latin-wght-normal.woff2") format("woff2"); font-weight: 400 900; }
   @font-face { font-family: "PF"; src: url("assets/fonts/playfair-display-latin-wght-italic.woff2") format("woff2"); font-weight: 400 900; font-style: italic; }
@@ -17,180 +17,43 @@
   .it { font-style: italic; }
   .cx { left: 0; right: 0; text-align: center; }
   .word { display: inline-block; }
+  .resto { background: radial-gradient(100% 60% at 50% 25%, #2a1a10 0%, #120a05 60%, #070302 100%); }
   .navy-bg { background: radial-gradient(120% 70% at 50% 0%, #0d2a66 0%, #071635 45%, #030a1c 100%); }
   .grid-bg { background-color: #f3f5fa;
     background-image: radial-gradient(70% 45% at 50% 42%, rgba(255,255,255,.95), rgba(255,255,255,0)),
       linear-gradient(rgba(12,40,100,.07) 2px, transparent 2px), linear-gradient(90deg, rgba(12,40,100,.07) 2px, transparent 2px);
     background-size: 100% 100%, 72px 72px, 72px 72px; background-position: 0 0, -2px -2px, -2px -2px; }
+  .table { position: absolute; left: 0; right: 0; top: 1180px; bottom: 0; background: linear-gradient(180deg,#6a4529 0%,#4a2e1b 22%,#2a190e 70%,#140b06 100%); }
+  .table::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(178deg, rgba(0,0,0,0) 0 26px, rgba(0,0,0,.10) 26px 29px); }
+  .table::after { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 4px; background: rgba(255,210,160,.35); }
   .eyebrow { font-size: 28px; font-weight: 700; letter-spacing: .22em; }
   .chip { display: inline-flex; align-items: center; gap: 14px; padding: 16px 28px; border-radius: 999px; font-size: 32px; font-weight: 600; white-space: nowrap; }
-  .phone { position: absolute; border-radius: 58px; background: #16181d; padding: 13px; box-sizing: border-box; transform-origin: 0 0;
+  .phone { position: absolute; border-radius: 56px; background: #16181d; padding: 12px; box-sizing: border-box; transform-origin: 0 0;
            box-shadow: 0 0 0 2px rgba(255,255,255,.18) inset, 0 2px 0 3px #2a2d35, 0 60px 100px -30px rgba(0,0,0,.8); }
-  .screen { position: relative; width: 100%; height: 100%; border-radius: 46px; overflow: hidden; background: #000; }
-  .notch { position: absolute; left: 50%; top: 13px; width: 32%; height: 28px; transform: translateX(-50%); border-radius: 20px; background: #000; z-index: 9; }
-  .tap { position: absolute; width: 84px; height: 84px; margin: -42px 0 0 -42px; border-radius: 50%; background: rgba(255,255,255,.45); border: 4px solid #fff; box-shadow: 0 6px 20px rgba(0,0,0,.35); opacity: 0; z-index: 20; }
-  .plate { position: absolute; border-radius: 30px; background: linear-gradient(160deg,#23272f 0%,#101318 55%,#07080b 100%); box-shadow: inset 0 0 0 2px rgba(255,255,255,.13), 0 30px 60px -20px rgba(0,0,0,.85); overflow: hidden; color: #fff; text-align: center; }
-  .plate .gloss { position: absolute; inset: 0; background: linear-gradient(118deg, rgba(255,255,255,.17) 0%, rgba(255,255,255,0) 38%); pointer-events: none; }
+  .screen { position: relative; width: 100%; height: 100%; border-radius: 45px; overflow: hidden; background: #000; }
+  .notch { position: absolute; left: 50%; top: 12px; width: 32%; height: 27px; transform: translateX(-50%); border-radius: 20px; background: #000; z-index: 9; }
+  .tap { position: absolute; width: 80px; height: 80px; margin: -40px 0 0 -40px; border-radius: 50%; background: rgba(255,255,255,.45); border: 4px solid #fff; box-shadow: 0 6px 20px rgba(0,0,0,.35); opacity: 0; z-index: 20; }
+  .plate { position: absolute; border-radius: 30px; overflow: hidden; text-align: center; box-shadow: inset 0 0 0 2px rgba(255,255,255,.13), 0 30px 60px -20px rgba(0,0,0,.85); }
+  .gloss { position: absolute; inset: 0; background: linear-gradient(118deg, rgba(255,255,255,.17) 0%, rgba(255,255,255,0) 38%); pointer-events: none; }
   .logo-b { border-radius: 50%; background: radial-gradient(circle at 35% 30%,#ffb347,#d9661f 70%); display: grid; place-items: center; font-family: "PF", serif; font-weight: 800; color: #fff; font-style: normal; }
   .mn-row { display: flex; align-items: center; gap: 14px; padding: 14px 2px; border-bottom: 1px solid #f0e2d2; }
   .mn-row img { width: 72px; height: 72px; border-radius: 16px; object-fit: cover; flex: none; }
-  .cell { position: absolute; width: 470px; height: 290px; border-radius: 30px; background: rgba(255,255,255,.06); box-shadow: inset 0 0 0 2px rgba(255,255,255,.1); box-sizing: border-box; padding: 30px; display: flex; gap: 26px; align-items: center; }
-  .mini { width: 130px; height: 190px; flex: none; border-radius: 18px; background: linear-gradient(160deg,#2a2f39,#0b0d12); box-shadow: inset 0 0 0 2px rgba(255,255,255,.14), 0 14px 30px -10px rgba(0,0,0,.7); position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; }
-  .mini i { width: 74px; height: 74px; border-radius: 50%; display: grid; place-items: center; }
   .card { position: absolute; border-radius: 34px; background: #fff; box-shadow: 0 30px 60px -24px rgba(10,30,80,.35), 0 0 0 1px rgba(10,30,80,.06); }
+  .mini { width: 130px; height: 190px; flex: none; border-radius: 18px; background: linear-gradient(160deg,#2a2f39,#0b0d12); box-shadow: inset 0 0 0 2px rgba(255,255,255,.14), 0 14px 30px -10px rgba(0,0,0,.7); position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; }
+  .mini i { width: 74px; height: 74px; border-radius: 50%; display: grid; place-items: center; }
+  .cell { position: absolute; width: 470px; height: 290px; border-radius: 30px; background: rgba(255,255,255,.06); box-shadow: inset 0 0 0 2px rgba(255,255,255,.1); box-sizing: border-box; padding: 30px; display: flex; gap: 26px; align-items: center; }
+  .app { position: absolute; inset: 0; font-family: "IN", sans-serif; }
+  .toast { position: absolute; left: 18px; right: 18px; top: 54px; border-radius: 18px; padding: 16px 18px; font-size: 19px; font-weight: 700; display: flex; align-items: center; gap: 10px; box-shadow: 0 14px 30px -10px rgba(0,0,0,.35); opacity: 0; z-index: 8; }
 </style>
 </head>
 <body>
-<div id="stage">
-
-  <!-- 1 a 3: RESTAURANTE (cardápio de papel, placa, celular) -->
-  <section class="scene" id="a13" style="background:radial-gradient(100% 60% at 50% 25%, #2a1a10 0%, #120a05 60%, #070302 100%)">
-    <div id="bokeh"></div>
-    <div class="abs" style="left:0; right:0; top:1180px; bottom:0; background:linear-gradient(180deg,#6a4529 0%,#4a2e1b 22%,#2a190e 70%,#140b06 100%)">
-      <div class="abs" style="inset:0; background:repeating-linear-gradient(178deg, rgba(0,0,0,0) 0 26px, rgba(0,0,0,.10) 26px 29px)"></div>
-      <div class="abs" style="left:0; right:0; top:0; height:4px; background:rgba(255,210,160,.35)"></div>
-      <div class="abs" style="left:80px; top:10px; width:920px; height:320px; background:radial-gradient(closest-side, rgba(255,220,170,.22), transparent)"></div>
-    </div>
-    <div class="abs" id="cam" style="inset:0; transform-origin:540px 1100px">
-      <!-- cardápio de papel -->
-      <div class="abs" style="inset:0; perspective:1400px">
-        <div class="abs" id="pm" style="left:270px; top:620px; width:540px; height:700px; transform-origin:50% 100%">
-          <div class="abs" style="inset:0; border-radius:10px; background:#efe2c8; background-image:repeating-linear-gradient(0deg, rgba(120,80,40,.05) 0 2px, transparent 2px 6px); box-shadow:inset 0 0 0 12px #e2cfaa, inset 0 0 0 14px #c9ad7d, 0 40px 60px -20px rgba(0,0,0,.8); padding:56px 54px; box-sizing:border-box; color:#5a3a1c; font-family:'PF',serif">
-            <div style="text-align:center; font-size:60px; font-weight:800; letter-spacing:.06em">CARDÁPIO</div>
-            <div style="height:3px; background:#c9ad7d; margin:18px 60px 30px"></div>
-            <div id="pm-list"></div>
-            <div class="abs" style="right:70px; bottom:90px; width:130px; height:130px; border-radius:50%; box-shadow:inset 0 0 0 9px rgba(140,90,40,.18), inset 0 0 0 14px rgba(140,90,40,.06)"></div>
-          </div>
-        </div>
-      </div>
-      <!-- placa de mesa -->
-      <div class="abs" style="inset:0; perspective:1600px">
-        <div class="abs" id="pl-w" style="left:330px; top:600px; width:420px; height:690px; transform-origin:50% 100%">
-          <div class="abs" style="left:70px; top:600px; width:280px; height:56px; background:linear-gradient(180deg,#22262f,#0b0d12); clip-path:polygon(8% 0,92% 0,100% 100%,0 100%); border-radius:0 0 18px 18px"></div>
-          <div class="abs" style="left:20px; top:640px; width:380px; height:46px; border-radius:50%; background:rgba(0,0,0,.6); filter:blur(14px)"></div>
-          <div class="plate" style="left:0; top:0; width:420px; height:608px">
-            <div class="gloss"></div>
-            <div class="logo-b" style="width:100px; height:100px; font-size:54px; margin:38px auto 0">B</div>
-            <div class="serif" style="font-size:44px; margin-top:12px" id="pl-rest"></div>
-            <div style="position:relative; width:120px; height:120px; margin:26px auto 0">
-              <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><rect x="7" y="3" width="10" height="18" rx="2.2"/><path d="M10.5 18h3"/><path d="M19.5 8.5a6 6 0 0 1 0 7M21.8 6.5a9 9 0 0 1 0 11M4.5 8.5a6 6 0 0 0 0 7M2.2 6.5a9 9 0 0 0 0 11"/></svg>
-              <div id="rings"></div>
-            </div>
-            <div style="font-size:26px; font-weight:600; color:rgba(255,255,255,.82); margin-top:10px" id="pl-aprox"></div>
-            <div style="display:flex; align-items:center; justify-content:center; gap:32px; margin-top:36px">
-              <div id="qr" style="width:122px; height:122px; background:#fff; border-radius:10px; padding:9px; box-sizing:border-box; display:grid; grid-template-columns:repeat(11,1fr)"></div>
-              <div style="text-align:left"><div style="font-size:24px; letter-spacing:.3em; color:rgba(255,255,255,.6); font-weight:700">MESA</div><div style="font-size:100px; font-weight:800; line-height:1" id="pl-mesa"></div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="abs cx serif" id="h1" style="top:200px; font-size:92px; color:#fff; padding:0 40px"></div>
-    <div class="abs cx" id="e2" style="top:165px"><span class="eyebrow" style="color:var(--blue-l)" id="e2-t"></span></div>
-    <div class="abs cx serif" id="h2" style="top:220px; font-size:96px; color:#fff; padding:0 40px"></div>
-    <div class="abs cx" id="s2sub" style="top:1420px; font-size:42px; line-height:1.4; color:var(--cream); font-weight:500"></div>
-    <!-- celular -->
-    <div class="abs" style="inset:0; perspective:2000px">
-      <div class="phone" id="ph" style="left:0; top:0; width:430px; height:880px">
-        <div class="screen" id="scr">
-          <div class="abs" style="inset:0; background:linear-gradient(160deg,#1d3b7a,#0a1430)"><div class="abs cx" style="top:150px; font-size:96px; font-weight:300; color:#fff">20:35</div><div class="abs cx" style="top:270px; font-size:22px; color:rgba(255,255,255,.7)">sexta-feira</div></div>
-          <div class="abs" id="mn" style="inset:0; background:#fff8f0; overflow:hidden">
-            <div id="mn-in" class="abs" style="left:0; right:0; top:0; padding:62px 20px 0">
-              <div style="display:flex; align-items:center; gap:14px">
-                <i class="logo-b" style="width:56px; height:56px; font-size:30px">B</i>
-                <b class="serif" style="font-size:32px; color:#2a1a10; flex:1" id="mn-name"></b>
-                <span style="background:var(--orange); color:#fff; border-radius:999px; padding:8px 16px; font-size:18px; font-weight:800" id="mn-mesa"></span>
-              </div>
-              <div style="position:relative; margin-top:16px; height:290px; border-radius:24px; overflow:hidden">
-                <img id="mn-hl-img" style="width:100%; height:100%; object-fit:cover">
-                <div class="abs" style="inset:0; background:linear-gradient(180deg,transparent 45%,rgba(0,0,0,.78))"></div>
-                <div class="abs" style="left:20px; bottom:18px; color:#fff"><span style="background:var(--warm); color:#2a1a10; border-radius:999px; padding:5px 12px; font-size:15px; font-weight:800">MAIS PEDIDO</span>
-                  <div class="serif" style="font-size:32px; margin-top:8px" id="mn-hl-n"></div><div style="font-size:24px; font-weight:800" id="mn-hl-p"></div></div>
-              </div>
-              <div style="display:flex; gap:10px; margin-top:16px; font-size:18px; font-weight:700">
-                <span style="background:#2a1a10; color:#fff; border-radius:999px; padding:9px 18px">Burgers</span><span style="background:#f3e4d3; color:#6b5240; border-radius:999px; padding:9px 18px">Porções</span><span style="background:#f3e4d3; color:#6b5240; border-radius:999px; padding:9px 18px">Bebidas</span>
-              </div>
-              <div id="mn-list" style="margin-top:6px"></div>
-            </div>
-            <div class="abs" style="left:16px; right:16px; bottom:16px; height:64px; border-radius:18px; background:var(--wa); color:#fff; display:flex; align-items:center; justify-content:center; gap:10px; font-size:21px; font-weight:800"><svg viewBox="0 0 24 24" width="26" height="26" fill="#fff"><use href="#wa"/></svg>Fazer pedido</div>
-          </div>
-          <div class="abs" id="dt" style="inset:0; overflow:hidden; background:#140b06"></div>
-          <div class="tap" id="tap1"></div>
-          <div class="notch"></div>
-        </div>
-      </div>
-    </div>
-    <div class="abs cx serif" id="c1" style="top:1400px; font-size:72px; color:#fff"></div>
-    <div class="abs cx serif" id="c2" style="top:1400px; font-size:72px; color:#fff"></div>
-  </section>
-
-  <!-- 4. VANTAGENS -->
-  <section class="scene grid-bg" id="a4">
-    <div id="v-wrap"></div>
-    <!-- visual 0: três pratos -->
-    <div class="abs" id="v-vis0" style="left:0; right:0; top:600px; height:700px"></div>
-    <!-- visual 1: preço atualizado -->
-    <div class="abs" id="v-vis1" style="left:0; right:0; top:600px; height:700px">
-      <div class="card" style="left:90px; top:80px; width:900px; height:240px; display:flex; align-items:center; gap:34px; padding:0 40px; box-sizing:border-box">
-        <img id="v1-img" style="width:170px; height:170px; border-radius:26px; object-fit:cover">
-        <div style="flex:1"><div class="serif" style="font-size:52px; color:var(--ink)" id="v1-name"></div><div style="font-size:26px; color:var(--soft); margin-top:6px">Cardápio da mesa</div></div>
-        <div style="position:relative; width:230px; height:120px; text-align:right">
-          <div class="abs" id="v1-old" style="right:0; top:14px; font-size:48px; font-weight:800; color:var(--ink); white-space:nowrap"><span id="v1-old-t"></span><i id="v1-strike" class="abs" style="left:0; top:50%; height:6px; width:0; background:#e0453a; border-radius:3px"></i></div>
-          <div class="abs" id="v1-new" style="right:0; top:14px; font-size:48px; font-weight:800; color:var(--blue); white-space:nowrap; opacity:0"></div>
-        </div>
-      </div>
-      <div class="abs cx" id="v1-toast" style="top:400px"><span class="chip" style="background:#e7f8ee; color:#0f7a3d; font-size:36px; box-shadow:0 0 0 2px rgba(22,163,74,.35) inset">
-        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span id="v1-toast-t"></span></span></div>
-    </div>
-    <!-- visual 2: aproxime -->
-    <div class="abs" id="v-vis2" style="left:0; right:0; top:600px; height:700px">
-      <div class="abs" style="left:330px; top:40px; width:420px; height:420px; border-radius:50%; background:radial-gradient(circle at 40% 35%, #2f86ff, #0a4fc0 70%); box-shadow:0 40px 80px -30px rgba(10,80,200,.6); display:grid; place-items:center">
-        <svg width="220" height="220" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round"><rect x="7" y="3" width="10" height="18" rx="2.2"/><path d="M10.5 18h3"/><path d="M19.5 8.5a6 6 0 0 1 0 7M21.8 6.5a9 9 0 0 1 0 11M4.5 8.5a6 6 0 0 0 0 7M2.2 6.5a9 9 0 0 0 0 11"/></svg>
-      </div>
-      <div id="v2-rings"></div>
-      <div class="abs cx" style="top:520px"><span class="chip" style="background:#fff; color:var(--ink); font-size:34px; box-shadow:0 14px 30px -12px rgba(10,30,80,.3)">Aproxime · pronto</span></div>
-    </div>
-  </section>
-
-  <!-- 5. OUTRAS PLACAS -->
-  <section class="scene navy-bg" id="a5">
-    <div class="abs cx serif" id="h5" style="top:190px; font-size:100px; color:#fff"></div>
-    <div id="cells"></div>
-    <div class="abs cx" id="f5" style="top:1490px; font-size:38px; color:var(--soft-d); font-weight:500"></div>
-  </section>
-
-  <!-- 6. PROVA: FOTO REAL -->
-  <section class="scene" id="a6" style="background:#000">
-    <img id="a6-img" class="abs" src="assets/placa-nfc-azul-no-balcao.webp" style="left:0; top:0; width:100%; height:100%; object-fit:cover; object-position:36% 50%">
-    <div class="abs" style="inset:0; background:linear-gradient(180deg, rgba(0,0,0,.15) 0%, rgba(0,0,0,0) 35%, rgba(2,8,24,.75) 70%, rgba(2,8,24,.95) 100%)"></div>
-    <div class="abs cx" id="e6" style="top:1250px"><span class="chip" style="background:rgba(255,255,255,.14); color:#fff; font-size:28px; box-shadow:inset 0 0 0 2px rgba(255,255,255,.25)">Placa real da BN Digital</span></div>
-    <div class="abs cx serif" id="h6" style="top:1360px; font-size:88px; color:#fff"></div>
-  </section>
-
-  <!-- 7. CHAMADA FINAL -->
-  <section class="scene" id="a7" style="background:linear-gradient(180deg,#0b3aa8 0%,#06215f 55%,#020a1f 100%)">
-    <div class="abs" style="left:180px; top:-260px; width:720px; height:720px; border-radius:50%; background:radial-gradient(closest-side, rgba(77,163,255,.6), transparent)"></div>
-    <img id="a7-logo" class="abs" src="assets/logo-bn-digital.webp" style="left:440px; top:330px; width:200px; height:200px; border-radius:50%; box-shadow:0 0 0 8px rgba(255,255,255,.12)">
-    <div class="abs cx" id="a7-pre" style="top:600px; font-size:40px; color:rgba(255,255,255,.85); font-weight:500; padding:0 60px"></div>
-    <div class="abs cx serif" id="h7" style="top:700px; font-size:112px; color:#fff; padding:0 40px"></div>
-    <div class="abs cx" id="btn-w" style="top:1090px">
-      <div id="btn" style="position:relative; display:inline-flex; align-items:center; gap:24px; background:var(--wa); color:#fff; border-radius:999px; padding:34px 64px; font-size:60px; font-weight:800; overflow:hidden; box-shadow:0 24px 50px -16px rgba(37,211,102,.6)">
-        <svg viewBox="0 0 24 24" width="70" height="70" fill="#fff"><use href="#wa"/></svg><span id="btn-t"></span>
-        <i id="shine" style="position:absolute; top:0; bottom:0; width:120px; left:-200px; background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent)"></i>
-      </div>
-      <div class="tap" id="tap7" style="left:540px; top:80px"></div>
-    </div>
-    <div class="abs cx" id="a7-num" style="top:1300px; font-size:58px; color:#fff; font-weight:800"></div>
-    <div class="abs cx" id="a7-ig" style="top:1395px; font-size:40px; color:#fff; font-weight:600"></div>
-    <div class="abs cx" id="a7-city" style="top:1465px; font-size:32px; color:rgba(255,255,255,.7)"></div>
-  </section>
-</div>
-
+<div id="stage"></div>
 <svg width="0" height="0" style="position:absolute"><defs><path id="wa" d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.69.25-1.29.17-1.41-.07-.12-.27-.2-.57-.35M12.05 21.5h-.01a9.43 9.43 0 0 1-4.8-1.32l-.35-.2-3.57.93.95-3.48-.22-.36a9.4 9.4 0 0 1-1.44-5.02c0-5.2 4.24-9.44 9.45-9.44 2.52 0 4.89.99 6.67 2.77a9.37 9.37 0 0 1 2.76 6.68c0 5.21-4.24 9.44-9.44 9.44m8.04-17.48A11.3 11.3 0 0 0 12.05.7C5.78.7.68 5.8.68 12.06c0 2 .52 3.96 1.52 5.68L.6 23.3l5.7-1.5a11.33 11.33 0 0 0 5.74 1.47h.01c6.26 0 11.36-5.1 11.37-11.37 0-3.03-1.18-5.89-3.33-8.03"/></defs></svg>
 
 <script src="textos.js"></script>
+<script src="tempo.js"></script>
 <script>
-const C = window.TEXTOS;
+const C = window.TEXTOS, TL = window.TL;
 const $ = (id) => document.getElementById(id);
 const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
 const prog = (t, a, b) => clamp((t - a) / (b - a));
@@ -198,40 +61,26 @@ const outCubic = (x) => 1 - Math.pow(1 - x, 3);
 const outBack = (x, c = 1.5) => 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2);
 const inOut = (x) => x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
 const lerp = (a, b, x) => a + (b - a) * x;
-function rich(s, color = "var(--blue-l)") {
-  return s.split("|").join("<br>").replace(/\*([^*]+)\*/g, `<span class="it" style="color:${color}">$1</span>`);
-}
+const V = (n, f) => TL[n].v + TL[n].d * f;   // momento em que a voz da cena n está na fração f
+function rich(s, color = "var(--blue-l)") { return s.split("|").join("<br>").replace(/\*([^*]+)\*/g, `<span class="it" style="color:${color}">$1</span>`); }
 function words(el, s, color = "var(--blue-l)") {
   let html = "", inHi = false;
-  s.split("|").forEach((line, li) => {
-    if (li) html += "<br>";
-    line.trim().split(" ").forEach((w, wi) => {
-      if (w.startsWith("*")) inHi = true;
-      const end = w.endsWith("*"), clean = w.replace(/\*/g, "");
-      html += (wi ? " " : "") + `<span class="word${inHi ? " it" : ""}"${inHi ? ` style="color:${color}"` : ""}>${clean}</span>`;
-      if (end) inHi = false;
-    });
-  });
-  el.innerHTML = html;
-  return [...el.querySelectorAll(".word")];
+  s.split("|").forEach((line, li) => { if (li) html += "<br>";
+    line.trim().split(" ").forEach((w, wi) => { if (w.startsWith("*")) inHi = true; const end = w.endsWith("*"), clean = w.replace(/\*/g, "");
+      html += (wi ? " " : "") + `<span class="word${inHi ? " it" : ""}"${inHi ? ` style="color:${color}"` : ""}>${clean}</span>`; if (end) inHi = false; }); });
+  el.innerHTML = html; return [...el.querySelectorAll(".word")];
 }
-function enter(el, t, at, dur = 0.5, dy = 50, ease = outCubic) {
-  const p = ease(prog(t, at, at + dur));
-  el.style.opacity = clamp(prog(t, at, at + dur * 0.7));
-  el.style.transform = `translateY(${(1 - p) * dy}px)`;
-}
+function enter(el, t, at, dur = 0.5, dy = 50) { const p = outCubic(prog(t, at, at + dur)); el.style.opacity = clamp(prog(t, at, at + dur * 0.7)); el.style.transform = `translateY(${(1 - p) * dy}px)`; }
 function wordsIn(ws, t, at, step = 0.08, dur = 0.45, dy = 50) { ws.forEach((w, i) => enter(w, t, at + i * step, dur, dy)); }
-function fadeOut(el, t, at, dur = 0.3) { const k = 1 - prog(t, at, at + dur); el.style.opacity = parseFloat(el.style.opacity || 1) * k; return k; }
+function pop(el, t, at, dur = 0.45, from = 0.7) { const p = prog(t, at, at + dur); el.style.opacity = clamp(p * 2); el.style.transform = `scale(${lerp(from, 1, outBack(p, 2))})`; }
 function tapAt(el, t, x, y, at) {
   el.style.left = x + "px"; el.style.top = y + "px";
   const a = prog(t, at - 0.25, at - 0.05), press = prog(t, at, at + 0.15), gone = prog(t, at + 0.25, at + 0.45);
-  el.style.opacity = clamp(a) * (1 - gone);
-  el.style.transform = `scale(${lerp(1.25, 1, a) - 0.18 * Math.sin(Math.PI * press)})`;
+  el.style.opacity = clamp(a) * (1 - gone); el.style.transform = `scale(${lerp(1.25, 1, a) - 0.18 * Math.sin(Math.PI * press)})`;
 }
 function reveal(el, t, a, d, kind, x = 540, y = 960) {
-  const p = inOut(prog(t, a, a + d));
-  el.style.opacity = 1;
-  if (p >= 1) { el.style.clipPath = "none"; return; }
+  const p = inOut(prog(t, a, a + d)); el.style.opacity = 1;
+  if (p >= 1 || kind === "none") { el.style.clipPath = "none"; return; }
   if (kind === "circle") el.style.clipPath = `circle(${p * 2300}px at ${x}px ${y}px)`;
   if (kind === "up") el.style.clipPath = `inset(${(1 - p) * 100}% 0 0 0)`;
   if (kind === "left") el.style.clipPath = `inset(0 0 0 ${(1 - p) * 100}%)`;
@@ -243,170 +92,391 @@ function ringsIn(box, n, size, left, top, color) { for (let i = 0; i < n; i++) {
   r.style.cssText = `left:${left}px; top:${top}px; width:${size}px; height:${size}px; border-radius:50%; border:6px solid ${color}; opacity:0`; box.appendChild(r); } return [...box.children]; }
 function pulse(rs, t, at, every = 0.22, dur = 0.9, grow = 2.4) { rs.forEach((r, i) => { const c = prog(t, at + i * every, at + i * every + dur);
   r.style.opacity = c > 0 && c < 1 ? (1 - c) * 0.95 : 0; r.style.transform = `scale(${0.6 + c * grow})`; }); }
+function el(tag, cls, css, html, parent) { const e = document.createElement(tag); if (cls) e.className = cls; if (css) e.style.cssText = css; if (html) e.innerHTML = html; if (parent) parent.appendChild(e); return e; }
+function scene(id, cls, style = "") { const e = el("section", "scene " + cls, style, "", $("stage")); e.id = id; return e; }
+function bokeh(parent, seed, n = 18) { const r = rng(seed), out = []; for (let i = 0; i < n; i++) { const sz = 40 + r() * 140, warm = r() > 0.3;
+  const d = el("i", "abs", `width:${sz}px; height:${sz}px; border-radius:50%; background:${warm ? "#ffb35c" : "#ffe3b0"}; filter:blur(${8 + r() * 16}px)`, "", parent);
+  out.push({ el: d, x: r() * 1080 - sz / 2, y: 60 + r() * 1000, o: 0.06 + r() * 0.26, ph: r() * 6.28 }); } return out; }
+function bokehAnim(list, t) { list.forEach((b) => { b.el.style.transform = `translate(${b.x + Math.sin(t * 0.35 + b.ph) * 18}px, ${b.y + Math.cos(t * 0.3 + b.ph) * 12}px)`; b.el.style.opacity = b.o * (0.75 + 0.25 * Math.sin(t * 0.9 + b.ph)); }); }
 
-// ---------- MONTAGEM ----------
-// bokeh do restaurante
-const bokeh = []; { const r = rng(5); for (let i = 0; i < 22; i++) { const d = document.createElement("i"); d.className = "abs";
-  const sz = 40 + r() * 140, warm = r() > 0.3; d.style.cssText = `width:${sz}px; height:${sz}px; border-radius:50%; background:${warm ? "#ffb35c" : "#ffe3b0"}; filter:blur(${8 + r() * 16}px)`;
-  $("bokeh").appendChild(d); bokeh.push({ el: d, x: r() * 1080 - sz / 2, y: 60 + r() * 1000, o: 0.08 + r() * 0.3, ph: r() * 6.28 }); } }
-$("pm-list").innerHTML = C.cardapioPapel.map(([n, p]) => `<div style="display:flex; align-items:baseline; gap:10px; font-size:34px; margin-bottom:22px"><span>${n}</span><span style="flex:1; border-bottom:3px dotted #b89a6a; transform:translateY(-8px)"></span><span style="font-family:'MO',monospace; font-size:28px">${p}</span></div>`).join("");
-const h1Words = words($("h1"), C.gancho);
-$("e2-t").textContent = C.placaSobretitulo; const h2Words = words($("h2"), C.placaTitulo);
-$("s2sub").innerHTML = rich(C.placaSub);
-$("pl-rest").textContent = C.restaurante; $("pl-aprox").textContent = C.aproxime; $("pl-mesa").textContent = C.mesa;
-{ const r = rng(7), qr = $("qr"); for (let i = 0; i < 121; i++) { const x = i % 11, y = Math.floor(i / 11);
-    const inF = (fx, fy) => x >= fx && x < fx + 3 && y >= fy && y < fy + 3;
-    const finder = inF(0, 0) || inF(8, 0) || inF(0, 8);
-    const on = finder ? !((x === 1 || x === 9) && (y === 1 || y === 9)) || false : r() > 0.5;
-    const d = document.createElement("i"); d.style.background = on ? "#0b0d12" : "transparent"; qr.appendChild(d); } }
-const rings = ringsIn($("rings"), 3, 110, 5, 5, "#4da3ff");
-// cardápio no celular
-$("mn-name").textContent = C.restaurante; $("mn-mesa").textContent = "Mesa " + C.mesa;
-$("mn-hl-img").src = `assets/${C.destaque.foto}.webp`; $("mn-hl-n").textContent = C.destaque.nome; $("mn-hl-p").textContent = C.destaque.preco;
-$("mn-list").innerHTML = C.pratos.map((p, i) => `<div class="mn-row" id="row${i}"><img src="assets/${p.foto}.webp"><div style="flex:1"><div style="font-size:22px; font-weight:800; color:#2a1a10">${p.nome}</div><div style="font-size:16px; color:#8a7262; margin-top:3px">${p.desc}</div></div>
-  <div style="font-size:20px; font-weight:800; color:#2a1a10">${p.preco}</div><span style="width:38px; height:38px; border-radius:50%; background:var(--orange); color:#fff; display:grid; place-items:center; font-size:26px; font-weight:700">+</span></div>`).join("");
-const DT = [C.pratos[1], C.pratos[3]];
-$("dt").innerHTML = DT.map((p, i) => `<div class="abs" id="dt${i}" style="inset:0; background:#140b06">
-  <img src="assets/${p.foto}.webp" style="position:absolute; left:0; top:0; width:100%; height:620px; object-fit:cover">
-  <div class="abs" style="left:0; right:0; top:300px; height:330px; background:linear-gradient(180deg,transparent,#140b06)"></div>
-  <div class="abs" style="left:22px; top:62px; width:48px; height:48px; border-radius:50%; background:rgba(0,0,0,.45); color:#fff; display:grid; place-items:center; font-size:32px">‹</div>
-  <div class="abs" style="left:26px; right:26px; top:560px; color:#fff">
-    <span style="background:var(--warm); color:#2a1a10; border-radius:999px; padding:5px 12px; font-size:15px; font-weight:800">BURGERS</span>
-    <div class="serif" style="font-size:44px; margin-top:12px">${p.nome}</div>
-    <div style="font-size:20px; color:#d9c3a8; margin-top:6px">${p.desc}</div>
-    <div style="font-size:36px; font-weight:800; color:var(--warm); margin-top:14px">${p.preco}</div>
-  </div>
-  <div class="abs cx" style="bottom:100px; font-size:17px; color:rgba(255,255,255,.6)">Deslize para o próximo ⌃</div>
-  <div class="abs" style="left:16px; right:16px; bottom:16px; height:64px; border-radius:18px; background:var(--orange); color:#fff; display:grid; place-items:center; font-size:22px; font-weight:800">Adicionar ao pedido</div>
-</div>`).join("");
-$("c1").innerHTML = rich(C.demoLegenda1); $("c2").innerHTML = rich(C.demoLegenda2);
-// vantagens
-const vH = [], vS = [];
-C.vantagens.forEach((v, i) => {
-  const h = document.createElement("div"); h.className = "abs cx serif"; h.style.cssText = "top:210px; font-size:96px; color:var(--ink); padding:0 40px";
-  $("v-wrap").appendChild(h); vH.push(words(h, v.titulo, "var(--blue)")); h.id = "vh" + i;
-  const s = document.createElement("div"); s.className = "abs cx"; s.style.cssText = "top:1420px; font-size:42px; color:var(--soft); font-weight:500; padding:0 60px"; s.textContent = v.sub; s.id = "vs" + i;
-  $("v-wrap").appendChild(s);
-});
-const v0 = [C.destaque, C.pratos[1], C.pratos[2]].map((p, i) => { const c = document.createElement("div"); c.className = "card";
-  c.style.cssText = `left:${55 + i * 330}px; top:${i === 1 ? 40 : 90}px; width:310px; height:430px; overflow:hidden; transform-origin:50% 100%`;
-  c.innerHTML = `<img src="assets/${p.foto}.webp" style="width:100%; height:300px; object-fit:cover"><div style="padding:18px 22px"><div class="serif" style="font-size:34px; color:var(--ink)">${p.nome}</div><div style="font-size:30px; font-weight:800; color:var(--orange); margin-top:6px">${p.preco}</div></div>`;
-  $("v-vis0").appendChild(c); return c; });
-$("v1-img").src = `assets/${C.destaque.foto}.webp`; $("v1-name").textContent = C.destaque.nome;
-$("v1-old-t").textContent = C.precoAntes; $("v1-new").textContent = C.precoDepois; $("v1-toast-t").textContent = C.avisoAtualizado;
-const v2Rings = ringsIn($("v2-rings"), 3, 420, 330, 40, "rgba(10,102,232,.55)");
-// outras placas
-const h5Words = words($("h5"), C.placasTitulo);
-const PL = {
-  "Cardápio": ["#f08a24", `<path d="M4 3h12a2 2 0 0 1 2 2v16l-3-2-3 2-3-2-3 2V5a2 2 0 0 1 2-2zM8 8h6M8 12h6M8 16h3"/>`],
-  "Wi-Fi": ["#0a66e8", `<path d="M2.5 9a14 14 0 0 1 19 0M5.5 12.5a9.5 9.5 0 0 1 13 0M8.6 16a5 5 0 0 1 6.8 0"/><circle cx="12" cy="19.2" r="1" fill="#fff"/>`],
-  "Pix": ["#32bcad", `<path d="M12 3.5 20.5 12 12 20.5 3.5 12z"/><path d="M8.5 12h7"/>`],
-  "Instagram": ["linear-gradient(45deg,#f58529,#dd2a7b 55%,#8134af)", `<rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".9" fill="#fff"/>`],
-  "WhatsApp": ["#25d366", `<use href="#wa" fill="#fff" stroke="none"/>`],
-  "Google": ["#f5a300", `<path d="M12 3.2l2.6 5.5 6 .7-4.4 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.4-4.1 6-.7z" fill="#fff"/>`],
+// ícones (traço branco, viewBox 24)
+const ICON = {
+  "Cardápio": [`#f08a24`, `<path d="M4 3h12a2 2 0 0 1 2 2v16l-3-2-3 2-3-2-3 2V5a2 2 0 0 1 2-2zM8 8h6M8 12h6M8 16h3"/>`],
+  "Wi-Fi": [`#0a66e8`, `<path d="M2.5 9a14 14 0 0 1 19 0M5.5 12.5a9.5 9.5 0 0 1 13 0M8.6 16a5 5 0 0 1 6.8 0"/><circle cx="12" cy="19.2" r="1" fill="#fff"/>`],
+  "Pix": [`#32bcad`, `<path d="M12 3.5 20.5 12 12 20.5 3.5 12z"/><path d="M8.5 12h7"/>`],
+  "Instagram": [`linear-gradient(45deg,#f58529,#dd2a7b 55%,#8134af)`, `<rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".9" fill="#fff"/>`],
+  "WhatsApp": [`#25d366`, `<use href="#wa" fill="#fff" stroke="none"/>`],
+  "Google": [`#f5a300`, `<path d="M12 3.2l2.6 5.5 6 .7-4.4 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.4-4.1 6-.7z" fill="#fff"/>`],
+  "Localização": [`#e8453c`, `<path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.6"/>`],
+  "Site": [`#0a2a66`, `<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>`],
+  "TikTok": [`#111111`, `<path d="M14 3v11.5a3.5 3.5 0 1 1-3.5-3.5"/><path d="M14 3c.5 2.7 2.4 4.4 5 4.6"/>`],
+  "Facebook": [`#1877f2`, `<path d="M14.5 21v-7.5H17l.5-3h-3V8.6c0-.9.3-1.6 1.6-1.6h1.6V4.3c-.3 0-1.3-.1-2.4-.1-2.4 0-3.9 1.4-3.9 4.1v2.2H8.6v3H11V21"/>`],
+  "Contato": [`#7c3aed`, `<rect x="3" y="4.5" width="18" height="15" rx="2.5"/><circle cx="9" cy="11" r="2.4"/><path d="M5.5 16.5c.7-1.6 2-2.5 3.5-2.5s2.8.9 3.5 2.5M14.5 9.5h4M14.5 13h4"/>`],
+  "Qualquer link": [`#0f766e`, `<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>`],
 };
-const cells = C.placas.map(([n, d], i) => { const [bg, ic] = PL[n] || ["#0a66e8", `<circle cx="12" cy="12" r="8"/>`];
-  const c = document.createElement("div"); c.className = "cell"; c.style.left = (60 + (i % 2) * 490) + "px"; c.style.top = (470 + Math.floor(i / 2) * 320) + "px";
-  c.innerHTML = `<div class="mini"><i style="background:${bg}"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ic}</svg></i>
-    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="1.6" stroke-linecap="round"><path d="M15.5 8.5a5 5 0 0 1 0 7M18 6.5a8.5 8.5 0 0 1 0 11M8.5 8.5a5 5 0 0 0 0 7M6 6.5a8.5 8.5 0 0 0 0 11"/></svg></div>
-    <div><div style="font-size:42px; font-weight:800; color:#fff">${n}</div><div style="font-size:29px; line-height:1.3; color:var(--soft-d); margin-top:8px">${d}</div></div>`;
-  $("cells").appendChild(c); return c; });
-$("f5").textContent = C.placasRodape;
-const h6Words = words($("h6"), C.provaTitulo);
-$("a7-pre").textContent = C.finalPre; const h7Words = words($("h7"), C.finalChamada);
-$("btn-t").textContent = C.botao; $("a7-num").textContent = C.whatsapp; $("a7-ig").textContent = C.instagram; $("a7-city").textContent = C.cidade;
+const NFC_SVG = (sz, col = "#fff") => `<svg width="${sz}" height="${sz}" viewBox="0 0 24 24" fill="none" stroke="${col}" stroke-width="1.5" stroke-linecap="round"><rect x="7" y="3" width="10" height="18" rx="2.2"/><path d="M10.5 18h3"/><path d="M19.5 8.5a6 6 0 0 1 0 7M21.8 6.5a9 9 0 0 1 0 11M4.5 8.5a6 6 0 0 0 0 7M2.2 6.5a9 9 0 0 0 0 11"/></svg>`;
+const ico = (name, sz, sw = 2) => `<svg width="${sz}" height="${sz}" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round">${ICON[name][1]}</svg>`;
+function qrHTML(seed, sz) { const r = rng(seed); let h = ""; for (let i = 0; i < 121; i++) { const x = i % 11, y = Math.floor(i / 11);
+    const inF = (fx, fy) => x >= fx && x < fx + 3 && y >= fy && y < fy + 3; const finder = inF(0, 0) || inF(8, 0) || inF(0, 8);
+    const on = finder ? !((x === 1 || x === 9) && (y === 1 || y === 9)) : r() > 0.5; h += `<i style="background:${on ? "#0b0d12" : "transparent"}"></i>`; }
+  return `<div style="width:${sz}px; height:${sz}px; background:#fff; border-radius:10px; padding:${sz * 0.075}px; box-sizing:border-box; display:grid; grid-template-columns:repeat(11,1fr)">${h}</div>`; }
+// placa de acrílico de uma função (Wi-Fi, Pix...)
+function plateHTML(kind, label) { const [bg] = ICON[kind];
+  return `<div class="plate" style="left:0; top:0; width:340px; height:500px; background:linear-gradient(160deg,#23272f 0%,#101318 55%,#07080b 100%); color:#fff">
+    <div class="gloss"></div>
+    <div style="display:flex; align-items:center; justify-content:center; gap:10px; margin-top:30px"><i class="logo-b" style="width:46px; height:46px; font-size:26px">B</i><b class="serif" style="font-size:30px">${C.restaurante}</b></div>
+    <div style="width:150px; height:150px; border-radius:50%; background:${bg}; margin:34px auto 0; display:grid; place-items:center; box-shadow:0 0 0 8px rgba(255,255,255,.08)">${ico(kind, 84, 1.8)}</div>
+    <div style="font-size:44px; font-weight:800; margin-top:24px">${label}</div>
+    <div style="display:flex; align-items:center; justify-content:center; gap:10px; margin-top:16px; color:rgba(255,255,255,.75); font-size:21px; font-weight:600">${NFC_SVG(40, "rgba(255,255,255,.8)")}Aproxime o celular</div>
+  </div>`; }
 
-// ---------- LINHA DO TEMPO ----------
-const T = window.T = { a13: [0, 16.8], a4: [16.3, 26.3], a5: [25.8, 34.5], a6: [34.0, 38.3], a7: [37.8, 44.0] };
-window.DURATION = 44.0;
-const VT = [[16.6, 19.35], [19.6, 22.35], [22.6, 26.5]];
+// =================== MONTAGEM ===================
+const R = {};  // referências por cena
+
+// ---------- 1-3. restaurante: cardápio de papel, placa de mesa, cardápio no celular ----------
+{ const s = scene("rest", "resto"); R.rest = s;
+  const bk = el("div", "", "", "", s); R.bk1 = bokeh(bk, 5, 22);
+  el("div", "table", "", `<div class="abs" style="left:80px; top:10px; width:920px; height:320px; background:radial-gradient(closest-side, rgba(255,220,170,.22), transparent)"></div>`, s);
+  const cam = el("div", "abs", "inset:0; transform-origin:540px 1100px", "", s); R.cam = cam;
+  const p1 = el("div", "abs", "inset:0; perspective:1400px", "", cam);
+  R.pm = el("div", "abs", "left:270px; top:620px; width:540px; height:700px; transform-origin:50% 100%", `
+    <div class="abs" style="inset:0; border-radius:10px; background:#efe2c8; background-image:repeating-linear-gradient(0deg, rgba(120,80,40,.05) 0 2px, transparent 2px 6px); box-shadow:inset 0 0 0 12px #e2cfaa, inset 0 0 0 14px #c9ad7d, 0 40px 60px -20px rgba(0,0,0,.8); padding:56px 54px; box-sizing:border-box; color:#5a3a1c; font-family:'PF',serif">
+      <div style="text-align:center; font-size:60px; font-weight:800; letter-spacing:.06em">CARDÁPIO</div><div style="height:3px; background:#c9ad7d; margin:18px 60px 30px"></div>
+      ${C.cardapioPapel.map(([n, p]) => `<div style="display:flex; align-items:baseline; gap:10px; font-size:34px; margin-bottom:22px"><span>${n}</span><span style="flex:1; border-bottom:3px dotted #b89a6a; transform:translateY(-8px)"></span><span style="font-family:'MO',monospace; font-size:28px">${p}</span></div>`).join("")}
+      <div class="abs" style="right:70px; bottom:90px; width:130px; height:130px; border-radius:50%; box-shadow:inset 0 0 0 9px rgba(140,90,40,.18), inset 0 0 0 14px rgba(140,90,40,.06)"></div></div>`, p1);
+  const p2 = el("div", "abs", "inset:0; perspective:1600px", "", cam);
+  R.pl = el("div", "abs", "left:330px; top:600px; width:420px; height:690px; transform-origin:50% 100%", `
+    <div class="abs" style="left:70px; top:600px; width:280px; height:56px; background:linear-gradient(180deg,#22262f,#0b0d12); clip-path:polygon(8% 0,92% 0,100% 100%,0 100%)"></div>
+    <div class="abs" style="left:20px; top:640px; width:380px; height:46px; border-radius:50%; background:rgba(0,0,0,.6); filter:blur(14px)"></div>
+    <div class="plate" style="left:0; top:0; width:420px; height:608px; background:linear-gradient(160deg,#23272f 0%,#101318 55%,#07080b 100%); color:#fff">
+      <div class="gloss"></div><div class="logo-b" style="width:100px; height:100px; font-size:54px; margin:38px auto 0">B</div>
+      <div class="serif" style="font-size:44px; margin-top:12px">${C.restaurante}</div>
+      <div style="position:relative; width:120px; height:120px; margin:26px auto 0">${NFC_SVG(120)}<div id="rings1"></div></div>
+      <div style="font-size:26px; font-weight:600; color:rgba(255,255,255,.82); margin-top:10px">${C.aproxime}</div>
+      <div style="display:flex; align-items:center; justify-content:center; gap:32px; margin-top:36px">${qrHTML(7, 122)}
+        <div style="text-align:left"><div style="font-size:24px; letter-spacing:.3em; color:rgba(255,255,255,.6); font-weight:700">MESA</div><div style="font-size:100px; font-weight:800; line-height:1">${C.mesa}</div></div></div>
+    </div>`, p2);
+  R.rings1 = ringsIn($("rings1"), 3, 110, 5, 5, "#4da3ff");
+  R.h1 = el("div", "abs cx serif", "top:200px; font-size:92px; color:#fff; padding:0 40px", "", s); R.h1w = words(R.h1, C.gancho);
+  R.e2 = el("div", "abs cx", "top:165px", `<span class="eyebrow" style="color:var(--blue-l)">${C.placaSobretitulo}</span>`, s);
+  R.h2 = el("div", "abs cx serif", "top:220px; font-size:96px; color:#fff; padding:0 40px", "", s); R.h2w = words(R.h2, C.placaTitulo);
+  const pp = el("div", "abs", "inset:0; perspective:2000px", "", s);
+  R.ph = el("div", "phone", "left:0; top:0; width:430px; height:880px", `<div class="screen" id="scr1">
+      <div class="abs" style="inset:0; background:linear-gradient(160deg,#1d3b7a,#0a1430)"><div class="abs cx" style="top:150px; font-size:96px; font-weight:300; color:#fff">20:35</div><div class="abs cx" style="top:270px; font-size:22px; color:rgba(255,255,255,.7)">sexta-feira</div></div>
+      <div class="abs" id="mn" style="inset:0; background:#fff8f0; overflow:hidden">
+        <div id="mn-in" class="abs" style="left:0; right:0; top:0; padding:62px 20px 0">
+          <div style="display:flex; align-items:center; gap:14px"><i class="logo-b" style="width:56px; height:56px; font-size:30px">B</i><b class="serif" style="font-size:32px; color:#2a1a10; flex:1">${C.restaurante}</b>
+            <span style="background:var(--orange); color:#fff; border-radius:999px; padding:8px 16px; font-size:18px; font-weight:800">Mesa ${C.mesa}</span></div>
+          <div style="position:relative; margin-top:16px; height:290px; border-radius:24px; overflow:hidden"><img src="assets/${C.destaque.foto}.webp" style="width:100%; height:100%; object-fit:cover">
+            <div class="abs" style="inset:0; background:linear-gradient(180deg,transparent 45%,rgba(0,0,0,.78))"></div>
+            <div class="abs" style="left:20px; bottom:18px; color:#fff"><span style="background:var(--warm); color:#2a1a10; border-radius:999px; padding:5px 12px; font-size:15px; font-weight:800">MAIS PEDIDO</span>
+              <div class="serif" style="font-size:32px; margin-top:8px">${C.destaque.nome}</div><div style="font-size:24px; font-weight:800">${C.destaque.preco}</div></div></div>
+          <div style="display:flex; gap:10px; margin-top:16px; font-size:18px; font-weight:700"><span style="background:#2a1a10; color:#fff; border-radius:999px; padding:9px 18px">Burgers</span><span style="background:#f3e4d3; color:#6b5240; border-radius:999px; padding:9px 18px">Porções</span><span style="background:#f3e4d3; color:#6b5240; border-radius:999px; padding:9px 18px">Bebidas</span></div>
+          <div style="margin-top:6px">${C.pratos.map((p, i) => `<div class="mn-row" id="row${i}"><img src="assets/${p.foto}.webp"><div style="flex:1"><div style="font-size:22px; font-weight:800; color:#2a1a10">${p.nome}</div><div style="font-size:16px; color:#8a7262; margin-top:3px">${p.desc}</div></div><div style="font-size:20px; font-weight:800; color:#2a1a10">${p.preco}</div><span style="width:38px; height:38px; border-radius:50%; background:var(--orange); color:#fff; display:grid; place-items:center; font-size:26px; font-weight:700">+</span></div>`).join("")}</div>
+        </div>
+        <div class="abs" style="left:16px; right:16px; bottom:16px; height:64px; border-radius:18px; background:var(--wa); color:#fff; display:flex; align-items:center; justify-content:center; gap:10px; font-size:21px; font-weight:800"><svg viewBox="0 0 24 24" width="26" height="26" fill="#fff"><use href="#wa"/></svg>Fazer pedido</div>
+      </div>
+      <div class="abs" id="dt" style="inset:0; overflow:hidden; background:#140b06">${[C.pratos[1], C.pratos[3]].map((p, i) => `<div class="abs" id="dt${i}" style="inset:0; background:#140b06">
+        <img src="assets/${p.foto}.webp" style="position:absolute; left:0; top:0; width:100%; height:620px; object-fit:cover"><div class="abs" style="left:0; right:0; top:300px; height:330px; background:linear-gradient(180deg,transparent,#140b06)"></div>
+        <div class="abs" style="left:22px; top:62px; width:48px; height:48px; border-radius:50%; background:rgba(0,0,0,.45); color:#fff; display:grid; place-items:center; font-size:32px">‹</div>
+        <div class="abs" style="left:26px; right:26px; top:560px; color:#fff"><span style="background:var(--warm); color:#2a1a10; border-radius:999px; padding:5px 12px; font-size:15px; font-weight:800">BURGERS</span>
+          <div class="serif" style="font-size:44px; margin-top:12px">${p.nome}</div><div style="font-size:20px; color:#d9c3a8; margin-top:6px">${p.desc}</div><div style="font-size:36px; font-weight:800; color:var(--warm); margin-top:14px">${p.preco}</div></div>
+        <div class="abs cx" style="bottom:100px; font-size:17px; color:rgba(255,255,255,.6)">Deslize para o próximo ⌃</div>
+        <div class="abs" style="left:16px; right:16px; bottom:16px; height:64px; border-radius:18px; background:var(--orange); color:#fff; display:grid; place-items:center; font-size:22px; font-weight:800">Adicionar ao pedido</div></div>`).join("")}</div>
+      <div class="tap" id="tap1"></div><div class="notch"></div></div>`, pp);
+  R.c1 = el("div", "abs cx serif", "top:1400px; font-size:72px; color:#fff", rich(C.demoLegenda1), s);
+  R.c2 = el("div", "abs cx serif", "top:1400px; font-size:72px; color:#fff", rich(C.demoLegenda2), s);
+}
+
+// ---------- 4. vantagens ----------
+{ const s = scene("vant", "grid-bg"); R.vant = s;
+  const cardV = (txt, icon, top) => el("div", "card", `left:90px; top:${top}px; width:900px; height:300px; display:flex; align-items:center; gap:40px; padding:0 56px; box-sizing:border-box`,
+    `<div style="width:170px; height:170px; border-radius:50%; background:rgba(10,102,232,.1); display:grid; place-items:center; flex:none; position:relative">${icon}
+      <i class="abs" style="left:30px; top:80px; width:110px; height:8px; border-radius:4px; background:#e0453a; transform:rotate(-45deg)"></i></div>
+     <div class="serif" style="font-size:72px; color:var(--ink)">${rich(txt, "var(--blue)")}</div>`, s);
+  R.v1 = cardV(C.vantagem1, `<svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="#0a66e8" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>`, 640);
+  R.v2 = cardV(C.vantagem2, `<svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="#0a66e8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M12 7v7M9 11.5l3 3 3-3"/></svg>`, 1000);
+  R.v3 = el("div", "abs cx", "top:1410px", `<span class="chip" style="background:#fff; color:var(--ink); font-size:36px; box-shadow:0 14px 30px -12px rgba(10,30,80,.3)">${NFC_SVG(44, "#0a66e8")}Aproximou, abriu.</span>`, s);
+}
+
+// ---------- 5. atualização ----------
+{ const s = scene("atual", "grid-bg"); R.atual = s;
+  R.ah = el("div", "abs cx serif", "top:200px; font-size:90px; color:var(--ink); padding:0 40px", "", s); R.ahw = words(R.ah, C.atualizaTitulo, "var(--blue)");
+  R.ac1 = el("div", "card", "left:90px; top:560px; width:900px; height:220px; display:flex; align-items:center; gap:34px; padding:0 40px; box-sizing:border-box",
+    `<img src="assets/${C.destaque.foto}.webp" style="width:150px; height:150px; border-radius:24px; object-fit:cover"><div style="flex:1"><div class="serif" style="font-size:50px; color:var(--ink)">${C.destaque.nome}</div><div style="font-size:24px; color:var(--soft); margin-top:6px">Preço novo</div></div>
+     <div style="position:relative; width:230px; height:110px"><div class="abs" id="aold" style="right:0; top:24px; font-size:46px; font-weight:800; color:var(--ink); white-space:nowrap">${C.precoAntes}<i id="astrike" class="abs" style="left:0; top:50%; height:6px; width:0; background:#e0453a; border-radius:3px"></i></div>
+     <div class="abs" id="anew" style="right:0; top:24px; font-size:46px; font-weight:800; color:var(--blue); white-space:nowrap; opacity:0">${C.precoDepois}</div></div>`, s);
+  R.ac2 = el("div", "card", "left:90px; top:820px; width:900px; height:220px; display:flex; align-items:center; gap:34px; padding:0 40px; box-sizing:border-box",
+    `<img src="assets/${C.produtoNovo.foto}.webp" style="width:150px; height:150px; border-radius:24px; object-fit:cover"><div style="flex:1"><span style="background:#16a34a; color:#fff; border-radius:999px; padding:6px 14px; font-size:20px; font-weight:800">NOVO</span><div class="serif" style="font-size:50px; color:var(--ink); margin-top:8px">${C.produtoNovo.nome}</div></div>
+     <div style="font-size:46px; font-weight:800; color:var(--ink)">${C.produtoNovo.preco}</div>`, s);
+  R.at = el("div", "abs cx", "top:1110px", `<span class="chip" style="background:#e7f8ee; color:#0f7a3d; font-size:36px; box-shadow:0 0 0 2px rgba(22,163,74,.35) inset"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>${C.avisoAtualizado}</span>`, s);
+  R.as = el("div", "abs cx", "top:1300px; font-size:44px; line-height:1.4; color:var(--soft); font-weight:600", rich(C.atualizaSub, "var(--blue)"), s);
+}
+
+// ---------- 6-10. uma cena por placa ----------
+const TINT = { wifi: "rgba(10,102,232,.30)", pix: "rgba(50,188,173,.28)", insta: "rgba(221,42,123,.28)", whats: "rgba(37,211,102,.24)", google: "rgba(245,163,0,.26)" };
+const KIND = { wifi: "Wi-Fi", pix: "Pix", insta: "Instagram", whats: "WhatsApp", google: "Google" };
+const APPS = {
+  wifi: () => `<div class="app" style="background:#f2f4f8"><div style="padding:70px 24px 0"><div style="font-size:34px; font-weight:800; color:#111">Wi-Fi</div>
+      <div style="background:#fff; border-radius:20px; margin-top:22px; padding:6px 20px">
+        <div style="display:flex; align-items:center; gap:14px; padding:18px 0; border-bottom:1px solid #eceef2"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#0a66e8" stroke-width="2.4" stroke-linecap="round">${ICON["Wi-Fi"][1].replace('fill="#fff"', 'fill="#0a66e8"')}</svg>
+          <div style="flex:1"><div style="font-size:21px; font-weight:800; color:#111">${C.wifi.rede}</div><div id="wf-st" style="font-size:17px; color:#8a90a0; margin-top:3px">Conectando...</div></div><span id="wf-ok" style="width:34px; height:34px; border-radius:50%; background:#16a34a; display:grid; place-items:center; opacity:0"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></div>
+        <div style="display:flex; align-items:center; gap:14px; padding:18px 0; opacity:.45"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#8a90a0" stroke-width="2.4" stroke-linecap="round">${ICON["Wi-Fi"][1]}</svg><div style="font-size:20px; color:#111">Vizinho_5G</div></div>
+      </div><div style="font-size:16px; color:#8a90a0; margin-top:14px; padding:0 6px">Senha preenchida pela placa.</div></div>
+    <div class="toast" id="wf-toast" style="background:#fff; color:#0f7a3d"><span style="width:30px; height:30px; border-radius:50%; background:#16a34a; display:grid; place-items:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>Conectado ao Wi-Fi</div></div>`,
+  pix: () => `<div class="app" style="background:#fff"><div style="padding:70px 24px 0; text-align:center"><div style="display:flex; align-items:center; gap:10px; justify-content:center; color:#32bcad; font-size:22px; font-weight:800">${`<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#32bcad" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">${ICON.Pix[1]}</svg>`}Pagar com Pix</div>
+      <i class="logo-b" style="width:96px; height:96px; font-size:52px; margin:34px auto 0">B</i><div class="serif" style="font-size:36px; color:#111; margin-top:14px">${C.restaurante}</div>
+      <div style="margin-top:34px; font-size:17px; color:#8a90a0; font-weight:700; letter-spacing:.12em">CHAVE PIX</div>
+      <div style="margin:10px 0 0; border-radius:16px; background:#f2f6f6; padding:18px 14px; font-size:21px; font-weight:700; color:#111">${C.pix.chave}</div>
+      <div id="px-btn" style="margin-top:22px; height:66px; border-radius:18px; background:#32bcad; color:#fff; display:grid; place-items:center; font-size:22px; font-weight:800">Copiar chave</div>
+      <div style="margin-top:22px; font-size:17px; color:#8a90a0">Cole no app do seu banco e pague.</div></div>
+    <div class="toast" id="px-toast" style="background:#111; color:#fff"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#32bcad" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Chave copiada</div></div>`,
+  insta: () => `<div class="app" style="background:#fff"><div style="padding:66px 22px 0"><div style="font-size:24px; font-weight:800; color:#111">${C.insta.perfil}</div>
+      <div style="display:flex; align-items:center; gap:22px; margin-top:20px"><div style="padding:4px; border-radius:50%; background:linear-gradient(45deg,#f58529,#dd2a7b,#8134af)"><i class="logo-b" style="width:96px; height:96px; font-size:50px; border:4px solid #fff">B</i></div>
+        <div style="display:flex; gap:20px; text-align:center; color:#111"><div><b style="font-size:22px">128</b><div style="font-size:15px">posts</div></div><div><b style="font-size:22px" id="ig-n">2.430</b><div style="font-size:15px">seguidores</div></div><div><b style="font-size:22px">180</b><div style="font-size:15px">seguindo</div></div></div></div>
+      <div class="serif" style="font-size:22px; color:#111; margin-top:12px">${C.restaurante}</div><div style="font-size:16px; color:#444">Hambúrguer na brasa · Casimiro de Abreu</div>
+      <div id="ig-btn" style="margin-top:14px; height:46px; border-radius:12px; background:#0095f6; color:#fff; display:grid; place-items:center; font-size:19px; font-weight:800">Seguir</div></div>
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:3px; margin-top:16px">${["hero-700", "carvao-600", "fumo-600", "brasa-600", "g-triplo-840", "cinza-600"].map((f) => `<img src="assets/${f}.webp" style="width:100%; aspect-ratio:1; object-fit:cover">`).join("")}</div></div>`,
+  whats: () => `<div class="app" style="background:#efeae2"><div style="height:120px; background:#075e54; display:flex; align-items:flex-end; gap:14px; padding:0 18px 16px; box-sizing:border-box; color:#fff"><i class="logo-b" style="width:56px; height:56px; font-size:30px">B</i><div><div style="font-size:24px; font-weight:700">${C.restaurante}</div><div style="font-size:16px; opacity:.8">online</div></div></div>
+      <div id="wa-msg" class="abs" style="right:16px; bottom:120px; max-width:300px; background:#d9fdd3; border-radius:16px; padding:12px 16px; font-size:19px; line-height:1.4; color:#111; opacity:0">${C.whats.msg}</div>
+      <div id="wa-rep" class="abs" style="left:16px; bottom:120px; max-width:300px; background:#fff; border-radius:16px; padding:12px 16px; font-size:19px; line-height:1.4; color:#111; opacity:0">${C.whats.resposta}</div>
+      <div class="abs" style="left:12px; right:12px; bottom:22px; display:flex; gap:10px; align-items:flex-end"><div id="wa-in" style="flex:1; background:#fff; border-radius:26px; padding:14px 18px; font-size:18px; line-height:1.35; color:#111">${C.whats.msg}</div>
+        <div style="width:62px; height:62px; border-radius:50%; background:#00a884; display:grid; place-items:center; flex:none" id="wa-send"><svg viewBox="0 0 24 24" width="30" height="30" fill="#fff"><path d="M3.4 20.4 21 12 3.4 3.6l-.01 6.53L15 12 3.39 13.87z"/></svg></div></div></div>`,
+  google: () => `<div class="app" style="background:#fff"><div style="padding:72px 24px 0"><div style="display:flex; align-items:center; gap:12px"><i class="logo-b" style="width:56px; height:56px; font-size:30px">B</i><div><div style="font-size:22px; font-weight:800; color:#111">${C.restaurante}</div><div style="font-size:16px; color:#5f6368">Avaliar no Google</div></div></div>
+      <div style="font-size:26px; font-weight:800; color:#111; margin-top:40px; text-align:center">Como foi a sua experiência?</div>
+      <div id="gg-stars" style="display:flex; justify-content:center; gap:10px; margin-top:26px">${[0, 1, 2, 3, 4].map(() => `<svg viewBox="0 0 24 24" width="58" height="58"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6L2.5 9.4l6.6-.8z" fill="#e3e3e8"/><path class="f" d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6L2.5 9.4l6.6-.8z" fill="#fbbc05" style="transform-origin:12px 12px; transform:scale(0)"/></svg>`).join("")}</div>
+      <div style="margin-top:30px; height:120px; border-radius:14px; border:2px solid #e3e3e8"></div>
+      <div style="display:flex; justify-content:flex-end; margin-top:24px"><span id="gg-pub" style="background:#1a73e8; color:#fff; border-radius:999px; padding:14px 34px; font-size:21px; font-weight:700">Publicar</span></div></div></div>`,
+};
+// fração da fala em que o celular encosta na placa e em que acontece a ação na tela
+const ACT = { wifi: [0.6, 0.86], pix: [0.12, 0.5], insta: [0.3, 0.8], whats: [0.38, 0.72], google: [0.3, 0.62] };
+Object.keys(APPS).forEach((k, idx) => {
+  const s = scene("sc-" + k, "resto"); R[k] = { s };
+  R[k].bk = bokeh(el("div", "", "", "", s), 11 + idx, 16);
+  el("div", "abs", `left:-200px; right:-200px; top:200px; height:1100px; background:radial-gradient(45% 50% at 50% 50%, ${TINT[k]}, transparent 70%)`, "", s);
+  el("div", "table", "", "", s);
+  const [bg] = ICON[KIND[k]];
+  R[k].e = el("div", "abs cx", "top:165px", `<span class="eyebrow" style="color:#fff; background:${bg}; padding:10px 22px; border-radius:999px; display:inline-flex; align-items:center; gap:10px">${ico(KIND[k], 30)}PLACA DE ${C[k].nome.toUpperCase()}</span>`, s);
+  R[k].h = el("div", "abs cx serif", "top:245px; font-size:92px; color:#fff; padding:0 40px", "", s); R[k].hw = words(R[k].h, C[k].titulo);
+  const pw = el("div", "abs", "inset:0; perspective:1600px", "", s);
+  R[k].pl = el("div", "abs", "left:100px; top:660px; width:340px; height:560px; transform-origin:50% 100%",
+    `<div class="abs" style="left:55px; top:494px; width:230px; height:46px; background:linear-gradient(180deg,#22262f,#0b0d12); clip-path:polygon(8% 0,92% 0,100% 100%,0 100%)"></div>
+     <div class="abs" style="left:10px; top:528px; width:320px; height:40px; border-radius:50%; background:rgba(0,0,0,.6); filter:blur(14px)"></div>${plateHTML(KIND[k], C[k].nome)}<div id="rg-${k}"></div>`, pw);
+  R[k].rings = ringsIn($("rg-" + k), 3, 150, 95, 165, "#fff");
+  const pp = el("div", "abs", "inset:0; perspective:2000px", "", s);
+  R[k].ph = el("div", "phone", "left:0; top:0; width:400px; height:820px", `<div class="screen" id="scr-${k}">
+      <div class="abs" style="inset:0; background:linear-gradient(160deg,#1d3b7a,#0a1430)"><div class="abs cx" style="top:140px; font-size:90px; font-weight:300; color:#fff">20:35</div></div>
+      <div class="abs" id="app-${k}" style="inset:0">${APPS[k]()}</div><div class="tap" id="tap-${k}"></div><div class="notch"></div></div>`, pp);
+  R[k].sub = el("div", "abs cx", "top:1460px; font-size:44px; color:var(--cream); font-weight:600", C[k].sub, s);
+});
+
+// ---------- 11. outras placas ----------
+{ const s = scene("outras", "navy-bg"); R.outras = s;
+  R.oh = el("div", "abs cx serif", "top:190px; font-size:100px; color:#fff", "", s); R.ohw = words(R.oh, C.outrasTitulo);
+  R.ocells = C.outras.map(([n, d], i) => { const [bg] = ICON[n];
+    return el("div", "cell", `left:${60 + (i % 2) * 490}px; top:${470 + Math.floor(i / 2) * 320}px`,
+      `<div class="mini"><i style="background:${bg}">${ico(n, 40)}</i>${NFC_SVG(36, "rgba(255,255,255,.7)")}</div>
+       <div><div style="font-size:40px; font-weight:800; color:#fff">${n}</div><div style="font-size:28px; line-height:1.3; color:var(--soft-d); margin-top:8px">${d}</div></div>`, s); });
+}
+
+// ---------- 12. placa personalizada ----------
+{ const s = scene("perso", "", "background:radial-gradient(80% 55% at 50% 45%, #1b2f5e 0%, #0a1430 55%, #040915 100%)"); R.perso = s;
+  R.ph1 = el("div", "abs cx serif", "top:180px; font-size:84px; color:#fff; padding:0 40px", "", s); R.ph1w = words(R.ph1, C.personalizadaTitulo);
+  el("div", "abs", "left:240px; top:1320px; width:600px; height:60px; border-radius:50%; background:rgba(0,0,0,.6); filter:blur(18px)", "", s);
+  R.pp = el("div", "abs", "left:310px; top:560px; width:460px; height:700px; perspective:1600px", "", s);
+  R.pplates = C.marcas.map((m) => el("div", "plate", `left:0; top:0; width:460px; height:680px; background:${m.fundo}; color:${m.texto}; backface-visibility:hidden`,
+    `<div class="gloss"></div><div style="width:150px; height:150px; border-radius:50%; background:${m.destaque}; margin:54px auto 0; display:grid; place-items:center; font-family:'PF',serif; font-weight:800; font-size:84px; color:${m.fundo.includes("#7c3aed") ? "#3b0f80" : "#111"}">${m.letra}</div>
+     <div class="serif" style="font-size:54px; margin-top:22px">${m.nome}</div>
+     <div style="height:4px; width:120px; background:${m.destaque}; margin:22px auto 0; border-radius:2px"></div>
+     <div style="margin:40px auto 0; width:130px; height:130px; display:grid; place-items:center">${NFC_SVG(130, m.texto)}</div>
+     <div style="font-size:28px; font-weight:700; margin-top:16px; opacity:.85">Aproxime o celular</div>`, R.pp));
+  R.pchips = C.personalizadaEtapas.map((n, i) => el("div", "abs", `left:${[60, 760, 70][i]}px; top:${[700, 860, 1080][i]}px`,
+    `<span class="chip" style="background:#fff; color:var(--ink); font-size:34px; box-shadow:0 14px 30px -12px rgba(0,0,0,.5)"><i style="width:22px; height:22px; border-radius:50%; background:${["#ff8a1f", "#d4a94e", "#7c3aed"][i]}"></i>${n}</span>`, s));
+}
+
+// ---------- 13. valor ----------
+{ const s = scene("valor", "navy-bg"); R.valor = s;
+  R.vh1 = el("div", "abs cx serif", "top:220px; font-size:96px; color:#fff", "", s); R.vh1w = words(R.vh1, C.valor1);
+  R.vh2 = el("div", "abs cx serif", "top:220px; font-size:96px; color:#fff", "", s); R.vh2w = words(R.vh2, C.valor2);
+  const names = ["Cardápio", "Wi-Fi", "Pix", "Instagram", "WhatsApp", "Google", "Localização", "TikTok"];
+  R.vminis = names.map((n, i) => el("div", "abs", `left:${70 + (i % 4) * 240}px; top:${560 + Math.floor(i / 4) * 280}px; width:220px; text-align:center`,
+    `<div class="mini" style="margin:0 auto"><i style="background:${ICON[n][0]}">${ico(n, 40)}</i>${NFC_SVG(34, "rgba(255,255,255,.7)")}</div><div style="font-size:26px; font-weight:700; color:#fff; margin-top:12px">${n}</div>`, s));
+  R.vbar = el("div", "abs", "left:90px; top:1150px; width:900px; height:120px", `
+    <div class="abs" style="left:0; right:0; top:50px; height:10px; border-radius:5px; background:rgba(255,255,255,.12)"></div>
+    <div class="abs" id="vfill" style="left:0; top:50px; height:10px; width:0; border-radius:5px; background:linear-gradient(90deg,#4da3ff,#ffb347)"></div>
+    <div class="abs" style="left:0; top:80px; font-size:26px; color:var(--soft-d); font-weight:700">8h</div><div class="abs" style="right:0; top:80px; font-size:26px; color:var(--soft-d); font-weight:700">22h</div>
+    <div id="vdots"></div>`, s);
+  R.vdots = [0.08, 0.2, 0.31, 0.44, 0.52, 0.63, 0.71, 0.82, 0.93].map((x) => el("i", "abs", `left:${x * 900 - 12}px; top:43px; width:24px; height:24px; border-radius:50%; background:#fff; box-shadow:0 0 0 6px rgba(77,163,255,.35); opacity:0`, "", $("vdots")));
+  R.vchip = el("div", "abs cx", "top:1380px", `<span class="chip" style="background:rgba(52,211,153,.14); color:#c9f7e3; font-size:38px; box-shadow:0 0 0 2px rgba(52,211,153,.45) inset"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3.5 17.5 6.5 20.5l5.8-5.8a4 4 0 0 0 5.4-5.4l-2.4 2.4-2.6-.6-.6-2.6z"/></svg>${C.valorChip}</span>`, s);
+}
+
+// ---------- 14. prova ----------
+{ const s = scene("prova", "", "background:#000"); R.prova = s;
+  R.pimg = el("img", "abs", "left:0; top:0; width:100%; height:100%; object-fit:cover; object-position:36% 50%", "", s); R.pimg.src = "assets/placa-nfc-azul-no-balcao.webp";
+  el("div", "abs", "inset:0; background:linear-gradient(180deg, rgba(0,0,0,.15) 0%, rgba(0,0,0,0) 35%, rgba(2,8,24,.75) 70%, rgba(2,8,24,.95) 100%)", "", s);
+  R.pe = el("div", "abs cx", "top:1250px", `<span class="chip" style="background:rgba(255,255,255,.14); color:#fff; font-size:28px; box-shadow:inset 0 0 0 2px rgba(255,255,255,.25)">Placa real da BN Digital</span>`, s);
+  R.prh = el("div", "abs cx serif", "top:1360px; font-size:88px; color:#fff", "", s); R.prhw = words(R.prh, C.provaTitulo);
+}
+
+// ---------- 15. chamada final ----------
+{ const s = scene("cta", "", "background:linear-gradient(180deg,#0b3aa8 0%,#06215f 55%,#020a1f 100%)"); R.cta = s;
+  el("div", "abs", "left:180px; top:-260px; width:720px; height:720px; border-radius:50%; background:radial-gradient(closest-side, rgba(77,163,255,.6), transparent)", "", s);
+  R.clogo = el("img", "abs", "left:440px; top:330px; width:200px; height:200px; border-radius:50%; box-shadow:0 0 0 8px rgba(255,255,255,.12)", "", s); R.clogo.src = "assets/logo-bn-digital.webp";
+  R.cpre = el("div", "abs cx", "top:600px; font-size:40px; color:rgba(255,255,255,.85); font-weight:500; padding:0 60px", C.finalPre, s);
+  R.ch = el("div", "abs cx serif", "top:700px; font-size:112px; color:#fff; padding:0 40px", "", s); R.chw = words(R.ch, C.finalChamada);
+  R.cbw = el("div", "abs cx", "top:1090px", `<div id="btn" style="position:relative; display:inline-flex; align-items:center; gap:24px; background:var(--wa); color:#fff; border-radius:999px; padding:34px 64px; font-size:60px; font-weight:800; overflow:hidden; box-shadow:0 24px 50px -16px rgba(37,211,102,.6)">
+      <svg viewBox="0 0 24 24" width="70" height="70" fill="#fff"><use href="#wa"/></svg>${C.botao}<i id="shine" style="position:absolute; top:0; bottom:0; width:120px; left:-200px; background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent)"></i></div><div class="tap" id="tapc" style="left:540px; top:80px"></div>`, s);
+  R.cn = el("div", "abs cx", "top:1300px; font-size:58px; color:#fff; font-weight:800", C.whatsapp, s);
+  R.ci = el("div", "abs cx", "top:1395px; font-size:40px; color:#fff; font-weight:600", C.instagram, s);
+  R.cc = el("div", "abs cx", "top:1465px; font-size:32px; color:rgba(255,255,255,.7)", C.cidade, s);
+}
+
+window.DURATION = TL.fim;
+// tempo em que cada cena aparece (a), troca (b) e como entra
+const SC = [["rest", "gancho", "none"], ["vant", "vantagens", "up"], ["atual", "atualiza", "left"], ["sc-wifi", "wifi", "circle"], ["sc-pix", "pix", "left"],
+  ["sc-insta", "insta", "up"], ["sc-whats", "whats", "left"], ["sc-google", "google", "up"], ["outras", "outras", "circle"], ["perso", "personalizada", "left"],
+  ["valor", "valor", "up"], ["prova", "prova", "left"], ["cta", "cta", "circle"]];
+const ENDS = { rest: TL.demo.b };
+
+// =================== ANIMAÇÃO ===================
+function phoneScenario(k, t) {
+  const T = TL[k], [tf, af] = ACT[k], tap = V(k, tf), act = V(k, af), r = R[k];
+  bokehAnim(r.bk, t);
+  enter(r.e, t, T.a + 0.25, 0.4, 20); wordsIn(r.hw, t, T.a + 0.35, 0.08, 0.45, 50);
+  { const p = prog(t, T.a + 0.2, T.a + 0.85); r.pl.style.opacity = clamp(p * 2);
+    r.pl.style.transform = `translateY(${(1 - outBack(p, 1.3)) * 200}px) rotateX(${(1 - outCubic(p)) * 35}deg) rotateY(${12 + Math.sin(t * 0.8) * 2}deg)`; }
+  pulse(r.rings, t, tap, 0.22, 0.9, 1.8);
+  const e = outCubic(prog(t, tap - 1.0, tap - 0.15)), m = inOut(prog(t, tap + 0.3, tap + 0.95)), fl = Math.sin(t * 1.6) * 8 * m;
+  const buzz = t > tap && t < tap + 0.22 ? Math.sin(t * 160) * 4 : 0;
+  const x = lerp(lerp(1500, 330, e), 590, m) + buzz, y = lerp(lerp(760, 620, e), 500, m) + fl;
+  r.ph.style.transform = `translate(${x}px, ${y}px) rotateY(${lerp(lerp(-30, -14, e), -6, m)}deg) rotateZ(${lerp(lerp(22, -16, e), 0, m)}deg)`;
+  const app = $("app-" + k), o = outCubic(prog(t, tap + 0.1, tap + 0.5)); app.style.transform = `translateY(${(1 - o) * 100}%)`;
+  enter(r.sub, t, tap + 0.5, 0.45, 26);
+  const scr = $("scr-" + k);
+  if (k === "wifi") { const ok = prog(t, act, act + 0.2); $("wf-st").textContent = ok > 0 ? "Conectado" : "Conectando..."; $("wf-st").style.color = ok > 0 ? "#16a34a" : "#8a90a0";
+    pop($("wf-ok"), t, act, 0.35); const q = prog(t, act + 0.1, act + 0.45); $("wf-toast").style.opacity = q; $("wf-toast").style.transform = `translateY(${(1 - outCubic(q)) * -40}px)`; }
+  if (k === "pix") { const [bx, by] = center($("px-btn"), scr); tapAt($("tap-pix"), t, bx, by, act);
+    const c = t > act + 0.1; $("px-btn").textContent = c ? "Chave copiada ✓" : "Copiar chave"; $("px-btn").style.background = c ? "#1f8f84" : "#32bcad";
+    const q = prog(t, act + 0.1, act + 0.4); $("px-toast").style.opacity = q * (1 - prog(t, act + 2.2, act + 2.5)); $("px-toast").style.transform = `translateY(${(1 - outCubic(q)) * -40}px)`; }
+  if (k === "insta") { const [bx, by] = center($("ig-btn"), scr); tapAt($("tap-insta"), t, bx, by, act);
+    const c = t > act + 0.1; $("ig-btn").textContent = c ? "Seguindo" : "Seguir"; $("ig-btn").style.background = c ? "#efefef" : "#0095f6"; $("ig-btn").style.color = c ? "#111" : "#fff";
+    $("ig-n").textContent = (c ? C.insta.seguidores + 1 : C.insta.seguidores).toLocaleString("pt-BR"); }
+  if (k === "whats") { const [bx, by] = center($("wa-send"), scr); tapAt($("tap-whats"), t, bx, by, act);
+    const q = outCubic(prog(t, act + 0.1, act + 0.45)); $("wa-in").style.opacity = 1 - q; $("wa-msg").style.opacity = q; $("wa-msg").style.transform = `translateY(${(1 - q) * 60}px)`;
+    const rr = outCubic(prog(t, act + 1.1, act + 1.45)); $("wa-msg").style.bottom = `${120 + rr * 110}px`; $("wa-rep").style.opacity = rr; $("wa-rep").style.transform = `translateY(${(1 - rr) * 30}px)`; }
+  if (k === "google") { [...$("gg-stars").querySelectorAll(".f")].forEach((f, i) => { const p = prog(t, act + i * 0.12, act + 0.25 + i * 0.12); f.style.transform = `scale(${p > 0 ? outBack(p, 2) : 0})`; });
+    const pt = act + 1.2, [bx, by] = center($("gg-pub"), scr); tapAt($("tap-google"), t, bx, by, pt);
+    $("gg-pub").textContent = t > pt + 0.1 ? "Publicada ✓" : "Publicar"; $("gg-pub").style.background = t > pt + 0.1 ? "#188038" : "#1a73e8"; }
+}
 
 window.render = function (t) {
-  // ===== 1 a 3: restaurante =====
-  if (show($("a13"), t, ...T.a13)) {
-    bokeh.forEach((b) => { b.el.style.transform = `translate(${b.x + Math.sin(t * 0.35 + b.ph) * 18}px, ${b.y + Math.cos(t * 0.3 + b.ph) * 12}px)`; b.el.style.opacity = b.o * (0.75 + 0.25 * Math.sin(t * 0.9 + b.ph)); });
-    $("cam").style.transform = `scale(${lerp(1, 1.05, prog(t, 0, 8.6))})`;
-    // gancho
-    wordsIn(h1Words, t, 0.15, 0.09, 0.45, 60);
-    { const k = 1 - prog(t, 3.25, 3.55); $("h1").style.opacity = k; }
-    { const pin = outCubic(prog(t, 0.0, 0.7)), out = inOut(prog(t, 2.95, 3.55));
-      $("pm").style.opacity = clamp(prog(t, 0, 0.4)) * (1 - prog(t, 3.35, 3.55));
-      $("pm").style.transform = `translate(${-out * 1000}px, ${(1 - pin) * 120 + out * 120}px) rotateX(34deg) rotateZ(${Math.sin(t * 1.1) * 0.8 - out * 28}deg)`; }
-    // placa
-    { const p = prog(t, 3.65, 4.4), m = inOut(prog(t, 8.85, 9.45));
-      $("pl-w").style.opacity = clamp(p * 2) * lerp(1, 0.5, m);
-      $("pl-w").style.transform = `translate(${-m * 190}px, ${(1 - outBack(p, 1.3)) * 260 + m * 30}px) rotateX(${(1 - outCubic(p)) * 40}deg) rotateY(${lerp(0, 22, m)}deg) scale(${lerp(1, 0.84, m)})`; }
-    pulse(rings, t, 8.4);
-    enter($("e2"), t, 3.85, 0.4, 20); wordsIn(h2Words, t, 3.95, 0.08, 0.45, 50);
-    { const k = 1 - prog(t, 8.55, 8.85); $("e2").style.opacity *= k; $("h2").style.opacity = k; }
-    enter($("s2sub"), t, 4.7, 0.5, 30); $("s2sub").style.opacity *= 1 - prog(t, 7.45, 7.7);
-    // celular
-    { const e = outCubic(prog(t, 7.55, 8.3)), m = inOut(prog(t, 8.9, 9.5)), fl = Math.sin(t * 1.6) * 8 * m;
-      const buzz = t > 8.4 && t < 8.62 ? Math.sin(t * 160) * 4 : 0;
+  SC.forEach(([id, key, kind], i) => {
+    const a = TL[key].a, b = ENDS[id] || TL[key].b;
+    if (show($(id), t, a, b + 0.6)) reveal($(id), t, a, i ? 0.45 : 0.01, kind || "none", 540, 1000);
+  });
+
+  // ---- 1-3. restaurante ----
+  if ($("rest").style.visibility === "visible") {
+    const G = TL.gancho, P = TL.placa, D = TL.demo;
+    bokehAnim(R.bk1, t);
+    R.cam.style.transform = `scale(${lerp(1, 1.05, prog(t, 0, P.b))})`;
+    wordsIn(R.h1w, t, 0.15, 0.09, 0.45, 60); R.h1.style.opacity = 1 - prog(t, G.b - 0.35, G.b - 0.05);
+    { const pin = outCubic(prog(t, 0, 0.7)), out = inOut(prog(t, G.b - 0.65, G.b - 0.05));
+      R.pm.style.opacity = clamp(prog(t, 0, 0.4)) * (1 - prog(t, G.b - 0.25, G.b - 0.05));
+      R.pm.style.transform = `translate(${-out * 1000}px, ${(1 - pin) * 120 + out * 120}px) rotateX(34deg) rotateZ(${Math.sin(t * 1.1) * 0.8 - out * 28}deg)`; }
+    const touch = P.b - 0.1;
+    { const p = prog(t, P.a - 0.05, P.a + 0.7), m = inOut(prog(t, touch + 0.45, touch + 1.05));
+      R.pl.style.opacity = clamp(p * 2) * lerp(1, 0.5, m);
+      R.pl.style.transform = `translate(${-m * 190}px, ${(1 - outBack(p, 1.3)) * 260 + m * 30}px) rotateX(${(1 - outCubic(p)) * 40}deg) rotateY(${lerp(0, 22, m)}deg) scale(${lerp(1, 0.84, m)})`; }
+    pulse(R.rings1, t, touch);
+    enter(R.e2, t, P.a + 0.2, 0.4, 20); wordsIn(R.h2w, t, P.a + 0.3, 0.08, 0.45, 50);
+    { const k = 1 - prog(t, touch + 0.1, touch + 0.4); R.e2.style.opacity *= k; R.h2.style.opacity = k; }
+    { const e = outCubic(prog(t, touch - 0.85, touch - 0.1)), m = inOut(prog(t, touch + 0.45, touch + 1.05)), fl = Math.sin(t * 1.6) * 8 * m;
+      const buzz = t > touch && t < touch + 0.22 ? Math.sin(t * 160) * 4 : 0;
       const x = lerp(lerp(1700, 560, e), 325, m) + buzz, y = lerp(lerp(760, 540, e), 420, m) + fl;
-      const rz = lerp(lerp(24, -14, e), 0, m), ry = lerp(lerp(-30, -14, e), 0, m);
-      $("ph").style.transform = `translate(${x}px, ${y}px) rotateY(${ry}deg) rotateZ(${rz}deg)`;
-      $("ph").style.opacity = t < 7.5 || t > 16.5 ? 0 : 1; }
-    { const s1 = outCubic(prog(t, 8.55, 8.95)); $("mn").style.transform = `translateY(${(1 - s1) * 100}%)`;
-      $("mn-in").style.transform = `translateY(${-lerp(0, 300, inOut(prog(t, 10.2, 11.2)))}px)`; }
-    { const scr = $("scr"); if (t > 11.2 && t < 12.3) { const [x, y] = center($("row1"), scr); tapAt($("tap1"), t, x, y, 11.75); } else $("tap1").style.opacity = 0; }
-    { const d = inOut(prog(t, 11.95, 12.35)), sw = inOut(prog(t, 13.75, 14.15));
-      $("dt").style.transform = `translateX(${(1 - d) * 100}%)`;
-      $("dt0").style.transform = `translateY(${-sw * 100}%)`; $("dt1").style.transform = `translateY(${(1 - sw) * 100}%)`; }
-    { const p = prog(t, 9.5, 10.0), k = 1 - prog(t, 11.8, 12.05); $("c1").style.opacity = p * k; $("c1").style.transform = `translateY(${(1 - outCubic(p)) * 40}px)`; }
-    { const p = prog(t, 12.2, 12.7); $("c2").style.opacity = p; $("c2").style.transform = `translateY(${(1 - outCubic(p)) * 40}px)`; }
+      R.ph.style.transform = `translate(${x}px, ${y}px) rotateY(${lerp(lerp(-30, -14, e), 0, m)}deg) rotateZ(${lerp(lerp(24, -14, e), 0, m)}deg)`;
+      R.ph.style.opacity = t < touch - 1 ? 0 : 1; }
+    { const s1 = outCubic(prog(t, touch + 0.15, touch + 0.55)); $("mn").style.transform = `translateY(${(1 - s1) * 100}%)`;
+      $("mn-in").style.transform = `translateY(${-lerp(0, 300, inOut(prog(t, D.a + 1.3, D.a + 2.2)))}px)`; }
+    const tapRow = V("demo", 0.55), det = tapRow + 0.2, swipe = D.b - 1.0;
+    { const scr = $("scr1"); if (t > tapRow - 0.5 && t < tapRow + 0.6) { const [x, y] = center($("row1"), scr); tapAt($("tap1"), t, x, y, tapRow); } else $("tap1").style.opacity = 0; }
+    { const d = inOut(prog(t, det, det + 0.4)), sw = inOut(prog(t, swipe, swipe + 0.4));
+      $("dt").style.transform = `translateX(${(1 - d) * 100}%)`; $("dt0").style.transform = `translateY(${-sw * 100}%)`; $("dt1").style.transform = `translateY(${(1 - sw) * 100}%)`; }
+    { const p = prog(t, D.a + 0.9, D.a + 1.4), k = 1 - prog(t, det - 0.25, det); R.c1.style.opacity = p * k; R.c1.style.transform = `translateY(${(1 - outCubic(p)) * 40}px)`; }
+    { const p = prog(t, det + 0.1, det + 0.6); R.c2.style.opacity = p; R.c2.style.transform = `translateY(${(1 - outCubic(p)) * 40}px)`; }
   }
 
-  // ===== 4. vantagens =====
-  if (show($("a4"), t, ...T.a4)) {
-    reveal($("a4"), t, 16.3, 0.45, "up");
-    VT.forEach(([a, b], i) => {
-      wordsIn(vH[i], t, a + 0.05, 0.08, 0.45, 50);
-      const k = 1 - prog(t, b - 0.25, b);
-      $("vh" + i).style.opacity = k; enter($("vs" + i), t, a + 0.7, 0.45, 26); $("vs" + i).style.opacity *= k;
-      $("v-vis" + i).style.opacity = k; $("v-vis" + i).style.visibility = t > a - 0.1 && t < b ? "visible" : "hidden";
-    });
-    v0.forEach((c, i) => { const p = prog(t, 16.85 + i * 0.15, 17.4 + i * 0.15);
-      c.style.opacity = clamp(p * 2); c.style.transform = `translateY(${(1 - outBack(p, 1.4)) * 200 + Math.sin(t * 1.5 + i) * 6}px) rotate(${(i - 1) * 5 * outCubic(p)}deg)`; });
-    { const c = $("v-vis1").firstElementChild, p = prog(t, 19.75, 20.25); c.style.opacity = clamp(p * 2); c.style.transform = `translateY(${(1 - outBack(p)) * 120}px)`;
-      $("v1-strike").style.width = `${outCubic(prog(t, 20.55, 20.8)) * 100}%`;
-      const n = prog(t, 20.85, 21.2); $("v1-old").style.opacity = 1 - n; $("v1-old").style.transform = `translateY(${-n * 40}px)`;
-      $("v1-new").style.opacity = n; $("v1-new").style.transform = `translateY(${(1 - outCubic(n)) * 40}px)`;
-      const q = prog(t, 21.15, 21.5); $("v1-toast").style.opacity = clamp(q * 2); $("v1-toast").style.transform = `scale(${lerp(0.7, 1, outBack(q, 2))})`; }
-    { const c = $("v-vis2").firstElementChild, p = prog(t, 22.75, 23.25); c.style.transform = `scale(${lerp(0.5, 1, outBack(p, 1.6))})`; c.style.opacity = clamp(p * 2);
-      pulse(v2Rings, t, 23.3, 0.3, 1.1, 0.9); if (t > 24.5) pulse(v2Rings, t, 24.6, 0.3, 1.1, 0.9); }
+  // ---- 4. vantagens ----
+  if ($("vant").style.visibility === "visible") {
+    const T = TL.vantagens;
+    [[R.v1, T.v - 0.1], [R.v2, V("vantagens", 0.5) - 0.1]].forEach(([c, at], i) => { const p = prog(t, at, at + 0.5);
+      c.style.opacity = clamp(p * 2); c.style.transform = `translateX(${(1 - outCubic(p)) * (i ? 300 : -300)}px)`;
+      c.querySelector("i").style.transform = `rotate(-45deg) scaleX(${outCubic(prog(t, at + 0.45, at + 0.7))})`; });
+    pop(R.v3, t, T.v + T.d + 0.05, 0.4);
   }
 
-  // ===== 5. outras placas =====
-  if (show($("a5"), t, ...T.a5)) {
-    reveal($("a5"), t, 25.8, 0.55, "circle", 540, 1100);
-    wordsIn(h5Words, t, 26.05, 0.09, 0.45, 50);
-    cells.forEach((c, i) => { const p = prog(t, 26.5 + i * 0.28, 27.0 + i * 0.28);
+  // ---- 5. atualização ----
+  if ($("atual").style.visibility === "visible") {
+    const T = TL.atualiza;
+    wordsIn(R.ahw, t, T.a + 0.3, 0.08, 0.45, 50);
+    { const p = prog(t, T.a + 0.4, T.a + 0.9); R.ac1.style.opacity = clamp(p * 2); R.ac1.style.transform = `translateY(${(1 - outBack(p)) * 120}px)`; }
+    const st = V("atualiza", 0.15); $("astrike").style.width = `${outCubic(prog(t, st, st + 0.25)) * 100}%`;
+    { const n = prog(t, st + 0.3, st + 0.65); $("aold").style.opacity = 1 - n; $("aold").style.transform = `translateY(${-n * 40}px)`; $("anew").style.opacity = n; $("anew").style.transform = `translateY(${(1 - outCubic(n)) * 40}px)`; }
+    { const at = V("atualiza", 0.38), p = prog(t, at, at + 0.5); R.ac2.style.opacity = clamp(p * 2); R.ac2.style.transform = `translateX(${(1 - outBack(p, 1.2)) * 700}px)`; }
+    pop(R.at, t, V("atualiza", 0.62), 0.4); enter(R.as, t, V("atualiza", 0.62) + 0.2, 0.45, 26);
+  }
+
+  // ---- 6-10. placas ----
+  Object.keys(APPS).forEach((k) => { if ($("sc-" + k).style.visibility === "visible") phoneScenario(k, t); });
+
+  // ---- 11. outras ----
+  if ($("outras").style.visibility === "visible") {
+    const T = TL.outras; wordsIn(R.ohw, t, T.a + 0.3, 0.09, 0.45, 50);
+    [0.02, 0.17, 0.3, 0.42, 0.56, 0.74].forEach((f, i) => { const c = R.ocells[i], p = prog(t, V("outras", f), V("outras", f) + 0.5);
       c.style.opacity = clamp(p * 2); c.style.transform = `translateY(${(1 - outBack(p, 1.4)) * 80}px) scale(${lerp(0.9, 1, outCubic(p))})`;
       c.firstElementChild.style.transform = `translateY(${Math.sin(t * 1.4 + i) * 4}px)`; });
-    enter($("f5"), t, 28.6, 0.5, 24);
   }
 
-  // ===== 6. foto real =====
-  if (show($("a6"), t, ...T.a6)) {
-    reveal($("a6"), t, 34.0, 0.45, "left");
-    $("a6-img").style.transform = `scale(${lerp(1.14, 1.0, outCubic(prog(t, 34.0, 38.3)))})`;
-    enter($("e6"), t, 34.5, 0.45, 24); wordsIn(h6Words, t, 34.65, 0.08, 0.45, 50);
+  // ---- 12. personalizada ----
+  if ($("perso").style.visibility === "visible") {
+    const T = TL.personalizada; wordsIn(R.ph1w, t, T.a + 0.3, 0.07, 0.45, 50);
+    const sw = [T.a + 0.2, V("personalizada", 0.42), V("personalizada", 0.68)];
+    R.pplates.forEach((p, i) => { const pin = inOut(prog(t, sw[i], sw[i] + 0.55)), pout = i < 2 ? inOut(prog(t, sw[i + 1], sw[i + 1] + 0.55)) : 0;
+      p.style.opacity = pin > 0 && pout < 1 ? 1 : 0; p.style.transform = `rotateY(${(1 - pin) * 90 - pout * 90 + Math.sin(t * 0.9) * 6}deg)`; });
+    R.pchips.forEach((c, i) => { pop(c, t, [V("personalizada", 0.3), V("personalizada", 0.5), V("personalizada", 0.75)][i], 0.4); c.style.transform += ` translateY(${Math.sin(t * 1.3 + i) * 6}px)`; });
   }
 
-  // ===== 7. chamada =====
-  if (show($("a7"), t, T.a7[0], T.a7[1] + 1)) {
-    reveal($("a7"), t, 37.8, 0.55, "circle", 540, 1450);
-    { const p = prog(t, 38.05, 38.6); $("a7-logo").style.opacity = clamp(p * 2); $("a7-logo").style.transform = `scale(${lerp(0.7, 1, outBack(p))})`; }
-    enter($("a7-pre"), t, 38.3, 0.5, 30);
-    wordsIn(h7Words, t, 38.6, 0.08, 0.45, 50);
-    { const p = prog(t, 39.3, 39.8); $("btn-w").style.opacity = clamp(p * 1.6); $("btn-w").style.transform = `scale(${lerp(0.85, 1, outBack(p, 2))})`;
-      const pr = Math.sin(Math.PI * prog(t, 40.85, 41.0)); $("btn").style.transform = `scale(${1 - 0.05 * pr + (t > 41.1 ? 0.025 * Math.sin((t - 41.1) * 5) : 0)})`;
-      $("shine").style.left = `${lerp(-200, 900, prog(t, 40.1, 40.6))}px`; }
-    tapAt($("tap7"), t, 540, 92, 40.85);
-    enter($("a7-num"), t, 39.65, 0.45, 26); enter($("a7-ig"), t, 39.8, 0.45, 26); enter($("a7-city"), t, 39.95, 0.45, 26);
+  // ---- 13. valor ----
+  if ($("valor").style.visibility === "visible") {
+    const T = TL.valor, s2 = V("valor", 0.3);
+    wordsIn(R.vh1w, t, T.a + 0.3, 0.08, 0.45, 50); R.vh1.style.opacity = 1 - prog(t, s2 - 0.3, s2 - 0.05);
+    wordsIn(R.vh2w, t, s2, 0.08, 0.45, 50); R.vh2.style.opacity = t > s2 - 0.05 ? 1 : 0;
+    R.vminis.forEach((m, i) => pop(m, t, T.a + 0.5 + i * 0.1, 0.45));
+    const f = inOut(prog(t, s2 + 0.2, V("valor", 0.75))); $("vfill").style.width = `${f * 100}%`;
+    R.vdots.forEach((d, i) => { const at = lerp(s2 + 0.2, V("valor", 0.75), [0.08, 0.2, 0.31, 0.44, 0.52, 0.63, 0.71, 0.82, 0.93][i]); pop(d, t, at, 0.3, 0.2); });
+    pop(R.vchip, t, V("valor", 0.72), 0.45);
+  }
+
+  // ---- 14. prova ----
+  if ($("prova").style.visibility === "visible") {
+    const T = TL.prova; R.pimg.style.transform = `scale(${lerp(1.14, 1.0, outCubic(prog(t, T.a, T.b + 0.6)))})`;
+    enter(R.pe, t, T.a + 0.5, 0.45, 24); wordsIn(R.prhw, t, T.a + 0.65, 0.08, 0.45, 50);
+  }
+
+  // ---- 15. chamada ----
+  if ($("cta").style.visibility === "visible") {
+    const T = TL.cta;
+    { const p = prog(t, T.a + 0.25, T.a + 0.8); R.clogo.style.opacity = clamp(p * 2); R.clogo.style.transform = `scale(${lerp(0.7, 1, outBack(p))})`; }
+    enter(R.cpre, t, T.a + 0.5, 0.5, 30); wordsIn(R.chw, t, T.a + 0.8, 0.08, 0.45, 50);
+    const bt = T.a + 1.5, tp = T.a + 3.0;
+    { const p = prog(t, bt, bt + 0.5); R.cbw.style.opacity = clamp(p * 1.6); R.cbw.style.transform = `scale(${lerp(0.85, 1, outBack(p, 2))})`;
+      const pr = Math.sin(Math.PI * prog(t, tp, tp + 0.15)); $("btn").style.transform = `scale(${1 - 0.05 * pr + (t > tp + 0.25 ? 0.025 * Math.sin((t - tp) * 5) : 0)})`;
+      $("shine").style.left = `${lerp(-200, 900, prog(t, bt + 0.8, bt + 1.3))}px`; }
+    tapAt($("tapc"), t, 540, 92, tp);
+    enter(R.cn, t, bt + 0.35, 0.45, 26); enter(R.ci, t, bt + 0.5, 0.45, 26); enter(R.cc, t, bt + 0.65, 0.45, 26);
   }
 };
+window.TAPS = { fim: TL.fim };
 
 window.ready = (async () => {
   for (const f of ['800 100px "PF"', 'italic 800 100px "PF"', '600 40px "IN"', '800 40px "MO"']) await document.fonts.load(f);

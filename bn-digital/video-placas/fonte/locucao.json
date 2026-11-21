@@ -1,0 +1,22 @@
+{
+  "voz_gemini": "Achird",
+  "voz_elevenlabs": "gHd1exuPmjC5yOMlzA9t",
+  "obs": "Uma fala por cena, na ordem do vídeo. 'BN' vai escrito 'Bê Ene' pra voz falar certo. Áudios em work/vo/<cena>.wav.",
+  "falas": {
+    "gancho": "Seu cliente ainda espera o cardápio chegar na mesa?",
+    "placa": "Com a placa de mesa da Bê Ene Digital, é só aproximar o celular.",
+    "demo": "O cardápio abre na hora, com foto e preço de cada prato.",
+    "vantagens": "Sem esperar o garçom e sem baixar aplicativo.",
+    "atualiza": "Mudou um preço ou chegou produto novo? A gente atualiza pra você, sem reimprimir nada.",
+    "wifi": "Cliente chegou e pediu a senha do Wi-Fi? Entrega a plaquinha. Ele encosta o celular e já está conectado.",
+    "pix": "Na hora de pagar, a placa de Pix mostra a sua chave, pronta pra copiar. Ninguém precisa ficar ditando chave no balcão.",
+    "insta": "Quer mais seguidores? Encostou na placa, o seu Instagram abre. É só tocar em seguir.",
+    "whats": "Pedido, reserva ou dúvida? A placa de WhatsApp abre a conversa direto com você.",
+    "google": "E na saída, a placa de avaliação abre o Google pro cliente avaliar o seu negócio com um toque.",
+    "outras": "Tem placa de localização, de site, de TikTok, de Facebook e de contato. Cada uma leva o cliente aonde você quiser.",
+    "personalizada": "E cada placa sai com a cor, a logo e a cara do seu negócio.",
+    "valor": "Pode parecer só uma plaquinha. Mas ela trabalha pra você o dia inteiro. E a manutenção fica com a gente.",
+    "prova": "Placas feitas pela Bê Ene Digital, aqui em Casimiro de Abreu.",
+    "cta": "Chama no WhatsApp e peça o seu orçamento."
+  }
+}

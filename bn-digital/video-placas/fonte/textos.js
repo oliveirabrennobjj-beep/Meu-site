@@ -1,4 +1,5 @@
 // TEXTOS DO VÍDEO DAS PLACAS: troque aqui e gere de novo (ver README.md).
+// A locução (o que a voz fala) fica em locucao.json.
 // "|" quebra a linha. *palavras* entre asteriscos ficam em itálico colorido.
 window.TEXTOS = {
   marca: "BN DIGITAL",
@@ -6,19 +7,18 @@ window.TEXTOS = {
   whatsapp: "(22) 99705-2912",
   instagram: "@bn_digital__sites_e_nfc",
 
-  // 1. gancho: cardápio de papel
+  // gancho: cardápio de papel
   gancho: "Seu cliente ainda espera|o *cardápio* chegar?",
   cardapioPapel: [["X-Burguer", "18,00"], ["X-Salada", "20,00"], ["X-Bacon", "24,00"], ["Batata frita", "15,00"], ["Refrigerante", "6,00"]],
 
-  // 2. a placa
+  // a placa de mesa
   placaSobretitulo: "BN DIGITAL",
   placaTitulo: "Placa de mesa com|*cardápio digital.*",
-  placaSub: "O cliente aproxima o celular|e vê o cardápio.",
   restaurante: "Burgeria",
   mesa: "04",
   aproxime: "Aproxime o celular",
 
-  // 3. demonstração no celular (fotos em assets/)
+  // demonstração do cardápio (fotos em assets/)
   demoLegenda1: "Encostou o celular,|*o cardápio abre.*",
   demoLegenda2: "Foto e preço de|*cada prato.*",
   destaque: { foto: "hero-700", nome: "Smash duplo", preco: "R$ 34,90" },
@@ -29,33 +29,51 @@ window.TEXTOS = {
     { foto: "g-triplo-840", nome: "Smash triplo", desc: "Três carnes e muito queijo", preco: "R$ 42,90" },
   ],
 
-  // 4. vantagens
-  vantagens: [
-    { titulo: "O cliente vê tudo|*na hora.*", sub: "Sem esperar o garçom trazer o cardápio." },
-    { titulo: "Mudou o preço?|*Atualiza na hora.*", sub: "Sem reimprimir nenhum cardápio." },
-    { titulo: "Sem baixar|*aplicativo.*", sub: "É só aproximar o celular da placa." },
-  ],
+  // vantagens
+  vantagem1: "Sem esperar|*o garçom.*",
+  vantagem2: "Sem baixar|*aplicativo.*",
+  atualizaTitulo: "Mudou o preço?|Chegou *produto novo?*",
+  atualizaSub: "A gente atualiza pra você.|Sem reimprimir nada.",
   precoAntes: "R$ 34,90",
   precoDepois: "R$ 36,90",
+  produtoNovo: { foto: "cinza-600", nome: "Burger da casa", preco: "R$ 38,90" },
   avisoAtualizado: "Cardápio atualizado",
 
-  // 5. outras placas (6 itens)
-  placasTitulo: "E tem placa|*pra tudo.*",
-  placas: [
-    ["Cardápio", "Foto e preço de cada prato"],
-    ["Wi-Fi", "Conecta sem pedir a senha"],
-    ["Pix", "Paga sem digitar a chave"],
-    ["Instagram", "Segue o seu perfil na hora"],
-    ["WhatsApp", "Fala direto com você"],
-    ["Google", "Avaliação com um toque"],
+  // uma cena por placa
+  wifi: { nome: "Wi-Fi", titulo: "Wi-Fi sem|*ditar senha.*", sub: "Encostou, conectou.", rede: "Burgeria Clientes" },
+  pix: { nome: "Pix", titulo: "Pix sem|*ditar chave.*", sub: "A chave aparece pronta pra copiar.", chave: "pix@seunegocio.com.br" },
+  insta: { nome: "Instagram", titulo: "Mais|*seguidores.*", sub: "O perfil abre, o cliente segue.", perfil: "burgeria", seguidores: 2430 },
+  whats: { nome: "WhatsApp", titulo: "Conversa|*direto com você.*", sub: "Pedido, reserva ou dúvida.", msg: "Olá! Vim pela placa da mesa 04. Quero fazer um pedido.", resposta: "Oi! Pode mandar o seu pedido." },
+  google: { nome: "Google", titulo: "Mais avaliações|*no Google.*", sub: "A avaliação abre com um toque." },
+
+  // outras placas (6)
+  outrasTitulo: "Tem placa|*pra tudo.*",
+  outras: [
+    ["Localização", "Abre o mapa até você"],
+    ["Site", "Abre o seu site"],
+    ["TikTok", "Abre o seu perfil"],
+    ["Facebook", "Abre a sua página"],
+    ["Contato", "Salva o seu número"],
+    ["Qualquer link", "Promoção, delivery, o que quiser"],
   ],
-  placasRodape: "O cliente aproxima o celular e pronto.",
 
-  // 6. prova
+  // placa personalizada (3 exemplos de marca fictícios)
+  personalizadaTitulo: "Com a cor, a logo e|a *cara do seu negócio.*",
+  personalizadaEtapas: ["Cor", "Logo", "Identidade"],
+  marcas: [
+    { nome: "Burgeria", letra: "B", fundo: "linear-gradient(160deg,#23272f,#07080b)", destaque: "#ff8a1f", texto: "#ffffff" },
+    { nome: "Navalha", letra: "N", fundo: "linear-gradient(160deg,#1d1a14,#0a0907)", destaque: "#d4a94e", texto: "#f3e6c8" },
+    { nome: "Açaí da Orla", letra: "A", fundo: "linear-gradient(160deg,#7c3aed,#3b0f80)", destaque: "#f2e33b", texto: "#ffffff" },
+  ],
+
+  // valor
+  valor1: "Pode parecer só|uma *plaquinha.*",
+  valor2: "Ela trabalha pra você|*o dia inteiro.*",
+  valorChip: "Manutenção por nossa conta",
+
+  // prova e chamada final
   provaTitulo: "Feitas pela BN Digital,|*aqui em Casimiro.*",
-
-  // 7. chamada final
-  finalPre: "Cardápio, Wi-Fi, Pix, Instagram e WhatsApp.",
-  finalChamada: "Quer a placa no seu|*restaurante?*",
+  finalPre: "Placas personalizadas para o seu negócio.",
+  finalChamada: "Quer as placas no|seu *negócio?*",
   botao: "Pedir orçamento",
 };

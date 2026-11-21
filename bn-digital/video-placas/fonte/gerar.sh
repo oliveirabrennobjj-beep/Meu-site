@@ -9,11 +9,14 @@ if ! curl -s -o /dev/null http://localhost:8765/bn-digital/video-placas/fonte/in
   trap 'kill $SRV' EXIT; sleep 1
 fi
 rm -rf "$W/frames"
-python3 capture.py frames 30 44 "$W/frames"
+python3 montar_tempo.py
+DUR=$(python3 -c "import json;print(json.load(open('../work/tempo.json'))['fim'])")
+python3 capture.py frames 30 "$DUR" "$W/frames"
 python3 synth.py "$W/trilha.wav"
-# capa: quadro de 5,5 s (placa na mesa + título), também usado como 1º quadro
-cp "$W/frames/f00165.jpg" ../capa.jpg
-cp "$W/frames/f00165.jpg" "$W/frames/f00000.jpg"
+# capa: placa na mesa com o título (2,8 s depois do início da cena da placa), também usada como 1º quadro
+CAPA=$(python3 -c "import json;print('f%05d.jpg' % int((json.load(open('../work/tempo.json'))['placa']['a'] + 2.8) * 30))")
+cp "$W/frames/$CAPA" ../capa.jpg
+cp "$W/frames/$CAPA" "$W/frames/f00000.jpg"
 ffmpeg -y -loglevel error -framerate 30 -i "$W/frames/f%05d.jpg" -i "$W/trilha.wav" \
   -c:v libx264 -preset slow -crf 18 -pix_fmt yuv420p -c:a aac -b:a 192k -shortest -movflags +faststart ../placas.mp4
 echo "pronto: bn-digital/video-placas/placas.mp4"
