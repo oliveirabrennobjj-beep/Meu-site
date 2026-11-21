@@ -914,9 +914,10 @@ export const TEXTOS_PADRAO: Textos = {
     "Ah, e quem eu procuro aí pra conversar sobre isso? Se puder ser o dono ou a dona, melhor, já mostro tudo pessoalmente.\nQual horário costuma ser melhor pra encontrar? Ou, se preferir, me passa o contato.",
   casimiroAgenda: `${APRESENTACAO_CASIMIRO}\nTô começando {sistemaUm} pra {sistemaQuem} aqui da cidade: {sistemaFrase}.\n{sistemaGanho}\nPosso passar aí pra te mostrar como funciona? É rapidinho. ${VISITA}`,
   foraAgenda:
-    "Oi, {saudacao}, tudo certo? Aqui é o Brenno, da BN Digital. Sou de Casimiro{pertinho}.\nTô começando {sistemaUm} pra {sistemaQuem}: {sistemaFrase}.\n{sistemaGanho}\nQuer que eu te mande uma imagem de como ficaria pra {nome}? Se não for a hora, tranquilo, é só falar.",
+    "Oi, {saudacao}, tudo certo? Aqui é o Brenno, da BN Digital. Sou de Casimiro{pertinho}.\nTô começando {sistemaUm} pra {sistemaQuem}: {sistemaFrase}.\n{sistemaGanho}\nOlha abaixo como ficaria pra {nome}. Se não for a hora, tranquilo, é só falar.",
   depoisAgenda:
-    "Ah, e aproveitando: tô começando {sistemaUm} pra {sistemaQuem}. {SistemaFrase}.\n{sistemaGanho}\nQuer que eu te mande uma imagem de como ficaria pra {nome}?",
+    // Sem pergunta no fim: o Brenno manda o print do sistema logo depois.
+    "Ah, e aproveitando: tô começando {sistemaUm} pra {sistemaQuem}. {SistemaFrase}.\n{sistemaGanho}",
   gostou:
     "Que bom que gostou! Consigo te fazer uma demonstração de design, de como vai ficar o site da {nome}, ainda hoje ou amanhã.\nPara você ter uma ideia, olha um que eu já fiz: {exemplo}\nPosso montar e te mandar por aqui?",
 };
