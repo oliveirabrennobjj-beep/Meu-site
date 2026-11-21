@@ -364,9 +364,9 @@ export const RAMOS: Ramo[] = [
     nome: "Academia de luta",
     opcao: "Luta (muay thai, jiu-jitsu, boxe)",
     tipo: /luta|muay|jiu|boxe|kickbox|artes marciais|karat|jud[oô]|capoeira|taekwondo/i,
-    nomeLoja: /\bmuay|\bjiu|\blutas?\b|\bboxe\b|\bkarat|\bjud[oô]\b|\bcapoeira|\btaekwondo/i,
+    nomeLoja: /\bmuay|\bjiu|\blutas?\b|\bboxe\b|\bkarat|\bjud[oô](?![\wà-ú])|\bcapoeira|\btaekwondo/i,
     certeza: {
-      padrao: /\bmuay|\bjiu|\bbjj\b|\blutas?\b|\bboxe\b|\bkarat|\bjud[oô]\b|\btaekwondo|\bcapoeira|\bfight|\bct\b|centro de treinamento|\bteam\b/i,
+      padrao: /\bmuay|\bjiu|\bbjj\b|\blutas?\b|\bboxe\b|\bkarat|\bjud[oô](?![\wà-ú])|\btaekwondo|\bcapoeira|\bfight|\bct\b|centro de treinamento|\bteam\b/i,
       corrige: ["academia", "geral"],
     },
     quem: "academia de luta",
@@ -395,9 +395,9 @@ export const RAMOS: Ramo[] = [
     id: "danca",
     nome: "Escola de dança",
     opcao: "Dança (balé, zumba, ritmos)",
-    tipo: /dan[cç]a|\bdance|ballet|\bbal[eé]\b|zumba|forr[oó]|\bsamba|hip.?hop|\bjazz/i,
-    nomeLoja: /\bdan[cç]a|\bdance|\bballet|\bbal[eé]\b|\bzumba/i,
-    certeza: { padrao: /\bdan[cç]a|\bdance|\bballet|\bbal[eé]\b|\bzumba|\britmos\b/i, corrige: MODALIDADE },
+    tipo: /(?<![a-zà-ú])dan[cç]a|\bdance|ballet|\bbal[eé](?![\wà-ú])|zumba|forr[oó]|\bsamba|hip.?hop|\bjazz/i,
+    nomeLoja: /\bdan[cç]a|\bdance|\bballet|\bbal[eé](?![\wà-ú])|\bzumba/i,
+    certeza: { padrao: /\bdan[cç]a|\bdance|\bballet|\bbal[eé](?![\wà-ú])|\bzumba|\britmos\b/i, corrige: MODALIDADE },
     noSite: "as modalidades, os horários das turmas e um botão pra marcar aula experimental pelo WhatsApp",
     ondePlaca: " depois da aula",
   },
@@ -415,7 +415,7 @@ export const RAMOS: Ramo[] = [
     id: "escola",
     nome: "Escola e cursos",
     opcao: "Escola e cursos (idiomas, música, autoescola)",
-    tipo: /escola|curso|idioma|ingl[eê]s|aulas? particular|refor[cç]o escolar|creche|jardim de inf|m[uú]sica|educa[cç][aã]o/i,
+    tipo: /escola|curso|idioma|ingl[eê]s|aulas? particular|refor[cç]o escolar|creche|jardim de inf|(?:escola|aulas?|cursos?) de m[uú]sica|educa[cç][aã]o/i,
     nomeLoja: /\bescola|\bcol[eé]gio|\bcursos?\b|\bidiomas?|\bingl[eê]s|\benglish|\bcreche|\bm[uú]sica/i,
     noSite: "os cursos, os horários das turmas e um botão pra fazer a matrícula pelo WhatsApp",
     ondePlaca: " depois da aula",
@@ -424,8 +424,9 @@ export const RAMOS: Ramo[] = [
     id: "festa",
     nome: "Festas e eventos",
     opcao: "Festas, eventos e fotografia",
-    tipo: /festa|evento|buffet|cerimon|fot[oó]gr[aá]f|decora[cç][aã]o|entretenimento|\bdj\b/i,
+    tipo: /festa|evento|buffet|cerimon|fot[oó]gr[aá]f|decora[cç][aã]o|entretenimento|casamento|\bdj\b/i,
     nomeLoja: /\bfestas?\b|\beventos?\b|\bbuffet|\bfotografia|\bdecora/i,
+    certeza: { padrao: /\bfestas?\b|\beventos?\b|\bbuffet\b/i, corrige: ["salao"] },
     noSite: "as fotos das festas, os pacotes e um botão pra pedir orçamento pelo WhatsApp",
     ondePlaca: " no fim da festa",
   },
@@ -480,8 +481,8 @@ export const RAMOS: Ramo[] = [
   {
     id: "salao",
     nome: "Salão de beleza",
-    tipo: /sal[aã]o|beleza|cabel|manicure|nail|unhas?\b|sobrancel|c[ií]lios|maquia|tatu|piercing/i,
-    nomeLoja: /\bsal[aã]o|\bbeleza|\bbeauty|\bstudio\b|\bcabel|\bhair|\bnails?\b|\bunhas?\b/i,
+    tipo: /sal[aã]o|(?<!produtos de )beleza|cabel|manicure|nail|unhas?\b|sobrancel|c[ií]lios|maquia|tatu|piercing/i,
+    nomeLoja: /\bsal[aã]o|\bbeleza|\bbeauty|\bcabel|\bhair|\bnails?\b|\bunhas?\b/i,
     noSite: SERVICOS,
     ondePlaca: " ainda na cadeira",
   },
@@ -491,7 +492,7 @@ export const RAMOS: Ramo[] = [
     tipo: /est[eé]tic|depila|harmoniza|dermat|micropigment/i,
     nomeLoja: /\best[eé]tica\b/i,
     certeza: {
-      padrao: /cl[ií]nica[^|]*est[eé]tica|centro de [^|]*est[eé]tica|harmoniza/i,
+      padrao: /cl[ií]nica[^|]*est[eé]tica|centro de [^|]*est[eé]tica|harmoniza|\best[eé]tica\b(?! (automotiva|auto|veicular))/i,
       corrige: ["salao", "geral"],
     },
     noSite: "os procedimentos, os horários e um botão pra agendar pelo WhatsApp",
@@ -536,7 +537,7 @@ export const RAMOS: Ramo[] = [
   {
     id: "restaurante",
     nome: "Restaurante",
-    tipo: /restaur|churras|grill|marmit|gastronom|steak|self.?service|\bbar\b|\bbares\b|boteco|petisc|quiosque|kiosque|crep|esfi[hr]|catering|frango|comida|\bdelivery\b/i,
+    tipo: /restaur|churras|grill|marmit|gastronom|steak|self.?service|\bbar\b|\bbares\b|boteco|petisc|quiosque|kiosque|crep|esfi[hr]|catering|frango|comida|\bdelivery\b|casa noturna/i,
     nomeLoja: /\brestaurante|\bchurrasc|\bgrill\b|\bmarmit|\bgastronomia|\bsteak/i,
     noSite: CARDAPIO,
     ondePlaca: " enquanto espera o pedido",
@@ -545,15 +546,16 @@ export const RAMOS: Ramo[] = [
     id: "pet",
     nome: "Pet shop",
     opcao: "Pet shop e veterinária",
-    tipo: /\bpet|veterin|ra[cç](?:[oõ]es|[aã]o)|agropecu|pecu[aá]ri|agr[ií]col|criador|cria[cç][aã]o de/i,
+    tipo: /\bpet|veterin|ra[cç](?:[oõ]es|[aã]o)|fazenda|\baves\b|rancho|agropecu|pecu[aá]ri|agr[ií]col|criador|cria[cç][aã]o de/i,
     nomeLoja: /\bpet\b|\bpetshop|\bveterin|\bra[cç](?:[oõ]es|[aã]o)/i,
+    certeza: { padrao: /\bpet\b|\bpetshop|banho e tosa|\btosa\b/i, corrige: ["salao", "massagem", "estetica", "geral"] },
     noSite: "os serviços, os horários e um botão pra agendar pelo WhatsApp",
     ondePlaca: " quando busca o bichinho",
   },
   {
     id: "oficina",
     nome: "Oficina mecânica",
-    tipo: /oficina(?! de (?:reparos?|conserto) de (?:celular|eletr))|mec[aâ]nic|auto(?!.?escola)|diesel|motor|lanterna|funilaria|radiador|pneu|borrach|moto|lava.?jato|reboque|guincho|som (para|pra) carro|som automotivo|bicicleta|\bbikes?\b/i,
+    tipo: /oficina(?! de (?:reparos?|conserto) de (?:celular|eletr))|mec[aâ]nic|auto(?!.?escola|ma[cçt])|diesel|motor|lanterna|funilaria|radiador|pneu|borrach|moto|lava.?jato|reboque|guincho|som (para|pra) carro|som automotivo|bicicleta|\bbikes?\b/i,
     nomeLoja: /\boficina|\bmec[aâ]nica|\bauto\b|\bautomotiv|\bdiesel|\bmotos?\b|\bpneus?\b|lava.?jato|lanternagem/i,
     noSite: "os serviços, o horário, o mapa e um botão pra pedir orçamento pelo WhatsApp",
     ondePlaca: " na hora de buscar o carro",
@@ -570,8 +572,9 @@ export const RAMOS: Ramo[] = [
     id: "saude",
     nome: "Consultório",
     opcao: "Consultório (psicólogo, nutricionista, médico)",
-    tipo: /psic|nutri|terapeut|terapia|m[eé]dic|cl[ií]nica|consult[oó]rio|psiquiat|psican|fonoaud|oftalm|ginec|pediatr|cardiol|ortoped|pod[oó]log|laborat|diagn[oó]stico|sa[uú]de|acupunt/i,
-    nomeLoja: /\bpsic[oó]log|\bnutri|\bconsult[oó]rio|\bcl[ií]nica\b|\bterapia|\bterapeut/i,
+    tipo: /psic|nutri|terapeut|terapia|m[eé]dic(?!amento)|cl[ií]nic[ao]|consult[oó]rio|psiquiat|psican|fonoaud|oftalm|ginec|pediatr|cardiol|ortoped|pod[oó]log|laborat|diagn[oó]stico|sa[uú]de|acupunt/i,
+    nomeLoja: /\bpsic[oó]log|\bnutri|\bconsult[oó]rio|\bcl[ií]nica\b|\bterapia|\bterapeut|podolog/i,
+    certeza: { padrao: /podolog/i, corrige: ["salao", "estetica"] },
     noSite: "as especialidades, os horários e um botão pra marcar consulta pelo WhatsApp",
     ondePlaca: " depois da consulta",
   },
@@ -596,7 +599,7 @@ export const RAMOS: Ramo[] = [
   {
     id: "papelaria",
     nome: "Papelaria",
-    tipo: /papelar|livrar|armarinho|gr[aá]fic|c[oó]pias?\b|impress|presente|personalizad/i,
+    tipo: /papelar|livrar|armarinho|gr[aá]fic|c[oó]pias?(?! de chave)\b|impress|presente|personalizad|carimbo|moldura|artesanato/i,
     nomeLoja: /\bpapelaria|\bpapel\b|\blivraria/i,
     noSite: "os produtos, a lista de material escolar e um botão pra pedir pelo WhatsApp",
     ondePlaca: " no caixa",
@@ -614,8 +617,8 @@ export const RAMOS: Ramo[] = [
     id: "construcao",
     nome: "Material de construção",
     opcao: "Construção, tintas e vidraçaria",
-    tipo: /constru|\btintas?\b|madeireir|ferragen|ferrament|el[eé]tric[oa] e hidr|hidr[aá]ulic|vidra[cç]|marmor|serralher|serralhar|home ?center|gesso|drywall|esquadria|janelas|vidros|madeiras|marcen|carpint|moveleir|serrari|reforma|empreiteir/i,
-    nomeLoja: /\bconstru|\btintas\b|\bmadeireira|\bferragens|\bvidra[cç]aria|\bmateriais/i,
+    tipo: /constru|\btintas?\b|madeireir|ferragen|ferrament|el[eé]tric[oa] e hidr|hidr[aá]ulic|vidra[cç]|marmor|serralher|serralhar|home ?center|gesso|drywall|esquadria|janelas|vidros|madeiras|marcen|carpint|moveleir|serrari|reforma|empreiteir|materia(?:l|is) el[eé]tric|andaime|alvenaria|pedreiro/i,
+    nomeLoja: /\bconstru|\btintas\b|\bmadeireira|\bferragens|\bvidra[cç]aria|\bmateriais|\bmaterial\b|\bgesso\b/i,
     noSite: "os produtos, o horário, o mapa e um botão pra pedir orçamento pelo WhatsApp",
     ondePlaca: " no balcão",
   },
@@ -632,7 +635,7 @@ export const RAMOS: Ramo[] = [
     id: "mercado",
     nome: "Mercado",
     opcao: "Mercado, mercearia e hortifrúti",
-    tipo: /mercad|mercearia|hortifr|sacol[aã]o|atacad|a[cç]ougue|frutar|emp[oó]rio|bebida|cerveja|distribuid|dep[oó]sito|armaz[eé]m|\bg[aá]s\b|butano|peixar|produtos naturais|aliment|queijo|[aá]gua engarrafada|congelad|descart[aá]v|conveni[eê]ncia|fazenda|\baves\b/i,
+    tipo: /mercad|mercearia|hortifr|sacol[aã]o|atacad(?!ista de cosm)|a[cç]ougue|frutar|emp[oó]rio|bebida|cerveja|distribuid|dep[oó]sito|armaz[eé]m|\bg[aá]s\b|butano|peixar|produtos naturais|aliment|queijo|[aá]gua engarrafada|congelad|descart[aá]v|conveni[eê]ncia/i,
     nomeLoja: /\bmercad|\bmercearia|\bhortifr|\bsacol[aã]o|\ba[cç]ougue/i,
     noSite: "as ofertas da semana, o horário e um botão pra fazer o pedido pelo WhatsApp",
     ondePlaca: " no caixa",
@@ -640,7 +643,7 @@ export const RAMOS: Ramo[] = [
   {
     id: "farmacia",
     nome: "Farmácia",
-    tipo: /farm[aá]c|drogaria|manipula|suplement|vitamin|fitoter|perfum|cosm[eé]tic/i,
+    tipo: /farm[aá]c|drogaria|manipula|suplement|vitamin|fitoter|perfum|cosm[eé]tic|produtos de beleza/i,
     nomeLoja: /\bfarma|\bdrogaria/i,
     noSite: "o horário, a entrega e um botão pra pedir pelo WhatsApp",
     ondePlaca: " no balcão",
@@ -664,19 +667,20 @@ const TIPO_GENERICO =
 export function ramoDe(lead: Pick<Lead, "nome" | "tipo" | "ramo">): Ramo {
   const escolhido = RAMOS.find((r) => r.id === lead.ramo);
   if (escolhido) return escolhido;
+  const subPeloTipo = lead.tipo ? SUBNICHOS.find((s) => s.tipo?.test(lead.tipo ?? "")) : undefined;
   const base =
     RAMOS.find((r) => r.tipo.test(lead.tipo ?? "")) ??
     RAMOS.find((r) => r.nomeLoja?.test(lead.nome)) ??
+    (subPeloTipo && RAMOS.find((r) => r.id === subPeloTipo.ramo)) ??
     GERAL;
   const certo = RAMOS.find((r) => r.certeza?.corrige.includes(base.id) && r.certeza.padrao.test(lead.nome)) ?? base;
   // "Gran Pizza" com tipo "Delivery", "Barriga Doce Tattoo" com tipo "Loja": o nome diz o que vende. Só vale
   // quando o tipo é genérico (ou caiu no geral), o nome não confirma o próprio ramo e não há sub-nicho nele.
   const tipo = (lead.tipo ?? "").trim();
   if ((certo.id === "geral" || TIPO_GENERICO.test(tipo)) && !(certo.id !== "geral" && certo.nomeLoja?.test(lead.nome))) {
-    const temSub = SUBNICHOS.some(
-      (s) => (s.ramo === certo.id || s.outrosRamos?.includes(certo.id)) && (s.nomeLoja?.test(lead.nome) || s.tipo?.test(tipo)),
-    );
-    if (!temSub) {
+    // Sub-nicho do próprio ramo pelo nome segura o ramo; pelo tipo só segura quando o nome não aponta pra outro.
+    const doRamo = SUBNICHOS.filter((s) => s.ramo === certo.id || s.outrosRamos?.includes(certo.id));
+    if (!doRamo.some((s) => s.nomeLoja?.test(lead.nome))) {
       // Tipo de comida ("Delivery", "Quiosque", "Café") só troca por outro ramo de comida: o Mr Fit é marmita fit, não academia.
       const comida = /^(delivery|quiosque|caf[eé]|restaurante fast-food)$|aliment/i.test(tipo);
       const pode = (id: RamoId) => !comida || ["restaurante", "hamburgueria", "pizzaria", "padaria", "acai", "mercado"].includes(id);
@@ -715,6 +719,12 @@ export interface Subnicho {
 const PEDIDO_ZAP = "um botão que já abre o pedido no WhatsApp";
 const ORCAMENTO = "um botão pra pedir orçamento pelo WhatsApp";
 
+// `\b` do JavaScript não conhece acento: "Spaço" passava por \bspa\b e "Judô" não fechava \bjud[oô]\b.
+// Todo \b das regras de ramo e sub-nicho vira uma fronteira que trata letra acentuada como letra.
+const LETRA = "\\wÀ-ÖØ-öø-ÿ";
+const FRONTEIRA = `(?:(?<![${LETRA}])(?=[${LETRA}])|(?<=[${LETRA}])(?![${LETRA}]))`;
+const comAcento = (r: RegExp) => new RegExp(r.source.replaceAll("\\b", FRONTEIRA), r.flags);
+
 export const SUBNICHOS: Subnicho[] = [
   // Pet
   { id: "aquario", ramo: "pet", nome: "Aquarismo", tipo: /aqu[aá]rio|aquaris|peix/i, nomeLoja: /aqu[aá]rio|aquaris|\bpeix|\bfish\b|\breef\b/i,
@@ -722,14 +732,14 @@ export const SUBNICHOS: Subnicho[] = [
   { id: "veterinario", ramo: "pet", nome: "Veterinária", tipo: /veterin/i, nomeLoja: /\bvet\b|veterin/i,
     quem: "clínica veterinária", noSite: "os atendimentos, os horários e um botão pra marcar a consulta pelo WhatsApp", ondePlaca: " na recepção",
     sistemaTexto: { quem: "clínica veterinária", frase: "o tutor escolhe a consulta ou a vacina e o horário pelo celular, e já fica marcado na sua agenda", ganho: "Você não precisa parar o atendimento pra responder mensagem." } },
-  { id: "agro", ramo: "pet", nome: "Agropecuária", tipo: /agropecu|agr[ií]col|pecu[aá]ri|cooperativa|criador|cavalo|equin|haras|selaria/i, nomeLoja: /\bagro|agropecu|selaria|\bharas\b|\brural\b|\bfazenda|\bcampo\b/i,
+  { id: "agro", ramo: "pet", nome: "Agropecuária", tipo: /agropecu|agr[ií]col|pecu[aá]ri|cooperativa|criador|cria[cç][aã]o|cavalo|equin|haras|selaria|fazenda|\baves\b|rancho/i, nomeLoja: /\bagro|agropecu|selaria|\bharas\b|\brural\b|\bfazenda|\bcampo\b/i,
     quem: "agropecuária", noSite: `as rações, os produtos pro campo e ${PEDIDO_ZAP}`, ondePlaca: " no balcão", sistema: null },
   { id: "racao", ramo: "pet", nome: "Loja de ração", tipo: /ra[cç](?:[oõ]es|[aã]o)|suprimentos para animais/i,
     quem: "loja de ração", noSite: `as rações e os acessórios com foto e ${PEDIDO_ZAP}`, ondePlaca: " no caixa", sistema: null },
   // Luta: cada modalidade com a foto dela
   { id: "jiujitsu", ramo: "luta", nome: "Jiu-jitsu", tipo: /jiu|bjj|grappling/i, nomeLoja: /\bjiu|\bbjj\b|gracie|\bjj\b/i, quem: "academia de jiu-jitsu" },
   { id: "muaythai", ramo: "luta", nome: "Muay thai", tipo: /muay|thai|kick ?box/i, nomeLoja: /\bmuay|\bthai\b|kick ?box/i, quem: "academia de muay thai" },
-  { id: "judo", ramo: "luta", nome: "Judô", tipo: /jud[oô]/i, nomeLoja: /\bjud[oô]\b/i, quem: "academia de judô" },
+  { id: "judo", ramo: "luta", nome: "Judô", tipo: /jud[oô]/i, nomeLoja: /\bjud[oô](?![\wà-ú])/i, quem: "academia de judô" },
   { id: "taekwondo", ramo: "luta", nome: "Taekwondo", tipo: /taekwon|tae kwon/i, nomeLoja: /taekwon|tae kwon/i, quem: "academia de taekwondo" },
   { id: "karate", ramo: "luta", nome: "Karatê", tipo: /karat|kung ?fu|aikid/i, nomeLoja: /\bkarat|kung ?fu|aikid/i, quem: "academia de karatê" },
   { id: "boxe", ramo: "luta", nome: "Boxe", tipo: /\bbox(e|ing)\b|pugil/i, nomeLoja: /\bbox(e|ing)\b/i, quem: "academia de boxe" },
@@ -744,7 +754,7 @@ export const SUBNICHOS: Subnicho[] = [
   { id: "cilios", ramo: "salao", nome: "Cílios e sobrancelha", tipo: /c[ií]lios|lash|sobrancel|brow/i, nomeLoja: /c[ií]lios|\blash|sobrancel|\bbrows?\b/i,
     quem: "studio de cílios e sobrancelha" },
   // Festas
-  { id: "fotografia", ramo: "festa", nome: "Fotografia", tipo: /fot[oó]gr[aá]f|photo|v[ií]deo/i, nomeLoja: /fot[oó]gr[aá]f|photo|\bfoto/i,
+  { id: "fotografia", ramo: "festa", nome: "Fotografia", tipo: /fot[oó]gr[aá]f|photo|(?<!locadora de )v[ií]deo/i, nomeLoja: /fot[oó]gr[aá]f|photo|\bfoto/i,
     quem: "fotógrafo", noSite: `os ensaios com foto, os pacotes e ${ORCAMENTO}`, ondePlaca: " na entrega das fotos" },
   // Oficina
   { id: "moto", ramo: "oficina", nome: "Motos", tipo: /moto|scooter/i, nomeLoja: /\bmotos?\b|motoca|scooter/i,
@@ -760,7 +770,7 @@ export const SUBNICHOS: Subnicho[] = [
     quem: "empresa de energia solar", noSite: `as instalações com foto, quanto dá pra economizar e ${ORCAMENTO}` },
   { id: "refrigeracao", ramo: "servicos", nome: "Ar-condicionado", tipo: /condicionado|climatiza|refrigera|geladeira|lavadora/i, nomeLoja: /refrigera|climatiza|\bar ?condicionado|(?<!cabo )\bfrio\b/i,
     quem: "assistência de ar-condicionado", noSite: `os serviços com foto, a região que atende e ${ORCAMENTO}` },
-  { id: "informatica", ramo: "servicos", nome: "Informática", tipo: /inform[aá]tic|computador|notebook/i, nomeLoja: /inform[aá]tica|\bpc\b|notebook/i,
+  { id: "informatica", ramo: "servicos", nome: "Informática", tipo: /inform[aá]tic|computador|notebook|lan house/i, nomeLoja: /inform[aá]tica|\bpc\b|notebook/i,
     quem: "assistência de informática", noSite: `os consertos, os computadores à venda e ${ORCAMENTO}` },
   { id: "eletricista", ramo: "servicos", nome: "Eletricista", tipo: /eletricist|el[eé]tric/i, nomeLoja: /eletricista|\bel[eé]trica\b/i,
     quem: "eletricista", noSite: `os serviços com foto, a região que atende e ${ORCAMENTO}` },
@@ -778,11 +788,11 @@ export const SUBNICHOS: Subnicho[] = [
     quem: "loja de produtos naturais", noSite: `os grãos, castanhas e temperos com foto e ${PEDIDO_ZAP}` },
   { id: "descartaveis", ramo: "mercado", nome: "Descartáveis", tipo: /descart[aá]v|embalag/i, nomeLoja: /descart[aá]v|embalag/i,
     quem: "loja de descartáveis", noSite: `os copos, potes e embalagens com foto e ${PEDIDO_ZAP}` },
-  { id: "bebidas", ramo: "mercado", nome: "Bebidas", tipo: /bebida|cerveja|adega|chopp|conveni/i, nomeLoja: /bebidas|\badega|\bchopp|conveni[eê]ncia|\bgelada/i,
+  { id: "bebidas", ramo: "mercado", nome: "Bebidas", tipo: /bebida|cerveja|adega|chopp|conveni|^dep[oó]sito$/i, nomeLoja: /bebidas|\badega|\bchopp|conveni[eê]ncia|\bgelada/i,
     quem: "distribuidora de bebidas", noSite: "as bebidas geladas, os preços e um botão pra pedir a entrega pelo WhatsApp" },
   { id: "acougue", ramo: "mercado", nome: "Açougue", tipo: /a[cç]ougue|carnes/i, nomeLoja: /a[cç]ougue|\bcarnes\b|\bbeef\b/i,
     quem: "açougue", noSite: `os cortes do dia, as ofertas e ${PEDIDO_ZAP}` },
-  { id: "gasagua", ramo: "mercado", nome: "Gás e água", tipo: /\bg[aá]s\b|butano|[aá]gua/i, nomeLoja: /\bg[aá]s\b|\b[aá]gua\b|gal[aã]o/i,
+  { id: "gasagua", ramo: "mercado", nome: "Gás e água", tipo: /\bg[aá]s\b|butano|[aá]gua/i, nomeLoja: /\bg[aá]s\b|(?<![\wà-ú])[aá]gua\b|gal[aã]o/i,
     quem: "depósito de gás e água", noSite: "o preço do gás e da água, a região que entrega e um botão pra pedir pelo WhatsApp", ondePlaca: " na hora da entrega" },
   { id: "peixaria", ramo: "mercado", nome: "Peixaria", tipo: /peixar|pescad|frutos do mar/i, nomeLoja: /peixaria|pescado|frutos do mar/i,
     quem: "peixaria", noSite: `os peixes do dia com foto e ${PEDIDO_ZAP}` },
@@ -796,7 +806,7 @@ export const SUBNICHOS: Subnicho[] = [
   { id: "churrascaria", ramo: "restaurante", nome: "Churrascaria", tipo: /churras|steak|carnes|espeto|grill/i, nomeLoja: /churras|steak|\bespeto|\bgrill\b/i, quem: "churrascaria" },
   { id: "marmita", ramo: "restaurante", outrosRamos: ["hamburgueria"], nome: "Quentinha", tipo: /self.?service|marmit|quentinh|comida caseira|comida para viagem|\bpf\b/i, nomeLoja: /quentinh|marmit|self.?service|comida caseira|\bpf\b|prato feito|\bbuffet\b|tempero/i,
     quem: "restaurante de comida caseira", noSite: `as quentinhas do dia com foto, os preços e ${PEDIDO_ZAP}` },
-  { id: "bar", ramo: "restaurante", nome: "Bar", tipo: /\bbar\b|\bbares\b|boteco|petisc|\bpub\b|chop/i, nomeLoja: /\bbar\b|boteco|botequim|petiscaria|\bpub\b|choperia/i, quem: "bar" },
+  { id: "bar", ramo: "restaurante", nome: "Bar", tipo: /\bbar\b|\bbares\b|boteco|petisc|\bpub\b|chop|casa noturna|balada/i, nomeLoja: /\bbar\b|boteco|botequim|petiscaria|\bpub\b|choperia/i, quem: "bar" },
   // Lanchonete: só mostra hambúrguer quem vende hambúrguer
   { id: "churros", ramo: "hamburgueria", outrosRamos: ["restaurante", "acai"], nome: "Churros", tipo: /churro/i, nomeLoja: /churro/i, quem: "loja de churros",
     noSite: `os sabores de churros com foto e ${PEDIDO_ZAP}` },
@@ -810,9 +820,9 @@ export const SUBNICHOS: Subnicho[] = [
   { id: "salgados", ramo: "hamburgueria", outrosRamos: ["restaurante", "padaria"], nome: "Salgados", tipo: /salgad|coxinha|esfi/i, nomeLoja: /salgad|coxinha|esfi[hr]|\bkibe/i, quem: "casa de salgados",
     noSite: `os salgados com foto, as encomendas pra festa e ${PEDIDO_ZAP}` },
   // Padaria
-  { id: "confeitaria", ramo: "padaria", nome: "Confeitaria", tipo: /confeit|doceria|doces|bolo|brigad/i, nomeLoja: /confeitaria|doceria|\bcake|\bbolos\b|brigadeir/i,
+  { id: "confeitaria", ramo: "padaria", outrosRamos: ["mercado"], nome: "Confeitaria", tipo: /confeit|doceria|doces|bolo|brigad/i, nomeLoja: /confeitaria|doceria|\bcake|\bbolos\b|brigadeir|\bdoces\b|biscoit/i,
     quem: "confeitaria", noSite: "os bolos e doces com foto e um botão pra encomendar pelo WhatsApp" },
-  { id: "cafeteria", ramo: "padaria", nome: "Cafeteria", tipo: /cafeteria|caf[eé]\b|torrefa/i, nomeLoja: /cafeteria|coffee/i, quem: "cafeteria", noSite: `o cardápio com foto e ${PEDIDO_ZAP}`, ondePlaca: " na mesa" },
+  { id: "cafeteria", ramo: "padaria", nome: "Cafeteria", tipo: /cafeteria|caf[eé](?![\wà-ú])|torrefa/i, nomeLoja: /cafeteria|coffee/i, quem: "cafeteria", noSite: `o cardápio com foto e ${PEDIDO_ZAP}`, ondePlaca: " na mesa" },
   // Açaí
   { id: "sorveteria", ramo: "acai", nome: "Sorveteria", tipo: /sorvet|gelat|picol/i, nomeLoja: /^(?!.*a[cç]a[ií]).*(sorvet|gelat|picol)/i, quem: "sorveteria" },
   { id: "hortifruti", ramo: "mercado", nome: "Hortifrúti", tipo: /hortifr|sacol[aã]o|frutas e vegetais|verdur/i, nomeLoja: /hortifr|sacol[aã]o|\bfeira|verdur|\bfrutas\b/i,
@@ -820,7 +830,7 @@ export const SUBNICHOS: Subnicho[] = [
   // Moda
   { id: "calcados", ramo: "moda", nome: "Calçados", tipo: /cal[cç]ad|sapat|t[eê]nis/i, nomeLoja: /cal[cç]ados|sapat|\bshoes?\b/i, quem: "loja de calçados",
     noSite: "os modelos novos com foto, a numeração e um botão que já abre o WhatsApp pra reservar o par" },
-  { id: "esportiva", ramo: "moda", nome: "Moda esportiva", tipo: /esportiv|\bsports?\b|fitness|atl[eé]tic/i, nomeLoja: /\bsports?\b|esporte|fitness/i, quem: "loja de artigos esportivos" },
+  { id: "esportiva", ramo: "moda", nome: "Moda esportiva", tipo: /(?<!poli|clube )esportiv|\bsports?\b|fitness|atl[eé]tic/i, nomeLoja: /\bsports?\b|esporte|fitness/i, quem: "loja de artigos esportivos" },
   { id: "joalheria", ramo: "moda", nome: "Joias e relógios", tipo: /joalh|j[oó]ias?|relojo|rel[oó]gio|bijuter|semijoi/i, nomeLoja: /joias|joalheria|relojoaria|semijoias|bijuterias|\bprata\b/i, quem: "joalheria",
     noSite: "as peças com foto, os preços e um botão que já abre o WhatsApp pra reservar" },
   { id: "costura", ramo: "moda", nome: "Costura", tipo: /costur|alfaiat|ajustes/i, nomeLoja: /costura|alfaiat|ajustes/i, quem: "ateliê de costura",
@@ -842,7 +852,7 @@ export const SUBNICHOS: Subnicho[] = [
     noSite: "os imóveis com foto, aluguel e venda separados e um botão pra marcar a visita pelo WhatsApp" },
   { id: "advocacia", ramo: "escritorio", nome: "Advocacia", tipo: /advoga|advocacia|jur[ií]dic/i, nomeLoja: /advoga|advocacia|jur[ií]dic/i, quem: "escritório de advocacia" },
   // Papelaria
-  { id: "grafica", ramo: "papelaria", nome: "Gráfica", tipo: /gr[aá]fic|impress|personaliz|camiseta|brinde/i, nomeLoja: /gr[aá]fica|impress|personaliz|\bbrindes|\bprint/i, quem: "gráfica",
+  { id: "grafica", ramo: "papelaria", nome: "Gráfica", tipo: /gr[aá]fic|impress|personaliz|camiseta|brinde|carimbo|moldura/i, nomeLoja: /gr[aá]fica|impress|personaliz|\bbrindes|\bprint/i, quem: "gráfica",
     noSite: `os produtos com foto, os prazos e ${ORCAMENTO}`, ondePlaca: " na hora de buscar a encomenda" },
   // Farmácia
   { id: "cosmeticos", ramo: "farmacia", nome: "Cosméticos", tipo: /cosm[eé]tic|perfum|maquiag|beleza/i, nomeLoja: /cosm[eé]tic|perfum|\bmake|maquiag|beauty|\bbeleza/i,
@@ -855,6 +865,16 @@ export const SUBNICHOS: Subnicho[] = [
   { id: "floricultura", ramo: "geral", nome: "Floricultura", tipo: /flor/i, nomeLoja: /floricultura|\bflores\b|\bflora\b/i, quem: "floricultura",
     noSite: "os buquês e arranjos com foto e um botão pra encomendar pelo WhatsApp", ondePlaca: " no caixa" },
 ];
+
+for (const r of [...RAMOS, GERAL]) {
+  r.tipo = comAcento(r.tipo);
+  if (r.nomeLoja) r.nomeLoja = comAcento(r.nomeLoja);
+  if (r.certeza) r.certeza.padrao = comAcento(r.certeza.padrao);
+}
+for (const s of SUBNICHOS) {
+  if (s.tipo) s.tipo = comAcento(s.tipo);
+  if (s.nomeLoja) s.nomeLoja = comAcento(s.nomeLoja);
+}
 
 /** O sub-nicho da loja dentro do ramo dela. O nome da loja vale mais que o tipo do Google. */
 export function subnichoDe(lead: Pick<Lead, "nome" | "tipo" | "ramo" | "subnicho">): Subnicho | null {
