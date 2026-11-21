@@ -17,3 +17,6 @@ cp "$W/frames/f00150.jpg" "$W/frames/f00000.jpg"
 ffmpeg -y -loglevel error -framerate 30 -i "$W/frames/f%05d.jpg" -i "$W/trilha.wav" \
   -c:v libx264 -preset slow -crf 18 -pix_fmt yuv420p -c:a aac -b:a 192k -shortest -movflags +faststart ../orcamento.mp4
 echo "pronto: bn-digital/video-orcamento/orcamento.mp4"
+
+# versão para Stories (até 60 s): sem o bloco das placas NFC
+python3 stories.py ../orcamento.mp4 ../stories-orcamento.mp4 "0:44.8:0,56.4:62:0.35"

@@ -20,3 +20,6 @@ cp "$W/frames/$CAPA" "$W/frames/f00000.jpg"
 ffmpeg -y -loglevel error -framerate 30 -i "$W/frames/f%05d.jpg" -i "$W/trilha.wav" \
   -c:v libx264 -preset slow -crf 18 -pix_fmt yuv420p -c:a aac -b:a 192k -shortest -movflags +faststart ../placas.mp4
 echo "pronto: bn-digital/video-placas/placas.mp4"
+
+# versões para Stories (até 60 s cada)
+python3 stories_placas.py

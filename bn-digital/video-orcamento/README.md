@@ -4,7 +4,8 @@ Vídeo vertical para Reels, 1080×1920, 30 fps, 62 s. Uma impressora imprime o o
 
 | Arquivo | O que é |
 |---|---|
-| `orcamento.mp4` | o vídeo pronto para postar |
+| `orcamento.mp4` | o vídeo completo (Reels, 62 s) |
+| `stories-orcamento.mp4` | versão para Stories (50 s), sem o bloco das placas NFC |
 | `capa.jpg` | capa (também é o 1º quadro do vídeo) |
 | `legenda.txt` | legenda pronta para o post |
 | `roteiro.md` | cena a cena, com os tempos |

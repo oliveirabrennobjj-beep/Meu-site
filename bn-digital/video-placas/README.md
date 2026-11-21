@@ -4,7 +4,9 @@ Vídeo vertical para Reels, 1080×1920, 30 fps, ~1min35. Começa na placa de mes
 
 | Arquivo | O que é |
 |---|---|
-| `placas.mp4` | o vídeo pronto para postar |
+| `placas.mp4` | o vídeo completo (Reels, ~1min35) |
+| `stories-1-cardapio.mp4` | Stories parte 1: placa de mesa, cardápio, placa personalizada (~45 s) |
+| `stories-2-placas.mp4` | Stories parte 2: Wi-Fi, Pix, Instagram, WhatsApp, Google e outras (~51 s) |
 | `capa.jpg` | capa (também é o 1º quadro do vídeo) |
 | `legenda.txt` | legenda pronta para o post |
 | `roteiro.md` | cena a cena |
@@ -16,7 +18,7 @@ Vídeo vertical para Reels, 1080×1920, 30 fps, ~1min35. Começa na placa de mes
 ## Gerar de novo
 
 ```bash
-bash fonte/gerar.sh      # monta os tempos, captura os quadros, faz a trilha e o MP4 (~15 min)
+bash fonte/gerar.sh      # monta os tempos, captura os quadros, faz a trilha, o MP4 e as 2 partes para Stories (~15 min)
 ```
 
 ## Voz
