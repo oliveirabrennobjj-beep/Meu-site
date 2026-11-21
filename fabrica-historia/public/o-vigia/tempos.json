@@ -1,0 +1,836 @@
+{
+ "nome": "o-vigia",
+ "historia": "o-vigia",
+ "duracaoMs": 61323,
+ "cenas": [
+  {
+   "fala": "Na minha cidade, quando o sino toca meia-noite, todo mundo tranca a porta.",
+   "tomadas": [
+    "sinoTorre",
+    "vilaGeral"
+   ],
+   "som": "sino",
+   "audio": "o-vigia/fala-00-db5fcb22.v115.wav",
+   "inicioMs": 0,
+   "falaMs": 120,
+   "fimMs": 7749
+  },
+  {
+   "fala": "É a hora que o Homem Comprido sai pra andar.",
+   "tomadas": [
+    "ruaNeblina",
+    "compridoRosto"
+   ],
+   "som": "grave",
+   "audio": "o-vigia/fala-01-91c627d5.v115.wav",
+   "inicioMs": 7749,
+   "falaMs": 7869,
+   "fimMs": 12583
+  },
+  {
+   "fala": "Todo mundo tem pavor dele. Menos eu.",
+   "tomadas": [
+    "vizinhoApaga",
+    "meninoCalmo"
+   ],
+   "som": null,
+   "audio": "o-vigia/fala-02-96aa8b71.v115.wav",
+   "inicioMs": 12583,
+   "falaMs": 12703,
+   "fimMs": 18095
+  },
+  {
+   "fala": "Toda noite ele para na frente da minha casa...",
+   "tomadas": [
+    "compridoFrenteCasa"
+   ],
+   "som": null,
+   "audio": "o-vigia/fala-03-d764c8e9.v115.wav",
+   "inicioMs": 18095,
+   "falaMs": 18215,
+   "fimMs": 22705
+  },
+  {
+   "fala": "e fica olhando pro meu telhado.",
+   "tomadas": [
+    "compridoOlhaCima"
+   ],
+   "som": null,
+   "audio": "o-vigia/fala-04-6400ade2.v115.wav",
+   "inicioMs": 22705,
+   "falaMs": 22825,
+   "fimMs": 26473
+  },
+  {
+   "fala": "Ontem eu subi pra descobrir o que ele tanto olha.",
+   "tomadas": [
+    "meninoSobe",
+    "meninoTelhado"
+   ],
+   "som": null,
+   "audio": "o-vigia/fala-05-aaace872.v115.wav",
+   "inicioMs": 26473,
+   "falaMs": 26593,
+   "fimMs": 31431
+  },
+  {
+   "fala": "Tinha uma coisa agarrada na chaminé.",
+   "tomadas": [
+    "criaturaChamine"
+   ],
+   "som": "grave",
+   "audio": "o-vigia/fala-06-beb7b5d3.v115.wav",
+   "inicioMs": 31431,
+   "falaMs": 31551,
+   "fimMs": 34936
+  },
+  {
+   "fala": "Ela estava olhando direto pra minha janela.",
+   "tomadas": [
+    "criaturaRosto",
+    "olharJanela"
+   ],
+   "som": null,
+   "audio": "o-vigia/fala-07-41a4fd63.v115.wav",
+   "inicioMs": 34936,
+   "falaMs": 35056,
+   "fimMs": 39559
+  },
+  {
+   "fala": "O Homem Comprido nunca quis me pegar.",
+   "tomadas": [
+    "compridoVigia"
+   ],
+   "som": null,
+   "audio": "o-vigia/fala-08-19492adc.v115.wav",
+   "inicioMs": 39559,
+   "falaMs": 39679,
+   "fimMs": 44487
+  },
+  {
+   "fala": "Ele passava a noite inteira vigiando ela.",
+   "tomadas": [
+    "planoGeral"
+   ],
+   "som": null,
+   "audio": "o-vigia/fala-09-cb184fda.v115.wav",
+   "inicioMs": 44487,
+   "falaMs": 44607,
+   "fimMs": 49117
+  },
+  {
+   "fala": "Hoje o sino tocou...",
+   "tomadas": [
+    "sinoBalanca"
+   ],
+   "som": "sino",
+   "audio": "o-vigia/fala-10-103ae702.v115.wav",
+   "inicioMs": 49117,
+   "falaMs": 49237,
+   "fimMs": 52330
+  },
+  {
+   "fala": "e ele não apareceu.",
+   "tomadas": [
+    "ruaVazia"
+   ],
+   "som": null,
+   "audio": "o-vigia/fala-11-9119052a.v115.wav",
+   "inicioMs": 52330,
+   "falaMs": 52450,
+   "fimMs": 55747
+  },
+  {
+   "fala": "E eu ouvi alguém arranhando o vidro.",
+   "tomadas": [
+    "janelaArranhao"
+   ],
+   "som": "arranhao",
+   "audio": "o-vigia/fala-12-4a710e32.v115.wav",
+   "inicioMs": 55747,
+   "falaMs": 55867,
+   "fimMs": 61323
+  }
+ ],
+ "legendas": [
+  {
+   "text": " Na",
+   "startMs": 120,
+   "endMs": 507,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " minha",
+   "startMs": 507,
+   "endMs": 1224,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " cidade,",
+   "startMs": 1224,
+   "endMs": 2053,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " quando",
+   "startMs": 2215,
+   "endMs": 2815,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " o",
+   "startMs": 2815,
+   "endMs": 3014,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " sino",
+   "startMs": 3014,
+   "endMs": 3454,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " toca",
+   "startMs": 3454,
+   "endMs": 3893,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " meia-noite,",
+   "startMs": 3893,
+   "endMs": 4732,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " todo",
+   "startMs": 5152,
+   "endMs": 5599,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " mundo",
+   "startMs": 5599,
+   "endMs": 6127,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " tranca",
+   "startMs": 6127,
+   "endMs": 6737,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " a",
+   "startMs": 6737,
+   "endMs": 6940,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " porta.",
+   "startMs": 6940,
+   "endMs": 7469,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " É",
+   "startMs": 7869,
+   "endMs": 8095,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " a",
+   "startMs": 8095,
+   "endMs": 8321,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " hora",
+   "startMs": 8321,
+   "endMs": 8819,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " que",
+   "startMs": 8819,
+   "endMs": 9226,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " o",
+   "startMs": 9226,
+   "endMs": 9453,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " Homem",
+   "startMs": 9453,
+   "endMs": 10041,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " Comprido",
+   "startMs": 10041,
+   "endMs": 10900,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " sai",
+   "startMs": 10900,
+   "endMs": 11308,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " pra",
+   "startMs": 11308,
+   "endMs": 11715,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " andar.",
+   "startMs": 11715,
+   "endMs": 12303,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " Todo",
+   "startMs": 12703,
+   "endMs": 13245,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " mundo",
+   "startMs": 13245,
+   "endMs": 13885,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " tem",
+   "startMs": 13885,
+   "endMs": 14328,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " pavor",
+   "startMs": 14328,
+   "endMs": 14968,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " dele.",
+   "startMs": 14968,
+   "endMs": 15509,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " Menos",
+   "startMs": 16137,
+   "endMs": 17228,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " eu.",
+   "startMs": 17228,
+   "endMs": 17815,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " Toda",
+   "startMs": 18215,
+   "endMs": 18692,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " noite",
+   "startMs": 18692,
+   "endMs": 19257,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " ele",
+   "startMs": 19257,
+   "endMs": 19647,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " para",
+   "startMs": 19647,
+   "endMs": 20125,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " na",
+   "startMs": 20125,
+   "endMs": 20429,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " frente",
+   "startMs": 20429,
+   "endMs": 21080,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " da",
+   "startMs": 21080,
+   "endMs": 21384,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " minha",
+   "startMs": 21384,
+   "endMs": 21948,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " casa...",
+   "startMs": 21948,
+   "endMs": 22425,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " e",
+   "startMs": 22825,
+   "endMs": 23073,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " fica",
+   "startMs": 23073,
+   "endMs": 23618,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " olhando",
+   "startMs": 23618,
+   "endMs": 24460,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " pro",
+   "startMs": 24460,
+   "endMs": 24905,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " meu",
+   "startMs": 24905,
+   "endMs": 25351,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " telhado.",
+   "startMs": 25351,
+   "endMs": 26193,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " Ontem",
+   "startMs": 26593,
+   "endMs": 27142,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " eu",
+   "startMs": 27142,
+   "endMs": 27437,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " subi",
+   "startMs": 27437,
+   "endMs": 27901,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " pra",
+   "startMs": 27901,
+   "endMs": 28281,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " descobrir",
+   "startMs": 28281,
+   "endMs": 29167,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " o",
+   "startMs": 29167,
+   "endMs": 29378,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " que",
+   "startMs": 29378,
+   "endMs": 29758,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " ele",
+   "startMs": 29758,
+   "endMs": 30138,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " tanto",
+   "startMs": 30138,
+   "endMs": 30686,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " olha.",
+   "startMs": 30686,
+   "endMs": 31151,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " Tinha",
+   "startMs": 31551,
+   "endMs": 32068,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " uma",
+   "startMs": 32068,
+   "endMs": 32427,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " coisa",
+   "startMs": 32427,
+   "endMs": 32944,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " agarrada",
+   "startMs": 32944,
+   "endMs": 33700,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " na",
+   "startMs": 33700,
+   "endMs": 33979,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " chaminé.",
+   "startMs": 33979,
+   "endMs": 34656,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " Ela",
+   "startMs": 35056,
+   "endMs": 35465,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " estava",
+   "startMs": 35465,
+   "endMs": 36146,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " olhando",
+   "startMs": 36146,
+   "endMs": 36918,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " direto",
+   "startMs": 36918,
+   "endMs": 37599,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " pra",
+   "startMs": 37599,
+   "endMs": 38008,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " minha",
+   "startMs": 38008,
+   "endMs": 38598,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " janela.",
+   "startMs": 38598,
+   "endMs": 39279,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " O",
+   "startMs": 39679,
+   "endMs": 39959,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " Homem",
+   "startMs": 39959,
+   "endMs": 40685,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " Comprido",
+   "startMs": 40685,
+   "endMs": 41748,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " nunca",
+   "startMs": 41748,
+   "endMs": 42474,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " quis",
+   "startMs": 42474,
+   "endMs": 43089,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " me",
+   "startMs": 43089,
+   "endMs": 43481,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " pegar.",
+   "startMs": 43481,
+   "endMs": 44208,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " Ele",
+   "startMs": 44607,
+   "endMs": 45035,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " passava",
+   "startMs": 45035,
+   "endMs": 45843,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " a",
+   "startMs": 45843,
+   "endMs": 46080,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " noite",
+   "startMs": 46080,
+   "endMs": 46698,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " inteira",
+   "startMs": 46698,
+   "endMs": 47506,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " vigiando",
+   "startMs": 47506,
+   "endMs": 48409,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " ela.",
+   "startMs": 48409,
+   "endMs": 48837,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " Hoje",
+   "startMs": 49237,
+   "endMs": 50011,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " o",
+   "startMs": 50011,
+   "endMs": 50362,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " sino",
+   "startMs": 50362,
+   "endMs": 51136,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " tocou...",
+   "startMs": 51136,
+   "endMs": 52050,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " e",
+   "startMs": 52450,
+   "endMs": 52809,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " ele",
+   "startMs": 52809,
+   "endMs": 53456,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " não",
+   "startMs": 53456,
+   "endMs": 54102,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " apareceu.",
+   "startMs": 54102,
+   "endMs": 55467,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " E",
+   "startMs": 55867,
+   "endMs": 56055,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " eu",
+   "startMs": 56055,
+   "endMs": 56319,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " ouvi",
+   "startMs": 56319,
+   "endMs": 56733,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " alguém",
+   "startMs": 56733,
+   "endMs": 57298,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " arranhando",
+   "startMs": 57298,
+   "endMs": 58165,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " o",
+   "startMs": 58165,
+   "endMs": 58353,
+   "timestampMs": null,
+   "confidence": null
+  },
+  {
+   "text": " vidro.",
+   "startMs": 58353,
+   "endMs": 58843,
+   "timestampMs": null,
+   "confidence": null
+  }
+ ]
+}

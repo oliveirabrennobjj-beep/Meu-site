@@ -1,0 +1,31 @@
+{
+  "nome": "o-vigia",
+  "historia": "o-vigia",
+  "velocidade": 1.15,
+  "voz": {
+    "modelo": "gemini-3.1-flash-tts-preview",
+    "nome": "Charon",
+    "tom": "Leia como narrador de história de terror, voz grave, séria e misteriosa, sem pressa:"
+  },
+  "cenas": [
+    { "fala": "Na minha cidade, quando o sino toca meia-noite, todo mundo tranca a porta.", "tomadas": ["sinoTorre", "vilaGeral"], "som": "sino" },
+    { "fala": "É a hora que o Homem Comprido sai pra andar.", "tomadas": ["ruaNeblina", "compridoRosto"], "som": "grave" },
+    { "fala": "Todo mundo tem pavor dele. Menos eu.", "tomadas": ["vizinhoApaga", "meninoCalmo"] },
+    { "fala": "Toda noite ele para na frente da minha casa...", "tomadas": ["compridoFrenteCasa"] },
+    { "fala": "e fica olhando pro meu telhado.", "tomadas": ["compridoOlhaCima"] },
+    { "fala": "Ontem eu subi pra descobrir o que ele tanto olha.", "tomadas": ["meninoSobe", "meninoTelhado"] },
+    { "fala": "Tinha uma coisa agarrada na chaminé.", "tomadas": ["criaturaChamine"], "som": "grave" },
+    { "fala": "Ela estava olhando direto pra minha janela.", "tomadas": ["criaturaRosto", "olharJanela"] },
+    { "fala": "O Homem Comprido nunca quis me pegar.", "tomadas": ["compridoVigia"] },
+    { "fala": "Ele passava a noite inteira vigiando ela.", "tomadas": ["planoGeral"] },
+    { "fala": "Hoje o sino tocou...", "tomadas": ["sinoBalanca"], "som": "sino" },
+    { "fala": "e ele não apareceu.", "tomadas": ["ruaVazia"] },
+    {
+      "fala": "E eu ouvi alguém arranhando o vidro.",
+      "tomadas": ["janelaArranhao"],
+      "som": "arranhao",
+      "tom": "Sussurre devagar, com medo, como narrador de terror:",
+      "finalMs": 2200
+    }
+  ]
+}
