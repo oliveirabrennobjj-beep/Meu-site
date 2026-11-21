@@ -93,6 +93,10 @@
   .zig-b { -webkit-mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / 18px 100%;
            mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / 18px 100%; }
   .skel { height: 18px; border-radius: 9px; background: #e7eaf0; }
+  .pill { display: inline-flex; align-items: center; gap: 18px; padding: 14px 32px 14px 14px; border-radius: 999px; background: #fff; font-size: 38px; font-weight: 700; color: var(--ink); white-space: nowrap;
+          box-shadow: 0 16px 34px -16px rgba(10,30,80,.35), 0 0 0 1px rgba(10,30,80,.06); }
+  .pill i { width: 66px; height: 66px; border-radius: 50%; display: grid; place-items: center; flex: none; }
+  .mn-row { display: flex; align-items: center; gap: 14px; padding: 18px 4px; border-bottom: 1px solid #f0e2d2; }
 </style>
 </head>
 <body>
@@ -261,6 +265,78 @@
         </div>
       </div>
     </div>
+  </section>
+
+  <!-- 8b. PLACA DE MESA: ENCOSTA O CELULAR, ABRE O CARDÁPIO -->
+  <section class="scene" id="nf1" style="background:radial-gradient(90% 55% at 50% 28%, #12285a 0%, #081534 55%, #030a1c 100%)">
+    <div class="abs" style="left:0; right:0; top:1150px; bottom:0; background:linear-gradient(180deg,#6a4529 0%,#4a2e1b 22%,#2a190e 70%,#140b06 100%)">
+      <div class="abs" style="inset:0; background:repeating-linear-gradient(178deg, rgba(0,0,0,.0) 0 26px, rgba(0,0,0,.10) 26px 29px)"></div>
+      <div class="abs" style="left:0; right:0; top:0; height:4px; background:rgba(255,210,160,.35)"></div>
+      <div class="abs" style="left:80px; top:10px; width:920px; height:300px; background:radial-gradient(closest-side, rgba(255,220,170,.22), transparent)"></div>
+    </div>
+    <div class="abs cx" id="p1-eyebrow" style="top:160px"><span class="eyebrow" style="color:var(--blue-l)" id="p1-eyebrow-t"></span></div>
+    <div class="abs cx serif" id="p1-h" style="top:215px; font-size:92px; color:#fff; padding:0 50px"></div>
+    <div class="abs" style="inset:0; perspective:1600px">
+      <div class="abs" id="p1-plate-w" style="left:170px; top:600px; width:380px; height:600px; transform-origin:50% 100%">
+        <div class="abs" style="left:60px; top:548px; width:260px; height:50px; border-radius:0 0 18px 18px; background:linear-gradient(180deg,#22262f,#0b0d12); clip-path:polygon(8% 0,92% 0,100% 100%,0 100%)"></div>
+        <div class="abs" style="left:20px; top:590px; width:340px; height:40px; border-radius:50%; background:rgba(0,0,0,.55); filter:blur(14px)"></div>
+        <div class="abs" id="p1-plate" style="left:0; top:0; width:380px; height:556px; border-radius:30px; background:linear-gradient(160deg,#22262f 0%,#101318 55%,#07080b 100%); box-shadow:inset 0 0 0 2px rgba(255,255,255,.12), 0 30px 60px -20px rgba(0,0,0,.8); overflow:hidden; color:#fff; text-align:center">
+          <div class="abs" style="inset:0; background:linear-gradient(118deg, rgba(255,255,255,.16) 0%, rgba(255,255,255,0) 38%)"></div>
+          <div style="margin:34px auto 0; width:92px; height:92px; border-radius:50%; background:radial-gradient(circle at 35% 30%,#ffb347,#d9661f 70%); display:grid; place-items:center; font-family:'PF',serif; font-weight:800; font-size:50px; color:#fff">B</div>
+          <div class="serif" style="font-size:40px; margin-top:12px" id="p1-rest"></div>
+          <div style="position:relative; width:110px; height:110px; margin:26px auto 0" id="p1-nfc">
+            <svg width="110" height="110" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><rect x="7" y="3" width="10" height="18" rx="2.2"/><path d="M10.5 18h3"/><path d="M19.5 8.5a6 6 0 0 1 0 7M21.8 6.5a9 9 0 0 1 0 11M4.5 8.5a6 6 0 0 0 0 7M2.2 6.5a9 9 0 0 0 0 11"/></svg>
+            <div id="p1-rings"></div>
+          </div>
+          <div style="font-size:24px; font-weight:600; color:rgba(255,255,255,.8); margin-top:10px" id="p1-aprox"></div>
+          <div style="display:flex; align-items:center; justify-content:center; gap:30px; margin-top:34px">
+            <div id="p1-qr" style="width:112px; height:112px; background:#fff; border-radius:10px; padding:8px; box-sizing:border-box; display:grid; grid-template-columns:repeat(11,1fr)"></div>
+            <div style="text-align:left"><div style="font-size:22px; letter-spacing:.3em; color:rgba(255,255,255,.6); font-weight:700">MESA</div><div style="font-size:92px; font-weight:800; line-height:1" id="p1-mesa"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="abs" style="inset:0; perspective:2000px">
+      <div class="phone" id="ph2" style="left:0; top:0; width:430px; height:880px; border-radius:58px; padding:13px">
+        <div class="screen" style="border-radius:46px">
+          <div class="abs" style="inset:0; background:linear-gradient(160deg,#1d3b7a,#0a1430)"><div class="abs cx" style="top:150px; font-size:96px; font-weight:300; color:#fff">20:35</div><div class="abs cx" style="top:270px; font-size:22px; color:rgba(255,255,255,.7)">sexta-feira, 20 de novembro</div></div>
+          <div class="abs" id="mn" style="inset:0; background:#fff8f0; overflow:hidden">
+            <div id="mn-in" class="abs" style="left:0; right:0; top:0; padding:66px 22px 0">
+              <div style="display:flex; align-items:center; gap:14px">
+                <i style="width:56px; height:56px; border-radius:50%; background:radial-gradient(circle at 35% 30%,#ffb347,#d9661f 70%); display:grid; place-items:center; font-family:'PF',serif; font-weight:800; font-size:30px; color:#fff; font-style:normal">B</i>
+                <b class="serif" style="font-size:32px; color:#2a1a10; flex:1" id="mn-name"></b>
+                <span style="background:#d9661f; color:#fff; border-radius:999px; padding:8px 16px; font-size:18px; font-weight:800" id="mn-mesa"></span>
+              </div>
+              <div style="position:relative; margin-top:18px; height:300px; border-radius:24px; overflow:hidden">
+                <img src="assets/hamburguer-hero.jpg" style="width:100%; height:100%; object-fit:cover">
+                <div class="abs" style="inset:0; background:linear-gradient(180deg,transparent 45%,rgba(0,0,0,.75))"></div>
+                <div class="abs" style="left:20px; bottom:18px; color:#fff"><span style="background:#ffb347; color:#2a1a10; border-radius:999px; padding:5px 12px; font-size:15px; font-weight:800">MAIS PEDIDO</span>
+                  <div class="serif" style="font-size:32px; margin-top:8px" id="mn-hl-n"></div><div style="font-size:24px; font-weight:800" id="mn-hl-p"></div></div>
+              </div>
+              <div style="display:flex; gap:10px; margin-top:18px; font-size:18px; font-weight:700">
+                <span style="background:#2a1a10; color:#fff; border-radius:999px; padding:9px 18px">Burgers</span><span style="background:#f3e4d3; color:#6b5240; border-radius:999px; padding:9px 18px">Porções</span><span style="background:#f3e4d3; color:#6b5240; border-radius:999px; padding:9px 18px">Bebidas</span>
+              </div>
+              <div id="mn-list" style="margin-top:8px"></div>
+            </div>
+            <div class="abs" style="left:16px; right:16px; bottom:16px; height:64px; border-radius:18px; background:var(--wa); color:#fff; display:flex; align-items:center; justify-content:center; gap:10px; font-size:21px; font-weight:800"><svg viewBox="0 0 24 24" width="26" height="26" fill="#fff"><use href="#wa"/></svg>Fazer pedido</div>
+          </div>
+          <div class="notch" style="height:28px"></div>
+        </div>
+      </div>
+    </div>
+    <div class="abs cx serif" id="p1-cap" style="top:1460px; font-size:66px; color:#fff"></div>
+    <div class="abs cx" id="p1-sub" style="top:1640px; font-size:36px; color:var(--soft-d); font-weight:500"></div>
+  </section>
+
+  <!-- 8c. TIPOS DE PLACA -->
+  <section class="scene grid-bg" id="nf2">
+    <div class="abs cx serif" id="p2-h" style="top:180px; font-size:96px; color:var(--ink)"></div>
+    <div class="abs" id="p2-photo" style="left:70px; top:450px; width:940px; height:480px; border-radius:34px; overflow:hidden; box-shadow:0 40px 70px -30px rgba(10,30,80,.45)">
+      <img id="p2-img" src="assets/placas-nfc-preta-e-azul.webp" style="width:100%; height:100%; object-fit:cover; object-position:50% 40%">
+      <div class="abs" style="left:24px; bottom:22px"><span class="chip" style="background:rgba(255,255,255,.92); color:var(--ink); font-size:26px" id="p2-tag"></span></div>
+    </div>
+    <div class="abs" id="p2-pills" style="left:30px; right:30px; top:990px; display:flex; flex-wrap:wrap; justify-content:center; gap:22px"></div>
+    <div class="abs cx serif" id="p2-foot" style="top:1440px; font-size:72px; color:var(--ink)"></div>
   </section>
 
   <!-- 9. CHAMADA FINAL -->
@@ -449,13 +525,44 @@ const s8Words = words($("s8-h"), C.precoChamada);
 $("s8-brand").textContent = C.marca + " · ORÇAMENTO"; $("s8-label").textContent = C.precoRotulo;
 $("s8-p1").textContent = C.precoMin; $("s8-p2").textContent = "a " + C.precoMax; $("s8-p3").textContent = C.precoPeriodoExtenso;
 $("s8-note").innerHTML = rich(C.precoNota); $("s8-stamp-t").innerHTML = C.carimbo;
+// placas NFC
+$("p1-eyebrow-t").textContent = C.placaSobretitulo; const p1Words = words($("p1-h"), C.placaTitulo);
+$("p1-rest").textContent = C.placaRestaurante; $("p1-aprox").textContent = C.placaAproxime; $("p1-mesa").textContent = C.placaMesa;
+$("p1-cap").innerHTML = rich(C.placaLegenda); $("p1-sub").textContent = C.placaSub;
+$("mn-name").textContent = C.placaRestaurante; $("mn-mesa").textContent = "Mesa " + C.placaMesa;
+$("mn-hl-n").textContent = C.cardapioDestaque[0]; $("mn-hl-p").textContent = C.cardapioDestaque[1];
+$("mn-list").innerHTML = C.cardapio.map(([n, d, pr]) => `<div class="mn-row"><div style="flex:1"><div style="font-size:22px; font-weight:800; color:#2a1a10">${n}</div><div style="font-size:16px; color:#8a7262; margin-top:3px">${d}</div></div>
+  <div style="font-size:21px; font-weight:800; color:#2a1a10">${pr}</div><span style="width:40px; height:40px; border-radius:50%; background:#d9661f; color:#fff; display:grid; place-items:center; font-size:28px; font-weight:700">+</span></div>`).join("");
+{ const r = rng(7), qr = $("p1-qr"); for (let i = 0; i < 121; i++) { const x = i % 11, y = Math.floor(i / 11);
+    const finder = (x < 3 && y < 3) || (x > 7 && y < 3) || (x < 3 && y > 7);
+    const on = finder ? !(x % 10 === 1 && y % 10 === 1) && !((x === 9) && (y === 1)) : r() > 0.5;
+    const d = document.createElement("i"); d.style.background = on ? "#0b0d12" : "transparent"; qr.appendChild(d); } }
+for (let i = 0; i < 3; i++) { const r = document.createElement("div"); r.className = "abs";
+  r.style.cssText = "left:5px; top:5px; width:100px; height:100px; border-radius:50%; border:5px solid #4da3ff; opacity:0"; $("p1-rings").appendChild(r); }
+const p2Words = words($("p2-h"), C.placasTitulo, "var(--blue)");
+$("p2-tag").textContent = C.placasFoto; $("p2-foot").innerHTML = rich(C.placasRodape, "var(--blue)");
+const PL_ICON = {
+  "Cardápio online": ["#f08a24", `<path d="M4 3h12a2 2 0 0 1 2 2v16l-3-2-3 2-3-2-3 2V5a2 2 0 0 1 2-2zM8 8h6M8 12h6M8 16h3"/>`],
+  "Pix": ["#32bcad", `<path d="M12 3.5 20.5 12 12 20.5 3.5 12z"/><path d="M8.5 12h7"/>`],
+  "Wi-Fi": ["#0a66e8", `<path d="M2.5 9a14 14 0 0 1 19 0M5.5 12.5a9.5 9.5 0 0 1 13 0M8.6 16a5 5 0 0 1 6.8 0"/><circle cx="12" cy="19.2" r="1" fill="#fff"/>`],
+  "Instagram": ["linear-gradient(45deg,#f58529,#dd2a7b 55%,#8134af)", `<rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".9" fill="#fff"/>`],
+  "WhatsApp": ["#25d366", `<use href="#wa" fill="#fff" stroke="none"/>`],
+  "Site": ["#0a2a66", `<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>`],
+  "Avaliação no Google": ["#f5a300", `<path d="M12 3.2l2.6 5.5 6 .7-4.4 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.4-4.1 6-.7z" fill="#fff"/>`],
+};
+const pills = C.placas.map((n) => { const [bg, ic] = PL_ICON[n] || ["#0a66e8", `<circle cx="12" cy="12" r="8"/>`];
+  const el = document.createElement("span"); el.className = "pill";
+  el.innerHTML = `<i style="background:${bg}"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ic}</svg></i>${n}`;
+  $("p2-pills").appendChild(el); return el; });
+
 // cena 9
 $("s9-pre").innerHTML = rich(C.finalFrase); const s9Words = words($("s9-h"), C.finalChamada);
 $("s9-btn-t").textContent = C.botao; $("s9-num").textContent = C.whatsapp; $("s9-ig").textContent = C.instagram; $("s9-city").textContent = C.cidade;
 
 // ---------- LINHA DO TEMPO ----------
-const T = window.T = { s1: [0, 6.3], s23: [5.75, 18.85], s4: [18.45, 25.95], s5: [25.6, 31.15], s6: [30.75, 35.6], s7: [35.25, 40.25], s8: [39.85, 45.15], s9: [44.75, 50.5] };
-window.DURATION = 50.5;
+const D9 = 11.45; // a chamada final começa depois das placas NFC
+const T = window.T = { s1: [0, 6.3], s23: [5.75, 18.85], s4: [18.45, 25.95], s5: [25.6, 31.15], s6: [30.75, 35.6], s7: [35.25, 40.25], s8: [39.85, 45.3], p1: [44.8, 51.45], p2: [50.95, 56.7], s9: [44.75 + D9, 62.0] };
+window.DURATION = 62.0;
 const SITE_AT = [11.2, 13.05, 14.9, 16.75], SITE_DUR = 1.85;
 const S4 = { t0: 18.95, step: 0.1, px: 13, max: 680 };
 window.CK_TIMES = C.inclusos.map((_, i) => S4.t0 + (80 + 78 * (i + 1) + 4) / (S4.px / S4.step));
@@ -612,17 +719,50 @@ window.render = function (t) {
       const sh = prog(t, 42.12, 42.45); $("s8-shake").style.transform = sh > 0 && sh < 1 ? `translate(${Math.sin(sh * 50) * 10 * (1 - sh)}px, ${Math.cos(sh * 44) * 8 * (1 - sh)}px)` : "none"; }
   }
 
+  // ===== 8b. placa de mesa =====
+  if (show($("nf1"), t, ...T.p1)) {
+    reveal($("nf1"), t, 44.8, 0.45, "up");
+    enter($("p1-eyebrow"), t, 45.0, 0.4, 20); wordsIn(p1Words, t, 45.1, 0.08, 0.45, 50);
+    { const p = prog(t, 45.35, 45.95), m = inOut(prog(t, 47.0, 47.6));
+      $("p1-plate-w").style.opacity = clamp(p * 2) * lerp(1, 0.55, m);
+      $("p1-plate-w").style.transform = `translate(${-m * 150}px, ${(1 - outBack(p, 1.3)) * 90 + m * 40}px) rotateY(${lerp(18, 26, m)}deg) rotateX(${(1 - outCubic(p)) * 30}deg) scale(${lerp(1, 0.86, m)})`; }
+    [...$("p1-rings").children].forEach((r, i) => { const st = 46.55 + i * 0.22, c = prog(t, st, st + 0.9);
+      r.style.opacity = c > 0 && c < 1 ? (1 - c) * 0.95 : 0; r.style.transform = `scale(${0.6 + c * 2.4})`; });
+    { const e = outCubic(prog(t, 45.85, 46.5)), m = inOut(prog(t, 47.0, 47.6)), fl = Math.sin(t * 1.6) * 8 * m;
+      const buzz = t > 46.55 && t < 46.8 ? Math.sin(t * 160) * 4 : 0;
+      const x = lerp(lerp(1700, 440, e), 325, m) + buzz, y = lerp(lerp(760, 560, e), 520, m) + fl;
+      const rz = lerp(lerp(24, -14, e), 0, m), ry = lerp(lerp(-30, -12, e), 0, m);
+      $("ph2").style.transform = `translate(${x}px, ${y}px) rotateY(${ry}deg) rotateZ(${rz}deg)`;
+      $("ph2").style.boxShadow = `0 0 0 2px rgba(255,255,255,.18) inset, 0 2px 0 3px #2a2d35, 0 60px 100px -30px rgba(0,0,0,.8)`; }
+    { const s1 = outCubic(prog(t, 46.7, 47.1)); $("mn").style.transform = `translateY(${(1 - s1) * 100}%)`;
+      $("mn-in").style.transform = `translateY(${-lerp(0, 250, inOut(prog(t, 48.0, 50.6)))}px)`; }
+    { const p = prog(t, 47.6, 48.1); $("p1-cap").style.opacity = p; $("p1-cap").style.transform = `translateY(${(1 - outCubic(p)) * 40}px)`; }
+    enter($("p1-sub"), t, 47.95, 0.45, 24);
+  }
+
+  // ===== 8c. tipos de placa =====
+  if (show($("nf2"), t, ...T.p2)) {
+    reveal($("nf2"), t, 50.95, 0.45, "left");
+    wordsIn(p2Words, t, 51.15, 0.08, 0.45, 50);
+    { const p = prog(t, 51.35, 51.9); $("p2-photo").style.opacity = clamp(p * 2); $("p2-photo").style.transform = `translateY(${(1 - outCubic(p)) * 60}px)`;
+      $("p2-img").style.transform = `scale(${lerp(1.12, 1.0, outCubic(prog(t, 51.35, 56.7)))})`; }
+    pills.forEach((el, i) => { const p = prog(t, 51.95 + i * 0.13, 52.4 + i * 0.13);
+      el.style.opacity = clamp(p * 2); el.style.transform = `scale(${p > 0 ? outBack(p, 2) : 0.6}) translateY(${Math.sin(t * 1.4 + i) * 3}px)`; });
+    enter($("p2-foot"), t, 53.15, 0.5, 40);
+  }
+
   // ===== 9. chamada final =====
   if (show($("s9"), t, T.s9[0], T.s9[1] + 1)) {
-    reveal($("s9"), t, 44.75, 0.55, "circle", 760, 640);
-    { const p = prog(t, 45.0, 45.55); $("s9-logo").style.opacity = clamp(p * 2); $("s9-logo").style.transform = `scale(${lerp(0.7, 1, outBack(p))})`; }
-    enter($("s9-pre"), t, 45.25, 0.5, 30);
-    wordsIn(s9Words, t, 45.8, 0.08, 0.45, 50);
-    { const p = prog(t, 46.5, 47.0); $("s9-btn-w").style.opacity = clamp(p * 1.6); $("s9-btn-w").style.transform = `scale(${lerp(0.85, 1, outBack(p, 2))})`;
-      const pr = Math.sin(Math.PI * prog(t, 47.75, 47.9)); $("s9-btn").style.transform = `scale(${1 - 0.05 * pr + (t > 48 ? 0.025 * Math.sin((t - 48) * 5) : 0)})`;
-      $("s9-shine").style.left = `${lerp(-200, 900, prog(t, 47.1, 47.6))}px`; }
-    tapAt($("s9-tap"), t, 540, 92, 47.75);
-    enter($("s9-num"), t, 46.85, 0.45, 26); enter($("s9-ig"), t, 47.0, 0.45, 26); enter($("s9-city"), t, 47.15, 0.45, 26);
+    const u = t - D9;
+    reveal($("s9"), u, 44.75, 0.55, "circle", 760, 640);
+    { const p = prog(u, 45.0, 45.55); $("s9-logo").style.opacity = clamp(p * 2); $("s9-logo").style.transform = `scale(${lerp(0.7, 1, outBack(p))})`; }
+    enter($("s9-pre"), u, 45.25, 0.5, 30);
+    wordsIn(s9Words, u, 45.8, 0.08, 0.45, 50);
+    { const p = prog(u, 46.5, 47.0); $("s9-btn-w").style.opacity = clamp(p * 1.6); $("s9-btn-w").style.transform = `scale(${lerp(0.85, 1, outBack(p, 2))})`;
+      const pr = Math.sin(Math.PI * prog(u, 47.75, 47.9)); $("s9-btn").style.transform = `scale(${1 - 0.05 * pr + (u > 48 ? 0.025 * Math.sin((u - 48) * 5) : 0)})`;
+      $("s9-shine").style.left = `${lerp(-200, 900, prog(u, 47.1, 47.6))}px`; }
+    tapAt($("s9-tap"), u, 540, 92, 47.75);
+    enter($("s9-num"), u, 46.85, 0.45, 26); enter($("s9-ig"), u, 47.0, 0.45, 26); enter($("s9-city"), u, 47.15, 0.45, 26);
   }
 };
 

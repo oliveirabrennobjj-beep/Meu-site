@@ -1,7 +1,7 @@
-# Trilha original do vídeo do orçamento (50,5 s, 110 BPM, Lá maior). Sem samples de terceiros.
+# Trilha original do vídeo do orçamento (62 s, 110 BPM, Lá maior). Sem samples de terceiros.
 # Os tempos batem com a linha do tempo de index.html (objeto T e cenas).
 import numpy as np, wave, sys
-SR = 44100; DUR = 50.5; N = int(SR * DUR); BPM = 110; BEAT = 60 / BPM
+SR = 44100; DUR = 62.0; N = int(SR * DUR); BPM = 110; BEAT = 60 / BPM
 L = np.zeros(N); R = np.zeros(N)
 rng = np.random.default_rng(11)
 
@@ -34,13 +34,13 @@ sub = tt(5.9); add(np.sin(2*np.pi*note(30)*sub) * np.minimum(1, sub / 2) * np.mi
 x = tt(1.3); rs = rng.standard_normal(len(x)); rs = onepole(rs, 2500) - onepole(rs, 500)
 add(rs * (x / 1.3) ** 2, 4.5, 0.10)
 
-START = 5.75; END_BEAT = 44.75
+START = 5.75; END_BEAT = 56.2
 chords = [[57, 61, 64, 69], [54, 57, 61, 66], [50, 54, 57, 62], [52, 56, 59, 64]]
 roots = [33, 30, 26, 28]
 seg = BEAT * 8
 k = 0; st = START
-while st < 49.0:
-    d = min(seg, 50.5 - st) + 0.4
+while st < 60.5:
+    d = min(seg, 62.0 - st) + 0.4
     add(pad(chords[k % 4], d), st, 0.022 if st < END_BEAT else 0.016)
     k += 1; st += seg
 def kick():
@@ -51,7 +51,7 @@ def hat():
     return h * np.exp(-np.arange(n) / SR * 70)
 HAT = hat(); KICK = kick()
 b = START; i = 0
-while b < 49.3:
+while b < 60.8:
     soft = b >= END_BEAT
     if not soft or i % 2 == 0: add(KICK, b, 0.36 if not soft else 0.22)
     add(HAT, b + BEAT / 2, 0.035, 0.3)
@@ -64,7 +64,7 @@ while b < 49.3:
 # acorde final
 x = tt(5.5); fin = np.zeros_like(x)
 for m in [45, 57, 64, 69, 73, 76]: fin += np.sin(2*np.pi*note(m)*x) + 0.25*np.sin(4*np.pi*note(m)*x)
-add(fin * np.exp(-x * 0.55) * np.minimum(1, x / 0.02), 44.75, 0.045)
+add(fin * np.exp(-x * 0.55) * np.minimum(1, x / 0.02), 56.2, 0.045)
 
 # --- efeitos (mesma tonalidade) ---
 def pluck(m, d=0.6, dec=7):
@@ -100,7 +100,7 @@ for i, m in enumerate([57, 61, 64, 66, 64, 69, 73]): add(pluck(m, 0.5), 0.12 + i
 x = tt(0.2); rip = rng.standard_normal(len(x)); rip = onepole(rip, 5000) - onepole(rip, 900)
 add(rip * np.exp(-x * 14) * (1 + 0.6 * np.sign(np.sin(2*np.pi*55*x))), 4.45, 0.16)
 # transições
-for c, d in [(5.75, 0.6), (6.15, 0.5), (10.45, 0.55), (18.45, 0.45), (25.6, 0.45), (30.75, 0.5), (32.75, 0.6), (35.25, 0.45), (39.85, 0.45), (40.25, 0.5), (44.75, 0.6)]:
+for c, d in [(5.75, 0.6), (6.15, 0.5), (10.45, 0.55), (18.45, 0.45), (25.6, 0.45), (30.75, 0.5), (32.75, 0.6), (35.25, 0.45), (39.85, 0.45), (40.25, 0.5), (44.8, 0.55), (45.85, 0.5), (46.7, 0.35), (50.95, 0.45), (56.2, 0.6)]:
     add(whoosh(d), c - d * 0.35, 0.13)
 for c in [13.05, 14.9, 16.75]: add(whoosh(0.32, 600, 3000), c - 0.05, 0.07, 0.3)
 add(pluck(76, 0.5), 7.6, 0.06); add(pluck(81, 0.6), 7.62, 0.035, 0.3)
@@ -124,11 +124,18 @@ for i, c in enumerate([36.75, 36.9, 37.05]): add(pluck([76, 81, 85][i], 0.5), c,
 x = tt(0.4); th = np.sin(2*np.pi*np.cumsum(40 + 60 * np.exp(-x * 40)) / SR) * np.exp(-x * 12)
 nz = rng.standard_normal(len(x)); nz = onepole(nz, 1200) * np.exp(-x * 30)
 add(th + 0.8 * nz, 42.0, 0.42)
+# placas NFC: placa na mesa, toque do celular, cardápio abrindo, tipos de placa
+add(pluck(57, 0.8), 45.4, 0.05); add(pluck(64, 0.8), 45.45, 0.035, 0.2)
+x = tt(0.22); bz = np.sign(np.sin(2*np.pi*150*x)) * np.exp(-x * 10); add(onepole(bz, 900), 46.55, 0.10)
+add(pluck(88, 0.8), 46.6, 0.06, -0.2); add(pluck(93, 0.9), 46.72, 0.05, 0.2)
+add(pluck(76, 0.6), 47.6, 0.05)
+for i in range(7): add(pluck([69, 71, 73, 76, 78, 81, 83][i], 0.45), 51.95 + i * 0.13, 0.05, -0.3 + 0.1 * i)
+add(pluck(81, 0.7), 53.15, 0.05)
 # botão
-add(pluck(81, 0.6), 47.75, 0.06); add(pluck(88, 0.8), 47.85, 0.04)
+add(pluck(81, 0.6), 59.2, 0.06); add(pluck(88, 0.8), 59.3, 0.04)
 
 mix = np.stack([L, R], 1)
-fade = np.ones(N); fs = int(49.3 * SR); fade[fs:] = np.linspace(1, 0, N - fs) ** 1.5
+fade = np.ones(N); fs = int(60.8 * SR); fade[fs:] = np.linspace(1, 0, N - fs) ** 1.5
 mix *= fade[:, None]
 mix = np.tanh(mix * 1.5) / np.tanh(1.5)
 mix *= 0.86 / np.max(np.abs(mix))

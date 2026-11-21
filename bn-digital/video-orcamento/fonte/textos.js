@@ -29,10 +29,10 @@ window.TEXTOS = {
   sitesTitulo: "Cada negócio com|a *sua cara.*",
   sitesRodape: "No computador e no celular.",
   sites: [
-    { img: "padaria", nome: "Padaria BNH", tipo: "Padaria · cardápio e encomendas", cor: "#7a4a24" },
-    { img: "kitanda", nome: "Kitanda Hortifruti", tipo: "Hortifruti · pedido no WhatsApp", cor: "#f08a24" },
+    { img: "padaria", nome: "Padaria Trigal", tipo: "Padaria · cardápio e encomendas", cor: "#7a4a24" },
+    { img: "burgeria", nome: "Burgeria", tipo: "Hamburgueria · cardápio e pedido", cor: "#2f7d4f" },
     { img: "brteam", nome: "BR Team", tipo: "Academia · aula experimental", cor: "#1d4ed8" },
-    { img: "maya", nome: "Barbearia Maya", tipo: "Barbearia · agendamento", cor: "#c9a25c" },
+    { img: "navalha", nome: "Navalha Barbearia", tipo: "Barbearia · agendamento", cor: "#c9a25c" },
   ],
 
   // cena 4: lista impressa (7 itens)
@@ -74,6 +74,26 @@ window.TEXTOS = {
   precoRotulo: "ALUGUEL DO SITE",
   precoNota: "O valor depende do|tamanho do site.",
   carimbo: "ORÇA-<br>MENTO",
+
+  // placas NFC (depois do preço)
+  placaSobretitulo: "E TEM MAIS: PLACAS NFC",
+  placaTitulo: "Placa na mesa,|cardápio *no celular.*",
+  placaRestaurante: "Burgeria",
+  placaMesa: "01",
+  placaAproxime: "Aproxime o celular",
+  placaLegenda: "Encostou o celular,|*o cardápio abre.*",
+  placaSub: "Sem baixar aplicativo.",
+  cardapio: [
+    ["Burger clássico", "Carne, queijo, alface e tomate", "R$ 28,90"],
+    ["Burger duplo", "Duas carnes e cheddar", "R$ 36,90"],
+    ["Batata rústica", "Com alecrim e maionese", "R$ 18,90"],
+    ["Refrigerante lata", "350 ml", "R$ 6,00"],
+  ],
+  cardapioDestaque: ["Burger bacon", "R$ 32,90"],
+  placasTitulo: "Uma placa pra|*cada coisa.*",
+  placasFoto: "Placas da BN Digital",
+  placas: ["Cardápio online", "Pix", "Wi-Fi", "Instagram", "WhatsApp", "Site", "Avaliação no Google"],
+  placasRodape: "Seu cliente aproxima|o celular *e pronto.*",
 
   // cena 9: chamada final
   finalFrase: "Seu negócio merece uma|presença digital profissional.",

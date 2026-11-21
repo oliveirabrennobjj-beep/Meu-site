@@ -9,7 +9,7 @@ if ! curl -s -o /dev/null http://localhost:8765/bn-digital/video-orcamento/fonte
   trap 'kill $SRV' EXIT; sleep 1
 fi
 rm -rf "$W/frames"
-python3 capture.py frames 30 50.5 "$W/frames"
+python3 capture.py frames 30 62 "$W/frames"
 python3 synth.py "$W/trilha.wav"
 # capa: quadro de 5,0 s (pergunta + cupom com o preço), também usado como 1º quadro
 cp "$W/frames/f00150.jpg" ../capa.jpg
