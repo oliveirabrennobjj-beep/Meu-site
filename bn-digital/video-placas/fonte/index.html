@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>BN Digital — placas de mesa</title>
+<style>
+  @font-face { font-family: "PF"; src: url("assets/fonts/playfair-display-latin-wght-normal.woff2") format("woff2"); font-weight: 400 900; }
+  @font-face { font-family: "PF"; src: url("assets/fonts/playfair-display-latin-wght-italic.woff2") format("woff2"); font-weight: 400 900; font-style: italic; }
+  @font-face { font-family: "IN"; src: url("assets/fonts/inter-latin-wght-normal.woff2") format("woff2"); font-weight: 100 900; }
+  @font-face { font-family: "MO"; src: url("assets/fonts/jetbrains-mono-latin-wght-normal.woff2") format("woff2"); font-weight: 100 800; }
+  :root { --blue: #0a66e8; --blue-l: #4da3ff; --ink: #0a0f1c; --soft: #5a6172; --soft-d: #9fb0cc; --wa: #25d366; --warm: #ffb347; --orange: #d9661f; --cream: #e9d6bd; }
+  html, body { margin: 0; background: #000; }
+  #stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #000; font-family: "IN", sans-serif; -webkit-font-smoothing: antialiased; }
+  .scene { position: absolute; inset: 0; overflow: hidden; visibility: hidden; }
+  .abs { position: absolute; }
+  .serif { font-family: "PF", serif; font-weight: 800; letter-spacing: -0.025em; line-height: 1.05; }
+  .it { font-style: italic; }
+  .cx { left: 0; right: 0; text-align: center; }
+  .word { display: inline-block; }
+  .navy-bg { background: radial-gradient(120% 70% at 50% 0%, #0d2a66 0%, #071635 45%, #030a1c 100%); }
+  .grid-bg { background-color: #f3f5fa;
+    background-image: radial-gradient(70% 45% at 50% 42%, rgba(255,255,255,.95), rgba(255,255,255,0)),
+      linear-gradient(rgba(12,40,100,.07) 2px, transparent 2px), linear-gradient(90deg, rgba(12,40,100,.07) 2px, transparent 2px);
+    background-size: 100% 100%, 72px 72px, 72px 72px; background-position: 0 0, -2px -2px, -2px -2px; }
+  .eyebrow { font-size: 28px; font-weight: 700; letter-spacing: .22em; }
+  .chip { display: inline-flex; align-items: center; gap: 14px; padding: 16px 28px; border-radius: 999px; font-size: 32px; font-weight: 600; white-space: nowrap; }
+  .phone { position: absolute; border-radius: 58px; background: #16181d; padding: 13px; box-sizing: border-box; transform-origin: 0 0;
+           box-shadow: 0 0 0 2px rgba(255,255,255,.18) inset, 0 2px 0 3px #2a2d35, 0 60px 100px -30px rgba(0,0,0,.8); }
+  .screen { position: relative; width: 100%; height: 100%; border-radius: 46px; overflow: hidden; background: #000; }
+  .notch { position: absolute; left: 50%; top: 13px; width: 32%; height: 28px; transform: translateX(-50%); border-radius: 20px; background: #000; z-index: 9; }
+  .tap { position: absolute; width: 84px; height: 84px; margin: -42px 0 0 -42px; border-radius: 50%; background: rgba(255,255,255,.45); border: 4px solid #fff; box-shadow: 0 6px 20px rgba(0,0,0,.35); opacity: 0; z-index: 20; }
+  .plate { position: absolute; border-radius: 30px; background: linear-gradient(160deg,#23272f 0%,#101318 55%,#07080b 100%); box-shadow: inset 0 0 0 2px rgba(255,255,255,.13), 0 30px 60px -20px rgba(0,0,0,.85); overflow: hidden; color: #fff; text-align: center; }
+  .plate .gloss { position: absolute; inset: 0; background: linear-gradient(118deg, rgba(255,255,255,.17) 0%, rgba(255,255,255,0) 38%); pointer-events: none; }
+  .logo-b { border-radius: 50%; background: radial-gradient(circle at 35% 30%,#ffb347,#d9661f 70%); display: grid; place-items: center; font-family: "PF", serif; font-weight: 800; color: #fff; font-style: normal; }
+  .mn-row { display: flex; align-items: center; gap: 14px; padding: 14px 2px; border-bottom: 1px solid #f0e2d2; }
+  .mn-row img { width: 72px; height: 72px; border-radius: 16px; object-fit: cover; flex: none; }
+  .cell { position: absolute; width: 470px; height: 290px; border-radius: 30px; background: rgba(255,255,255,.06); box-shadow: inset 0 0 0 2px rgba(255,255,255,.1); box-sizing: border-box; padding: 30px; display: flex; gap: 26px; align-items: center; }
+  .mini { width: 130px; height: 190px; flex: none; border-radius: 18px; background: linear-gradient(160deg,#2a2f39,#0b0d12); box-shadow: inset 0 0 0 2px rgba(255,255,255,.14), 0 14px 30px -10px rgba(0,0,0,.7); position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; }
+  .mini i { width: 74px; height: 74px; border-radius: 50%; display: grid; place-items: center; }
+  .card { position: absolute; border-radius: 34px; background: #fff; box-shadow: 0 30px 60px -24px rgba(10,30,80,.35), 0 0 0 1px rgba(10,30,80,.06); }
+</style>
+</head>
+<body>
+<div id="stage">
+
+  <!-- 1 a 3: RESTAURANTE (cardápio de papel, placa, celular) -->
+  <section class="scene" id="a13" style="background:radial-gradient(100% 60% at 50% 25%, #2a1a10 0%, #120a05 60%, #070302 100%)">
+    <div id="bokeh"></div>
+    <div class="abs" style="left:0; right:0; top:1180px; bottom:0; background:linear-gradient(180deg,#6a4529 0%,#4a2e1b 22%,#2a190e 70%,#140b06 100%)">
+      <div class="abs" style="inset:0; background:repeating-linear-gradient(178deg, rgba(0,0,0,0) 0 26px, rgba(0,0,0,.10) 26px 29px)"></div>
+      <div class="abs" style="left:0; right:0; top:0; height:4px; background:rgba(255,210,160,.35)"></div>
+      <div class="abs" style="left:80px; top:10px; width:920px; height:320px; background:radial-gradient(closest-side, rgba(255,220,170,.22), transparent)"></div>
+    </div>
+    <div class="abs" id="cam" style="inset:0; transform-origin:540px 1100px">
+      <!-- cardápio de papel -->
+      <div class="abs" style="inset:0; perspective:1400px">
+        <div class="abs" id="pm" style="left:270px; top:620px; width:540px; height:700px; transform-origin:50% 100%">
+          <div class="abs" style="inset:0; border-radius:10px; background:#efe2c8; background-image:repeating-linear-gradient(0deg, rgba(120,80,40,.05) 0 2px, transparent 2px 6px); box-shadow:inset 0 0 0 12px #e2cfaa, inset 0 0 0 14px #c9ad7d, 0 40px 60px -20px rgba(0,0,0,.8); padding:56px 54px; box-sizing:border-box; color:#5a3a1c; font-family:'PF',serif">
+            <div style="text-align:center; font-size:60px; font-weight:800; letter-spacing:.06em">CARDÁPIO</div>
+            <div style="height:3px; background:#c9ad7d; margin:18px 60px 30px"></div>
+            <div id="pm-list"></div>
+            <div class="abs" style="right:70px; bottom:90px; width:130px; height:130px; border-radius:50%; box-shadow:inset 0 0 0 9px rgba(140,90,40,.18), inset 0 0 0 14px rgba(140,90,40,.06)"></div>
+          </div>
+        </div>
+      </div>
+      <!-- placa de mesa -->
+      <div class="abs" style="inset:0; perspective:1600px">
+        <div class="abs" id="pl-w" style="left:330px; top:600px; width:420px; height:690px; transform-origin:50% 100%">
+          <div class="abs" style="left:70px; top:600px; width:280px; height:56px; background:linear-gradient(180deg,#22262f,#0b0d12); clip-path:polygon(8% 0,92% 0,100% 100%,0 100%); border-radius:0 0 18px 18px"></div>
+          <div class="abs" style="left:20px; top:640px; width:380px; height:46px; border-radius:50%; background:rgba(0,0,0,.6); filter:blur(14px)"></div>
+          <div class="plate" style="left:0; top:0; width:420px; height:608px">
+            <div class="gloss"></div>
+            <div class="logo-b" style="width:100px; height:100px; font-size:54px; margin:38px auto 0">B</div>
+            <div class="serif" style="font-size:44px; margin-top:12px" id="pl-rest"></div>
+            <div style="position:relative; width:120px; height:120px; margin:26px auto 0">
+              <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><rect x="7" y="3" width="10" height="18" rx="2.2"/><path d="M10.5 18h3"/><path d="M19.5 8.5a6 6 0 0 1 0 7M21.8 6.5a9 9 0 0 1 0 11M4.5 8.5a6 6 0 0 0 0 7M2.2 6.5a9 9 0 0 0 0 11"/></svg>
+              <div id="rings"></div>
+            </div>
+            <div style="font-size:26px; font-weight:600; color:rgba(255,255,255,.82); margin-top:10px" id="pl-aprox"></div>
+            <div style="display:flex; align-items:center; justify-content:center; gap:32px; margin-top:36px">
+              <div id="qr" style="width:122px; height:122px; background:#fff; border-radius:10px; padding:9px; box-sizing:border-box; display:grid; grid-template-columns:repeat(11,1fr)"></div>
+              <div style="text-align:left"><div style="font-size:24px; letter-spacing:.3em; color:rgba(255,255,255,.6); font-weight:700">MESA</div><div style="font-size:100px; font-weight:800; line-height:1" id="pl-mesa"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="abs cx serif" id="h1" style="top:200px; font-size:92px; color:#fff; padding:0 40px"></div>
+    <div class="abs cx" id="e2" style="top:165px"><span class="eyebrow" style="color:var(--blue-l)" id="e2-t"></span></div>
+    <div class="abs cx serif" id="h2" style="top:220px; font-size:96px; color:#fff; padding:0 40px"></div>
+    <div class="abs cx" id="s2sub" style="top:1420px; font-size:42px; line-height:1.4; color:var(--cream); font-weight:500"></div>
+    <!-- celular -->
+    <div class="abs" style="inset:0; perspective:2000px">
+      <div class="phone" id="ph" style="left:0; top:0; width:430px; height:880px">
+        <div class="screen" id="scr">
+          <div class="abs" style="inset:0; background:linear-gradient(160deg,#1d3b7a,#0a1430)"><div class="abs cx" style="top:150px; font-size:96px; font-weight:300; color:#fff">20:35</div><div class="abs cx" style="top:270px; font-size:22px; color:rgba(255,255,255,.7)">sexta-feira</div></div>
+          <div class="abs" id="mn" style="inset:0; background:#fff8f0; overflow:hidden">
+            <div id="mn-in" class="abs" style="left:0; right:0; top:0; padding:62px 20px 0">
+              <div style="display:flex; align-items:center; gap:14px">
+                <i class="logo-b" style="width:56px; height:56px; font-size:30px">B</i>
+                <b class="serif" style="font-size:32px; color:#2a1a10; flex:1" id="mn-name"></b>
+                <span style="background:var(--orange); color:#fff; border-radius:999px; padding:8px 16px; font-size:18px; font-weight:800" id="mn-mesa"></span>
+              </div>
+              <div style="position:relative; margin-top:16px; height:290px; border-radius:24px; overflow:hidden">
+                <img id="mn-hl-img" style="width:100%; height:100%; object-fit:cover">
+                <div class="abs" style="inset:0; background:linear-gradient(180deg,transparent 45%,rgba(0,0,0,.78))"></div>
+                <div class="abs" style="left:20px; bottom:18px; color:#fff"><span style="background:var(--warm); color:#2a1a10; border-radius:999px; padding:5px 12px; font-size:15px; font-weight:800">MAIS PEDIDO</span>
+                  <div class="serif" style="font-size:32px; margin-top:8px" id="mn-hl-n"></div><div style="font-size:24px; font-weight:800" id="mn-hl-p"></div></div>
+              </div>
+              <div style="display:flex; gap:10px; margin-top:16px; font-size:18px; font-weight:700">
+                <span style="background:#2a1a10; color:#fff; border-radius:999px; padding:9px 18px">Burgers</span><span style="background:#f3e4d3; color:#6b5240; border-radius:999px; padding:9px 18px">Porções</span><span style="background:#f3e4d3; color:#6b5240; border-radius:999px; padding:9px 18px">Bebidas</span>
+              </div>
+              <div id="mn-list" style="margin-top:6px"></div>
+            </div>
+            <div class="abs" style="left:16px; right:16px; bottom:16px; height:64px; border-radius:18px; background:var(--wa); color:#fff; display:flex; align-items:center; justify-content:center; gap:10px; font-size:21px; font-weight:800"><svg viewBox="0 0 24 24" width="26" height="26" fill="#fff"><use href="#wa"/></svg>Fazer pedido</div>
+          </div>
+          <div class="abs" id="dt" style="inset:0; overflow:hidden; background:#140b06"></div>
+          <div class="tap" id="tap1"></div>
+          <div class="notch"></div>
+        </div>
+      </div>
+    </div>
+    <div class="abs cx serif" id="c1" style="top:1400px; font-size:72px; color:#fff"></div>
+    <div class="abs cx serif" id="c2" style="top:1400px; font-size:72px; color:#fff"></div>
+  </section>
+
+  <!-- 4. VANTAGENS -->
+  <section class="scene grid-bg" id="a4">
+    <div id="v-wrap"></div>
+    <!-- visual 0: três pratos -->
+    <div class="abs" id="v-vis0" style="left:0; right:0; top:600px; height:700px"></div>
+    <!-- visual 1: preço atualizado -->
+    <div class="abs" id="v-vis1" style="left:0; right:0; top:600px; height:700px">
+      <div class="card" style="left:90px; top:80px; width:900px; height:240px; display:flex; align-items:center; gap:34px; padding:0 40px; box-sizing:border-box">
+        <img id="v1-img" style="width:170px; height:170px; border-radius:26px; object-fit:cover">
+        <div style="flex:1"><div class="serif" style="font-size:52px; color:var(--ink)" id="v1-name"></div><div style="font-size:26px; color:var(--soft); margin-top:6px">Cardápio da mesa</div></div>
+        <div style="position:relative; width:230px; height:120px; text-align:right">
+          <div class="abs" id="v1-old" style="right:0; top:14px; font-size:48px; font-weight:800; color:var(--ink); white-space:nowrap"><span id="v1-old-t"></span><i id="v1-strike" class="abs" style="left:0; top:50%; height:6px; width:0; background:#e0453a; border-radius:3px"></i></div>
+          <div class="abs" id="v1-new" style="right:0; top:14px; font-size:48px; font-weight:800; color:var(--blue); white-space:nowrap; opacity:0"></div>
+        </div>
+      </div>
+      <div class="abs cx" id="v1-toast" style="top:400px"><span class="chip" style="background:#e7f8ee; color:#0f7a3d; font-size:36px; box-shadow:0 0 0 2px rgba(22,163,74,.35) inset">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span id="v1-toast-t"></span></span></div>
+    </div>
+    <!-- visual 2: aproxime -->
+    <div class="abs" id="v-vis2" style="left:0; right:0; top:600px; height:700px">
+      <div class="abs" style="left:330px; top:40px; width:420px; height:420px; border-radius:50%; background:radial-gradient(circle at 40% 35%, #2f86ff, #0a4fc0 70%); box-shadow:0 40px 80px -30px rgba(10,80,200,.6); display:grid; place-items:center">
+        <svg width="220" height="220" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round"><rect x="7" y="3" width="10" height="18" rx="2.2"/><path d="M10.5 18h3"/><path d="M19.5 8.5a6 6 0 0 1 0 7M21.8 6.5a9 9 0 0 1 0 11M4.5 8.5a6 6 0 0 0 0 7M2.2 6.5a9 9 0 0 0 0 11"/></svg>
+      </div>
+      <div id="v2-rings"></div>
+      <div class="abs cx" style="top:520px"><span class="chip" style="background:#fff; color:var(--ink); font-size:34px; box-shadow:0 14px 30px -12px rgba(10,30,80,.3)">Aproxime · pronto</span></div>
+    </div>
+  </section>
+
+  <!-- 5. OUTRAS PLACAS -->
+  <section class="scene navy-bg" id="a5">
+    <div class="abs cx serif" id="h5" style="top:190px; font-size:100px; color:#fff"></div>
+    <div id="cells"></div>
+    <div class="abs cx" id="f5" style="top:1490px; font-size:38px; color:var(--soft-d); font-weight:500"></div>
+  </section>
+
+  <!-- 6. PROVA: FOTO REAL -->
+  <section class="scene" id="a6" style="background:#000">
+    <img id="a6-img" class="abs" src="assets/placa-nfc-azul-no-balcao.webp" style="left:0; top:0; width:100%; height:100%; object-fit:cover; object-position:36% 50%">
+    <div class="abs" style="inset:0; background:linear-gradient(180deg, rgba(0,0,0,.15) 0%, rgba(0,0,0,0) 35%, rgba(2,8,24,.75) 70%, rgba(2,8,24,.95) 100%)"></div>
+    <div class="abs cx" id="e6" style="top:1250px"><span class="chip" style="background:rgba(255,255,255,.14); color:#fff; font-size:28px; box-shadow:inset 0 0 0 2px rgba(255,255,255,.25)">Placa real da BN Digital</span></div>
+    <div class="abs cx serif" id="h6" style="top:1360px; font-size:88px; color:#fff"></div>
+  </section>
+
+  <!-- 7. CHAMADA FINAL -->
+  <section class="scene" id="a7" style="background:linear-gradient(180deg,#0b3aa8 0%,#06215f 55%,#020a1f 100%)">
+    <div class="abs" style="left:180px; top:-260px; width:720px; height:720px; border-radius:50%; background:radial-gradient(closest-side, rgba(77,163,255,.6), transparent)"></div>
+    <img id="a7-logo" class="abs" src="assets/logo-bn-digital.webp" style="left:440px; top:330px; width:200px; height:200px; border-radius:50%; box-shadow:0 0 0 8px rgba(255,255,255,.12)">
+    <div class="abs cx" id="a7-pre" style="top:600px; font-size:40px; color:rgba(255,255,255,.85); font-weight:500; padding:0 60px"></div>
+    <div class="abs cx serif" id="h7" style="top:700px; font-size:112px; color:#fff; padding:0 40px"></div>
+    <div class="abs cx" id="btn-w" style="top:1090px">
+      <div id="btn" style="position:relative; display:inline-flex; align-items:center; gap:24px; background:var(--wa); color:#fff; border-radius:999px; padding:34px 64px; font-size:60px; font-weight:800; overflow:hidden; box-shadow:0 24px 50px -16px rgba(37,211,102,.6)">
+        <svg viewBox="0 0 24 24" width="70" height="70" fill="#fff"><use href="#wa"/></svg><span id="btn-t"></span>
+        <i id="shine" style="position:absolute; top:0; bottom:0; width:120px; left:-200px; background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent)"></i>
+      </div>
+      <div class="tap" id="tap7" style="left:540px; top:80px"></div>
+    </div>
+    <div class="abs cx" id="a7-num" style="top:1300px; font-size:58px; color:#fff; font-weight:800"></div>
+    <div class="abs cx" id="a7-ig" style="top:1395px; font-size:40px; color:#fff; font-weight:600"></div>
+    <div class="abs cx" id="a7-city" style="top:1465px; font-size:32px; color:rgba(255,255,255,.7)"></div>
+  </section>
+</div>
+
+<svg width="0" height="0" style="position:absolute"><defs><path id="wa" d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.69.25-1.29.17-1.41-.07-.12-.27-.2-.57-.35M12.05 21.5h-.01a9.43 9.43 0 0 1-4.8-1.32l-.35-.2-3.57.93.95-3.48-.22-.36a9.4 9.4 0 0 1-1.44-5.02c0-5.2 4.24-9.44 9.45-9.44 2.52 0 4.89.99 6.67 2.77a9.37 9.37 0 0 1 2.76 6.68c0 5.21-4.24 9.44-9.44 9.44m8.04-17.48A11.3 11.3 0 0 0 12.05.7C5.78.7.68 5.8.68 12.06c0 2 .52 3.96 1.52 5.68L.6 23.3l5.7-1.5a11.33 11.33 0 0 0 5.74 1.47h.01c6.26 0 11.36-5.1 11.37-11.37 0-3.03-1.18-5.89-3.33-8.03"/></defs></svg>
+
+<script src="textos.js"></script>
+<script>
+const C = window.TEXTOS;
+const $ = (id) => document.getElementById(id);
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const prog = (t, a, b) => clamp((t - a) / (b - a));
+const outCubic = (x) => 1 - Math.pow(1 - x, 3);
+const outBack = (x, c = 1.5) => 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2);
+const inOut = (x) => x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const lerp = (a, b, x) => a + (b - a) * x;
+function rich(s, color = "var(--blue-l)") {
+  return s.split("|").join("<br>").replace(/\*([^*]+)\*/g, `<span class="it" style="color:${color}">$1</span>`);
+}
+function words(el, s, color = "var(--blue-l)") {
+  let html = "", inHi = false;
+  s.split("|").forEach((line, li) => {
+    if (li) html += "<br>";
+    line.trim().split(" ").forEach((w, wi) => {
+      if (w.startsWith("*")) inHi = true;
+      const end = w.endsWith("*"), clean = w.replace(/\*/g, "");
+      html += (wi ? " " : "") + `<span class="word${inHi ? " it" : ""}"${inHi ? ` style="color:${color}"` : ""}>${clean}</span>`;
+      if (end) inHi = false;
+    });
+  });
+  el.innerHTML = html;
+  return [...el.querySelectorAll(".word")];
+}
+function enter(el, t, at, dur = 0.5, dy = 50, ease = outCubic) {
+  const p = ease(prog(t, at, at + dur));
+  el.style.opacity = clamp(prog(t, at, at + dur * 0.7));
+  el.style.transform = `translateY(${(1 - p) * dy}px)`;
+}
+function wordsIn(ws, t, at, step = 0.08, dur = 0.45, dy = 50) { ws.forEach((w, i) => enter(w, t, at + i * step, dur, dy)); }
+function fadeOut(el, t, at, dur = 0.3) { const k = 1 - prog(t, at, at + dur); el.style.opacity = parseFloat(el.style.opacity || 1) * k; return k; }
+function tapAt(el, t, x, y, at) {
+  el.style.left = x + "px"; el.style.top = y + "px";
+  const a = prog(t, at - 0.25, at - 0.05), press = prog(t, at, at + 0.15), gone = prog(t, at + 0.25, at + 0.45);
+  el.style.opacity = clamp(a) * (1 - gone);
+  el.style.transform = `scale(${lerp(1.25, 1, a) - 0.18 * Math.sin(Math.PI * press)})`;
+}
+function reveal(el, t, a, d, kind, x = 540, y = 960) {
+  const p = inOut(prog(t, a, a + d));
+  el.style.opacity = 1;
+  if (p >= 1) { el.style.clipPath = "none"; return; }
+  if (kind === "circle") el.style.clipPath = `circle(${p * 2300}px at ${x}px ${y}px)`;
+  if (kind === "up") el.style.clipPath = `inset(${(1 - p) * 100}% 0 0 0)`;
+  if (kind === "left") el.style.clipPath = `inset(0 0 0 ${(1 - p) * 100}%)`;
+}
+function show(el, t, a, b) { const on = t >= a && t < b; el.style.visibility = on ? "visible" : "hidden"; return on; }
+function rng(seed) { let s = seed; return () => (s = (s * 16807) % 2147483647) / 2147483647; }
+function center(el, box) { const a = el.getBoundingClientRect(), b = box.getBoundingClientRect(); return [a.left - b.left + a.width / 2, a.top - b.top + a.height / 2]; }
+function ringsIn(box, n, size, left, top, color) { for (let i = 0; i < n; i++) { const r = document.createElement("div"); r.className = "abs";
+  r.style.cssText = `left:${left}px; top:${top}px; width:${size}px; height:${size}px; border-radius:50%; border:6px solid ${color}; opacity:0`; box.appendChild(r); } return [...box.children]; }
+function pulse(rs, t, at, every = 0.22, dur = 0.9, grow = 2.4) { rs.forEach((r, i) => { const c = prog(t, at + i * every, at + i * every + dur);
+  r.style.opacity = c > 0 && c < 1 ? (1 - c) * 0.95 : 0; r.style.transform = `scale(${0.6 + c * grow})`; }); }
+
+// ---------- MONTAGEM ----------
+// bokeh do restaurante
+const bokeh = []; { const r = rng(5); for (let i = 0; i < 22; i++) { const d = document.createElement("i"); d.className = "abs";
+  const sz = 40 + r() * 140, warm = r() > 0.3; d.style.cssText = `width:${sz}px; height:${sz}px; border-radius:50%; background:${warm ? "#ffb35c" : "#ffe3b0"}; filter:blur(${8 + r() * 16}px)`;
+  $("bokeh").appendChild(d); bokeh.push({ el: d, x: r() * 1080 - sz / 2, y: 60 + r() * 1000, o: 0.08 + r() * 0.3, ph: r() * 6.28 }); } }
+$("pm-list").innerHTML = C.cardapioPapel.map(([n, p]) => `<div style="display:flex; align-items:baseline; gap:10px; font-size:34px; margin-bottom:22px"><span>${n}</span><span style="flex:1; border-bottom:3px dotted #b89a6a; transform:translateY(-8px)"></span><span style="font-family:'MO',monospace; font-size:28px">${p}</span></div>`).join("");
+const h1Words = words($("h1"), C.gancho);
+$("e2-t").textContent = C.placaSobretitulo; const h2Words = words($("h2"), C.placaTitulo);
+$("s2sub").innerHTML = rich(C.placaSub);
+$("pl-rest").textContent = C.restaurante; $("pl-aprox").textContent = C.aproxime; $("pl-mesa").textContent = C.mesa;
+{ const r = rng(7), qr = $("qr"); for (let i = 0; i < 121; i++) { const x = i % 11, y = Math.floor(i / 11);
+    const inF = (fx, fy) => x >= fx && x < fx + 3 && y >= fy && y < fy + 3;
+    const finder = inF(0, 0) || inF(8, 0) || inF(0, 8);
+    const on = finder ? !((x === 1 || x === 9) && (y === 1 || y === 9)) || false : r() > 0.5;
+    const d = document.createElement("i"); d.style.background = on ? "#0b0d12" : "transparent"; qr.appendChild(d); } }
+const rings = ringsIn($("rings"), 3, 110, 5, 5, "#4da3ff");
+// cardápio no celular
+$("mn-name").textContent = C.restaurante; $("mn-mesa").textContent = "Mesa " + C.mesa;
+$("mn-hl-img").src = `assets/${C.destaque.foto}.webp`; $("mn-hl-n").textContent = C.destaque.nome; $("mn-hl-p").textContent = C.destaque.preco;
+$("mn-list").innerHTML = C.pratos.map((p, i) => `<div class="mn-row" id="row${i}"><img src="assets/${p.foto}.webp"><div style="flex:1"><div style="font-size:22px; font-weight:800; color:#2a1a10">${p.nome}</div><div style="font-size:16px; color:#8a7262; margin-top:3px">${p.desc}</div></div>
+  <div style="font-size:20px; font-weight:800; color:#2a1a10">${p.preco}</div><span style="width:38px; height:38px; border-radius:50%; background:var(--orange); color:#fff; display:grid; place-items:center; font-size:26px; font-weight:700">+</span></div>`).join("");
+const DT = [C.pratos[1], C.pratos[3]];
+$("dt").innerHTML = DT.map((p, i) => `<div class="abs" id="dt${i}" style="inset:0; background:#140b06">
+  <img src="assets/${p.foto}.webp" style="position:absolute; left:0; top:0; width:100%; height:620px; object-fit:cover">
+  <div class="abs" style="left:0; right:0; top:300px; height:330px; background:linear-gradient(180deg,transparent,#140b06)"></div>
+  <div class="abs" style="left:22px; top:62px; width:48px; height:48px; border-radius:50%; background:rgba(0,0,0,.45); color:#fff; display:grid; place-items:center; font-size:32px">‹</div>
+  <div class="abs" style="left:26px; right:26px; top:560px; color:#fff">
+    <span style="background:var(--warm); color:#2a1a10; border-radius:999px; padding:5px 12px; font-size:15px; font-weight:800">BURGERS</span>
+    <div class="serif" style="font-size:44px; margin-top:12px">${p.nome}</div>
+    <div style="font-size:20px; color:#d9c3a8; margin-top:6px">${p.desc}</div>
+    <div style="font-size:36px; font-weight:800; color:var(--warm); margin-top:14px">${p.preco}</div>
+  </div>
+  <div class="abs cx" style="bottom:100px; font-size:17px; color:rgba(255,255,255,.6)">Deslize para o próximo ⌃</div>
+  <div class="abs" style="left:16px; right:16px; bottom:16px; height:64px; border-radius:18px; background:var(--orange); color:#fff; display:grid; place-items:center; font-size:22px; font-weight:800">Adicionar ao pedido</div>
+</div>`).join("");
+$("c1").innerHTML = rich(C.demoLegenda1); $("c2").innerHTML = rich(C.demoLegenda2);
+// vantagens
+const vH = [], vS = [];
+C.vantagens.forEach((v, i) => {
+  const h = document.createElement("div"); h.className = "abs cx serif"; h.style.cssText = "top:210px; font-size:96px; color:var(--ink); padding:0 40px";
+  $("v-wrap").appendChild(h); vH.push(words(h, v.titulo, "var(--blue)")); h.id = "vh" + i;
+  const s = document.createElement("div"); s.className = "abs cx"; s.style.cssText = "top:1420px; font-size:42px; color:var(--soft); font-weight:500; padding:0 60px"; s.textContent = v.sub; s.id = "vs" + i;
+  $("v-wrap").appendChild(s);
+});
+const v0 = [C.destaque, C.pratos[1], C.pratos[2]].map((p, i) => { const c = document.createElement("div"); c.className = "card";
+  c.style.cssText = `left:${55 + i * 330}px; top:${i === 1 ? 40 : 90}px; width:310px; height:430px; overflow:hidden; transform-origin:50% 100%`;
+  c.innerHTML = `<img src="assets/${p.foto}.webp" style="width:100%; height:300px; object-fit:cover"><div style="padding:18px 22px"><div class="serif" style="font-size:34px; color:var(--ink)">${p.nome}</div><div style="font-size:30px; font-weight:800; color:var(--orange); margin-top:6px">${p.preco}</div></div>`;
+  $("v-vis0").appendChild(c); return c; });
+$("v1-img").src = `assets/${C.destaque.foto}.webp`; $("v1-name").textContent = C.destaque.nome;
+$("v1-old-t").textContent = C.precoAntes; $("v1-new").textContent = C.precoDepois; $("v1-toast-t").textContent = C.avisoAtualizado;
+const v2Rings = ringsIn($("v2-rings"), 3, 420, 330, 40, "rgba(10,102,232,.55)");
+// outras placas
+const h5Words = words($("h5"), C.placasTitulo);
+const PL = {
+  "Cardápio": ["#f08a24", `<path d="M4 3h12a2 2 0 0 1 2 2v16l-3-2-3 2-3-2-3 2V5a2 2 0 0 1 2-2zM8 8h6M8 12h6M8 16h3"/>`],
+  "Wi-Fi": ["#0a66e8", `<path d="M2.5 9a14 14 0 0 1 19 0M5.5 12.5a9.5 9.5 0 0 1 13 0M8.6 16a5 5 0 0 1 6.8 0"/><circle cx="12" cy="19.2" r="1" fill="#fff"/>`],
+  "Pix": ["#32bcad", `<path d="M12 3.5 20.5 12 12 20.5 3.5 12z"/><path d="M8.5 12h7"/>`],
+  "Instagram": ["linear-gradient(45deg,#f58529,#dd2a7b 55%,#8134af)", `<rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".9" fill="#fff"/>`],
+  "WhatsApp": ["#25d366", `<use href="#wa" fill="#fff" stroke="none"/>`],
+  "Google": ["#f5a300", `<path d="M12 3.2l2.6 5.5 6 .7-4.4 4.1 1.2 6-5.4-3-5.4 3 1.2-6-4.4-4.1 6-.7z" fill="#fff"/>`],
+};
+const cells = C.placas.map(([n, d], i) => { const [bg, ic] = PL[n] || ["#0a66e8", `<circle cx="12" cy="12" r="8"/>`];
+  const c = document.createElement("div"); c.className = "cell"; c.style.left = (60 + (i % 2) * 490) + "px"; c.style.top = (470 + Math.floor(i / 2) * 320) + "px";
+  c.innerHTML = `<div class="mini"><i style="background:${bg}"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ic}</svg></i>
+    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="1.6" stroke-linecap="round"><path d="M15.5 8.5a5 5 0 0 1 0 7M18 6.5a8.5 8.5 0 0 1 0 11M8.5 8.5a5 5 0 0 0 0 7M6 6.5a8.5 8.5 0 0 0 0 11"/></svg></div>
+    <div><div style="font-size:42px; font-weight:800; color:#fff">${n}</div><div style="font-size:29px; line-height:1.3; color:var(--soft-d); margin-top:8px">${d}</div></div>`;
+  $("cells").appendChild(c); return c; });
+$("f5").textContent = C.placasRodape;
+const h6Words = words($("h6"), C.provaTitulo);
+$("a7-pre").textContent = C.finalPre; const h7Words = words($("h7"), C.finalChamada);
+$("btn-t").textContent = C.botao; $("a7-num").textContent = C.whatsapp; $("a7-ig").textContent = C.instagram; $("a7-city").textContent = C.cidade;
+
+// ---------- LINHA DO TEMPO ----------
+const T = window.T = { a13: [0, 16.8], a4: [16.3, 26.3], a5: [25.8, 34.5], a6: [34.0, 38.3], a7: [37.8, 44.0] };
+window.DURATION = 44.0;
+const VT = [[16.6, 19.35], [19.6, 22.35], [22.6, 26.5]];
+
+window.render = function (t) {
+  // ===== 1 a 3: restaurante =====
+  if (show($("a13"), t, ...T.a13)) {
+    bokeh.forEach((b) => { b.el.style.transform = `translate(${b.x + Math.sin(t * 0.35 + b.ph) * 18}px, ${b.y + Math.cos(t * 0.3 + b.ph) * 12}px)`; b.el.style.opacity = b.o * (0.75 + 0.25 * Math.sin(t * 0.9 + b.ph)); });
+    $("cam").style.transform = `scale(${lerp(1, 1.05, prog(t, 0, 8.6))})`;
+    // gancho
+    wordsIn(h1Words, t, 0.15, 0.09, 0.45, 60);
+    { const k = 1 - prog(t, 3.25, 3.55); $("h1").style.opacity = k; }
+    { const pin = outCubic(prog(t, 0.0, 0.7)), out = inOut(prog(t, 2.95, 3.55));
+      $("pm").style.opacity = clamp(prog(t, 0, 0.4)) * (1 - prog(t, 3.35, 3.55));
+      $("pm").style.transform = `translate(${-out * 1000}px, ${(1 - pin) * 120 + out * 120}px) rotateX(34deg) rotateZ(${Math.sin(t * 1.1) * 0.8 - out * 28}deg)`; }
+    // placa
+    { const p = prog(t, 3.65, 4.4), m = inOut(prog(t, 8.85, 9.45));
+      $("pl-w").style.opacity = clamp(p * 2) * lerp(1, 0.5, m);
+      $("pl-w").style.transform = `translate(${-m * 190}px, ${(1 - outBack(p, 1.3)) * 260 + m * 30}px) rotateX(${(1 - outCubic(p)) * 40}deg) rotateY(${lerp(0, 22, m)}deg) scale(${lerp(1, 0.84, m)})`; }
+    pulse(rings, t, 8.4);
+    enter($("e2"), t, 3.85, 0.4, 20); wordsIn(h2Words, t, 3.95, 0.08, 0.45, 50);
+    { const k = 1 - prog(t, 8.55, 8.85); $("e2").style.opacity *= k; $("h2").style.opacity = k; }
+    enter($("s2sub"), t, 4.7, 0.5, 30); $("s2sub").style.opacity *= 1 - prog(t, 7.45, 7.7);
+    // celular
+    { const e = outCubic(prog(t, 7.55, 8.3)), m = inOut(prog(t, 8.9, 9.5)), fl = Math.sin(t * 1.6) * 8 * m;
+      const buzz = t > 8.4 && t < 8.62 ? Math.sin(t * 160) * 4 : 0;
+      const x = lerp(lerp(1700, 560, e), 325, m) + buzz, y = lerp(lerp(760, 540, e), 420, m) + fl;
+      const rz = lerp(lerp(24, -14, e), 0, m), ry = lerp(lerp(-30, -14, e), 0, m);
+      $("ph").style.transform = `translate(${x}px, ${y}px) rotateY(${ry}deg) rotateZ(${rz}deg)`;
+      $("ph").style.opacity = t < 7.5 || t > 16.5 ? 0 : 1; }
+    { const s1 = outCubic(prog(t, 8.55, 8.95)); $("mn").style.transform = `translateY(${(1 - s1) * 100}%)`;
+      $("mn-in").style.transform = `translateY(${-lerp(0, 300, inOut(prog(t, 10.2, 11.2)))}px)`; }
+    { const scr = $("scr"); if (t > 11.2 && t < 12.3) { const [x, y] = center($("row1"), scr); tapAt($("tap1"), t, x, y, 11.75); } else $("tap1").style.opacity = 0; }
+    { const d = inOut(prog(t, 11.95, 12.35)), sw = inOut(prog(t, 13.75, 14.15));
+      $("dt").style.transform = `translateX(${(1 - d) * 100}%)`;
+      $("dt0").style.transform = `translateY(${-sw * 100}%)`; $("dt1").style.transform = `translateY(${(1 - sw) * 100}%)`; }
+    { const p = prog(t, 9.5, 10.0), k = 1 - prog(t, 11.8, 12.05); $("c1").style.opacity = p * k; $("c1").style.transform = `translateY(${(1 - outCubic(p)) * 40}px)`; }
+    { const p = prog(t, 12.2, 12.7); $("c2").style.opacity = p; $("c2").style.transform = `translateY(${(1 - outCubic(p)) * 40}px)`; }
+  }
+
+  // ===== 4. vantagens =====
+  if (show($("a4"), t, ...T.a4)) {
+    reveal($("a4"), t, 16.3, 0.45, "up");
+    VT.forEach(([a, b], i) => {
+      wordsIn(vH[i], t, a + 0.05, 0.08, 0.45, 50);
+      const k = 1 - prog(t, b - 0.25, b);
+      $("vh" + i).style.opacity = k; enter($("vs" + i), t, a + 0.7, 0.45, 26); $("vs" + i).style.opacity *= k;
+      $("v-vis" + i).style.opacity = k; $("v-vis" + i).style.visibility = t > a - 0.1 && t < b ? "visible" : "hidden";
+    });
+    v0.forEach((c, i) => { const p = prog(t, 16.85 + i * 0.15, 17.4 + i * 0.15);
+      c.style.opacity = clamp(p * 2); c.style.transform = `translateY(${(1 - outBack(p, 1.4)) * 200 + Math.sin(t * 1.5 + i) * 6}px) rotate(${(i - 1) * 5 * outCubic(p)}deg)`; });
+    { const c = $("v-vis1").firstElementChild, p = prog(t, 19.75, 20.25); c.style.opacity = clamp(p * 2); c.style.transform = `translateY(${(1 - outBack(p)) * 120}px)`;
+      $("v1-strike").style.width = `${outCubic(prog(t, 20.55, 20.8)) * 100}%`;
+      const n = prog(t, 20.85, 21.2); $("v1-old").style.opacity = 1 - n; $("v1-old").style.transform = `translateY(${-n * 40}px)`;
+      $("v1-new").style.opacity = n; $("v1-new").style.transform = `translateY(${(1 - outCubic(n)) * 40}px)`;
+      const q = prog(t, 21.15, 21.5); $("v1-toast").style.opacity = clamp(q * 2); $("v1-toast").style.transform = `scale(${lerp(0.7, 1, outBack(q, 2))})`; }
+    { const c = $("v-vis2").firstElementChild, p = prog(t, 22.75, 23.25); c.style.transform = `scale(${lerp(0.5, 1, outBack(p, 1.6))})`; c.style.opacity = clamp(p * 2);
+      pulse(v2Rings, t, 23.3, 0.3, 1.1, 0.9); if (t > 24.5) pulse(v2Rings, t, 24.6, 0.3, 1.1, 0.9); }
+  }
+
+  // ===== 5. outras placas =====
+  if (show($("a5"), t, ...T.a5)) {
+    reveal($("a5"), t, 25.8, 0.55, "circle", 540, 1100);
+    wordsIn(h5Words, t, 26.05, 0.09, 0.45, 50);
+    cells.forEach((c, i) => { const p = prog(t, 26.5 + i * 0.28, 27.0 + i * 0.28);
+      c.style.opacity = clamp(p * 2); c.style.transform = `translateY(${(1 - outBack(p, 1.4)) * 80}px) scale(${lerp(0.9, 1, outCubic(p))})`;
+      c.firstElementChild.style.transform = `translateY(${Math.sin(t * 1.4 + i) * 4}px)`; });
+    enter($("f5"), t, 28.6, 0.5, 24);
+  }
+
+  // ===== 6. foto real =====
+  if (show($("a6"), t, ...T.a6)) {
+    reveal($("a6"), t, 34.0, 0.45, "left");
+    $("a6-img").style.transform = `scale(${lerp(1.14, 1.0, outCubic(prog(t, 34.0, 38.3)))})`;
+    enter($("e6"), t, 34.5, 0.45, 24); wordsIn(h6Words, t, 34.65, 0.08, 0.45, 50);
+  }
+
+  // ===== 7. chamada =====
+  if (show($("a7"), t, T.a7[0], T.a7[1] + 1)) {
+    reveal($("a7"), t, 37.8, 0.55, "circle", 540, 1450);
+    { const p = prog(t, 38.05, 38.6); $("a7-logo").style.opacity = clamp(p * 2); $("a7-logo").style.transform = `scale(${lerp(0.7, 1, outBack(p))})`; }
+    enter($("a7-pre"), t, 38.3, 0.5, 30);
+    wordsIn(h7Words, t, 38.6, 0.08, 0.45, 50);
+    { const p = prog(t, 39.3, 39.8); $("btn-w").style.opacity = clamp(p * 1.6); $("btn-w").style.transform = `scale(${lerp(0.85, 1, outBack(p, 2))})`;
+      const pr = Math.sin(Math.PI * prog(t, 40.85, 41.0)); $("btn").style.transform = `scale(${1 - 0.05 * pr + (t > 41.1 ? 0.025 * Math.sin((t - 41.1) * 5) : 0)})`;
+      $("shine").style.left = `${lerp(-200, 900, prog(t, 40.1, 40.6))}px`; }
+    tapAt($("tap7"), t, 540, 92, 40.85);
+    enter($("a7-num"), t, 39.65, 0.45, 26); enter($("a7-ig"), t, 39.8, 0.45, 26); enter($("a7-city"), t, 39.95, 0.45, 26);
+  }
+};
+
+window.ready = (async () => {
+  for (const f of ['800 100px "PF"', 'italic 800 100px "PF"', '600 40px "IN"', '800 40px "MO"']) await document.fonts.load(f);
+  await document.fonts.ready;
+  await Promise.all([...document.images].map((im) => im.decode().catch(() => {})));
+  window.render(0);
+  return true;
+})();
+</script>
+</body>
+</html>
