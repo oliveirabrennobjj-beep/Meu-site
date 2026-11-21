@@ -105,7 +105,9 @@ const DENTISTA = "Dra. Deise Barbosa Teste";
 const AQUARIO = "Aquarismo Peixes Teste - casa de ração";
 // Caso real de 20/11: vende frango assado e quentinha, e a prévia mostrava costela.
 const FRANGO = "Frango Assado Teste e Quentinha";
-for (const [i, nome, tipo] of [[3, MASSO, "Salão de beleza"], [4, CT, "Academia"], [5, DENTISTA, "Dentista"], [6, AQUARIO, "Loja de ração"], [7, FRANGO, "Restaurante"]]) {
+const QUEIJO = "Ateliê do Queijo Teste";
+const PIZZA = "Gran Pizza Teste";
+for (const [i, nome, tipo] of [[3, MASSO, "Salão de beleza"], [4, CT, "Academia"], [5, DENTISTA, "Dentista"], [6, AQUARIO, "Loja de ração"], [7, FRANGO, "Restaurante"], [8, QUEIJO, "Fabricante de queijo"], [9, PIZZA, "Delivery"]]) {
   leads.push({
     id: `w552290000000${i}`,
     nome,
@@ -397,6 +399,9 @@ try {
     [DENTISTA, "Dentista em Cidade de Teste", "dentista-1.webp"],
     [AQUARIO, "Aquarismo em Cidade de Teste", "aquario-1.webp"],
     [FRANGO, "Frango assado em Cidade de Teste", "frango-1.webp"],
+    // Queijaria não é supermercado; pizzaria com tipo "Delivery" é pizzaria (o nome vence o tipo genérico).
+    [QUEIJO, "Cidade de Teste", "queijaria-1.webp"],
+    [PIZZA, "Cidade de Teste", "pizzaria-1.webp"],
   ]) {
     await p.getByRole("button", { name: loja, exact: true }).click();
     await p.getByRole("dialog").first().getByRole("button", { name: "Mostrar demonstração do site" }).click();

@@ -6,7 +6,7 @@ import {
   HeartPulse, House, IceCreamCone, KeyRound, Languages, Laptop, Leaf, Music, Package, PawPrint, Pencil,
   Printer, Ruler, Scale, Scissors, Shield, Shirt, Smartphone, Snowflake, Sofa, Sparkles, Stethoscope, Store, SunMedium,
   Swords, Syringe, Tractor, Trophy, Truck, Users, Utensils, Wheat, Wrench, Zap, Drumstick, Cookie, Carrot, BedDouble,
-  Palette, Sandwich, Soup, Wifi, Croissant, Salad, type LucideIcon,
+  Palette, Sandwich, Soup, Wifi, Croissant, Salad, Milk, Nut, type LucideIcon,
 } from "lucide-react";
 
 type Servico = [nome: string, linha: string, icone: LucideIcon];
@@ -546,6 +546,34 @@ export const SUBTEMAS: Record<string, SubTema> = {
     servicos: [["Frutas", "Da estação", Apple], ["Verduras", "Colhidas cedo", Leaf],
       ["Legumes", "Fresquinhos", Carrot], ["Entrega", "Combine pelo WhatsApp", Truck]],
     sobre: ["Fresquinho", "todo dia"], cta: ["Bora fazer a feira?", "Mande a lista pelo WhatsApp que a gente separa."],
+  },
+  queijaria: {
+    fundo: "#f8f3ea", cartao: "#ffffff", tinta: "#2a2116", suave: "#2a2116a8", destaque: "#a8742a", noDestaque: "#ffffff", mancha: "#f1e2c4",
+    fonte: ELEGANTE, italico: false, maiusculo: false, escuro: false,
+    destaques: [["Queijos frescos", "Pro dia a dia"], ["Curados", "Sabor marcante"]],
+    roteiro: "Direto pra sua mesa", titulo: ["Queijos e frios", "pra sua mesa"],
+    chamada: "Veja os queijos da semana e encomende pelo WhatsApp.", botao: "Encomendar",
+    servicos: [["Queijos frescos", "Pro dia a dia", Milk], ["Curados", "Sabor marcante", Clock],
+      ["Encomendas", "Pra festa e pra presente", Gift], ["Retirada", "Combine pelo WhatsApp", Truck]],
+    sobre: ["Queijo bom", "é aqui"], cta: ["Bateu vontade de queijo?", "Peça pelo WhatsApp que a gente separa."],
+  },
+  naturais: {
+    fundo: "#f5f4ec", cartao: "#ffffff", tinta: "#22301f", suave: "#22301fa8", destaque: "#5f7f33", noDestaque: "#ffffff", mancha: "#e2ead0",
+    fonte: ELEGANTE, italico: false, maiusculo: false, escuro: false,
+    destaques: [["Grãos e castanhas", "A granel"], ["Temperos e chás", "Pra todo dia"]],
+    roteiro: "Do jeito natural", titulo: ["Natural e a granel,", "do seu jeito"],
+    chamada: "Veja os produtos e peça pelo WhatsApp.", botao: "Pedir pelo WhatsApp",
+    servicos: [["Grãos e castanhas", "Leve a quantidade certa", Nut], ["A granel", "Do jeito que você precisa", Scale],
+      ["Temperos e chás", "Pra todo dia", Leaf], ["Entrega", "Combine pelo WhatsApp", Truck]],
+    sobre: ["Comer bem", "começa aqui"], cta: ["Bora montar sua lista?", "Mande pelo WhatsApp que a gente separa."],
+  },
+  descartaveis: {
+    destaques: [["Copos e potes", "Pra todo tamanho"], ["Embalagens", "Pro seu delivery"]],
+    roteiro: "Pro seu negócio", titulo: ["Descartáveis e embalagens", "pro seu negócio"],
+    chamada: "Veja os produtos e peça pelo WhatsApp.", botao: "Pedir orçamento",
+    servicos: [["Copos e potes", "Pra todo tamanho", CupSoda], ["Embalagens", "Pro seu delivery", Package],
+      ["Festas", "Pratos, talheres e mais", Gift], ["Entrega", "Combine pelo WhatsApp", Truck]],
+    sobre: ["Tudo pro seu", "negócio"], cta: ["Precisa repor o estoque?", "Mande a lista pelo WhatsApp."],
   },
   cosmeticos: {
     fundo: "#fbf4f2", cartao: "#ffffff", tinta: "#1f3a2e", suave: "#1f3a2ea8", destaque: "#b4626a", noDestaque: "#ffffff", mancha: "#f2dcd8",

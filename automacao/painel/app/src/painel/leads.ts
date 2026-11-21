@@ -657,6 +657,10 @@ export const RAMOS_ESCOLHA = RAMOS.filter((r) => r !== GERAL)
  * Ramo da loja: a escolha do Brenno, senão o tipo do Google, senão o nome. No fim, o nome pode
  * corrigir o tipo (a massoterapeuta cadastrada como salão, o CT cadastrado como academia).
  */
+/** Tipo do Google que não diz o que a loja vende ("Loja", "Delivery", "Fabricante"…): aí o nome decide. */
+const TIPO_GENERICO =
+  /^(loja|delivery|quiosque|caf[eé]|armaz[eé]m|dep[oó]sito|atacadista|fabricante|fabrica[cç][aã]o de alimentos|fabricante de alimentos( congelados)?|fornecedor de produtos aliment[ií]cios|servi[cç]o de distribui[cç][aã]o|centro comercial|mercado tradicional|com[eé]rcio|restaurante fast-food)?$/i;
+
 export function ramoDe(lead: Pick<Lead, "nome" | "tipo" | "ramo">): Ramo {
   const escolhido = RAMOS.find((r) => r.id === lead.ramo);
   if (escolhido) return escolhido;
@@ -664,9 +668,24 @@ export function ramoDe(lead: Pick<Lead, "nome" | "tipo" | "ramo">): Ramo {
     RAMOS.find((r) => r.tipo.test(lead.tipo ?? "")) ??
     RAMOS.find((r) => r.nomeLoja?.test(lead.nome)) ??
     GERAL;
-  return (
-    RAMOS.find((r) => r.certeza?.corrige.includes(base.id) && r.certeza.padrao.test(lead.nome)) ?? base
-  );
+  const certo = RAMOS.find((r) => r.certeza?.corrige.includes(base.id) && r.certeza.padrao.test(lead.nome)) ?? base;
+  // "Gran Pizza" com tipo "Delivery", "Barriga Doce Tattoo" com tipo "Loja": o nome diz o que vende. Só vale
+  // quando o tipo é genérico (ou caiu no geral), o nome não confirma o próprio ramo e não há sub-nicho nele.
+  const tipo = (lead.tipo ?? "").trim();
+  if ((certo.id === "geral" || TIPO_GENERICO.test(tipo)) && !(certo.id !== "geral" && certo.nomeLoja?.test(lead.nome))) {
+    const temSub = SUBNICHOS.some(
+      (s) => (s.ramo === certo.id || s.outrosRamos?.includes(certo.id)) && (s.nomeLoja?.test(lead.nome) || s.tipo?.test(tipo)),
+    );
+    if (!temSub) {
+      // Tipo de comida ("Delivery", "Quiosque", "Café") só troca por outro ramo de comida: o Mr Fit é marmita fit, não academia.
+      const comida = /^(delivery|quiosque|caf[eé]|restaurante fast-food)$|aliment/i.test(tipo);
+      const pode = (id: RamoId) => !comida || ["restaurante", "hamburgueria", "pizzaria", "padaria", "acai", "mercado"].includes(id);
+      const sub = SUBNICHOS.find((s) => pode(s.ramo) && s.nomeLoja?.test(lead.nome));
+      const peloNome = sub ? RAMOS.find((r) => r.id === sub.ramo) : RAMOS.find((r) => pode(r.id) && r.nomeLoja?.test(lead.nome));
+      if (peloNome) return peloNome;
+    }
+  }
+  return certo;
 }
 
 /* Sub-nicho ------------------------------------------------------------------------------------ */
@@ -739,7 +758,7 @@ export const SUBNICHOS: Subnicho[] = [
     quem: "assistência de celular", noSite: `os consertos com foto, o tempo de reparo e ${ORCAMENTO}`, ondePlaca: " na hora de buscar o celular" },
   { id: "solar", ramo: "servicos", nome: "Energia solar", tipo: /solar|fotovolt/i, nomeLoja: /\bsolar|fotovolt/i,
     quem: "empresa de energia solar", noSite: `as instalações com foto, quanto dá pra economizar e ${ORCAMENTO}` },
-  { id: "refrigeracao", ramo: "servicos", nome: "Ar-condicionado", tipo: /condicionado|climatiza|refrigera|geladeira|lavadora/i, nomeLoja: /refrigera|climatiza|\bar ?condicionado|\bfrio\b/i,
+  { id: "refrigeracao", ramo: "servicos", nome: "Ar-condicionado", tipo: /condicionado|climatiza|refrigera|geladeira|lavadora/i, nomeLoja: /refrigera|climatiza|\bar ?condicionado|(?<!cabo )\bfrio\b/i,
     quem: "assistência de ar-condicionado", noSite: `os serviços com foto, a região que atende e ${ORCAMENTO}` },
   { id: "informatica", ramo: "servicos", nome: "Informática", tipo: /inform[aá]tic|computador|notebook/i, nomeLoja: /inform[aá]tica|\bpc\b|notebook/i,
     quem: "assistência de informática", noSite: `os consertos, os computadores à venda e ${ORCAMENTO}` },
@@ -753,6 +772,12 @@ export const SUBNICHOS: Subnicho[] = [
   { id: "marcenaria", ramo: "construcao", nome: "Marcenaria", tipo: /marcen|carpint|moveleir|planejad/i, nomeLoja: /marcenaria|carpintaria|planejados/i,
     quem: "marcenaria", noSite: `os móveis com foto e ${ORCAMENTO}`, ondePlaca: " na hora de fechar o orçamento" },
   // Mercado
+  { id: "queijaria", ramo: "mercado", nome: "Queijaria", tipo: /queij|latic[ií]n|\bfrios\b/i, nomeLoja: /queij|latic[ií]n|\bfrios\b/i,
+    quem: "queijaria", noSite: `os queijos com foto, as encomendas e ${PEDIDO_ZAP}` },
+  { id: "naturais", ramo: "mercado", nome: "Produtos naturais", tipo: /produtos naturais|granel|gr[aã]os|cerealista/i, nomeLoja: /natural|\bgr[aã]os?\b|granel|integral/i,
+    quem: "loja de produtos naturais", noSite: `os grãos, castanhas e temperos com foto e ${PEDIDO_ZAP}` },
+  { id: "descartaveis", ramo: "mercado", nome: "Descartáveis", tipo: /descart[aá]v|embalag/i, nomeLoja: /descart[aá]v|embalag/i,
+    quem: "loja de descartáveis", noSite: `os copos, potes e embalagens com foto e ${PEDIDO_ZAP}` },
   { id: "bebidas", ramo: "mercado", nome: "Bebidas", tipo: /bebida|cerveja|adega|chopp|conveni/i, nomeLoja: /bebidas|\badega|\bchopp|conveni[eê]ncia|\bgelada/i,
     quem: "distribuidora de bebidas", noSite: "as bebidas geladas, os preços e um botão pra pedir a entrega pelo WhatsApp" },
   { id: "acougue", ramo: "mercado", nome: "Açougue", tipo: /a[cç]ougue|carnes/i, nomeLoja: /a[cç]ougue|\bcarnes\b|\bbeef\b/i,
@@ -767,7 +792,7 @@ export const SUBNICHOS: Subnicho[] = [
   { id: "crepe", ramo: "restaurante", nome: "Creperia", tipo: /crep/i, nomeLoja: /\bcrep/i, quem: "creperia" },
   { id: "massas", ramo: "restaurante", nome: "Massas", tipo: /massas|italian|cantina/i, nomeLoja: /\bmassas\b|lasanh|\bcantina|\bnonna|trattoria|italian/i, quem: "restaurante de massas" },
   { id: "japones", ramo: "restaurante", nome: "Japonês", tipo: /japon|sushi|temaki|oriental/i, nomeLoja: /sushi|temaki|japon|\bnikkei|oriental/i, quem: "restaurante japonês" },
-  { id: "frutosdomar", ramo: "restaurante", nome: "Frutos do mar", tipo: /frutos do mar|peixe|camar|marisc/i, nomeLoja: /frutos do mar|\bcamar[aã]o|peixe|marisc/i, quem: "restaurante de frutos do mar" },
+  { id: "frutosdomar", ramo: "restaurante", nome: "Frutos do mar", tipo: /frutos do mar|peixe|camar|marisc/i, nomeLoja: /frutos do mar|\bcamar[aã]o|peixe|marisc|pescador/i, quem: "restaurante de frutos do mar" },
   { id: "churrascaria", ramo: "restaurante", nome: "Churrascaria", tipo: /churras|steak|carnes|espeto|grill/i, nomeLoja: /churras|steak|\bespeto|\bgrill\b/i, quem: "churrascaria" },
   { id: "marmita", ramo: "restaurante", outrosRamos: ["hamburgueria"], nome: "Quentinha", tipo: /self.?service|marmit|quentinh|comida caseira|comida para viagem|\bpf\b/i, nomeLoja: /quentinh|marmit|self.?service|comida caseira|\bpf\b|prato feito|\bbuffet\b|tempero/i,
     quem: "restaurante de comida caseira", noSite: `as quentinhas do dia com foto, os preços e ${PEDIDO_ZAP}` },
@@ -795,10 +820,10 @@ export const SUBNICHOS: Subnicho[] = [
   // Moda
   { id: "calcados", ramo: "moda", nome: "Calçados", tipo: /cal[cç]ad|sapat|t[eê]nis/i, nomeLoja: /cal[cç]ados|sapat|\bshoes?\b/i, quem: "loja de calçados",
     noSite: "os modelos novos com foto, a numeração e um botão que já abre o WhatsApp pra reservar o par" },
-  { id: "esportiva", ramo: "moda", nome: "Moda esportiva", tipo: /esportiv|\bsports?\b|fitness|atl[eé]tic/i, nomeLoja: /\bsports?\b|esporte|fitness|\bfit\b/i, quem: "loja de artigos esportivos" },
+  { id: "esportiva", ramo: "moda", nome: "Moda esportiva", tipo: /esportiv|\bsports?\b|fitness|atl[eé]tic/i, nomeLoja: /\bsports?\b|esporte|fitness/i, quem: "loja de artigos esportivos" },
   { id: "joalheria", ramo: "moda", nome: "Joias e relógios", tipo: /joalh|j[oó]ias?|relojo|rel[oó]gio|bijuter|semijoi/i, nomeLoja: /joias|joalheria|relojoaria|semijoias|bijuterias|\bprata\b/i, quem: "joalheria",
     noSite: "as peças com foto, os preços e um botão que já abre o WhatsApp pra reservar" },
-  { id: "costura", ramo: "moda", nome: "Costura", tipo: /costur|alfaiat|ajustes/i, nomeLoja: /costura|ateli[eê]|alfaiat|ajustes/i, quem: "ateliê de costura",
+  { id: "costura", ramo: "moda", nome: "Costura", tipo: /costur|alfaiat|ajustes/i, nomeLoja: /costura|alfaiat|ajustes/i, quem: "ateliê de costura",
     noSite: "os serviços de costura e ajuste, os prazos e um botão pra pedir orçamento pelo WhatsApp", ondePlaca: " na hora de buscar a peça" },
   // Escola
   { id: "autoescola", ramo: "escola", nome: "Autoescola", tipo: /auto.?escola|cfc|habilita/i, nomeLoja: /auto.?escola|\bcfc\b/i, quem: "autoescola",
@@ -827,7 +852,7 @@ export const SUBNICHOS: Subnicho[] = [
     quem: "pousada", noSite: "os quartos com foto, a localização e um botão pra reservar pelo WhatsApp", ondePlaca: " na recepção" },
   { id: "moveis", ramo: "geral", nome: "Móveis", tipo: /m[oó]veis|sof[aá]|colch|estofad|planejad/i, nomeLoja: /m[oó]veis|\bsof[aá]s?\b|colch|estofad/i, quem: "loja de móveis",
     noSite: "os móveis com foto, os preços e um botão que já abre o WhatsApp", ondePlaca: " no caixa" },
-  { id: "floricultura", ramo: "geral", nome: "Floricultura", tipo: /flor/i, nomeLoja: /\bflor(es|icultura)?\b/i, quem: "floricultura",
+  { id: "floricultura", ramo: "geral", nome: "Floricultura", tipo: /flor/i, nomeLoja: /floricultura|\bflores\b|\bflora\b/i, quem: "floricultura",
     noSite: "os buquês e arranjos com foto e um botão pra encomendar pelo WhatsApp", ondePlaca: " no caixa" },
 ];
 
