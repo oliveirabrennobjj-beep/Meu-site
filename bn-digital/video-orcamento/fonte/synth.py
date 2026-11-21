@@ -92,7 +92,7 @@ def printer(t0, t1, step=0.1, gain=0.05):
         add(click(1800, 0.012), tm, gain * 0.6)
         tm += step
 printer(0.75, 4.05)
-printer(18.95, 24.05, gain=0.035)
+printer(18.95, 23.8, gain=0.035)
 printer(41.0, 41.6, step=0.08, gain=0.03)
 # palavras do gancho
 for i, m in enumerate([57, 61, 64, 66, 64, 69, 73]): add(pluck(m, 0.5), 0.12 + i * 0.09, 0.035, -0.3 + 0.1 * i)
@@ -106,8 +106,9 @@ for c in [13.05, 14.9, 16.75]: add(whoosh(0.32, 600, 3000), c - 0.05, 0.07, 0.3)
 add(pluck(76, 0.5), 7.6, 0.06); add(pluck(81, 0.6), 7.62, 0.035, 0.3)
 for c in [7.8, 8.05]: add(pluck(88, 0.25, 14), c, 0.03, -0.3)
 # checks da lista
-ck = [18.95 + (80 + 78 * (i + 1) + 4) / 130 for i in range(7)]
-for i, c in enumerate(ck): add(pluck([69, 71, 73, 76, 78, 81, 83][i], 0.5), c, 0.06, -0.2 + 0.07 * i)
+ck = [18.95 + (80 + 64 * (i + 1) + 4) / 160 for i in range(10)]
+for i, c in enumerate(ck): add(pluck([69, 71, 73, 74, 76, 78, 80, 81, 83, 85][i], 0.45), c, 0.055, -0.25 + 0.05 * i)
+for i in range(3): add(pluck([81, 85, 88][i], 0.5), 42.5 + i * 0.13, 0.045, -0.3 + 0.3 * i)
 # digitação: busca e domínio
 q = "lanchonete em casimiro de abreu"
 for i in range(len(q)): add(keytap(), 26.55 + 1.3 * (i + 1) / len(q) - 0.02, 0.10, 0.2)

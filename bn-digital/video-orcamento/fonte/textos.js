@@ -35,7 +35,7 @@ window.TEXTOS = {
     { img: "navalha", nome: "Navalha Barbearia", tipo: "Barbearia · agendamento", cor: "#c9a25c" },
   ],
 
-  // cena 4: lista impressa (7 itens)
+  // cena 4: lista impressa (10 itens)
   listaChamada: "O que vem|no seu *site:*",
   listaTitulo: "INCLUSO NO SEU SITE",
   inclusos: [
@@ -46,6 +46,9 @@ window.TEXTOS = {
     "Formulário de contato",
     "SEO básico pro Google",
     "Domínio próprio e cadeado (SSL)",
+    "Manutenção todo mês",
+    "Atualização sempre que precisar",
+    "Acréscimo de produtos",
   ],
 
   // cena 5: busca
@@ -74,6 +77,8 @@ window.TEXTOS = {
   precoRotulo: "ALUGUEL DO SITE",
   precoNota: "O valor depende do|tamanho do site.",
   carimbo: "ORÇA-<br>MENTO",
+  precoInclusoTitulo: "JÁ VEM NO ALUGUEL",
+  precoInclusos: ["Manutenção", "Atualizações", "Produtos novos"],
 
   // placas NFC (depois do preço)
   placaSobretitulo: "E TEM MAIS: PLACAS NFC",

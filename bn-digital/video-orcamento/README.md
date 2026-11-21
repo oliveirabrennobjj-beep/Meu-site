@@ -18,7 +18,7 @@ Vídeo vertical para Reels, 1080×1920, 30 fps, 62 s. Uma impressora imprime o o
 1. Edite `fonte/textos.js` (preço em `precoMin`, `precoMax`; itens em `inclusos`; extras em `extras`).
 2. Gere de novo: `bash fonte/gerar.sh` (uns 8 minutos).
 
-Mantenha 7 itens em `inclusos`, 3 em `extras`, 4 em `sites` e 7 em `placas`: os tempos das animações e dos sons contam com isso.
+Mantenha 10 itens em `inclusos`, 3 em `extras`, 4 em `sites` e 7 em `placas`: os tempos das animações e dos sons contam com isso.
 Para ver uma cena sem gerar tudo: `python3 -m http.server 8765` na raiz do repositório e `python3 fonte/capture.py stills work/stills 12 30 43` (tempos em segundos).
 
 ## Trocar um site da cena 3

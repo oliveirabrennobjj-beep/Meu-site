@@ -67,7 +67,7 @@
   .ls-head { height: 80px; box-sizing: border-box; padding-top: 16px; text-align: center; font-family: "MO", monospace; border-bottom: 2px dashed #a9a9ae; margin: 0 22px; }
   .ls-head b { display: block; font-size: 22px; letter-spacing: .14em; }
   .ls-head span { display: block; font-size: 14px; letter-spacing: .2em; color: #4a4b52; margin-top: 4px; }
-  .ls-row { height: 78px; display: flex; align-items: center; gap: 12px; margin: 0 22px; border-bottom: 1px solid #e4e3dd; }
+  .ls-row { height: 64px; display: flex; align-items: center; gap: 12px; margin: 0 22px; border-bottom: 1px solid #e4e3dd; }
   .ls-row p { flex: 1; margin: 0; font-size: 21px; line-height: 26px; font-weight: 650; }
   .ls-ck { flex: none; width: 38px; height: 38px; border-radius: 50%; background: var(--blue); display: grid; place-items: center; transform: scale(0); }
 
@@ -265,8 +265,13 @@
         </div>
       </div>
     </div>
+    <div class="abs cx" id="s8-inc" style="top:1420px">
+      <div style="font-size:28px; font-weight:800; letter-spacing:.2em; color:var(--blue-l)" id="s8-inc-t"></div>
+      <div id="s8-chips" style="display:flex; justify-content:center; gap:18px; margin-top:22px"></div>
+    </div>
   </section>
 
+  <!-- (fim da cena 8) -->
   <!-- 8b. PLACA DE MESA: ENCOSTA O CELULAR, ABRE O CARDÁPIO -->
   <section class="scene" id="nf1" style="background:radial-gradient(90% 55% at 50% 28%, #12285a 0%, #081534 55%, #030a1c 100%)">
     <div class="abs" style="left:0; right:0; top:1150px; bottom:0; background:linear-gradient(180deg,#6a4529 0%,#4a2e1b 22%,#2a190e 70%,#140b06 100%)">
@@ -489,7 +494,7 @@ SITES.forEach((s) => {
 });
 // cena 4
 $("s4-pr-host").innerHTML = printerHTML("p4", listHTML());
-$("p4").style.left = "-4px"; $("p4").style.top = "1448px"; $("p4").style.transform = "scale(1.6)";
+$("p4").style.left = "30px"; $("p4").style.top = "1458px"; $("p4").style.transform = "scale(1.5)";
 const s4Words = words($("s4-h"), C.listaChamada);
 // cena 5
 const s5Words = words($("s5-h"), C.buscaTitulo, "var(--blue)");
@@ -525,6 +530,11 @@ const s8Words = words($("s8-h"), C.precoChamada);
 $("s8-brand").textContent = C.marca + " · ORÇAMENTO"; $("s8-label").textContent = C.precoRotulo;
 $("s8-p1").textContent = C.precoMin; $("s8-p2").textContent = "a " + C.precoMax; $("s8-p3").textContent = C.precoPeriodoExtenso;
 $("s8-note").innerHTML = rich(C.precoNota); $("s8-stamp-t").innerHTML = C.carimbo;
+$("s8-inc-t").textContent = C.precoInclusoTitulo;
+const s8Chips = C.precoInclusos.map((n) => { const c = document.createElement("span"); c.className = "chip";
+  c.style.cssText = "background:rgba(255,255,255,.1); color:#fff; font-size:34px; box-shadow:inset 0 0 0 2px rgba(77,163,255,.45)";
+  c.innerHTML = `<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#4da3ff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>${n}`;
+  $("s8-chips").appendChild(c); return c; });
 // placas NFC
 $("p1-eyebrow-t").textContent = C.placaSobretitulo; const p1Words = words($("p1-h"), C.placaTitulo);
 $("p1-rest").textContent = C.placaRestaurante; $("p1-aprox").textContent = C.placaAproxime; $("p1-mesa").textContent = C.placaMesa;
@@ -564,8 +574,8 @@ const D9 = 11.45; // a chamada final começa depois das placas NFC
 const T = window.T = { s1: [0, 6.3], s23: [5.75, 18.85], s4: [18.45, 25.95], s5: [25.6, 31.15], s6: [30.75, 35.6], s7: [35.25, 40.25], s8: [39.85, 45.3], p1: [44.8, 51.45], p2: [50.95, 56.7], s9: [44.75 + D9, 62.0] };
 window.DURATION = 62.0;
 const SITE_AT = [11.2, 13.05, 14.9, 16.75], SITE_DUR = 1.85;
-const S4 = { t0: 18.95, step: 0.1, px: 13, max: 680 };
-window.CK_TIMES = C.inclusos.map((_, i) => S4.t0 + (80 + 78 * (i + 1) + 4) / (S4.px / S4.step));
+const S4 = { t0: 18.95, step: 0.1, px: 16, max: 774, row: 64 };
+window.CK_TIMES = C.inclusos.map((_, i) => S4.t0 + (80 + S4.row * (i + 1) + 4) / (S4.px / S4.step));
 
 window.render = function (t) {
   // ===== 1. impressora =====
@@ -655,8 +665,8 @@ window.render = function (t) {
     reveal($("s4"), t, 18.45, 0.4, "down");
     wordsIn(s4Words, t, 18.75, 0.09, 0.45, 50);
     $("s4-cam").style.transform = `scale(${lerp(1.0, 1.035, prog(t, 18.5, 25.9))})`;
-    const L = feed(t, S4.t0, S4.step, S4.px, S4.max), printing = t > S4.t0 && t < 24.05;
-    $("p4").style.transform = `scale(1.6) translateY(${printing ? Math.sin(t * 95) * 0.6 : 0}px)`;
+    const L = feed(t, S4.t0, S4.step, S4.px, S4.max), printing = t > S4.t0 && t < 23.85;
+    $("p4").style.transform = `scale(1.5) translateY(${printing ? Math.sin(t * 95) * 0.6 : 0}px)`;
     $("p4-led").style.boxShadow = `0 0 ${printing ? 26 + 10 * Math.sin(t * 20) : 16}px ${printing ? 8 : 3}px rgba(77,163,255,${printing ? 0.7 : 0.4})`;
     $("p4-paper").style.height = L + "px";
     $("p4-paper").style.transform = `perspective(1100px) rotateX(5deg) rotateZ(${0.35 * Math.sin(t * 1.2)}deg)`;
@@ -716,6 +726,8 @@ window.render = function (t) {
     { const r = inOut(prog(t, 41.0, 41.6)); $("s8-pr").style.clipPath = `inset(0 0 ${(1 - r) * 100}% 0)`; }
     { const p = prog(t, 41.95, 42.12); $("s8-stamp").style.opacity = p > 0 ? 1 : 0;
       $("s8-stamp").style.transform = `rotate(-14deg) scale(${lerp(2.2, 1, outCubic(p))})`;
+      enter($("s8-inc-t"), t, 42.3, 0.4, 20);
+      s8Chips.forEach((c, i) => { const q = prog(t, 42.5 + i * 0.13, 42.9 + i * 0.13); c.style.opacity = clamp(q * 2); c.style.transform = `scale(${lerp(0.7, 1, outBack(q, 2))})`; });
       const sh = prog(t, 42.12, 42.45); $("s8-shake").style.transform = sh > 0 && sh < 1 ? `translate(${Math.sin(sh * 50) * 10 * (1 - sh)}px, ${Math.cos(sh * 44) * 8 * (1 - sh)}px)` : "none"; }
   }
 
