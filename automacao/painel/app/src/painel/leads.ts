@@ -917,7 +917,7 @@ export const TEXTOS_PADRAO: Textos = {
     "Oi, {saudacao}, tudo certo? Aqui é o Brenno, da BN Digital. Sou de Casimiro{pertinho}.\nTô começando {sistemaUm} pra {sistemaQuem}: {sistemaFrase}.\n{sistemaGanho}\nOlha abaixo como ficaria pra {nome}. Se não for a hora, tranquilo, é só falar.",
   depoisAgenda:
     // Sem pergunta no fim: o Brenno manda o print do sistema logo depois.
-    "Ah, e aproveitando: tô começando {sistemaUm} pra {sistemaQuem}. {SistemaFrase}.\n{sistemaGanho}",
+    "Ah, e aproveitando: tô começando {sistemaUm} pra {sistemaQuem}. {SistemaFrase}.\n{sistemaGanho}\nOlha como ficaria pra {nome}:",
   gostou:
     "Que bom que gostou! Consigo te fazer uma demonstração de design, de como vai ficar o site da {nome}, ainda hoje ou amanhã.\nPara você ter uma ideia, olha um que eu já fiz: {exemplo}\nPosso montar e te mandar por aqui?",
 };
