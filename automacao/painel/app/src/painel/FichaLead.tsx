@@ -10,6 +10,7 @@ import {
   ExternalLink,
   Handshake,
   Instagram,
+  Pencil,
   LayoutDashboard,
   MapPin,
   MessageCircle,
@@ -25,6 +26,7 @@ import {
   IconButton,
   InitialsAvatar,
   buttonClass,
+  fieldClass,
 } from "@/components/ui/app-dashboard-shell-utils/app-block-kit";
 import { SegmentedControl, type SegmentOption } from "@/components/ui/dashboard-parts";
 import { cn } from "@/lib/utils";
@@ -47,6 +49,10 @@ import {
   enderecoCurto,
   podeVisitar,
   situacaoZap,
+  lerNumero,
+  numeroDaLoja,
+  numeroVisivel,
+  zapDoLink,
   ramoDe,
   recebeuPedidoDeVisita,
   textoCorrecao,
@@ -98,34 +104,116 @@ function DonoDoCnpj({ lead }: { lead: Lead }) {
 }
 
 /** O que a página pública do WhatsApp Business disse sobre o número (ver `zap` em leads.ts). */
-function ConferenciaZap({ lead }: { lead: Lead }) {
+function ConferenciaZap({
+  lead,
+  onSalvar,
+  avisar,
+}: {
+  lead: Lead;
+  onSalvar: (id: string, mudanca: Partial<Lead>) => void;
+  avisar: (texto: string) => void;
+}) {
+  const [corrigindo, setCorrigindo] = useState(false);
+  const [digitado, setDigitado] = useState("");
   const situacao = situacaoZap(lead);
-  if (!situacao) return null;
+  const numero = numeroVisivel(numeroDaLoja(lead));
   const nome = lead.zap?.nome ?? "";
+  const duvida = situacao === "outroNome" || situacao === "semBusiness";
+  const instagram = instagramDe(lead);
   const [cor, fundo, Icone, texto] =
-    situacao === "conferido"
-      ? (["var(--blk-success)", "var(--blk-success-soft)", BadgeCheck, `WhatsApp conferido: a conta se chama "${nome}".`] as const)
-      : situacao === "outroNome"
-        ? ([
-            "var(--blk-warning)",
-            "var(--blk-warning-soft)",
-            TriangleAlert,
-            `No WhatsApp esse número aparece como "${nome}". Pode ser de outra pessoa: confira no Instagram antes de mandar.`,
-          ] as const)
-        : ([
-            "var(--bjork-text-muted)",
-            "var(--bjork-surface)",
-            CircleHelp,
-            "Esse número não tem WhatsApp Business. Pode ser WhatsApp comum ou número errado: se não entregar, veja o Instagram.",
-          ] as const);
+    situacao === "corrigido"
+      ? (["var(--blk-success)", "var(--blk-success-soft)", BadgeCheck, `Número corrigido por você: ${numero}.`] as const)
+      : situacao === "conferido"
+        ? (["var(--blk-success)", "var(--blk-success-soft)", BadgeCheck, `WhatsApp conferido: a conta se chama "${nome}".`] as const)
+        : situacao === "confirmado"
+          ? ([
+              "var(--blk-success)",
+              "var(--blk-success-soft)",
+              BadgeCheck,
+              zapDoLink(lead)
+                ? `${numero} é o WhatsApp que a própria loja põe na ficha do Google.`
+                : `${numero} está no cadastro do CNPJ da loja.`,
+            ] as const)
+          : situacao === "outroNome"
+            ? ([
+                "var(--blk-warning)",
+                "var(--blk-warning-soft)",
+                TriangleAlert,
+                `Cuidado: no WhatsApp, ${numero} aparece como "${nome}". Pode ser de outra pessoa. Confira no Instagram antes de mandar.`,
+              ] as const)
+            : ([
+                "var(--blk-warning)",
+                "var(--blk-warning-soft)",
+                CircleHelp,
+                `Número não confirmado: ${numero} veio do Google e não tem WhatsApp Business. Pode ser de outra pessoa ou nem ter WhatsApp. Se der "convidar para o WhatsApp", pegue o certo no Instagram.`,
+              ] as const);
+  if (!situacao) return null;
+  const salvar = () => {
+    const n = lerNumero(digitado);
+    if (!n) return avisar("Número inválido: coloque o DDD (ex.: 22 99999-0000)");
+    onSalvar(lead.id, { whatsappCerto: n });
+    avisar(`${lead.nome}: agora as mensagens vão para ${numeroVisivel(n)}`);
+    setCorrigindo(false);
+    setDigitado("");
+  };
   return (
-    <p
-      className="flex items-start gap-2 rounded-[10px] px-3 py-2 text-[12.5px] leading-snug"
-      style={{ background: fundo, color: cor }}
-    >
-      <Icone aria-hidden="true" className="mt-px size-4 shrink-0" />
-      <span className="[overflow-wrap:anywhere]">{texto}</span>
-    </p>
+    <div className="flex flex-col gap-2 rounded-[10px] px-3 py-2" style={{ background: fundo }}>
+      <p className="flex items-start gap-2 text-[12.5px] leading-snug" style={{ color: cor }}>
+        <Icone aria-hidden="true" className="mt-px size-4 shrink-0" />
+        <span className="[overflow-wrap:anywhere]">{texto}</span>
+      </p>
+      {(duvida || situacao === "corrigido") && !corrigindo && (
+        <div className="flex flex-wrap gap-2">
+          {duvida && (
+            <a
+              href={instagram?.url ?? buscaInstagram(lead)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={buttonClass("secondary", "sm")}
+            >
+              {instagram ? <Instagram aria-hidden="true" /> : <Search aria-hidden="true" />}
+              {instagram ? "Ver no Instagram" : "Buscar Instagram"}
+            </a>
+          )}
+          <BlockButton variant="secondary" size="sm" onClick={() => setCorrigindo(true)}>
+            <Pencil aria-hidden="true" />
+            {situacao === "corrigido" ? "Trocar número" : "Corrigir número"}
+          </BlockButton>
+          {situacao === "corrigido" && (
+            <BlockButton
+              variant="ghost"
+              size="sm"
+              onClick={() => {
+                onSalvar(lead.id, { whatsappCerto: null });
+                avisar(`${lead.nome}: voltou para o número do Google`);
+              }}
+            >
+              Voltar ao do Google
+            </BlockButton>
+          )}
+        </div>
+      )}
+      {corrigindo && (
+        <div className="flex flex-wrap gap-2">
+          <input
+            autoFocus
+            inputMode="tel"
+            value={digitado}
+            onChange={(e) => setDigitado(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && salvar()}
+            placeholder="WhatsApp certo, com DDD"
+            aria-label="WhatsApp certo da loja, com DDD"
+            className={cn(fieldClass, "h-9 min-w-0 flex-1 text-[13.5px]")}
+          />
+          <BlockButton size="sm" onClick={salvar}>
+            Salvar
+          </BlockButton>
+          <BlockButton variant="ghost" size="sm" onClick={() => setCorrigindo(false)}>
+            Cancelar
+          </BlockButton>
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -418,7 +506,7 @@ function Conteudo({
           )}
         </dl>
 
-        <ConferenciaZap lead={lead} />
+        <ConferenciaZap lead={lead} onSalvar={onSalvar} avisar={avisar} />
 
         {tirada && (
           <div className="flex flex-col gap-2 rounded-[12px] border border-[color:var(--bjork-border-strong)] bg-[var(--bjork-surface)] p-3">
@@ -726,7 +814,7 @@ function RoteiroPresencial({ placa }: { placa: boolean }) {
 function SobreALoja({ lead }: { lead: Lead }) {
   const instagram = instagramDe(lead);
   const pagina = paginaDe(lead);
-  const temWhatsApp = /\d/.test(lead.whatsapp);
+  const temWhatsApp = /\d/.test(numeroDaLoja(lead));
   const outro = (lead.outroWhatsapp ?? "").replace(/\D/g, "");
   const quantos = 2 + (pagina ? 1 : 0) + (temWhatsApp ? 1 : 0) + (outro ? 1 : 0);
   const atalho = buttonClass("secondary", "md", "min-w-0 px-2.5 text-[13px]");

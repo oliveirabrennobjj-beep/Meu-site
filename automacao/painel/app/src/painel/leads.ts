@@ -66,21 +66,61 @@ export interface Lead {
   enviadoPara?: "dono" | "loja";
   /** Quando a situação virou "respondeu" pela primeira vez (para saber em que dia e hora respondem). */
   respostaEm?: string;
+  /** Número certo que o Brenno achou (Instagram, cliente) quando o do Google estava errado; vale para todo envio. */
+  whatsappCerto?: string | null;
+  /** O WhatsApp da loja é um dos telefones do CNPJ dela (cadastro público da Receita). */
+  telNoCnpj?: boolean;
 }
 
 /* Conferência do WhatsApp ---------------------------------------------------------------------- */
 
-export type SituacaoZap = "conferido" | "outroNome" | "semBusiness";
+/**
+ * - corrigido: o Brenno trocou pelo número certo;
+ * - conferido: a conta do WhatsApp Business tem o nome da loja;
+ * - confirmado: o número está no link de WhatsApp da própria loja (ficha do Maps) ou no CNPJ dela;
+ * - outroNome: a conta do WhatsApp Business tem outro nome (pode ser de outra pessoa);
+ * - semBusiness: sem conta Business e sem outra confirmação (pode não ter WhatsApp).
+ */
+export type SituacaoZap = "corrigido" | "conferido" | "confirmado" | "outroNome" | "semBusiness";
+
+/** Número que a própria loja pôs no link de WhatsApp da ficha do Maps (wa.me ou api.whatsapp.com). */
+export function zapDoLink(lead: Lead) {
+  const m = (lead.link ?? "").match(/(?:wa\.me\/|whatsapp\.com\/send\/?\?phone=)\+?(\d{10,13})/i);
+  if (!m) return null;
+  const n = m[1].startsWith("55") ? m[1] : `55${m[1]}`;
+  return /^55\d{10,11}$/.test(n) ? n : null;
+}
+
+/** Celular ou fixo do Brasil digitado de qualquer jeito → 55DDXXXXXXXXX; null se faltar o DDD. */
+export function lerNumero(texto: string) {
+  let n = texto.replace(/\D/g, "").replace(/^0+/, "");
+  if (n.length === 10 || n.length === 11) n = `55${n}`;
+  return /^55[1-9]\d(9\d{8}|[2-5]\d{7})$/.test(n) ? n : null;
+}
+
+/** Número da loja para mandar mensagem: o que o Brenno corrigiu, o do link da loja ou o do Google. */
+export const numeroDaLoja = (lead: Lead) =>
+  lead.whatsappCerto || (lead.zap?.confere ? lead.whatsapp : zapDoLink(lead) || lead.whatsapp);
+
+/** (22) 99743-1349 */
+export function numeroVisivel(n: string) {
+  const d = n.replace(/\D/g, "").replace(/^55/, "");
+  return d.length >= 10 ? `(${d.slice(0, 2)}) ${d.slice(2, -4)}-${d.slice(-4)}` : d;
+}
 
 export function situacaoZap(lead: Lead): SituacaoZap | null {
+  if (lead.whatsappCerto) return "corrigido";
+  if (lead.zap?.nome && lead.zap.confere) return "conferido";
+  if (zapDoLink(lead) || lead.telNoCnpj) return "confirmado";
   if (!lead.zap) return null;
-  if (!lead.zap.nome) return "semBusiness";
-  return lead.zap.confere ? "conferido" : "outroNome";
+  return lead.zap.nome ? "outroNome" : "semBusiness";
 }
 
 /** Na fila, número conferido vem antes; número com nome de outra conta vai pro fim. */
 const PESO_ZAP: Record<SituacaoZap | "naoConferido", number> = {
+  corrigido: 0,
   conferido: 0,
+  confirmado: 0,
   naoConferido: 1,
   semBusiness: 2,
   outroNome: 3,
@@ -1162,7 +1202,7 @@ export function textoMensagem(textos: Textos, lead: Lead, oferta: Oferta, agora 
   return preencher(textos, chaveTexto(lead, oferta), lead, agora);
 }
 
-export function linkWhatsApp(lead: Lead, texto: string, para: string = lead.whatsapp) {
+export function linkWhatsApp(lead: Lead, texto: string, para: string = numeroDaLoja(lead)) {
   const numero = String(para ?? "").replace(/\D/g, "");
   return `https://wa.me/${numero}?text=${encodeURIComponent(texto)}`;
 }
@@ -1275,7 +1315,7 @@ export const donoConhecido = (lead: Lead) => Boolean(lead.dono?.whatsapp || lead
 
 /** Número da conversa: o do dono quando a última mensagem foi pra ele. */
 export const numeroConversa = (lead: Lead) =>
-  (lead.enviadoPara === "dono" && lead.dono?.whatsapp) || lead.whatsapp;
+  (lead.enviadoPara === "dono" && lead.dono?.whatsapp) || numeroDaLoja(lead);
 
 /** Mensagem falando com o dono pelo nome: "Oi, Ana, boa tarde…". */
 export function paraODono(texto: string, lead: Lead) {
@@ -1317,6 +1357,7 @@ export function lerImportacao(texto: string, existentes: Iterable<string>): Lead
       ...(lerZap(x.zap) ? { zap: lerZap(x.zap)! } : {}),
       ...(lerFoto(x.foto) ? { foto: lerFoto(x.foto)! } : {}),
       ...(lerDono(x.dono) ? { dono: lerDono(x.dono)! } : {}),
+      ...(x.telNoCnpj === true ? { telNoCnpj: true } : {}),
       status: "novo",
       criado: agora,
     });

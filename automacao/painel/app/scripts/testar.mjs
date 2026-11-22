@@ -122,6 +122,10 @@ for (const [i, nome, tipo] of [[3, MASSO, "Salão de beleza"], [4, CT, "Academia
     // Contato do dono pelo cadastro do CNPJ: celular dele (aquário) e WhatsApp da loja que já é dele (dentista).
     ...(nome === AQUARIO ? { dono: { nome: "Ana", whatsapp: "5522988887777", em: "2026-11-20T00:00:00.000Z" } } : {}),
     ...(nome === DENTISTA ? { dono: { nome: "Rui", mesmo: true, em: "2026-11-20T00:00:00.000Z" } } : {}),
+    // Caso Raffus (22/11): número do Google sem WhatsApp Business; o certo estava no Instagram.
+    ...(nome === PESCA
+      ? { zap: { nome: "", confere: false, em: "2026-11-20T00:00:00.000Z" }, link: "https://www.instagram.com/pesca_teste/" }
+      : {}),
   });
 }
 
@@ -456,6 +460,22 @@ try {
     await p.getByRole("dialog").getByRole("button", { name: "Fechar ficha" }).click();
   }
   await p.evaluate(() => (window.__escritas.length = 0));
+
+  // Número não confirmado: aviso com Instagram e "Corrigir número"; depois disso todo envio vai pro número certo.
+  {
+    await p.getByRole("button", { name: PESCA, exact: true }).click();
+    const ficha = p.getByRole("dialog");
+    await ficha.getByText(/Número não confirmado: \(22\) [\d-]+ veio do Google/).waitFor();
+    assert.equal(await ficha.getByRole("link", { name: "Ver no Instagram" }).getAttribute("href"), "https://www.instagram.com/pesca_teste/");
+    await ficha.getByRole("button", { name: "Corrigir número" }).click();
+    await ficha.getByLabel("WhatsApp certo da loja, com DDD").fill("(22) 99743-1349");
+    await ficha.getByRole("button", { name: "Salvar", exact: true }).click();
+    assert.equal((await p.evaluate(() => window.__escritas)).at(-1).dados.whatsappCerto, "5522997431349");
+    await ficha.getByText("Número corrigido por você: (22) 99743-1349.").waitFor();
+    assert.match(await ficha.getByRole("link", { name: "Enviar no WhatsApp" }).getAttribute("href"), /^https:\/\/wa\.me\/5522997431349\?text=/);
+    await p.screenshot({ path: path.join(saida, "celular-numero-corrigido.png") });
+    await ficha.getByRole("button", { name: "Fechar ficha" }).click();
+  }
 
   // Dono pelo CNPJ: mensagem pro celular dele chamando pelo nome; a da loja fica como segunda opção.
   {

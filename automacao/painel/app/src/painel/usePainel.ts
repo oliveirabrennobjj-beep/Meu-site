@@ -220,7 +220,14 @@ export function usePainel(avisar: (texto: string) => void) {
     if (fase !== "pronto" || !doServidor || !db || pesquisaFeita.current) return;
     pesquisaFeita.current = true;
     (async () => {
-      let arquivo: { lote?: unknown; leads?: unknown; conferencia?: unknown; fotos?: unknown; donos?: unknown };
+      let arquivo: {
+        lote?: unknown;
+        leads?: unknown;
+        conferencia?: unknown;
+        fotos?: unknown;
+        donos?: unknown;
+        telCnpj?: unknown;
+      };
       try {
         const resposta = await fetch("pesquisa/lote.json", { cache: "no-store" });
         if (!resposta.ok) return;
@@ -261,6 +268,9 @@ export function usePainel(avisar: (texto: string) => void) {
       const fotos = arquivo.fotos && typeof arquivo.fotos === "object" ? (arquivo.fotos as Record<string, unknown>) : {};
       // Contato do dono achado no cadastro do CNPJ ({whatsapp da loja: {nome, whatsapp, mesmo}}).
       const donos = arquivo.donos && typeof arquivo.donos === "object" ? (arquivo.donos as Record<string, unknown>) : {};
+      // WhatsApp da loja que é telefone do CNPJ dela ({whatsapp: true}): número confirmado.
+      const telCnpj =
+        arquivo.telCnpj && typeof arquivo.telCnpj === "object" ? (arquivo.telCnpj as Record<string, unknown>) : {};
       const conferir = leads.flatMap((l) => {
         const zap = lerZap(conferencia[l.whatsapp]);
         const foto = lerFoto(fotos[l.whatsapp]);
@@ -269,6 +279,7 @@ export function usePainel(avisar: (texto: string) => void) {
           ...(zap && zap.em !== l.zap?.em ? { zap } : {}),
           ...(foto && foto !== l.foto ? { foto } : {}),
           ...(dono && dono.em !== l.dono?.em ? { dono } : {}),
+          ...(telCnpj[l.whatsapp] === true && !l.telNoCnpj ? { telNoCnpj: true } : {}),
         };
         return Object.keys(mudanca).length ? [{ id: l.id, mudanca }] : [];
       });
