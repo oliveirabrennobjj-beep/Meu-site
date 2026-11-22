@@ -280,7 +280,9 @@ export function falta(alvo: Date, agora = agoraSP()) {
 
 /** Ocupa a agenda: o que ainda vai acontecer (ou aconteceu) de fato. */
 export const ocupa = (c: Compromisso) =>
-  !c.apagado && !c.legado && (c.status === "agendado" || c.status === "confirmado" || c.status === "realizado");
+  !c.apagado &&
+  !c.legado &&
+  (c.status === "agendado" || c.status === "confirmado" || c.status === "remarcado" || c.status === "realizado");
 
 /** Compromissos que batem com este (contando a folga de deslocamento antes e depois). */
 export function conflitos(
@@ -397,7 +399,9 @@ export function preencherModelo(
 
 /* Painel "Hoje" --------------------------------------------------------------------------------- */
 
-const vivo = (c: Compromisso) => !c.apagado && (c.status === "agendado" || c.status === "confirmado");
+/** Ainda vai acontecer: agendado, confirmado ou remarcado (com data nova). */
+export const vivo = (c: Compromisso) =>
+  !c.apagado && (c.status === "agendado" || c.status === "confirmado" || c.status === "remarcado");
 
 /** Combinados antigos (`lead.compromisso`) aparecem na agenda como itens de retorno. */
 export function combinadosAntigos(leads: Lead[], cfg: ConfigAgenda): Compromisso[] {
@@ -447,16 +451,22 @@ export function proximo(todos: Compromisso[], agora = agoraSP()) {
   );
 }
 
-/** Lembretes a mandar: compromissos dentro da janela do maior lembrete que ainda não receberam lembrete. */
+/**
+ * Lembretes a mandar agora: para cada horário dentro de algum aviso (ex.: 1 dia e 1 hora antes), o aviso
+ * mais próximo que ainda não foi mandado. Até 2 h antes vai o "lembrete"; antes disso, a "confirmação".
+ */
 export function lembretesParaEnviar(todos: Compromisso[], cfg: ConfigAgenda, agora = agoraSP()) {
-  const janela = Math.max(...cfg.lembretes) * 60_000;
   return todos
-    .filter((c) => vivo(c) && !c.legado && !c.avisos.lembrete && !c.avisos.confirmacao)
-    .filter((c) => {
-      const t = inicioDe(c).getTime() - agora.getTime();
-      return t > 0 && t <= janela;
+    .filter((c) => vivo(c) && !c.legado)
+    .flatMap((c) => {
+      const min = (inicioDe(c).getTime() - agora.getTime()) / 60_000;
+      if (min <= 0) return [];
+      const devidos = cfg.lembretes.filter((l) => min <= l);
+      if (!devidos.length) return [];
+      const modelo: ModeloId = Math.min(...devidos) <= 120 ? "lembrete" : "confirmacao";
+      return c.avisos[modelo] ? [] : [{ c, modelo }];
     })
-    .sort(porHorario);
+    .sort((a, b) => porHorario(a.c, b.c));
 }
 
 /** Lojas que responderam ou pediram pra falar depois e não têm nada marcado pra frente. */
@@ -464,11 +474,14 @@ export function precisamDeRetorno(leads: Lead[], todos: Compromisso[], agora = a
   const comFuturo = new Set(
     todos.filter((c) => vivo(c) && inicioDe(c).getTime() >= agora.getTime() - 3_600_000).map((c) => c.leadId),
   );
-  const remarcados = new Set(todos.filter((c) => !c.apagado && c.status === "remarcado").map((c) => c.leadId));
+  // Cancelou ou não veio e não remarcou: tem que combinar de novo.
+  const perdidos = new Set(
+    todos.filter((c) => !c.apagado && (c.status === "cancelado" || c.status === "faltou")).map((c) => c.leadId),
+  );
   return leads.filter(
     (l) =>
       !comFuturo.has(l.id) &&
-      (remarcados.has(l.id) || statusDe(l) === "respondeu" || statusDe(l) === "depois"),
+      (perdidos.has(l.id) || statusDe(l) === "respondeu" || statusDe(l) === "depois"),
   );
 }
 
