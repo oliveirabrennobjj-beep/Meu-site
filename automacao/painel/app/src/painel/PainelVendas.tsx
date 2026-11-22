@@ -32,9 +32,14 @@ import { cn } from "@/lib/utils";
 import { FichaLead } from "./FichaLead";
 import { Importar, Mensagens } from "./Ferramentas";
 import { Agenda } from "./Agenda";
+import { combinadosAntigos, deHoje, leadDo, type Compromisso, type ModeloId } from "./agenda";
+import { AgendaDaLoja, CompromissoFicha } from "./CompromissoFicha";
+import { CompromissoForm, type Rascunho } from "./CompromissoForm";
+import { ConfigAgendaFolha } from "./ConfigAgendaFolha";
+import { HojeAgenda } from "./HojeAgenda";
+import { QuandoRespondem } from "./QuandoRespondem";
 import { Assistente } from "./Assistente";
 import { Funil } from "./Funil";
-import { ProximosPassos } from "./ProximosPassos";
 import { TabelaLeads } from "./TabelaLeads";
 import {
   META_DIA,
@@ -93,8 +98,23 @@ export function PainelVendas() {
     return () => window.clearTimeout(timer);
   }, [aviso]);
 
-  const { leads: todos, textos, conversa, fase, lento, erro, salvar, salvarMensagens, salvarConversa, importar } =
-    usePainel(avisar);
+  const {
+    leads: todos,
+    textos,
+    conversa,
+    fase,
+    lento,
+    erro,
+    salvar,
+    salvarMensagens,
+    salvarConversa,
+    importar,
+    compromissos,
+    configAgenda,
+    salvarCompromisso,
+    salvarConfigAgenda,
+    exemplosAgenda,
+  } = usePainel(avisar);
   // Loja tirada da lista (número sem WhatsApp, loja que não existe mais) some das telas e das contagens.
   const leads = useMemo(() => todos.filter(naLista), [todos]);
   const tiradas = useMemo(() => todos.filter((l) => !naLista(l)), [todos]);
@@ -106,6 +126,9 @@ export function PainelVendas() {
   const [nichoEscolhido, setNichoEscolhido] = useState<string | null>(null);
   const [consulta, setConsulta] = useState("");
   const [fichaId, setFichaId] = useState<string | null>(null);
+  const [rascunho, setRascunho] = useState<Rascunho | null>(null);
+  const [compromissoId, setCompromissoId] = useState<string | null>(null);
+  const [ajustesAgenda, setAjustesAgenda] = useState(false);
   const mainRef = useRef<HTMLElement>(null);
 
   const carregando = fase === "carregando";
@@ -173,7 +196,8 @@ export function PainelVendas() {
       {
         id: "enviado",
         label: "Enviados",
-        value: v(n.enviado),
+        // Todo mundo que já recebeu mensagem, inclusive quem respondeu depois.
+        value: v(contatados),
         chip: `${hoje > 0 ? "+" : ""}${hoje} hoje`,
         trend: hoje > 0 ? "up" : "none",
         tone: hoje > 0 ? "good" : "neutral",
@@ -182,7 +206,8 @@ export function PainelVendas() {
       {
         id: "respondeu",
         label: "Responderam",
-        value: v(n.respondeu),
+        // Qualquer resposta (interesse, fechou, depois ou não): o mesmo grupo da porcentagem.
+        value: v(comResposta),
         chip: fmtPct(comResposta, contatados),
         trend: comResposta > 0 ? "up" : "none",
         tone: comResposta > 0 ? "good" : "neutral",
@@ -253,7 +278,25 @@ export function PainelVendas() {
     setConsulta("");
   };
 
-  const marcados = leads.filter((l) => l.compromisso).length;
+  // Agenda: horários marcados mais os combinados antigos anotados nas lojas.
+  const agenda = useMemo(
+    () => [...compromissos, ...combinadosAntigos(todos, configAgenda)],
+    [compromissos, todos, configAgenda],
+  );
+  const porId = useMemo(() => new Map(todos.map((l) => [l.id, l])), [todos]);
+  const deHojeN = deHoje(agenda).length;
+  const compromisso = useMemo(() => agenda.find((c) => c.id === compromissoId) ?? null, [agenda, compromissoId]);
+  const abrirCompromisso = (c: Compromisso) => {
+    setFichaId(null);
+    setCompromissoId(c.id);
+  };
+  const novoHorario = (r: Rascunho) => {
+    setFichaId(null);
+    setCompromissoId(null);
+    setRascunho(r);
+  };
+  const avisado = (c: Compromisso, modelo: ModeloId) =>
+    salvarCompromisso({ ...c, avisos: { ...c.avisos, [modelo]: new Date().toISOString() } });
 
   const nav: ShellNavGroup[] = [
     {
@@ -275,7 +318,7 @@ export function PainelVendas() {
           id: "agenda",
           label: "Agenda",
           icon: CalendarDays,
-          badge: marcados ? String(marcados) : undefined,
+          badge: deHojeN ? String(deHojeN) : undefined,
         },
         { id: "funil", label: "Funil", icon: Workflow },
       ],
@@ -437,6 +480,57 @@ export function PainelVendas() {
             onSalvar={salvar}
             onAbrir={(lead) => setFichaId(lead.id)}
             avisar={avisar}
+            agenda={(lead) => (
+              <AgendaDaLoja
+                lead={lead}
+                lista={agenda.filter((c) => c.leadId === lead.id && !c.legado)}
+                cfg={configAgenda}
+                compromissos={agenda}
+                onAgendar={() => novoHorario({ leadId: lead.id })}
+                onAbrir={abrirCompromisso}
+                avisar={avisar}
+              />
+            )}
+          />
+          <CompromissoForm
+            rascunho={rascunho}
+            leads={todos}
+            compromissos={agenda}
+            cfg={configAgenda}
+            onFechar={() => setRascunho(null)}
+            onSalvar={(c, deLegado) => {
+              salvarCompromisso(c);
+              // Combinado antigo que virou horário marcado sai da loja, para não aparecer duas vezes.
+              if (deLegado) salvar(deLegado, { compromisso: null });
+              setRascunho(null);
+              setCompromissoId(c.id);
+              avisar(`Marcado: ${leadDo(c, porId)?.nome ?? "cliente"}, ${c.data.split("-").reverse().join("/")} às ${c.hora}`);
+            }}
+          />
+          <CompromissoFicha
+            compromisso={compromisso}
+            lead={compromisso ? leadDo(compromisso, porId) : null}
+            compromissos={agenda}
+            cfg={configAgenda}
+            onFechar={() => setCompromissoId(null)}
+            onSalvar={salvarCompromisso}
+            onFormulario={novoHorario}
+            onAbrirLead={
+              compromisso && porId.has(compromisso.leadId)
+                ? (lead) => {
+                    setCompromissoId(null);
+                    setFichaId(lead.id);
+                  }
+                : null
+            }
+            onDesmarcarLegado={(id) => salvar(id, { compromisso: null })}
+            avisar={avisar}
+          />
+          <ConfigAgendaFolha
+            aberta={ajustesAgenda}
+            cfg={configAgenda}
+            onFechar={() => setAjustesAgenda(false)}
+            onSalvar={salvarConfigAgenda}
           />
           <div role="status" aria-live="polite" className="pointer-events-none absolute inset-x-0 bottom-6 z-50">
             {aviso && (
@@ -466,7 +560,7 @@ export function PainelVendas() {
             </h1>
             <p className="mt-2 text-[13px] text-[color:var(--bjork-text-muted)]">
               {vista === "agenda"
-                ? "O que ficou combinado com cada loja, dia a dia"
+                ? "Visitas, reuniões e ligações marcadas com cada cliente"
                 : vista === "funil"
                 ? "Em que etapa cada loja está agora"
                 : vista === "assistente"
@@ -508,7 +602,17 @@ export function PainelVendas() {
           />
         )}
 
-        {vista === "agenda" && <Agenda leads={leads} onAbrir={(lead) => setFichaId(lead.id)} />}
+        {vista === "agenda" && (
+          <Agenda
+            leads={todos}
+            agenda={agenda}
+            cfg={configAgenda}
+            onNovo={novoHorario}
+            onAbrir={abrirCompromisso}
+            onConfig={() => setAjustesAgenda(true)}
+            onExemplos={exemplosAgenda}
+          />
+        )}
 
         {vista === "funil" && (
           <Funil
@@ -523,6 +627,8 @@ export function PainelVendas() {
           />
         )}
 
+        {vista === "funil" && <QuandoRespondem leads={leads} />}
+
         {vista === "mensagens" && (
           <Mensagens textos={textos} leads={leads} onSalvar={salvarMensagens} />
         )}
@@ -531,7 +637,17 @@ export function PainelVendas() {
 
         {vista === "geral" && (
           <>
-            <ProximosPassos leads={leads} onAbrir={(lead) => setFichaId(lead.id)} />
+            <HojeAgenda
+              leads={leads}
+              agenda={agenda}
+              cfg={configAgenda}
+              onNovo={novoHorario}
+              onAbrir={abrirCompromisso}
+              onVerAgenda={() => navegar("agenda")}
+              onAbrirLead={(lead) => setFichaId(lead.id)}
+              onAvisado={avisado}
+              avisar={avisar}
+            />
 
             <section
               aria-label="Indicadores"

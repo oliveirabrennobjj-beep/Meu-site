@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import {
   ArrowRight,
   BadgeCheck,
@@ -189,6 +189,7 @@ export function FichaLead({
   onSalvar,
   onAbrir,
   avisar,
+  agenda,
 }: {
   lead: Lead | null;
   textos: Textos;
@@ -198,6 +199,8 @@ export function FichaLead({
   onSalvar: (id: string, mudanca: Partial<Lead>) => void;
   onAbrir: (lead: Lead) => void;
   avisar: (texto: string) => void;
+  /** Seção da agenda dessa loja (próximo horário, agendar, pedir horário). */
+  agenda?: (lead: Lead) => ReactNode;
 }) {
   // Guarda o último comércio para o conteúdo não sumir enquanto a ficha desce.
   const [mostrado, setMostrado] = useState(lead);
@@ -223,6 +226,7 @@ export function FichaLead({
           onSalvar={onSalvar}
           onAbrir={onAbrir}
           avisar={avisar}
+          agenda={agenda}
         />
       )}
     </BlockDrawer>
@@ -237,6 +241,7 @@ function Conteudo({
   onSalvar,
   onAbrir,
   avisar,
+  agenda,
 }: {
   lead: Lead;
   textos: Textos;
@@ -245,6 +250,7 @@ function Conteudo({
   onSalvar: (id: string, mudanca: Partial<Lead>) => void;
   onAbrir: (lead: Lead) => void;
   avisar: (texto: string) => void;
+  agenda?: (lead: Lead) => ReactNode;
 }) {
   const status = statusDe(lead);
   const novo = status === "novo";
@@ -681,6 +687,8 @@ function Conteudo({
             </div>
           </fieldset>
         )}
+
+        {agenda?.(lead)}
 
         <Anotar lead={lead} onSalvar={onSalvar} avisar={avisar} />
       </div>
