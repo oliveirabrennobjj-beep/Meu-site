@@ -50,7 +50,7 @@ const MESES = [
   "janeiro", "fevereiro", "março", "abril", "maio", "junho",
   "julho", "agosto", "setembro", "outubro", "novembro", "dezembro",
 ];
-const HORA_PX = 52;
+const HORA_PX = 60;
 const GUARDA = "agenda.vista";
 
 function vistaGuardada(): Vista {
@@ -140,7 +140,7 @@ export function Agenda({
           : "Próximos horários";
   const temExemplos = agenda.some((c) => c.exemplo);
 
-  const select = cn(fieldClass, "h-9 w-auto min-w-0 flex-1 rounded-[9px] pr-7 text-[13px] @md:flex-none");
+  const select = cn(fieldClass, "h-9 min-w-0 truncate rounded-[9px] pl-2.5 pr-6 text-[13px]");
 
   return (
     <div className="flex flex-col gap-3">
@@ -187,9 +187,9 @@ export function Agenda({
             />
           </label>
         )}
-        <div className="flex w-full gap-1.5 @3xl:ml-auto @3xl:w-auto">
+        <div className="grid w-full grid-cols-[repeat(3,minmax(0,1fr))] gap-1.5 @3xl:ml-auto @3xl:w-[480px]">
           <select aria-label="Filtrar por tipo" value={tipo} onChange={(e) => setTipo(e.target.value as TipoCompromisso | "")} className={select}>
-            <option value="">Todos os tipos</option>
+            <option value="">Todo tipo</option>
             {TIPOS_ORDEM.map((t) => (
               <option key={t} value={t}>
                 {TIPOS[t].curto}
@@ -197,7 +197,7 @@ export function Agenda({
             ))}
           </select>
           <select aria-label="Filtrar por serviço" value={servico} onChange={(e) => setServico(e.target.value as ServicoCompromisso | "")} className={select}>
-            <option value="">Todos os serviços</option>
+            <option value="">Todo serviço</option>
             {(Object.keys(SERVICOS) as ServicoCompromisso[]).map((s) => (
               <option key={s} value={s}>
                 {SERVICOS[s]}
@@ -205,8 +205,8 @@ export function Agenda({
             ))}
           </select>
           <select aria-label="Filtrar por situação" value={status} onChange={(e) => setStatus(e.target.value as typeof status)} className={select}>
-            <option value="ativos">Sem cancelados</option>
-            <option value="todos">Todas as situações</option>
+            <option value="ativos">Ativos</option>
+            <option value="todos">Todos, até cancelados</option>
             {STATUS_COMPROMISSO_ORDEM.map((s) => (
               <option key={s} value={s}>
                 {STATUS_COMPROMISSO[s].nome}
@@ -263,18 +263,30 @@ export function Agenda({
   );
 }
 
-/** Colunas lado a lado para horários que se sobrepõem no mesmo dia. */
+/** Colunas lado a lado só onde os horários se sobrepõem (cada grupo de sobreposição tem as suas). */
 function faixas(lista: Compromisso[]) {
-  const fins: number[] = [];
-  const lane = new Map<string, number>();
-  for (const c of lista.filter((x) => !x.semHora)) {
+  const pos = new Map<string, { lane: number; total: number }>();
+  const ordem = lista.filter((x) => !x.semHora).sort((a, b) => minutosDe(a.hora) - minutosDe(b.hora));
+  let grupo: Compromisso[] = [];
+  let fins: number[] = [];
+  let fimGrupo = -1;
+  const fechar = () => grupo.forEach((c) => (pos.get(c.id)!.total = fins.length));
+  for (const c of ordem) {
     const ini = minutosDe(c.hora);
+    if (ini >= fimGrupo) {
+      fechar();
+      grupo = [];
+      fins = [];
+    }
     let i = fins.findIndex((f) => f <= ini);
     if (i < 0) i = fins.push(0) - 1;
     fins[i] = ini + c.duracao;
-    lane.set(c.id, i);
+    fimGrupo = Math.max(fimGrupo, ini + c.duracao);
+    grupo.push(c);
+    pos.set(c.id, { lane: i, total: 1 });
   }
-  return { lane, total: Math.max(1, fins.length) };
+  fechar();
+  return pos;
 }
 
 function Semana({
@@ -306,7 +318,7 @@ function Semana({
 
   return (
     <section aria-label="Semana" className={cn(cardSurface, "overflow-x-auto overscroll-x-contain")}>
-      <div className="grid min-w-[700px]" style={{ gridTemplateColumns: "46px repeat(7, minmax(92px, 1fr))" }}>
+      <div className="grid min-w-[872px]" style={{ gridTemplateColumns: "46px repeat(7, minmax(118px, 1fr))" }}>
         <div className="sticky left-0 z-20 border-b border-[color:var(--bjork-border)] bg-[var(--bjork-surface)]" />
         {dias.map((d, i) => {
           const k = chaves[i];
@@ -356,7 +368,7 @@ function Semana({
         {dias.map((d, i) => {
           const k = chaves[i];
           const lista = (porDia.get(k) ?? []).filter((c) => !c.semHora);
-          const { lane, total } = faixas(lista);
+          const pos = faixas(lista);
           return (
             <div
               key={k}
@@ -378,7 +390,8 @@ function Semana({
               {lista.map((c) => {
                 const top = ((minutosDe(c.hora) - ini * 60) / 60) * HORA_PX;
                 const altura = Math.max((c.duracao / 60) * HORA_PX - 2, 24);
-                const l = lane.get(c.id) ?? 0;
+                const { lane: l, total } = pos.get(c.id) ?? { lane: 0, total: 1 };
+                const curto = altura < 40;
                 const cor = cfg.cores[c.tipo];
                 const caiu = c.status === "cancelado" || c.status === "faltou";
                 const Icone = TIPO_ICONE[c.tipo];
@@ -402,13 +415,16 @@ function Semana({
                       background: `color-mix(in srgb, ${cor} 14%, var(--bjork-surface))`,
                     }}
                   >
-                    <span className="flex items-center gap-1 font-mono text-[10.5px] font-semibold tabular-nums" style={{ color: cor }}>
-                      <Icone aria-hidden="true" className="size-3 shrink-0" />
+                    <span className="flex min-w-0 items-center gap-1 font-mono text-[10.5px] font-semibold tabular-nums" style={{ color: cor }}>
+                      {total < 3 && <Icone aria-hidden="true" className="size-3 shrink-0" />}
                       {c.hora}
-                      {c.status === "confirmado" && <span aria-hidden="true" className="ml-auto size-1.5 rounded-full bg-[var(--blk-success)]" />}
-                      {c.status === "remarcado" && <span aria-hidden="true" className="ml-auto size-1.5 rounded-full bg-[var(--blk-warning)]" />}
+                      {c.status === "confirmado" && <span aria-hidden="true" className="size-1.5 shrink-0 rounded-full bg-[var(--blk-success)]" />}
+                      {c.status === "remarcado" && <span aria-hidden="true" className="size-1.5 shrink-0 rounded-full bg-[var(--blk-warning)]" />}
+                      {curto && (
+                        <span className="min-w-0 truncate font-sans text-[11px] font-medium text-[color:var(--bjork-text)]">{nomeDe(c)}</span>
+                      )}
                     </span>
-                    <span className="block truncate text-[11.5px] font-medium text-[color:var(--bjork-text)]">{nomeDe(c)}</span>
+                    {!curto && <span className="block truncate text-[11.5px] font-medium text-[color:var(--bjork-text)]">{nomeDe(c)}</span>}
                   </button>
                 );
               })}

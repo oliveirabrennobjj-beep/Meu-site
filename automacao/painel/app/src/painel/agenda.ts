@@ -86,12 +86,12 @@ export const PRIORIDADES: Record<Prioridade, string> = { alta: "Alta", media: "M
 
 /** Rótulo e cor da etiqueta de status (verde confirmado, amarelo remarcado, vermelho cancelado/faltou). */
 export const STATUS_COMPROMISSO: Record<StatusCompromisso, { nome: string; cor: string; fundo: string }> = {
-  agendado: { nome: "Agendado", cor: "#1d4ed8", fundo: "#dbeafe" },
-  confirmado: { nome: "Confirmado", cor: "#15803d", fundo: "#dcfce7" },
-  realizado: { nome: "Realizado", cor: "#166534", fundo: "#bbf7d0" },
-  remarcado: { nome: "Remarcado", cor: "#a16207", fundo: "#fef3c7" },
-  cancelado: { nome: "Cancelado", cor: "#b91c1c", fundo: "#fee2e2" },
-  faltou: { nome: "Não compareceu", cor: "#b91c1c", fundo: "#fee2e2" },
+  agendado: { nome: "Agendado", cor: "var(--blk-accent-ink)", fundo: "var(--bjork-accent-soft)" },
+  confirmado: { nome: "Confirmado", cor: "var(--blk-success)", fundo: "var(--blk-success-soft)" },
+  realizado: { nome: "Realizado", cor: "var(--blk-success)", fundo: "var(--blk-success-soft)" },
+  remarcado: { nome: "Remarcado", cor: "var(--blk-warning)", fundo: "var(--blk-warning-soft)" },
+  cancelado: { nome: "Cancelado", cor: "var(--blk-error)", fundo: "var(--blk-error-soft)" },
+  faltou: { nome: "Não compareceu", cor: "var(--blk-error)", fundo: "var(--blk-error-soft)" },
 };
 export const STATUS_COMPROMISSO_ORDEM = Object.keys(STATUS_COMPROMISSO) as StatusCompromisso[];
 

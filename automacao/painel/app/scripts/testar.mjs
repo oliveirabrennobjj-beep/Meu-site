@@ -131,33 +131,43 @@ ${corpo}
 </body></html>`;
 
 function bancoDeMentira(iniciais) {
-  const docs = new Map(iniciais.map(({ id, ...dados }) => [id, dados]));
-  const ouvintes = new Set();
+  // Uma coleção por caminho (leads, compromissos…), como no banco do Artifact.
+  const colecoes = new Map([["leads", new Map(iniciais.map(({ id, ...dados }) => [id, dados]))]]);
+  const ouvintes = new Map();
+  const docsDe = (caminho) => {
+    if (!colecoes.has(caminho)) colecoes.set(caminho, new Map());
+    return colecoes.get(caminho);
+  };
   window.__escritas = [];
-  const emitir = () => {
+  const emitir = (caminho) => {
     const snap = {
       metadata: { fromCache: false },
-      docs: [...docs].map(([id, dados]) => ({ id, exists: true, data: () => dados })),
+      docs: [...docsDe(caminho)].map(([id, dados]) => ({ id, exists: true, data: () => dados })),
     };
-    ouvintes.forEach((fn) => fn(snap));
+    (ouvintes.get(caminho) ?? new Set()).forEach((fn) => fn(snap));
   };
   const db = {
     doc: (caminho) => ({
       onSnapshot: (next) => (setTimeout(() => next({ exists: false, data: () => undefined }), 0), () => {}),
       set: async (dados) => void window.__escritas.push({ op: "set", caminho, dados }),
     }),
-    collection: () => ({
-      onSnapshot: (next) => (ouvintes.add(next), setTimeout(emitir, 30), () => ouvintes.delete(next)),
+    collection: (caminho) => ({
+      onSnapshot: (next) => {
+        if (!ouvintes.has(caminho)) ouvintes.set(caminho, new Set());
+        ouvintes.get(caminho).add(next);
+        setTimeout(() => emitir(caminho), 30);
+        return () => ouvintes.get(caminho).delete(next);
+      },
       doc: (id) => ({
         update: async (dados) => {
-          window.__escritas.push({ op: "update", id, dados });
-          docs.set(id, { ...docs.get(id), ...dados });
-          emitir();
+          window.__escritas.push({ op: "update", colecao: caminho, id, dados });
+          docsDe(caminho).set(id, { ...docsDe(caminho).get(id), ...dados });
+          emitir(caminho);
         },
         set: async (dados) => {
-          window.__escritas.push({ op: "set", id, dados });
-          docs.set(id, dados);
-          emitir();
+          window.__escritas.push({ op: "set", colecao: caminho, id, dados });
+          docsDe(caminho).set(id, dados);
+          emitir(caminho);
         },
       }),
     }),
@@ -205,7 +215,8 @@ const umd = (pacote, arquivo) =>
   readFileSync(path.join(raiz, "node_modules", pacote, "umd", arquivo), "utf8");
 
 async function abrir(browser, opcoes) {
-  const contexto = await browser.newContext(opcoes);
+  // Horário de Brasília, como no celular do Brenno (a agenda usa o relógio de São Paulo).
+  const contexto = await browser.newContext({ timezoneId: "America/Sao_Paulo", ...opcoes });
   const pagina = await contexto.newPage();
   const erros = [];
   pagina.on("pageerror", (e) => erros.push(String(e)));
@@ -474,7 +485,7 @@ try {
 
   // Quem já recebeu o site pela versão antiga ainda pode receber a placa.
   // Loja longe que já recebeu pedido de visita: a ficha oferece a correção, uma vez só.
-  await p.getByRole("button", { name: LONGE }).click();
+  await p.getByRole("button", { name: LONGE, exact: true }).click();
   const longe = p.getByRole("dialog");
   const correcao = decodeURIComponent(
     await longe.getByRole("link", { name: "Mandar a correção" }).getAttribute("href"),
@@ -496,7 +507,7 @@ try {
   await longe.getByRole("button", { name: "Fechar ficha" }).click();
   await p.evaluate(() => (window.__escritas.length = 0));
 
-  await p.getByRole("button", { name: ANTIGA }).click();
+  await p.getByRole("button", { name: ANTIGA, exact: true }).click();
   const antiga = p.getByRole("dialog");
   await antiga.getByRole("radio", { name: "Dá pra ir: mensagem pedindo visita" }).click();
   await antiga.getByRole("radio", { name: "Site: mensagem já enviada" }).waitFor();
@@ -690,12 +701,18 @@ try {
   await ficha.getByRole("button", { name: "Feito" }).waitFor();
 
   await ficha.getByRole("button", { name: "Fechar ficha" }).click();
-  // O compromisso aparece em "Próximos passos", no topo do painel.
-  const passos = p.getByRole("region", { name: "Próximos passos" });
-  assert.match(await passos.innerText(), new RegExp(`amanhã 12:00[\\s\\S]*${nome}`));
+  // O combinado aparece na "Agenda de hoje", no topo do painel, na linha de amanhã.
+  const hojeAgenda = p.getByRole("region", { name: /^Agenda de hoje/ });
+  assert.match(await hojeAgenda.innerText(), new RegExp(`Amanhã:[\\s\\S]*12:00 ${nome}`));
+  // Quem respondeu e não tem horário: "Pedir horário" abre o WhatsApp com a mensagem formal pronta.
+  const lojaLonge = hojeAgenda.getByRole("listitem").filter({ hasText: LONGE });
+  await lojaLonge.getByRole("button", { name: "Pedir horário" }).click();
+  const pedido = decodeURIComponent(await lojaLonge.getByRole("link", { name: "Abrir no WhatsApp" }).getAttribute("href"));
+  assert.match(pedido, /^https:\/\/wa\.me\/5522900000002\?text=Olá, Loja Longe de Teste! Tudo bem\? Aqui é o Brenno, da BN Digital\./);
+  assert.match(pedido, /Tenho disponibilidade (na|no) \S+ \(\d\d\/\d\d\) ou (na|no) \S+ \(\d\d\/\d\d\)\. Qual dia e horário/);
   await p.getByRole("main").evaluate((el) => el.scrollTo({ top: 0 }));
   await p.waitForTimeout(300);
-  await p.screenshot({ path: path.join(saida, "celular-proximos-passos.png") });
+  await p.screenshot({ path: path.join(saida, "celular-hoje.png") });
   await p.getByRole("button", { name: "Abrir menu" }).click();
   await p.getByRole("dialog", { name: "Menu" }).getByText("Meta de hoje").waitFor();
   // Meta de 30 comércios: a padaria recebeu placa, site e dono hoje e conta como 1 contato.
@@ -737,18 +754,82 @@ try {
   assert.equal(guardada.dados.mensagens.length, 2);
   assert.deepEqual(guardada.dados.mensagens[1].salvas, [0]);
 
-  // Agenda: o dia de amanhã tem o ponto e lista as lojas combinadas.
+  // Agenda: no celular abre no Dia; o combinado de amanhã (anotado pelo assistente) aparece no dia seguinte.
   await p.getByRole("button", { name: "Abrir menu" }).click();
   await p.getByRole("dialog", { name: "Menu" }).getByRole("link", { name: /Agenda/ }).click();
   await p.getByRole("heading", { name: "Agenda" }).waitFor();
-  const amanha = new Date(Date.now() + 86_400_000);
-  const MESES = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
-  await p.getByRole("button", { name: new RegExp(`^${amanha.getDate()} de ${MESES[amanha.getMonth()]}, \\d lojas? marcadas?$`) }).click();
-  const doDia = await p.getByRole("main").innerText();
-  assert.match(doDia, /Amanhã, /);
-  assert.match(doDia, new RegExp(nome));
+  await p.getByRole("button", { name: "Próximo" }).click();
+  assert.match(await p.getByRole("region", { name: "Dia" }).innerText(), new RegExp(nome));
+  const compromissoSalvo = async () =>
+    (await p.evaluate(() => window.__escritas)).filter((e) => e.colecao === "compromissos").at(-1).dados;
+
+  // Marcar: visita na Loja Antiga amanhã às 12:00.
+  await p.getByRole("button", { name: "Novo horário" }).click();
+  let form = p.getByRole("dialog", { name: "Novo horário" });
+  await form.getByPlaceholder("Buscar loja pelo nome").fill("Loja Antiga");
+  await form.getByRole("button", { name: new RegExp(ANTIGA) }).click();
+  await form.getByLabel("Hora").fill("12:00");
+  await form.getByRole("button", { name: "Marcar horário" }).click();
+  let salvo = await compromissoSalvo();
+  assert.equal(salvo.leadId, "w5522900000001");
+  assert.equal(salvo.hora, "12:00");
+  assert.equal(salvo.tipo, "visita");
+  await p.getByRole("dialog", { name: `Horário com ${ANTIGA}` }).getByRole("button", { name: "Fechar" }).click();
+
+  // Choque: 12:15 bate com a visita (30 min + 15 de deslocamento) e o painel sugere 12:45.
+  await p.waitForTimeout(300);
+  await p.getByRole("button", { name: "Novo horário" }).click();
+  form = p.getByRole("dialog", { name: "Novo horário" });
+  await form.getByPlaceholder("Buscar loja pelo nome").fill("Loja Longe");
+  await form.getByRole("button", { name: new RegExp(LONGE) }).click();
+  await form.getByLabel("Hora").fill("12:15");
+  assert.match(await form.getByRole("alert").innerText(), new RegExp(`Bate com ${ANTIGA} \\(12:00\\)`));
+  await form.getByRole("button", { name: /^Usar / }).click();
+  assert.equal(await form.getByLabel("Hora").inputValue(), "12:45");
+  await form.getByRole("button", { name: "Marcar horário" }).click();
+  assert.equal((await compromissoSalvo()).hora, "12:45");
+
+  // Ficha do horário: remarcar guarda o histórico e a confirmação já usa a hora nova.
+  const horario = p.getByRole("dialog", { name: `Horário com ${LONGE}` });
+  await horario.getByRole("button", { name: "Remarcar" }).click();
+  await horario.getByLabel("Nova hora").fill("15:00");
+  await horario.getByRole("button", { name: "Salvar novo horário" }).click();
+  salvo = await compromissoSalvo();
+  assert.equal(salvo.status, "remarcado");
+  assert.equal(salvo.hora, "15:00");
+  assert.equal(salvo.historico.length, 1);
+  await p.waitForTimeout(300);
+  const confirmacao = decodeURIComponent(await horario.getByRole("link", { name: "Abrir no WhatsApp" }).getAttribute("href"));
+  assert.match(confirmacao, /^https:\/\/wa\.me\/5522900000002\?text=Oi Loja Longe de Teste, tudo bem\? Confirmando nossa conversa .+, às 15:00, aí na loja\./);
+  await p.screenshot({ path: path.join(saida, "celular-horario.png") });
+  // Realizado → "Vai pensar" já abre o retorno.
+  await horario.getByRole("button", { name: "Realizado" }).click();
+  await horario.getByRole("button", { name: "Vai pensar" }).click();
+  salvo = await compromissoSalvo();
+  assert.equal(salvo.status, "realizado");
+  assert.equal(salvo.resultado, "pensar");
+  form = p.getByRole("dialog", { name: "Novo horário" });
+  await form.getByRole("button", { name: "Fechar" }).click();
+  await p.waitForTimeout(300);
   assert.ok(await semTransbordo(p));
-  await p.screenshot({ path: path.join(saida, "celular-agenda.png") });
+  await p.screenshot({ path: path.join(saida, "celular-agenda-dia.png") });
+
+  // Exemplos: 5 horários de mentira, sem telefone, e o botão para apagar.
+  await p.getByRole("radio", { name: "Semana" }).click();
+  await p.getByRole("button", { name: "Pôr 5 exemplos" }).click();
+  await p.waitForTimeout(300);
+  const exemplos = (await p.evaluate(() => window.__escritas)).filter((e) => e.colecao === "compromissos" && e.dados.exemplo);
+  assert.equal(exemplos.length, 5);
+  assert.ok(exemplos.every((e) => e.dados.cliente.whatsapp === ""));
+  assert.ok(await semTransbordo(p));
+  await p.screenshot({ path: path.join(saida, "celular-agenda-semana.png") });
+  await p.getByRole("button", { name: "Apagar exemplos" }).click();
+  await p.waitForTimeout(300);
+  assert.equal(
+    (await p.evaluate(() => window.__escritas)).filter((e) => e.colecao === "compromissos" && e.dados.apagado).length,
+    5,
+  );
+  await p.getByRole("button", { name: "Pôr 5 exemplos" }).waitFor();
 
   // Funil: o fluxo mostra as etapas e tocar numa leva à lista filtrada.
   await p.getByRole("button", { name: "Abrir menu" }).click();

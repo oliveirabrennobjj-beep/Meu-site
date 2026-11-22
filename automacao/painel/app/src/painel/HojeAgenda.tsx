@@ -74,7 +74,9 @@ export function HojeAgenda({
   const vazio = !hoje.length && !amanha.length && !lembretes.length && !retorno.length && !atrasados.length;
 
   const minutosProx = prox ? (inicioDe(prox).getTime() - agora.getTime()) / 60_000 : 0;
-  const corProx = minutosProx < 0 ? "var(--blk-error)" : minutosProx <= 15 ? "var(--blk-warning)" : "var(--blk-accent-ink)";
+  // Laranja com menos de 15 min, vermelho quando atrasa; longe ainda, cor normal.
+  const corProx =
+    minutosProx < 0 ? "var(--blk-error)" : minutosProx <= 15 ? "var(--blk-warning)" : minutosProx <= 60 ? "var(--blk-accent-ink)" : "var(--bjork-text)";
 
   return (
     <section aria-labelledby="agenda-hoje" className={cn(cardSurface, "flex flex-col gap-3 p-3 @3xl:p-4")}>
