@@ -64,6 +64,8 @@ export interface Lead {
   dono?: { nome?: string; whatsapp?: string; mesmo?: boolean; em: string };
   /** Para quem foi a última mensagem quando a loja tem o celular do dono. */
   enviadoPara?: "dono" | "loja";
+  /** Quando a situação virou "respondeu" pela primeira vez (para saber em que dia e hora respondem). */
+  respostaEm?: string;
 }
 
 /* Conferência do WhatsApp ---------------------------------------------------------------------- */

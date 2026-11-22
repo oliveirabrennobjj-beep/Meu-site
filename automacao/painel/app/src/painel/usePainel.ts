@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Mensagem } from "./assistente";
+import { CONFIG_PADRAO, exemplos, lerCompromisso, lerConfigAgenda, type Compromisso, type ConfigAgenda } from "./agenda";
 import { TEXTOS_PADRAO, lerDono, lerFoto, lerImportacao, lerZap, type ChaveTexto, type Lead, type Textos } from "./leads";
 
 interface DocSnap {
@@ -64,6 +65,10 @@ export function usePainel(avisar: (texto: string) => void) {
   const dbRef = useRef<Db | null>(null);
   const filas = useRef(new Map<string, Promise<unknown>>());
   const [conversa, setConversa] = useState<Mensagem[]>([]);
+  const [compromissos, setCompromissos] = useState<Compromisso[]>([]);
+  const [configAgenda, setConfigAgenda] = useState<ConfigAgenda>(CONFIG_PADRAO);
+  const leadsRef = useRef<Lead[]>([]);
+  leadsRef.current = leads;
 
   useEffect(() => {
     let vivo = true;
@@ -106,6 +111,24 @@ export function usePainel(avisar: (texto: string) => void) {
         ),
       );
       parar.push(
+        db.doc("config/agenda").onSnapshot(
+          (snap) => setConfigAgenda(lerConfigAgenda(snap.exists ? snap.data() : null)),
+          () => {},
+        ),
+      );
+      parar.push(
+        db.collection("compromissos").onSnapshot(
+          (snap) =>
+            setCompromissos(
+              snap.docs.flatMap((d) => {
+                const c = lerCompromisso(d.id, d.data());
+                return c && !c.apagado ? [c] : [];
+              }),
+            ),
+          () => {},
+        ),
+      );
+      parar.push(
         db.collection("leads").onSnapshot(
           (snap) => {
             if (!snap.metadata?.fromCache) {
@@ -132,7 +155,11 @@ export function usePainel(avisar: (texto: string) => void) {
 
   const salvar = useCallback(
     (id: string, mudanca: Partial<Lead>) => {
-      const dados = { ...mudanca, atualizado: new Date().toISOString() };
+      const agora = new Date().toISOString();
+      // Primeira vez que a loja respondeu: guarda a hora, para o gráfico de quando as lojas respondem.
+      const respondeuAgora =
+        mudanca.status === "respondeu" && !leadsRef.current.find((l) => l.id === id)?.respostaEm;
+      const dados = { ...mudanca, ...(respondeuAgora ? { respostaEm: agora } : {}), atualizado: agora };
       setLeads((atual) => atual.map((l) => (l.id === id ? { ...l, ...dados } : l)));
       const db = dbRef.current;
       if (!db) {
@@ -269,6 +296,57 @@ export function usePainel(avisar: (texto: string) => void) {
     })();
   }, [fase, doServidor, leads, avisar]);
 
+  /** Cria ou muda um horário da agenda (um documento por horário, gravações em fila como nas lojas). */
+  const salvarCompromisso = useCallback(
+    (c: Compromisso) => {
+      setCompromissos((atual) => {
+        const sem = atual.filter((x) => x.id !== c.id);
+        return c.apagado ? sem : [...sem, c];
+      });
+      const db = dbRef.current;
+      if (!db) {
+        avisar("Sem conexão com o painel: o horário não foi salvo.");
+        return;
+      }
+      const { legado: _l, semHora: _s, ...dados } = c;
+      const chave = `compromisso-${c.id}`;
+      const anterior = filas.current.get(chave) ?? Promise.resolve();
+      const proxima = anterior
+        .then(() => db.collection("compromissos").doc(c.id).set(JSON.parse(JSON.stringify(dados))))
+        .catch((e) => avisar(`Não salvou o horário: ${motivo(e)}`));
+      filas.current.set(chave, proxima);
+    },
+    [avisar],
+  );
+
+  const salvarConfigAgenda = useCallback(
+    async (cfg: ConfigAgenda) => {
+      setConfigAgenda(cfg);
+      const db = dbRef.current;
+      if (!db) {
+        avisar("Sem conexão com o painel: as configurações não foram salvas.");
+        return;
+      }
+      try {
+        await db.doc("config/agenda").set(JSON.parse(JSON.stringify(cfg)));
+        avisar("Configurações da agenda salvas");
+      } catch (e) {
+        avisar(`Não salvou: ${motivo(e)}`);
+      }
+    },
+    [avisar],
+  );
+
+  /** Põe ou tira os 5 horários de exemplo (o banco não apaga documento: fica marcado como apagado). */
+  const exemplosAgenda = useCallback(
+    (por: boolean) => {
+      if (por) exemplos(configAgenda).forEach(salvarCompromisso);
+      else compromissos.filter((c) => c.exemplo).forEach((c) => salvarCompromisso({ ...c, apagado: true }));
+      avisar(por ? "5 horários de exemplo na agenda" : "Exemplos apagados");
+    },
+    [configAgenda, compromissos, salvarCompromisso, avisar],
+  );
+
   /** Guarda a conversa com o assistente (só as últimas 40 falas). */
   const salvarConversa = useCallback(
     (mensagens: Mensagem[]) => {
@@ -296,5 +374,10 @@ export function usePainel(avisar: (texto: string) => void) {
     salvarMensagens,
     salvarConversa,
     importar,
+    compromissos,
+    configAgenda,
+    salvarCompromisso,
+    salvarConfigAgenda,
+    exemplosAgenda,
   };
 }

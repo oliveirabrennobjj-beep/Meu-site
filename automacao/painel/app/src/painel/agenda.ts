@@ -1,7 +1,7 @@
 // Agenda de clientes: horários marcados com cada loja (visita, reunião, ligação…), choques de horário,
 // horários livres, lembretes e as mensagens prontas para mandar pelo WhatsApp.
 // As datas ficam como "AAAA-MM-DD" e "HH:mm" no horário de Brasília (o celular do Brenno).
-import type { Lead } from "./leads";
+import { ENVIOS, statusDe, type Lead } from "./leads";
 
 export type TipoCompromisso = "visita" | "online" | "ligacao" | "proposta" | "retorno" | "instalacao";
 export type ServicoCompromisso = "placa" | "site" | "ambos" | "outro";
@@ -19,7 +19,10 @@ export type ModeloId =
 
 export interface Compromisso {
   id: string;
+  /** Loja do painel; "" quando o cliente não está na lista (vai em `cliente`). */
   leadId: string;
+  /** Cliente que não está no painel (cliente novo ou exemplo). */
+  cliente?: { nome: string; whatsapp: string; endereco?: string } | null;
   tipo: TipoCompromisso;
   servico: ServicoCompromisso;
   /** AAAA-MM-DD */
@@ -171,10 +174,20 @@ export function lerConfigAgenda(v: unknown): ConfigAgenda {
 export function lerCompromisso(id: string, v: unknown): Compromisso | null {
   if (!v || typeof v !== "object") return null;
   const x = v as Partial<Compromisso>;
-  if (!x.leadId || !/^\d{4}-\d{2}-\d{2}$/.test(String(x.data)) || !/^\d{2}:\d{2}$/.test(String(x.hora))) return null;
+  const cliente =
+    x.cliente && typeof x.cliente === "object" && String(x.cliente.nome ?? "").trim()
+      ? {
+          nome: String(x.cliente.nome).trim(),
+          whatsapp: String(x.cliente.whatsapp ?? "").replace(/\D/g, ""),
+          ...(x.cliente.endereco ? { endereco: String(x.cliente.endereco) } : {}),
+        }
+      : null;
+  if ((!x.leadId && !cliente) || !/^\d{4}-\d{2}-\d{2}$/.test(String(x.data)) || !/^\d{2}:\d{2}$/.test(String(x.hora)))
+    return null;
   return {
     id,
-    leadId: String(x.leadId),
+    leadId: String(x.leadId ?? ""),
+    ...(cliente ? { cliente } : {}),
     tipo: x.tipo && x.tipo in TIPOS ? x.tipo : "visita",
     servico: x.servico && x.servico in SERVICOS ? x.servico : "ambos",
     data: String(x.data),
@@ -194,6 +207,25 @@ export function lerCompromisso(id: string, v: unknown): Compromisso | null {
 }
 
 /* Datas ---------------------------------------------------------------------------------------- */
+
+const RELOGIO_SP = new Intl.DateTimeFormat("en-US", {
+  timeZone: "America/Sao_Paulo",
+  year: "numeric",
+  month: "numeric",
+  day: "numeric",
+  hour: "numeric",
+  minute: "numeric",
+  second: "numeric",
+  hourCycle: "h23",
+});
+/**
+ * Agora no horário de Brasília, como um Date "de parede": os campos locais (getHours…) são os de
+ * São Paulo, qualquer que seja o fuso do aparelho. Os horários marcados também são de parede.
+ */
+export function agoraSP(base = new Date()) {
+  const p = Object.fromEntries(RELOGIO_SP.formatToParts(base).map((x) => [x.type, Number(x.value)]));
+  return new Date(p.year, p.month - 1, p.day, p.hour, p.minute, p.second);
+}
 
 const dois = (n: number) => String(n).padStart(2, "0");
 export const chaveDia = (d: Date) => `${d.getFullYear()}-${dois(d.getMonth() + 1)}-${dois(d.getDate())}`;
@@ -228,14 +260,14 @@ export const dataBr = (k: string) => k.split("-").reverse().join("/");
 /** 24/11 */
 export const dataCurta = (k: string) => k.slice(8, 10) + "/" + k.slice(5, 7);
 /** "hoje", "amanhã" ou "terça, 24/11" */
-export function diaFalado(k: string, agora = new Date()) {
+export function diaFalado(k: string, agora = agoraSP()) {
   if (k === chaveDia(agora)) return "hoje";
   if (k === chaveDia(somarDias(agora, 1))) return "amanhã";
   return `${SEMANA_CURTA[diaDaChave(k).getDay()]}, ${dataCurta(k)}`;
 }
 
 /** "em 40 min", "em 2 h 10", "agora", "há 15 min" */
-export function falta(alvo: Date, agora = new Date()) {
+export function falta(alvo: Date, agora = agoraSP()) {
   const min = Math.round((alvo.getTime() - agora.getTime()) / 60_000);
   if (Math.abs(min) < 1) return "agora";
   const abs = Math.abs(min);
@@ -270,7 +302,7 @@ export function horariosLivres(
   todos: Compromisso[],
   cfg: ConfigAgenda,
   ignorarId = "",
-  agora = new Date(),
+  agora = agoraSP(),
 ) {
   const livres: string[] = [];
   for (let m = cfg.inicio * 60; m + duracao <= cfg.fim * 60; m += 15) {
@@ -287,7 +319,7 @@ export function proximoLivre(
   pedido: Pick<Compromisso, "id" | "data" | "hora" | "duracao">,
   todos: Compromisso[],
   cfg: ConfigAgenda,
-  agora = new Date(),
+  agora = agoraSP(),
 ) {
   let dia = diaDaChave(pedido.data);
   for (let i = 0; i < 21; i++, dia = somarDias(dia, 1)) {
@@ -301,7 +333,7 @@ export function proximoLivre(
 }
 
 /** "na segunda (23/11) ou na terça (24/11)": os próximos dias de atendimento com horário livre. */
-export function diasSugeridos(todos: Compromisso[], cfg: ConfigAgenda, agora = new Date(), quantos = 2) {
+export function diasSugeridos(todos: Compromisso[], cfg: ConfigAgenda, agora = agoraSP(), quantos = 2) {
   const dias: string[] = [];
   for (let i = 1; i <= 21 && dias.length < quantos; i++) {
     const d = somarDias(agora, i);
@@ -316,6 +348,21 @@ export function diasSugeridos(todos: Compromisso[], cfg: ConfigAgenda, agora = n
 
 /** Primeiro nome de quem atende: o dono (quando o CNPJ trouxe) ou o nome da loja. */
 const nomeDaConversa = (lead: Lead) => lead.dono?.nome || lead.nome;
+
+/** A loja do compromisso; para cliente fora do painel, uma loja montada com o que foi digitado. */
+export function leadDo(c: Compromisso, porId: Map<string, Lead>): Lead | null {
+  const lead = c.leadId ? porId.get(c.leadId) : undefined;
+  if (lead) return lead;
+  if (!c.cliente) return null;
+  return {
+    id: `cliente-${c.id}`,
+    nome: c.cliente.nome,
+    whatsapp: c.cliente.whatsapp,
+    ...(c.cliente.endereco ? { endereco: c.cliente.endereco } : {}),
+    nota: null,
+    avaliacoes: null,
+  };
+}
 
 export function preencherModelo(
   texto: string,
@@ -381,7 +428,7 @@ export function combinadosAntigos(leads: Lead[], cfg: ConfigAgenda): Compromisso
   });
 }
 
-export function deHoje(todos: Compromisso[], agora = new Date()) {
+export function deHoje(todos: Compromisso[], agora = agoraSP()) {
   const k = chaveDia(agora);
   return todos.filter((c) => !c.apagado && c.data === k && c.status !== "cancelado").sort(porHorario);
 }
@@ -390,7 +437,7 @@ export const porHorario = (a: Compromisso, b: Compromisso) =>
   a.data === b.data ? a.hora.localeCompare(b.hora) : a.data.localeCompare(b.data);
 
 /** O próximo que ainda vai acontecer (ou que está atrasado há menos de 2 h, para avisar o atraso). */
-export function proximo(todos: Compromisso[], agora = new Date()) {
+export function proximo(todos: Compromisso[], agora = agoraSP()) {
   const limite = agora.getTime() - 2 * 3_600_000;
   return (
     todos
@@ -401,7 +448,7 @@ export function proximo(todos: Compromisso[], agora = new Date()) {
 }
 
 /** Lembretes a mandar: compromissos dentro da janela do maior lembrete que ainda não receberam lembrete. */
-export function lembretesParaEnviar(todos: Compromisso[], cfg: ConfigAgenda, agora = new Date()) {
+export function lembretesParaEnviar(todos: Compromisso[], cfg: ConfigAgenda, agora = agoraSP()) {
   const janela = Math.max(...cfg.lembretes) * 60_000;
   return todos
     .filter((c) => vivo(c) && !c.legado && !c.avisos.lembrete && !c.avisos.confirmacao)
@@ -413,21 +460,20 @@ export function lembretesParaEnviar(todos: Compromisso[], cfg: ConfigAgenda, ago
 }
 
 /** Lojas que responderam ou pediram pra falar depois e não têm nada marcado pra frente. */
-export function precisamDeRetorno(leads: Lead[], todos: Compromisso[], agora = new Date()) {
+export function precisamDeRetorno(leads: Lead[], todos: Compromisso[], agora = agoraSP()) {
   const comFuturo = new Set(
     todos.filter((c) => vivo(c) && inicioDe(c).getTime() >= agora.getTime() - 3_600_000).map((c) => c.leadId),
   );
   const remarcados = new Set(todos.filter((c) => !c.apagado && c.status === "remarcado").map((c) => c.leadId));
   return leads.filter(
     (l) =>
-      !l.exemplo &&
       !comFuturo.has(l.id) &&
-      (remarcados.has(l.id) || l.status === "respondeu" || l.status === "depois"),
+      (remarcados.has(l.id) || statusDe(l) === "respondeu" || statusDe(l) === "depois"),
   );
 }
 
 /** Contagens da semana (segunda a domingo) e o comparecimento das reuniões que já passaram. */
-export function semanaEmNumeros(todos: Compromisso[], agora = new Date()) {
+export function semanaEmNumeros(todos: Compromisso[], agora = agoraSP()) {
   const ini = chaveDia(segundaDa(agora));
   const fim = chaveDia(somarDias(segundaDa(agora), 6));
   const daSemana = todos.filter((c) => !c.apagado && !c.legado && c.data >= ini && c.data <= fim);
@@ -444,3 +490,89 @@ export function semanaEmNumeros(todos: Compromisso[], agora = new Date()) {
 }
 
 export const novoId = () => `c${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
+
+/* Exemplos -------------------------------------------------------------------------------------- */
+
+/** Cinco horários de mentira nesta semana, para ver a agenda funcionando (sem telefone inventado). */
+export function exemplos(cfg: ConfigAgenda, agora = agoraSP()): Compromisso[] {
+  const base: [string, TipoCompromisso, ServicoCompromisso, string, number][] = [
+    ["Floricultura (exemplo)", "visita", "placa", "09:30", 30],
+    ["Estética automotiva (exemplo)", "proposta", "site", "11:00", 45],
+    ["Loja de móveis (exemplo)", "online", "ambos", "14:00", 30],
+    ["Hamburgueria (exemplo)", "visita", "placa", "16:30", 30],
+    ["Barbearia (exemplo)", "ligacao", "site", "10:00", 15],
+  ];
+  const dias: string[] = [];
+  for (let i = 0; dias.length < base.length && i < 21; i++) {
+    const d = somarDias(agora, i);
+    if (cfg.dias.includes(d.getDay())) dias.push(chaveDia(d));
+  }
+  const criado = new Date().toISOString();
+  return base.map(([nome, tipo, servico, hora, duracao], i) => ({
+    id: `exemplo-${i + 1}`,
+    leadId: "",
+    cliente: { nome, whatsapp: "" },
+    tipo,
+    servico,
+    data: dias[Math.floor(i / 2)] ?? dias[0],
+    hora,
+    duracao,
+    local: tipo === "visita" ? "Centro, Casimiro de Abreu" : "",
+    obs: "Exemplo: apague quando quiser.",
+    prioridade: i === 0 ? "alta" : "media",
+    status: i === 1 ? "confirmado" : "agendado",
+    historico: [],
+    avisos: {},
+    criado,
+    exemplo: true,
+  }));
+}
+
+/* Quando as lojas respondem ----------------------------------------------------------------------- */
+
+export const FAIXAS = [
+  { nome: "8h–10h", de: 8, ate: 10 },
+  { nome: "10h–12h", de: 10, ate: 12 },
+  { nome: "12h–14h", de: 12, ate: 14 },
+  { nome: "14h–16h", de: 14, ate: 16 },
+  { nome: "16h–18h", de: 16, ate: 18 },
+  { nome: "18h–20h", de: 18, ate: 20 },
+  { nome: "Noite", de: 20, ate: 32 },
+];
+const faixaDe = (h: number) => FAIXAS.findIndex((f) => (h < 8 ? h + 24 : h) >= f.de && (h < 8 ? h + 24 : h) < f.ate);
+
+export interface Balde {
+  nome: string;
+  envios: number;
+  respostas: number;
+}
+
+/** Primeira mensagem de cada loja (por dia da semana e por faixa de horário) e quantas responderam. */
+export function quandoRespondem(leads: Lead[]) {
+  const porDia: Balde[] = [1, 2, 3, 4, 5, 6, 0].map((d) => ({ nome: SEMANA_CURTA[d], envios: 0, respostas: 0 }));
+  const porHora: Balde[] = FAIXAS.map((f) => ({ nome: f.nome, envios: 0, respostas: 0 }));
+  let total = 0;
+  for (const lead of leads) {
+    const datas = [lead.enviadoEm, ...ENVIOS.map((e) => lead.enviados?.[e])]
+      .filter((x): x is string => Boolean(x))
+      .map((x) => new Date(x))
+      .filter((d) => Number.isFinite(d.getTime()));
+    if (!datas.length) continue;
+    const primeira = agoraSP(new Date(Math.min(...datas.map((d) => d.getTime()))));
+    const s = statusDe(lead);
+    const respondeu = s === "respondeu" || s === "fechou" || s === "depois" || s === "nao";
+    const dia = porDia[(primeira.getDay() + 6) % 7];
+    const faixa = porHora[faixaDe(primeira.getHours())];
+    for (const b of [dia, faixa]) {
+      b.envios += 1;
+      if (respondeu) b.respostas += 1;
+    }
+    total += 1;
+  }
+  // Só aponta o melhor quando a amostra dá pra confiar (pelo menos 15 mensagens no balde).
+  const melhor = (lista: Balde[]) =>
+    lista
+      .filter((b) => b.envios >= 15)
+      .sort((a, b) => b.respostas / b.envios - a.respostas / a.envios)[0] ?? null;
+  return { porDia, porHora, total, melhorDia: melhor(porDia), melhorHora: melhor(porHora) };
+}
