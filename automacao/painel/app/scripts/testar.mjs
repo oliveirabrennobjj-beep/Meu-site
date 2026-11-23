@@ -75,6 +75,21 @@ leads.push({
   enviadoEm: new Date(Date.now() - 86_400_000).toISOString(),
 });
 
+// Caso Greiffe (23/11): o Google diz Casimiro, mas a ficha do Maps fica a 22 km do centro (Jardim Miramar).
+const PRAIANO = "Salão Praiano Teste";
+leads.push({
+  id: "w5522900000020",
+  nome: PRAIANO,
+  tipo: "Salão de Beleza",
+  cidade: "Casimiro de Abreu",
+  whatsapp: "5522900000020",
+  endereco: "R. Haydeia, 555 - Jardim Miramar, Casimiro de Abreu - RJ, 28860-000, Brasil",
+  maps: "https://www.google.com/maps/place/Teste/data=!4m7!3m6!1s0x0:0x0!8m2!3d-22.5569257!4d-41.983613!16s",
+  nota: 5,
+  avaliacoes: 999997,
+  status: "novo",
+});
+
 // Loja longe do centro que recebeu o pedido de visita antes da correção (caso da Parada Ideal).
 const LONGE = "Loja Longe de Teste";
 leads.push({
@@ -267,7 +282,7 @@ const browser = await chromium.launch();
 try {
   // Barra de São João é distrito de Casimiro, mas o painel conta como fora.
   const casimiro = leads.filter(
-    (l) => /casimiro/i.test(l.cidade ?? "") && !/barra de s[aã]o jo[aã]o/i.test(`${l.nome} ${l.cidade}`),
+    (l) => /casimiro/i.test(l.cidade ?? "") && !/barra de s[aã]o jo[aã]o|Praiano Teste/i.test(`${l.nome} ${l.cidade}`),
   ).length;
 
   // Celular
@@ -287,6 +302,39 @@ try {
     await previa.getByRole("heading", { level: 1 }).waitFor();
     await p.waitForTimeout(600);
     await p.screenshot({ path: path.join(saida, "celular-demonstracao.png") });
+    // SISTEMAS=todos: para cada estilo que tem sistema, abre o "Ver funcionando" e tira um print.
+    if (process.env.SISTEMAS) {
+      const ficha = p.getByRole("dialog").first();
+      const ids =
+        process.env.SISTEMAS === "todos"
+          ? await previa.getByLabel("Estilo da prévia").locator("option").evaluateAll((os) => os.map((o) => o.value).filter(Boolean))
+          : process.env.SISTEMAS.split(",");
+      let feitos = 0;
+      for (const id of ids) {
+        if (!(await previa.count())) await ficha.getByRole("button", { name: "Mostrar demonstração do site" }).click();
+        await previa.getByLabel("Estilo da prévia").selectOption(id);
+        await p.waitForTimeout(150);
+        await previa.getByRole("button", { name: "Fechar demonstração" }).click();
+        const abrir = ficha.getByRole("button", { name: /^Mostrar o sistema/ });
+        if (!(await abrir.count())) continue;
+        await abrir.click();
+        const sistema = p.getByRole("dialog", { name: /^Sistema de / });
+        await sistema.getByRole("button", { name: "Ver funcionando" }).click();
+        const demo = p.getByRole("dialog", { name: `Demonstração de clicar: ${nomeExtra}` });
+        await demo.getByRole("heading", { level: 1 }).waitFor();
+        await demo.locator("img").first().evaluate((img) => img.complete || new Promise((ok) => (img.onload = img.onerror = ok)));
+        await p.waitForTimeout(200);
+        await p.screenshot({ path: path.join(saida, `demo-${id.replace("/", "_")}.png`) });
+        await demo.getByRole("button", { name: "Fechar demonstração de clicar" }).click();
+        await sistema.getByRole("button", { name: "Fechar sistema" }).click();
+        await sistema.waitFor({ state: "detached" });
+        feitos += 1;
+      }
+      assert.deepEqual(cel.erros, []);
+      console.log(`${feitos} demonstrações de clicar em ${saida}`);
+      await browser.close();
+      process.exit(0);
+    }
     // RAMOS=crossfit,pilates troca o estilo da prévia e tira um print de cada (sem gerar a foto).
     if (process.env.RAMOS) {
       // Tela bem alta: a prévia rola dentro do diálogo e o que fica fora da rolagem sai em branco no print.
@@ -336,17 +384,39 @@ try {
     assert.doesNotMatch(textoHorario, /R\$|\{/);
     await p.waitForTimeout(300);
     await p.screenshot({ path: path.join(saida, "celular-horario.png") });
-    // O sistema no notebook e no celular, nos dois tipos: horário marcado e controle de alunos.
-    for (const [ramo, nomeSistema, arquivoFoto] of [
-      [null, "horário marcado", "celular-sistema.png"],
-      ["pilates", "controle de alunos", "celular-sistema-alunos.png"],
+    // O sistema no notebook e no celular, nos dois tipos (horário marcado e controle de alunos), e a
+    // demonstração de clicar com os serviços do tipo da loja: nunca a barbearia de exemplo em outro ramo.
+    for (const [ramo, nomeSistema, arquivoFoto, primeiro] of [
+      [null, "horário marcado", "celular-sistema.png", "Corte"],
+      ["salao", "horário marcado", null, "Escova"],
+      ["saude", "horário marcado", null, "Primeira consulta"],
+      ["pet", "horário marcado", null, "Banho"],
+      ["pilates", "controle de alunos", "celular-sistema-alunos.png", "Reformer"],
     ]) {
       if (ramo) await barbearia.getByLabel("Ramo da loja").selectOption(ramo);
       await barbearia.getByRole("button", { name: `Mostrar o sistema (${nomeSistema})` }).click();
       const sistema = p.getByRole("dialog", { name: `Sistema de ${nomeSistema} de Barbearia Exemplo 16` });
       await sistema.getByRole("heading", { level: 1 }).waitFor();
       await p.waitForTimeout(500);
-      await p.screenshot({ path: path.join(saida, arquivoFoto) });
+      if (arquivoFoto) await p.screenshot({ path: path.join(saida, arquivoFoto) });
+      await sistema.getByRole("button", { name: "Ver funcionando" }).click();
+      const demo = p.getByRole("dialog", { name: "Demonstração de clicar: Barbearia Exemplo 16" });
+      await demo.getByRole("heading", { level: 1 }).waitFor();
+      const texto = await demo.innerText();
+      assert.ok(texto.includes(primeiro), `${ramo ?? "barbearia"}: mostra ${primeiro}`);
+      if (ramo) assert.doesNotMatch(texto, /Sua Barbearia|Corte na régua|barbeiro/i, `${ramo}: nada de barbearia`);
+      // Marca de ponta a ponta e o horário aparece na agenda (ou nas turmas) com o selo "Novo".
+      await demo.getByRole("button", { name: new RegExp(`^${primeiro}`) }).first().click();
+      await demo.locator("section button[aria-pressed]").first().click();
+      await demo.locator("button:not([disabled])", { hasText: /^\d\d:00$/ }).first().click();
+      await demo.getByRole("button", { name: "Continuar" }).click();
+      await demo.getByLabel("Seu nome").fill("Cliente Teste");
+      await demo.getByRole("button", { name: /^Confirmar/ }).click();
+      await demo.getByRole("status").filter({ hasText: /marcad[oa]!/ }).waitFor();
+      if (!ramo || ramo === "pilates") await p.screenshot({ path: path.join(saida, `celular-demo-${ramo ?? "barbearia"}.png`) });
+      await demo.getByRole("button", { name: /^Ver n/ }).click();
+      assert.match(await demo.getByRole("listitem").filter({ hasText: "Novo" }).innerText(), new RegExp(`Cliente Teste[\\s\\S]*${primeiro}`));
+      await demo.getByRole("button", { name: "Fechar demonstração de clicar" }).click();
       await sistema.getByRole("button", { name: "Fechar sistema" }).click();
       await sistema.waitFor({ state: "detached" });
     }
@@ -364,7 +434,11 @@ try {
   await nicho.click();
 
   // Fora de Casimiro: mensagem de site, sem preço e sem pedido de visita.
-  const cidadeFora = p.locator("[data-tabelas] section[aria-labelledby]").filter({ hasText: "WhatsApp · site" }).first();
+  const cidadeFora = p
+    .locator("[data-tabelas] section[aria-labelledby]")
+    .filter({ hasText: "WhatsApp · site" })
+    .filter({ hasNotText: "longe do centro" })
+    .first();
   await cidadeFora.locator("tbody tr button").first().click();
   const textoFora = decodeURIComponent(
     await p.getByRole("dialog").getByRole("link", { name: "Enviar no WhatsApp" }).getAttribute("href"),
@@ -378,6 +452,17 @@ try {
   }
   assert.doesNotMatch(textoFora, /R\$|passar aí/);
   await p.getByRole("dialog").getByRole("button", { name: "Fechar ficha" }).click();
+
+  // Loja que o Google põe em Casimiro mas fica longe do centro: vai pra FORA, sem pedido de visita.
+  {
+    await p.getByRole("button", { name: PRAIANO, exact: true }).click();
+    const ficha = p.getByRole("dialog");
+    await ficha.getByText("Salão de Beleza · Casimiro, longe do centro").waitFor();
+    const texto = decodeURIComponent(await ficha.getByRole("link", { name: "Enviar no WhatsApp" }).getAttribute("href"));
+    assert.match(texto, /Sou de Casimiro, pertinho de Jardim Miramar\./);
+    assert.doesNotMatch(texto, /passar aí|pessoalmente/);
+    await ficha.getByRole("button", { name: "Fechar ficha" }).click();
+  }
 
   // Número sem WhatsApp: a loja sai das listas e da contagem; em "Tiradas" dá para trazer de volta.
   const kpiAEnviar = () => p.getByRole("article").filter({ hasText: "A enviar" }).locator("p").first().innerText();
