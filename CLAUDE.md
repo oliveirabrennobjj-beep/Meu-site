@@ -32,7 +32,7 @@ O Brenno instalou as skills para serem usadas em toda conversa. Regras:
 | Mexer em código existente | `surgical-patch` ou `safe-refactor` |
 | Código React (painel, sites em React) | `vercel-react-best-practices` |
 | Projeto ficando grande ou confuso | `improve-codebase-architecture` (usa `codebase-design`) |
-| Testar site no navegador | `webapp-testing` |
+| Testar site no navegador | `webapp-testing`, `agent-browser` (clicar, preencher e conferir a página pelo navegador) |
 | Word, PDF, Excel | `docx`, `pdf`, `xlsx` |
 | Instalar skill ou plugin | `find-skills`; ler o código antes de instalar |
 | Commit | `caveman-commit` |
