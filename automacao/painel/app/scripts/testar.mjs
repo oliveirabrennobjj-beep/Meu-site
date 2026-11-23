@@ -802,6 +802,7 @@ try {
   form = p.getByRole("dialog", { name: "Novo horário" });
   await form.getByPlaceholder("Buscar loja pelo nome").fill("Loja Longe");
   await form.getByRole("button", { name: new RegExp(LONGE) }).click();
+  await form.getByRole("button", { name: "Sistema de agendamento" }).click();
   await form.getByLabel("Hora").fill("12:15");
   assert.match(await form.getByRole("alert").innerText(), new RegExp(`Bate com ${ANTIGA} \\(12:00\\)`));
   await form.getByRole("button", { name: /^Usar / }).click();
@@ -822,6 +823,9 @@ try {
   const confirmacao = decodeURIComponent(await horario.getByRole("link", { name: "Abrir no WhatsApp" }).getAttribute("href"));
   assert.match(confirmacao, /^https:\/\/wa\.me\/5522900000002\?text=Oi Loja Longe de Teste, tudo bem\? Confirmando nossa conversa .+, às 15:00, aí na loja\./);
   await p.screenshot({ path: path.join(saida, "celular-horario.png") });
+  // O serviço entra na frase do jeito que se fala.
+  await horario.getByRole("button", { name: "Pós-reunião" }).click();
+  assert.match(await horario.getByLabel("Mensagem: Pós-reunião").inputValue(), /Qualquer dúvida sobre o sistema de agendamento, estou à disposição/);
   // Realizado → "Vai pensar" já abre o retorno.
   await horario.getByRole("button", { name: "Realizado" }).click();
   await horario.getByRole("button", { name: "Vai pensar" }).click();

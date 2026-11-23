@@ -4,7 +4,7 @@
 import { ENVIOS, statusDe, type Lead } from "./leads";
 
 export type TipoCompromisso = "visita" | "online" | "ligacao" | "proposta" | "retorno" | "instalacao";
-export type ServicoCompromisso = "placa" | "site" | "ambos" | "outro";
+export type ServicoCompromisso = "placa" | "site" | "ambos" | "sistema" | "outro";
 export type Prioridade = "alta" | "media" | "baixa";
 export type StatusCompromisso = "agendado" | "confirmado" | "realizado" | "remarcado" | "cancelado" | "faltou";
 export type Resultado = "fechou" | "pensar" | "naofechou";
@@ -79,7 +79,17 @@ export const SERVICOS: Record<ServicoCompromisso, string> = {
   placa: "Placa NFC",
   site: "Site",
   ambos: "Placa NFC + Site",
+  sistema: "Sistema de agendamento",
   outro: "Outro",
+};
+
+/** Como o serviço aparece no meio da mensagem ("Qualquer dúvida sobre o site, …"). */
+const SERVICO_NA_FRASE: Record<ServicoCompromisso, string> = {
+  placa: "a placa de avaliações",
+  site: "o site",
+  ambos: "o site e a placa de avaliações",
+  sistema: "o sistema de agendamento",
+  outro: "o nosso trabalho",
 };
 
 export const PRIORIDADES: Record<Prioridade, string> = { alta: "Alta", media: "Média", baixa: "Baixa" };
@@ -389,7 +399,7 @@ export function preencherModelo(
     .replaceAll("[data]", data ? dataBr(data) : "")
     .replaceAll("[hora]", c?.hora ?? "")
     .replaceAll("[local]", local)
-    .replaceAll("[serviço]", c?.servico ? SERVICOS[c.servico].replace("Placa NFC", "a placa de avaliação").replace("Site", "o site") : "o site e a placa de avaliação")
+    .replaceAll("[serviço]", SERVICO_NA_FRASE[c?.servico ?? "ambos"])
     .replaceAll("[dias sugeridos]", extra.diasSugeridos ?? "nos próximos dias")
     .replaceAll("[nova data]", extra.novaData ? dataBr(extra.novaData) : data ? dataBr(data) : "")
     .replaceAll("[nova hora]", extra.novaHora ?? c?.hora ?? "")
