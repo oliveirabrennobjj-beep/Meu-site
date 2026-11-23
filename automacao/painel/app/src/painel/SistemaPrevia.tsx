@@ -4,7 +4,7 @@ import { toJpeg } from "html-to-image";
 import { CalendarCheck, Check, Clock, Laptop, Loader2, MessageCircle, Send, Smartphone, Wallet, X } from "lucide-react";
 import { useElementWidth } from "@/components/ui/app-dashboard-shell-utils/app-block-kit";
 import { FONTES_NA_TELA, TEXTO, arquivo, compartilharFoto, cssDasFontes, temaDe } from "./Demonstracao";
-import { cidadeDe, ramoDe, subnichoDe, textosSistema, type Lead, type RamoId, numeroConversa } from "./leads";
+import { lugarDe, ramoDe, subnichoDe, textosSistema, type Lead, type RamoId, numeroConversa } from "./leads";
 import { SUB_SISTEMA } from "./subtemas";
 
 // Como ficaria o sistema da loja (horário marcado ou controle de alunos) num notebook e num celular.
@@ -152,7 +152,7 @@ export function SistemaPrevia({ lead, mensagem, onFechar }: { lead: Lead; mensag
           </div>
 
           <p className="mt-6 text-[11.5px]" style={{ color: t.suave }}>
-            Nomes e valores de exemplo · {cidadeDe(lead)} · Sistema feito por BN Digital
+            Nomes e valores de exemplo · {lugarDe(lead)} · Sistema feito por BN Digital
           </p>
         </article>
 

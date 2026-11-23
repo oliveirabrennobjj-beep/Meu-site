@@ -62,7 +62,7 @@ import {
   Zap,
   type LucideIcon,
 } from "lucide-react";
-import { RAMOS_ESCOLHA, SUBNICHOS, cidadeDe, ramoDe, subnichoDe, type Lead, type RamoId, numeroConversa } from "./leads";
+import { RAMOS_ESCOLHA, SUBNICHOS, lugarDe, ramoDe, subnichoDe, type Lead, type RamoId, numeroConversa } from "./leads";
 import { SUBTEMAS } from "./subtemas";
 import { ESCRITA, PaginaPremium, familiaDe } from "./SitePremium";
 
@@ -593,7 +593,7 @@ export function Demonstracao({
     }
   }
 
-  const cidade = cidadeDe(lead);
+  const cidade = lugarDe(lead);
   // Capa: a foto da própria loja no Google Maps; se não carregar, a foto do sub-nicho.
   const capa = lead.foto && fotoReal ? `${lead.foto}=w720-h900-k-no` : `img/demo/${t.foto}-1.webp`;
   const ramoDaLoja = ramoDe(lead);

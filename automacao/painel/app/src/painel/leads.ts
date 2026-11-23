@@ -248,8 +248,30 @@ const DISTRITOS: [string, RegExp][] = [
   ["Professor Souza", /professor souza/i],
 ];
 
+/** Loja que o Google põe em Casimiro mas fica longe do centro (Palmital, Cidade Praiana, Jardim Miramar…). */
+export const LONGE_DO_CENTRO = "Casimiro, longe do centro";
+const CENTRO: [number, number] = [-22.4806, -42.2045];
+const RAIO_KM = 8;
+
+/** Latitude e longitude do link da ficha do Maps (`!3d-22.55!4d-41.98`). */
+export function coordenadasDe(lead: Lead): [number, number] | null {
+  const m = (lead.maps ?? "").match(/!3d(-?\d+(?:\.\d+)?)!4d(-?\d+(?:\.\d+)?)/);
+  return m ? [Number(m[1]), Number(m[2])] : null;
+}
+
+/** Distância em km do centro de Casimiro (null sem coordenadas). */
+export function kmDoCentro(lead: Lead) {
+  const c = coordenadasDe(lead);
+  if (!c) return null;
+  const rad = (g: number) => (g * Math.PI) / 180;
+  const [la1, lo1, la2, lo2] = [CENTRO[0], CENTRO[1], c[0], c[1]].map(rad);
+  const h = Math.sin((la2 - la1) / 2) ** 2 + Math.cos(la1) * Math.cos(la2) * Math.sin((lo2 - lo1) / 2) ** 2;
+  return 2 * 6371 * Math.asin(Math.sqrt(h));
+}
+
 const distritoDe = (lead: Lead) =>
-  DISTRITOS.find(([, padrao]) => padrao.test(lead.cidade ?? "") || padrao.test(lead.nome))?.[0] ?? null;
+  DISTRITOS.find(([, padrao]) => padrao.test(lead.cidade ?? "") || padrao.test(lead.nome))?.[0] ??
+  (/casimiro/i.test(lead.cidade ?? "") && (kmDoCentro(lead) ?? 0) > RAIO_KM ? LONGE_DO_CENTRO : null);
 
 /** Comércio da cidade de Casimiro (sem os distritos), onde dá para ir falar com o dono pessoalmente. */
 export const ehCasimiro = (lead: Lead) => /casimiro/i.test(lead.cidade ?? "") && !distritoDe(lead);
@@ -267,6 +289,21 @@ export const recebeuPedidoDeVisita = (lead: Lead) =>
 export const cidadeDe = (lead: Lead) =>
   distritoDe(lead) ?? (ehCasimiro(lead) ? CASIMIRO : lead.cidade?.trim() || "Sem cidade");
 
+/** Bairro do endereço do Google: "R. X, 12 - Jardim Miramar, Casimiro de Abreu - RJ" → "Jardim Miramar". */
+function bairroDe(lead: Lead) {
+  const b = (lead.endereco ?? "").match(/-\s*([^,\-]{3,40}),\s*[^,]+ - RJ\b/)?.[1]?.trim() ?? "";
+  // Só nome de bairro de verdade: sem número, sem "casa/lote/quadra", e "Centro" não diz onde fica.
+  if (!b || /\d|^(centro|casimiro)|\b(casa|lote|lt|quadra|qd|loja|de souza)\b/i.test(b)) return null;
+  return b.toLowerCase() === b || b.toUpperCase() === b ? b.toLowerCase().replace(/(^|\s)\p{L}/gu, (x) => x.toUpperCase()) : b;
+}
+
+/**
+ * Lugar para mostrar ao cliente (mensagem e prévias): o bairro quando a loja fica longe do centro de
+ * Casimiro, senão a cidade.
+ */
+export const lugarDe = (lead: Lead) =>
+  distritoDe(lead) === LONGE_DO_CENTRO ? bairroDe(lead) ?? CASIMIRO : cidadeDe(lead);
+
 export function noEscopo(leads: Lead[], escopo: Escopo) {
   if (escopo === "todos") return leads;
   return leads.filter((lead) => ehCasimiro(lead) === (escopo === "casimiro"));
@@ -276,6 +313,7 @@ export function noEscopo(leads: Lead[], escopo: Escopo) {
 const ORDEM_CIDADES = [
   CASIMIRO,
   ...DISTRITOS.map(([nome]) => nome),
+  LONGE_DO_CENTRO,
   "Rio das Ostras",
   "Silva Jardim",
   "Unamar",
@@ -1184,8 +1222,8 @@ export function preencher(textos: Textos, chave: Exclude<ChaveTexto, "gostou">, 
   return (textos[chave]?.trim() || TEXTOS_PADRAO[chave])
     .replaceAll("{saudacao}", saudacao(agora))
     .replaceAll("{nome}", lead.nome || "sua empresa")
-    .replaceAll("{pertinho}", ehCasimiro(lead) ? " também" : `, pertinho de ${cidadeDe(lead)}`)
-    .replaceAll("{cidade}", cidadeDe(lead))
+    .replaceAll("{pertinho}", ehCasimiro(lead) || lugarDe(lead) === CASIMIRO ? " também" : `, pertinho de ${lugarDe(lead)}`)
+    .replaceAll("{cidade}", lugarDe(lead))
     .replaceAll("{nichoSite}", fraseSite(lead))
     .replaceAll("{nichoPlaca}", frasePlaca(lead, false))
     .replaceAll("{nicho}", TEXTOS_DE_PLACA.has(chave) ? frasePlaca(lead, true) : fraseSite(lead))
@@ -1243,7 +1281,7 @@ export const linkSeguro = (url?: string) => (url && /^https?:\/\//i.test(url) ? 
 // Abre a ficha exata quando a pesquisa guardou o link; senão, a busca por nome e cidade.
 export const linkMaps = (lead: Lead) =>
   (lead.maps && /^https:\/\/www\.google\.com\/maps\//.test(lead.maps) ? lead.maps : null) ??
-  `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${lead.nome} ${cidadeDe(lead)} RJ`)}`;
+  `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${lead.nome} ${lugarDe(lead)} RJ`)}`;
 
 /** Rua, número e bairro: o Google escreve "R. X, 12 - Bairro, Cidade - RJ, CEP, Brasil". */
 export const enderecoCurto = (lead: Lead) => (lead.endereco ?? "").split(/,\s*[^,]+ - RJ\b/)[0].trim();
@@ -1273,7 +1311,7 @@ export function paginaDe(lead: Lead) {
 }
 
 export const buscaInstagram = (lead: Lead) =>
-  `https://www.google.com/search?q=${encodeURIComponent(`${lead.nome} ${cidadeDe(lead)} instagram`)}`;
+  `https://www.google.com/search?q=${encodeURIComponent(`${lead.nome} ${lugarDe(lead)} instagram`)}`;
 
 /* Números -------------------------------------------------------------------------------------- */
 
