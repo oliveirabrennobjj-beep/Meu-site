@@ -1,19 +1,17 @@
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { toJpeg } from "html-to-image";
-import { CalendarCheck, Check, Clock, Laptop, Loader2, MessageCircle, Send, Smartphone, Wallet, X } from "lucide-react";
+import { CalendarCheck, Clock, Laptop, Loader2, MessageCircle, Play, Send, Smartphone, Wallet, X } from "lucide-react";
 import { useElementWidth } from "@/components/ui/app-dashboard-shell-utils/app-block-kit";
 import { FONTES_NA_TELA, TEXTO, arquivo, compartilharFoto, cssDasFontes, temaDe } from "./Demonstracao";
-import { lugarDe, ramoDe, subnichoDe, textosSistema, type Lead, type RamoId, numeroConversa } from "./leads";
-import { SUB_SISTEMA } from "./subtemas";
+import { Avatar, Marcado, SERIF_SISTEMA, conteudo } from "./sistemaConteudo";
+import { lugarDe, textosSistema, type Lead, numeroConversa } from "./leads";
+import { DemoClicavel } from "./DemoClicavel";
 
 // Como ficaria o sistema da loja (horário marcado ou controle de alunos) num notebook e num celular.
 // É uma imagem para mostrar e mandar no WhatsApp: nomes e valores são de exemplo e a tela avisa.
 
-/** Demonstração que dá pra clicar (horário marcado de barbearia), para mostrar pessoalmente. */
-const DEMO_AGENDA = "https://claude.ai/artifact/Wd4vVWKcnP8NRG6qcT8ZUY";
 
-const reais = (v: number) => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 });
 
 export function SistemaPrevia({ lead, mensagem, onFechar }: { lead: Lead; mensagem: string; onFechar: () => void }) {
   const t = temaDe(lead);
@@ -23,6 +21,8 @@ export function SistemaPrevia({ lead, mensagem, onFechar }: { lead: Lead; mensag
   const [aviso, setAviso] = useState("");
   const [gerando, setGerando] = useState(false);
   const [foto, setFoto] = useState<{ url: string; salva: boolean } | null>(null);
+  // Demonstração de clicar, com os serviços e o nome da loja, para mostrar pessoalmente.
+  const [aoVivo, setAoVivo] = useState(false);
 
   useEffect(() => {
     fechar.current?.focus();
@@ -156,14 +156,17 @@ export function SistemaPrevia({ lead, mensagem, onFechar }: { lead: Lead; mensag
           </p>
         </article>
 
-        {agenda && (
-          <p className="mx-auto max-w-[460px] px-5 py-4 text-center text-[13px] text-[color:var(--bjork-text-muted)]">
-            Pessoalmente, dá pra mostrar funcionando:{" "}
-            <a href={DEMO_AGENDA} target="_blank" rel="noopener noreferrer" className="font-semibold text-[color:var(--blk-accent-ink)] underline underline-offset-2">
-              abrir a demonstração de clicar
-            </a>
-          </p>
-        )}
+        <div className="mx-auto flex max-w-[460px] flex-col items-center gap-2 px-5 py-4 text-center">
+          <p className="text-[13px] text-[color:var(--bjork-text-muted)]">Pessoalmente, dá pra mostrar funcionando no celular:</p>
+          <button
+            type="button"
+            onClick={() => setAoVivo(true)}
+            className="inline-flex h-11 cursor-pointer items-center gap-2 rounded-full border border-[color:var(--bjork-border-strong)] bg-[var(--bjork-surface)] px-5 text-[14px] font-semibold text-[color:var(--bjork-text)] focus-visible:ring-2 focus-visible:ring-[color:var(--bjork-accent)]"
+          >
+            <Play aria-hidden="true" className="size-4" />
+            Ver funcionando
+          </button>
+        </div>
       </div>
 
       {foto && (
@@ -186,6 +189,8 @@ export function SistemaPrevia({ lead, mensagem, onFechar }: { lead: Lead; mensag
           </div>
         </div>
       )}
+
+      {aoVivo && <DemoClicavel lead={lead} onFechar={() => setAoVivo(false)} />}
 
       {aviso && (
         <p
@@ -235,117 +240,6 @@ function Escala({ largura, altura, children }: { largura: number; altura: number
         {children}
       </div>
     </div>
-  );
-}
-
-/* Conteúdo da página por ramo ----------------------------------------------------------------- */
-
-type Item = [nome: string, preco: number, tempo: string];
-type Pessoa = [nome: string, faz: string, foto?: string];
-
-const SERVICOS: Partial<Record<RamoId, Item[]>> = {
-  barbearia: [["Corte", 35, "30 min"], ["Barba", 25, "30 min"], ["Corte + barba", 55, "1 hora"], ["Sobrancelha", 10, "15 min"]],
-  salao: [["Escova", 45, "45 min"], ["Corte feminino", 60, "1 hora"], ["Manicure", 30, "40 min"], ["Coloração", 120, "2 horas"]],
-  estetica: [["Limpeza de pele", 120, "1 hora"], ["Drenagem", 90, "50 min"], ["Design de sobrancelha", 40, "30 min"], ["Peeling", 150, "1 hora"]],
-  massagem: [["Relaxante", 100, "1 hora"], ["Terapêutica", 120, "1 hora"], ["Drenagem", 90, "50 min"], ["Pedras quentes", 140, "1h15"]],
-  pet: [["Banho", 50, "1 hora"], ["Banho e tosa", 80, "2 horas"], ["Tosa higiênica", 40, "40 min"], ["Hidratação", 35, "30 min"]],
-  saude: [["Primeira consulta", 180, "50 min"], ["Retorno", 150, "50 min"], ["Consulta online", 150, "50 min"], ["Avaliação", 120, "40 min"]],
-  lavajato: [["Lavagem simples", 40, "40 min"], ["Lavagem completa", 70, "1h30"], ["Polimento", 180, "3 horas"], ["Higienização", 150, "2 horas"]],
-};
-const PROFISSIONAIS: Partial<Record<RamoId, Pessoa[]>> = {
-  barbearia: [["Rafa Souza", "Degradê e navalhado", "img/demo/barbeiro-1.webp"], ["Thiago Lima", "Barba e bigode", "img/demo/barbeiro-2.webp"], ["Diego Alves", "Corte social e infantil", "img/demo/barbeiro-3.webp"]],
-  salao: [["Carla Mendes", "Corte e coloração"], ["Bia Rocha", "Unhas"], ["Juliana Paz", "Escova e penteado"]],
-  estetica: [["Ana Lima", "Pele e limpeza"], ["Paula Reis", "Corporal"], ["Bruna Dias", "Sobrancelha"]],
-  massagem: [["Renata Costa", "Relaxante"], ["Marcos Silva", "Terapêutica"], ["Lívia Prado", "Drenagem"]],
-  pet: [["Camila", "Banho e secagem"], ["Rodrigo", "Tosa na tesoura"], ["Patrícia", "Tosa na máquina"]],
-  saude: [["Dra. Ana", "Adultos"], ["Dr. Bruno", "Crianças e adolescentes"], ["Dra. Carla", "Atendimento online"]],
-  lavajato: [["Box 1", "Lavagem rápida"], ["Box 2", "Lavagem completa"], ["Box 3", "Polimento e cera"]],
-};
-const AULAS: Partial<Record<RamoId, [aula: string, linha: string][]>> = {
-  pilates: [["Reformer", "50 min · até 4 alunos"], ["Solo", "50 min · até 8 alunos"], ["Cadillac", "50 min · individual"], ["Aula experimental", "Primeira aula"]],
-  yoga: [["Hatha", "1 hora · todos os níveis"], ["Vinyasa", "1 hora · intermediário"], ["Meditação", "30 min"], ["Aula experimental", "Primeira aula"]],
-  danca: [["Balé infantil", "50 min · 4 a 10 anos"], ["Ritmos", "1 hora · adulto"], ["Jazz", "1 hora · teen"], ["Aula experimental", "Primeira aula"]],
-  natacao: [["Infantil", "45 min · 4 a 12 anos"], ["Adultos", "45 min · iniciante"], ["Hidroginástica", "45 min"], ["Aula experimental", "Primeira aula"]],
-  crossfit: [["CrossFit", "1 hora · todos os níveis"], ["Funcional", "50 min"], ["Iniciantes", "1 hora"], ["Aula experimental", "Primeira aula"]],
-  luta: [["Muay thai", "1 hora · adulto"], ["Jiu-jitsu", "1h30 · adulto"], ["Kids", "50 min · 6 a 12 anos"], ["Aula experimental", "Primeira aula"]],
-  escola: [["Turma da manhã", "1 hora · iniciante"], ["Turma da tarde", "1 hora · intermediário"], ["Turma da noite", "1 hora · adulto"], ["Aula experimental", "Primeira aula"]],
-  academia: [["Funcional", "50 min"], ["Spinning", "45 min"], ["Musculação", "Livre, com professor"], ["Aula experimental", "Primeira aula"]],
-};
-const MENSALIDADE: Partial<Record<RamoId, number>> = { pilates: 260, yoga: 180, danca: 150, natacao: 190, crossfit: 220, luta: 160, academia: 110, escola: 200 };
-const PROFESSORES: Pessoa[] = [["Prof. Ana", "Turmas da manhã"], ["Prof. Bruno", "Turmas da noite"], ["Prof. Carla", "Iniciantes"]];
-
-function conteudo(lead: Lead) {
-  const sis = textosSistema(lead);
-  const ramo = ramoDe(lead).id;
-  const t = temaDe(lead);
-  const sub = SUB_SISTEMA[subnichoDe(lead)?.id ?? ""] ?? {};
-  const nota = typeof lead.nota === "number" && lead.nota > 0 ? lead.nota.toLocaleString("pt-BR", { minimumFractionDigits: 1 }) : "4,9";
-  const selo = lead.avaliacoes ? `${nota} · ${lead.avaliacoes} avaliações no Google` : `${nota} no Google`;
-  const foto = ramo === "barbearia" ? "img/demo/sistema-barbearia.webp" : `img/demo/${t.foto}-2.webp`;
-  if (sis.id === "alunos") {
-    const aulas = sub.aulas ?? AULAS[ramo] ?? AULAS.academia!;
-    const preco = sub.preco ?? MENSALIDADE[ramo] ?? 150;
-    return {
-      sis, t, foto, selo,
-      titulo: sub.titulo ?? (["Sua aula,", "do seu jeito."] as const),
-      chamada: "Veja as turmas, marque e remarque a aula pelo celular. A mensalidade fica em dia sem ninguém precisar cobrar.",
-      agendar: "Agende sua aula",
-      passos: [["Aula", "Escolha a turma"], ["Professor", "Quem dá a aula"], ["Data e hora", "Dia e horário"], ["Confirmar", "Revise e confirme"]],
-      colunas: ["Escolha a aula", "Escolha o professor", "Escolha a data"],
-      itens: aulas.map(([nome, linha]) => ({ nome, linha })),
-      pessoas: PROFESSORES,
-      resumo: [["Aula", aulas[0][0]], ["Professor", "Prof. Ana"], ["Data", "quinta, 19 de novembro"], ["Horário", "18:00"], ["Plano", "2x por semana"]] as [string, string][],
-      total: sub.total ?? ([`${reais(preco)}/mês`, "Mensalidade"] as const),
-      botao: "Confirmar aula",
-      recursos: [["Aula marcada pelo celular", "O aluno escolhe e remarca sozinho."], ["Mensalidade em dia", "Quem atrasou aparece na hora."], ["Cobrança no WhatsApp", "Um toque e a mensagem vai."], ["Turmas cheias", "Vaga sobrando vira aviso."]] as [string, string][],
-      horario: "Seg a sex 6h às 21h · sáb 8h às 12h",
-    };
-  }
-  const servicos = sub.servicos ?? SERVICOS[ramo] ?? SERVICOS.barbearia!;
-  const pessoas = sub.pessoas ?? PROFISSIONAIS[ramo] ?? PROFISSIONAIS.salao!;
-  const titulos: Partial<Record<RamoId, readonly [string, string]>> = {
-    barbearia: ["Corte na régua,", "hora marcada."],
-    salao: ["Beleza com", "hora marcada."],
-    pet: ["Banho e tosa", "com hora marcada."],
-    lavajato: ["Carro limpo,", "sem fila na porta."],
-    saude: ["Sua consulta,", "com hora marcada."],
-  };
-  return {
-    sis, t, foto, selo,
-    titulo: sub.titulo ?? titulos[ramo] ?? (["Seu momento,", "com hora marcada."] as const),
-    chamada: "Escolha o serviço, o profissional e o horário pelo celular. A gente te espera na hora certa, sem fila.",
-    agendar: "Agende seu horário",
-    passos: [["Serviço", "Escolha o serviço"], [ramo === "barbearia" ? "Barbeiro" : "Profissional", "Quem vai atender"], ["Data e hora", "Dia e horário"], ["Confirmar", "Revise e confirme"]],
-    colunas: ["Escolha o serviço", ramo === "barbearia" ? "Escolha o barbeiro" : "Escolha o profissional", "Escolha a data"],
-    itens: servicos.map(([nome, preco, tempo]) => ({ nome, linha: `${reais(preco)} · ${tempo}` })),
-    pessoas,
-    resumo: [["Serviço", servicos[0][0]], [ramo === "barbearia" ? "Barbeiro" : "Profissional", pessoas[0][0]], ["Data", "quinta, 19 de novembro"], ["Horário", "16:00"], ["Duração", servicos[0][2]]] as [string, string][],
-    total: [reais(servicos[0][1]), "Total"] as const,
-    botao: "Confirmar agendamento",
-    recursos: [["Agenda em 1 minuto", "Sem ligar e sem esperar resposta."], ["Confirmação no WhatsApp", "Com dia, hora e profissional."], ["Profissionais avaliados", "Nota de quem já foi atendido."], ["Paga na hora", "Pix, cartão ou dinheiro."]] as [string, string][],
-    horario: "Seg a sáb · 9h às 20h",
-  };
-}
-
-const SERIF_SISTEMA = `"Fraunces", Georgia, serif`;
-const iniciais = (nome: string) => nome.replace(/^Prof\.\s*/, "").split(/\s+/).map((p) => p[0]).slice(0, 2).join("").toUpperCase();
-
-function Avatar({ pessoa, tamanho, t }: { pessoa: Pessoa; tamanho: number; t: ReturnType<typeof temaDe> }) {
-  const [nome, , foto] = pessoa;
-  return foto ? (
-    <img src={foto} alt="" width={tamanho} height={tamanho} className="shrink-0 rounded-full object-cover" style={{ width: tamanho, height: tamanho, boxShadow: `0 0 0 1px ${t.destaque}55` }} />
-  ) : (
-    <span className="grid shrink-0 place-items-center rounded-full font-bold" style={{ width: tamanho, height: tamanho, background: t.mancha, color: t.escuro ? t.destaque : t.tinta, fontSize: tamanho * 0.36 }}>
-      {iniciais(nome)}
-    </span>
-  );
-}
-
-function Marcado({ t, tamanho = 20 }: { t: ReturnType<typeof temaDe>; tamanho?: number }) {
-  return (
-    <span className="grid shrink-0 place-items-center rounded-full" style={{ width: tamanho, height: tamanho, background: t.destaque, color: t.noDestaque }}>
-      <Check className="size-[60%]" strokeWidth={3} />
-    </span>
   );
 }
 
