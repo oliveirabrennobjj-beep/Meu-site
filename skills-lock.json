@@ -1,11 +1,74 @@
 {
   "version": 2,
   "skills": {
+    "analog-found-footage-horror": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/analog-found-footage-horror/SKILL.md",
+      "computedHash": "29db864437b7297e7472adcaefa0a5f753957b8ba8803e338f2e676aaccbfe15"
+    },
+    "animation": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/animation/SKILL.md",
+      "computedHash": "a62e367790ee6c8f2c9e6e8f53bce5b1d2401fb0c6cab501da1834a45b7caa78"
+    },
+    "anime-style": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/anime-style/SKILL.md",
+      "computedHash": "e582f61fdbacd6c7705e4a9b132f0d37189a1daf9a046480767ff76fa4e74a57"
+    },
+    "apocalypse-worlds": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/apocalypse-worlds/SKILL.md",
+      "computedHash": "c6bc8fe28e60f37c6311acd881d7911d7df8067c93e3bbb9a856cdad06946d4f"
+    },
     "apple-design": {
       "source": "emilkowalski/skills",
       "sourceType": "github",
       "skillPath": "skills/apple-design/SKILL.md",
       "computedHash": "118d450c2d6ca54fee5f56cf8883fa3231bc2d917bb8f5a3f87488162c55fac9"
+    },
+    "archviz": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/archviz/SKILL.md",
+      "computedHash": "427d3221cdb459756c0fb0b8fdf677680b0e09a4d38429fbec99c73850f21f4d"
+    },
+    "asset-optimization": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/asset-optimization/SKILL.md",
+      "computedHash": "b245a25d916e541dcdfeab9ff909aeab3a1caf2a9e5d405370464395c8a9e41b"
+    },
+    "biome-worlds": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/biome-worlds/SKILL.md",
+      "computedHash": "179287817374a873023714b4fdddc1f4e49503843adf27cb093cd27bedb678a3"
+    },
+    "blender-modeler": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/blender-modeler/SKILL.md",
+      "computedHash": "3d2625570d7371eeb8fcf41c23435481881866d5e7a40997f93db6a41dcf1afa"
+    },
+    "body-horror-style": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/body-horror-style/SKILL.md",
+      "computedHash": "29cf1d7517cfccf2eead90717c1030deb433f98521fa5a2c9b498960bafda0d9"
     },
     "brag": {
       "source": "latent-spaces/brag",
@@ -24,6 +87,27 @@
       "sourceType": "github",
       "skillPath": "skills/brainstorming/SKILL.md",
       "computedHash": "a7424777b7f81e3eb9b4556d29fe233553736d8255780d3e1feea190fef61fef"
+    },
+    "brutalist-mood": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/brutalist-mood/SKILL.md",
+      "computedHash": "fd4b640ed53e2a9c0545c3da27060db8125493ebaff900a234b3a25753432840"
+    },
+    "camera-cinematography": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/camera-cinematography/SKILL.md",
+      "computedHash": "8c6b0838ea2173a0b11ff9ceb707b6f0cb8c8ea37ce751e77ca2332546d27ed9"
+    },
+    "cartoon-style": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/cartoon-style/SKILL.md",
+      "computedHash": "b919c0f0bf5dc58790b2f0e10ba98e1837d1fcd28ade905631b95e3f4be7694b"
     },
     "cavecrew": {
       "source": "JuliusBrussee/caveman",
@@ -109,17 +193,94 @@
       "skillPath": "skills/caveman-stats/SKILL.md",
       "computedHash": "d47db80af9353f411b5840fa207ac10c883f04576cd280b135e3a44a0ff86285"
     },
+    "character-archetypes": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/character-archetypes/SKILL.md",
+      "computedHash": "4884851ba365dd73111d6b92b60217a1103923f9513b5f1fb1530ed3e71dd9f6"
+    },
+    "character-artist": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/character-artist/SKILL.md",
+      "computedHash": "759f7d1e6798cee05d4fea86d9172b5e7c3bb644cca85a17d7eee35b18a45f26"
+    },
+    "chibi-style": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/chibi-style/SKILL.md",
+      "computedHash": "b2e2a6de71439bb3ae1fc500773bc402338973f3be2299a6c4b622ac73f2c723"
+    },
     "claude-automation-recommender": {
       "source": "anthropics/claude-plugins-official",
       "sourceType": "github",
       "skillPath": "plugins/claude-code-setup/skills/claude-automation-recommender/SKILL.md",
       "computedHash": "77eacdf8f94c87706f3d840ddd94aa246a0d9b83201d6249dce2d7584112afe5"
     },
+    "cloth-sim": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/cloth-sim/SKILL.md",
+      "computedHash": "f0591c99e9acde425310c5f7b0a44a13f66ededd9a4cc3bb080cf3b970451ab1"
+    },
+    "collision-proxy": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/collision-proxy/SKILL.md",
+      "computedHash": "a6246f03c30cc4c9df61bed9f193fcf2afd676e0acd02b9eeccbfcbb71761081"
+    },
+    "comic-book-style": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/comic-book-style/SKILL.md",
+      "computedHash": "b7f7f2f769c65a83d592b0a61184a3f3ad7798647acd13b17c7fe14b6fb53d63"
+    },
+    "compositing": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/compositing/SKILL.md",
+      "computedHash": "54b9ccf2963c29d939156637b513ad9d42f697858b34e5d7ccd6641a5f9a0586"
+    },
     "copywriting": {
       "source": "coreyhaines31/marketingskills",
       "sourceType": "github",
       "skillPath": "skills/copywriting/SKILL.md",
       "computedHash": ""
+    },
+    "cosmic-eldritch-horror": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/cosmic-eldritch-horror/SKILL.md",
+      "computedHash": "b81804486968a95e939a70a2b2d065c8053ac0431ae78a04a01e985bb8be57cf"
+    },
+    "cozy-wholesome-mood": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/cozy-wholesome-mood/SKILL.md",
+      "computedHash": "6adbbcc994dc1a90e1d2531b9522d956ef522a356d235ec12859334901293224"
+    },
+    "creature-artist": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/creature-artist/SKILL.md",
+      "computedHash": "b87e7ed92cf9a40c6b93a530bf5c36cea8c573ca5201713679220985fec2b389"
+    },
+    "dark-gritty-mood": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/dark-gritty-mood/SKILL.md",
+      "computedHash": "e559bc9799f8654f3fd4e1046cf460e2620a45725e4a048e41af28610b68c46d"
     },
     "design-taste-frontend": {
       "source": "leonxlnx/taste-skill",
@@ -145,11 +306,46 @@
       "skillPath": "skills/docx/SKILL.md",
       "computedHash": ""
     },
+    "dream-surreal-mood": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/dream-surreal-mood/SKILL.md",
+      "computedHash": "babaa59f4b47eae05db25c22c16da5a9207d1518bd0bd0d50000253f48a4b914"
+    },
+    "dream-weirdcore-style": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/dream-weirdcore-style/SKILL.md",
+      "computedHash": "d6c666e19b93aa18c0b4638f031a520fe87980793351c7450f05e95bbfd6146c"
+    },
+    "environment-artist": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/environment-artist/SKILL.md",
+      "computedHash": "98fe3c3e72ba29f5f7169f738331f1cddc746f863bd0e715fcfdd2bab2d5853b"
+    },
     "executing-plans": {
       "source": "obra/superpowers",
       "sourceType": "github",
       "skillPath": "skills/executing-plans/SKILL.md",
       "computedHash": "58b364f6e3f64602c7cfd0b34ceaad9de95d41fe7e4b46b274843ba19fc01ccc"
+    },
+    "export-pipeline": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/export-pipeline/SKILL.md",
+      "computedHash": "476d639a628da3a3657ddb9cc2390baf4539aa4aa9eb50cb263ac35e89431284"
+    },
+    "fantasy-worlds": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/fantasy-worlds/SKILL.md",
+      "computedHash": "123516de6de8bc2eb1beafecfdaee2cf006a48c5d66753a1536060fff261b8e6"
     },
     "find-skills": {
       "source": "vercel-labs/skills",
@@ -163,11 +359,172 @@
       "skillPath": "skills/finishing-a-development-branch/SKILL.md",
       "computedHash": "7e24d821d45b8f10773edd9f1a4be2fac90eedae4f8fc8e70e34e27e44d3f3c0"
     },
+    "folk-horror-style": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/folk-horror-style/SKILL.md",
+      "computedHash": "a072628cb9ca8e9e0a722a3de3ae23c4eaa4c5e5d547f9d160b9bda58118baaa"
+    },
     "frontend-design": {
       "source": "anthropics/skills",
       "sourceType": "github",
       "skillPath": "skills/frontend-design/SKILL.md",
       "computedHash": ""
+    },
+    "frutiger-aero-style": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/frutiger-aero-style/SKILL.md",
+      "computedHash": "d59bb6a2286e096efebe56060ab12c88404e677b5fafde2361e9458a781d479e"
+    },
+    "genre-action-combat": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/genre-action-combat/SKILL.md",
+      "computedHash": "bbbe591af53d7cf0a16c0600ee415818479033f8b2c993d3cb0a7e66f2c7b43a"
+    },
+    "genre-card-party-idle": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/genre-card-party-idle/SKILL.md",
+      "computedHash": "ae8bee827eaa42b8b4d300986bf0245a3ccd363a252dbd98c1c349d04a525364"
+    },
+    "genre-metroidvania-roguelike": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/genre-metroidvania-roguelike/SKILL.md",
+      "computedHash": "1da15381135a2d5434274ff90bf0848ffa4e4c5dbdbb7e8f90498aff972e8eae"
+    },
+    "genre-narrative-vn": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/genre-narrative-vn/SKILL.md",
+      "computedHash": "8fc44315e4bd07a5f44d32326f7682847800f17e3201c7a85bb26fae44dd2dc9"
+    },
+    "genre-open-world-sandbox": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/genre-open-world-sandbox/SKILL.md",
+      "computedHash": "4bb0544302e824f74fd71a7ef1c78b555df070db37832b94af33c75e18744816"
+    },
+    "genre-puzzle-platformer": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/genre-puzzle-platformer/SKILL.md",
+      "computedHash": "be2e564f248d0dae254338d0c7b0f423764cd4c3039503a122e84c01c10c8967"
+    },
+    "genre-racing-sports": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/genre-racing-sports/SKILL.md",
+      "computedHash": "f8268f51f8e45d326f35e2aa30b097515dd6c40a8621bb3e847d8cb5d8ce3bfe"
+    },
+    "genre-rpg": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/genre-rpg/SKILL.md",
+      "computedHash": "81827dc48a678ecd07472053180201d85d43408044bbd736b575f4a33e7859d2"
+    },
+    "genre-shooter": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/genre-shooter/SKILL.md",
+      "computedHash": "01298a4e88588f9d044b48066f7c94caafc89405b0ec0af27b6f62ea6408543d"
+    },
+    "genre-soulslike": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/genre-soulslike/SKILL.md",
+      "computedHash": "ff21e97a0192d0e08bd27d10534a45c47c6345cbb55e63ea04f3e7189ca0b5c2"
+    },
+    "genre-stealth": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/genre-stealth/SKILL.md",
+      "computedHash": "d48533177d501d373988339f9839d1cdc734417802a35d12126af2590e2f3909"
+    },
+    "genre-strategy-sim": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/genre-strategy-sim/SKILL.md",
+      "computedHash": "2cabf48e16f5b5d29ecf9d516145f834477308cb620f55b8243ac7be07854caa"
+    },
+    "genre-survival": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/genre-survival/SKILL.md",
+      "computedHash": "3d8a76f9b4127fc847967a4af3210f20eb3e55c8299809e778d5ae2b244671b7"
+    },
+    "geometry-nodes": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/geometry-nodes/SKILL.md",
+      "computedHash": "f38bdf6fd0676315d843f4830d09a16c6cec78fee60ff2ba7353e4cdee010c39"
+    },
+    "godot-export": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/godot-export/SKILL.md",
+      "computedHash": "9d765752f6919c3c772b4b3c63ae3e6cda29f45825e0393a6d291b0f7e1db6f1"
+    },
+    "hair-groom": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/hair-groom/SKILL.md",
+      "computedHash": "5028eeff51f8b5a13e834db4433795b213d8df2d7a895a52eae68c0924e389ea"
+    },
+    "hand-painted-style": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/hand-painted-style/SKILL.md",
+      "computedHash": "452bb121571080d16b468b6160b43a7541d0bce9f13012269aa037f74074a567"
+    },
+    "hard-surface": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/hard-surface/SKILL.md",
+      "computedHash": "5a64e7f45211f61a7fe7eff6dd328ed67b721b96b87387c8eb42f0de5e805170"
+    },
+    "hd-2d-style": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/hd-2d-style/SKILL.md",
+      "computedHash": "a6130f4832e1e74c6d0e75c127ff0fb09a37dc96c4efef65883526aab5196b47"
+    },
+    "historical-worlds": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/historical-worlds/SKILL.md",
+      "computedHash": "59be90804f160b8d88a6c9c6b2c8052e8dd81b5cbf5becda8296228ea074687f"
+    },
+    "horror-style": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/horror-style/SKILL.md",
+      "computedHash": "a28f55dec06f33c651d462e4a4f638ff5ee1b395dd7feb40c30b0f4c55091cdc"
     },
     "hyperframes": {
       "source": "heygen-com/hyperframes",
@@ -266,6 +623,13 @@
       "computedHash": "7ba57f5ddaaff8d8d58008e233f2f0d354eea848bb68d6d2fbe2ee0bf1f2f332",
       "installMode": "copy"
     },
+    "indie-horror-aesthetics": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/indie-horror-aesthetics/SKILL.md",
+      "computedHash": "c158834ec118ddb75d06cdbeafd0d428fe88ccf5c855643c3d20450642e271eb"
+    },
     "instagram-marketing": {
       "source": "sergebulaev/instagram-skills",
       "sourceType": "github",
@@ -278,11 +642,74 @@
       "skillPath": "skills/investigate-first/SKILL.md",
       "computedHash": "129b1eba6d106c1d095baefd30578c6303b93119fcd21bd5583ebd34592f3acc"
     },
+    "isometric-style": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/isometric-style/SKILL.md",
+      "computedHash": "ea84f88c0e4e67ee3ac74f90a58141ecbdd4b9eee990f27f091f94b1aec14fc0"
+    },
     "lean-build": {
       "source": "JuliusBrussee/caveman",
       "sourceType": "github",
       "skillPath": "skills/lean-build/SKILL.md",
       "computedHash": "aee8fbb86c5e1e5066089293423f71dd6a87ab37486c360cd4488ef2fe96c7a7"
+    },
+    "lighting": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/lighting/SKILL.md",
+      "computedHash": "b868f9cea192b69189c8672db6a2ab02fdcb481f7ada0c1af699d7170f1cea60"
+    },
+    "liminal-space-style": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/liminal-space-style/SKILL.md",
+      "computedHash": "030c30ca667052e7ee7815bf940c75a81d38b54152786f21abdf122a8ce119b1"
+    },
+    "lod-pipeline": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/lod-pipeline/SKILL.md",
+      "computedHash": "dd9f2682d457ca7ed5d2f80a179964e6659782a5b146e34e0e814310f02f4890"
+    },
+    "lookdev": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/lookdev/SKILL.md",
+      "computedHash": "bc4e3059f533512226f5e925a9a9b86aa6f26487edbd54e448318bf274995fe1"
+    },
+    "lowpoly-style": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/lowpoly-style/SKILL.md",
+      "computedHash": "7fc2335bd79496dfbd32de8f74d7500814895c0f80a3e7ceba8447b10a816255"
+    },
+    "manga-style": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/manga-style/SKILL.md",
+      "computedHash": "312d8c478c24023b91ed234f1ed0e87407ec21213d18861048dabaf943c755ce"
+    },
+    "mascot-puppet-horror": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/mascot-puppet-horror/SKILL.md",
+      "computedHash": "1d831216e402937a928ab165d6ac66a58e40cc06a0292a159337ec951a54a547"
+    },
+    "materials": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/materials/SKILL.md",
+      "computedHash": "4574cdd5e559b9dd99a0e600e750b96967d683b30fd46e4915105ec19ac056ef"
     },
     "megacave": {
       "source": "JuliusBrussee/caveman",
@@ -296,17 +723,94 @@
       "skillPath": "skills/migration/SKILL.md",
       "computedHash": "e7c6efc84ff8f85d0242e7f29f51c09fd333c294cc3123ef8ee4b2aca2a93192"
     },
+    "minimalist-style": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/minimalist-style/SKILL.md",
+      "computedHash": "c815e4c898d2e62a9d59e24d56d6cec3bed32c794732ca1009db5c416237df57"
+    },
+    "neon-retrofuturism": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/neon-retrofuturism/SKILL.md",
+      "computedHash": "90f3a6d5b33b4547aaab55f8a9f042caa4a3b0d1a8e381ec6f6dacdb190cc337"
+    },
+    "noir-style": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/noir-style/SKILL.md",
+      "computedHash": "73fb00c7f6be865272285a4a709f9eb1eb2b099e131d534af4132ed3e1b5c3bb"
+    },
+    "painterly-style": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/painterly-style/SKILL.md",
+      "computedHash": "942da11e3003b23ec2fb74fb4bec6e16ae14307866def36dc20d08a09337aa7d"
+    },
     "pdf": {
       "source": "anthropics/skills",
       "sourceType": "github",
       "skillPath": "skills/pdf/SKILL.md",
       "computedHash": ""
     },
+    "physics-sim": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/physics-sim/SKILL.md",
+      "computedHash": "537d68a566acbcb7b1b0fbbf7ec5ed31fb07de8d2863e77db6385a1880c416fc"
+    },
+    "pixel-art-style": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/pixel-art-style/SKILL.md",
+      "computedHash": "1fcdfd2e48ee5ca991a7613ee1e0debfc6f4bff351cc9ae3503278a048154019"
+    },
     "pptx": {
       "source": "anthropics/skills",
       "sourceType": "github",
       "skillPath": "skills/pptx/SKILL.md",
       "computedHash": ""
+    },
+    "procedural-modeling": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/procedural-modeling/SKILL.md",
+      "computedHash": "2c4f85fba8145c13930100a6b27e03c62ae6c3e8387cb7933d603dffab5fbb6e"
+    },
+    "prop-artist": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/prop-artist/SKILL.md",
+      "computedHash": "57caef56216cf1341622dfafcd66abdc4834adc4dab5c9ffa8898ecf73dd1ca0"
+    },
+    "psx-horror-style": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/psx-horror-style/SKILL.md",
+      "computedHash": "cfa6253ddf7560d52e785b6655cd2e4ea98c5a53b9f0b46c90b29c7f1dff1136"
+    },
+    "qa-review": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/qa-review/SKILL.md",
+      "computedHash": "5b1189a553667f006318b2aafbee55c181748b247fe9ff6fda9aa84f2fcd9b05"
+    },
+    "realistic-style": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/realistic-style/SKILL.md",
+      "computedHash": "37fd0736735d989f6038cba459352ba11a87bf01552b62b73047888133879a7f"
     },
     "receiving-code-review": {
       "source": "obra/superpowers",
@@ -386,11 +890,46 @@
       "skillPath": "skills/remotion-upgrade/SKILL.md",
       "computedHash": ""
     },
+    "rendering": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/rendering/SKILL.md",
+      "computedHash": "c9d4a1d6942b547be04490fb25460abf694750b5d56b84ebb6a3ac07dd988026"
+    },
     "requesting-code-review": {
       "source": "obra/superpowers",
       "sourceType": "github",
       "skillPath": "skills/requesting-code-review/SKILL.md",
       "computedHash": "32bcc25e8c3315d0150f646ee0067c9d4bfbc7719c34012db9c202e17cce8a14"
+    },
+    "retopology": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/retopology/SKILL.md",
+      "computedHash": "6783badc3e140fdef23cbe1a753b54d8bca2b20aba296f8de05528d72279c743"
+    },
+    "retro-16bit-style": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/retro-16bit-style/SKILL.md",
+      "computedHash": "7e4524fd44317430b1964b17f31df78da8ecaebda5435fb82a2a30967559863d"
+    },
+    "retro-8bit-style": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/retro-8bit-style/SKILL.md",
+      "computedHash": "0fa2c6605712ecf0e42562270349d9eadf3aedbcb20e15ae4bc700285c50bd33"
+    },
+    "rigging": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/rigging/SKILL.md",
+      "computedHash": "40076496e897685d2c394a34058e12e60eed244d4de783120ec914353df74971"
     },
     "safe-refactor": {
       "source": "JuliusBrussee/caveman",
@@ -398,17 +937,59 @@
       "skillPath": "skills/safe-refactor/SKILL.md",
       "computedHash": "709db1dfde3fe3baa362ecdb3f1f3c0be27587358242737dfa4ca82a23744269"
     },
+    "scene-assembly": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/scene-assembly/SKILL.md",
+      "computedHash": "8806364f9a289387fe47eda086fd1f0da14dacf5d77e71c64342f55ade6ef074"
+    },
+    "sci-fi-punk-worlds": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/sci-fi-punk-worlds/SKILL.md",
+      "computedHash": "3c732ee921f74f75558c90694cee312427871e165faa705742acefef9d62898c"
+    },
+    "sculpting": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/sculpting/SKILL.md",
+      "computedHash": "f310b7c9790aee583c8e79e21aeb6d8ef16f90c6f2fb61522f688daf04066379"
+    },
     "seo-audit": {
       "source": "coreyhaines31/marketingskills",
       "sourceType": "github",
       "skillPath": "skills/seo-audit/SKILL.md",
       "computedHash": ""
     },
+    "set-dressing": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/set-dressing/SKILL.md",
+      "computedHash": "fdd87b1574f3e751d18a004e66a1090521de7495e71642ce2cb8ea70ebbf2c6c"
+    },
     "skill-creator": {
       "source": "anthropics/skills",
       "sourceType": "github",
       "skillPath": "skills/skill-creator/SKILL.md",
       "computedHash": ""
+    },
+    "stop-motion-craft-style": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/stop-motion-craft-style/SKILL.md",
+      "computedHash": "ae9b741cb59ba43f112810f05e6d78e2da755cf922dace68eaf25f2959577a02"
+    },
+    "stylized-style": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/stylized-style/SKILL.md",
+      "computedHash": "50652c0a2ebe67d89652f72e5e4e6080d78b1d08ce255936350c78fd8b0582eb"
     },
     "subagent-driven-development": {
       "source": "obra/superpowers",
@@ -434,11 +1015,32 @@
       "skillPath": "skills/test-driven-development/SKILL.md",
       "computedHash": "2782702b2cf69ace085ed30d067b6f8bfd2d777ad51770fc5bdae9cb5c1b5c04"
     },
+    "texture-workflow": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/texture-workflow/SKILL.md",
+      "computedHash": "fd84bd343b7fb6a3d738414ebe492dd790820c3cfad381212fd435f4454f2500"
+    },
     "ultracave": {
       "source": "JuliusBrussee/caveman",
       "sourceType": "github",
       "skillPath": "skills/ultracave/SKILL.md",
       "computedHash": "b9814ef35fbc9f4359f682c7f2e4944b30428f8c8d79463efa070f99fffaa453"
+    },
+    "unity-export": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/unity-export/SKILL.md",
+      "computedHash": "478d8365508bd6194442aa50ba9e76b55e57392ffba8905ae5c1bd3af58299c5"
+    },
+    "unreal-export": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/unreal-export/SKILL.md",
+      "computedHash": "04904da6e3032e867396d187ce8c8bf40b4be398e70cd14d1ef65148c2659e85"
     },
     "using-git-worktrees": {
       "source": "obra/superpowers",
@@ -452,6 +1054,34 @@
       "skillPath": "skills/using-superpowers/SKILL.md",
       "computedHash": "6a9104fac7e16c3cec2bc118943aefd331cac35b4cfabd427cea4dc16337c6a5"
     },
+    "uv-workflow": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/uv-workflow/SKILL.md",
+      "computedHash": "a0500863c3facece670c80883cff314332ae187e0ca040eae0e918fd457e91ca"
+    },
+    "vector-style": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/vector-style/SKILL.md",
+      "computedHash": "2834a746577742aea0c3c996d56c2029bc9f2fa96e82fa80648c76954c063f4c"
+    },
+    "vegetation-artist": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/vegetation-artist/SKILL.md",
+      "computedHash": "a8e13014ecf5b64639ace2f2df0cb0ee4b77e6f7844f359838cbe22e7a725111"
+    },
+    "vehicle-artist": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/vehicle-artist/SKILL.md",
+      "computedHash": "4277dda8e2d9991afda4298c505b6768d4b6559cfdff3f61cd0a64b4fcc14feb"
+    },
     "verification-before-completion": {
       "source": "obra/superpowers",
       "sourceType": "github",
@@ -463,6 +1093,27 @@
       "sourceType": "github",
       "skillPath": "skills/verify-and-stop/SKILL.md",
       "computedHash": "130048a85c3d028f9e8bb9fa923143b11b55511c9c43ab3f155b6c8022e48f56"
+    },
+    "vfx-fx": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/vfx-fx/SKILL.md",
+      "computedHash": "0f153aa7bdd2f740628f0199de0f263ed036b74bffed5ad483795030cc650b84"
+    },
+    "visual-console-eras": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/visual-console-eras/SKILL.md",
+      "computedHash": "a6fd3c9a799f2edf82fa349b1126ec2f3cff1434966d48ab6f8b31d014bff15b"
+    },
+    "voxel-style": {
+      "source": "arjun988/blender-skills",
+      "commit": "904f095d8f36a6e72adaebb08d07f884a074743d",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/voxel-style/SKILL.md",
+      "computedHash": "51b6abc940021ccd42ab2b98f68b3d077c4145f5da7df36dd4b0c4b7cbe924a4"
     },
     "watch": {
       "source": "bradautomates/claude-video",

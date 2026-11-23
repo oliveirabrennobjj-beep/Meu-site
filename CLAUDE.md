@@ -33,6 +33,7 @@ O Brenno instalou as skills para serem usadas em toda conversa. Regras:
 | Testar site no navegador | `webapp-testing` |
 | Word, PDF, Excel | `docx`, `pdf`, `xlsx` |
 | Instalar skill ou plugin | `find-skills`; ler o código antes de instalar |
+| Blender, modelo 3D, cena 3D, asset de jogo | `blender-director` primeiro (ele chama as outras 93 do pacote `arjun988/blender-skills`: `blender-modeler`, `hard-surface`, `materials`, `lighting`, `rendering`, `export-pipeline`, estilos como `lowpoly-style`, `horror-style` etc.). Precisam do Blender aberto com o MCP `blender-mcp` (`uvx blender-mcp`, porta 9876) no PC; sem ele, servem só de guia |
 | Commit | `caveman-commit` |
 | Antes de dizer "pronto" | `verification-before-completion` |
 
