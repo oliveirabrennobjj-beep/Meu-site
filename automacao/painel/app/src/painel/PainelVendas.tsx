@@ -32,7 +32,7 @@ import { cn } from "@/lib/utils";
 import { FichaLead } from "./FichaLead";
 import { Importar, Mensagens } from "./Ferramentas";
 import { Agenda } from "./Agenda";
-import { combinadosAntigos, deHoje, leadDo, type Compromisso, type ModeloId } from "./agenda";
+import { combinadosAntigos, deHoje, leadDo, vivo, type Compromisso, type ModeloId } from "./agenda";
 import { AgendaDaLoja, CompromissoFicha } from "./CompromissoFicha";
 import { CompromissoForm, type Rascunho } from "./CompromissoForm";
 import { ConfigAgendaFolha } from "./ConfigAgendaFolha";
@@ -62,6 +62,7 @@ import {
   statusDe,
   tipoDe,
   type Escopo,
+  type Lead,
   type Status,
 } from "./leads";
 import { usePainel } from "./usePainel";
@@ -284,6 +285,34 @@ export function PainelVendas() {
     [compromissos, todos, configAgenda],
   );
   const porId = useMemo(() => new Map(todos.map((l) => [l.id, l])), [todos]);
+
+  /**
+   * A loja não quer mais: fica em "Não quer", com a anotação no histórico, e os horários que ainda iam
+   * acontecer são cancelados (resultado "não fechou"). Vale para o botão da agenda, da ficha e do assistente.
+   */
+  const naoQuerMais = (leadId: string, motivo = "") => {
+    const lead = porId.get(leadId);
+    if (!lead) return;
+    const agora = new Date().toISOString();
+    const texto = `Não quer mais${motivo.trim() ? `: ${motivo.trim()}` : "."}`;
+    salvar(leadId, {
+      status: "nao",
+      obs: texto,
+      compromisso: null,
+      historico: [...(lead.historico ?? []), { em: agora, texto }].slice(-20),
+    });
+    const futuros = compromissos.filter((c) => c.leadId === leadId && vivo(c));
+    for (const c of futuros) salvarCompromisso({ ...c, status: "cancelado", resultado: "naofechou" });
+    avisar(`${lead.nome}: não quer mais${futuros.length ? ". Saiu da agenda." : "."}`);
+  };
+  /** Toda gravação na loja passa por aqui: "Não quer" também tira os horários dela da agenda. */
+  const salvarLoja = (id: string, mudanca: Partial<Lead>) => {
+    salvar(id, mudanca);
+    if (mudanca.status === "nao") {
+      for (const c of compromissos.filter((x) => x.leadId === id && vivo(x)))
+        salvarCompromisso({ ...c, status: "cancelado", resultado: "naofechou" });
+    }
+  };
   const deHojeN = deHoje(agenda).length;
   const compromisso = useMemo(() => agenda.find((c) => c.id === compromissoId) ?? null, [agenda, compromissoId]);
   const abrirCompromisso = (c: Compromisso) => {
@@ -477,7 +506,7 @@ export function PainelVendas() {
             textos={textos}
             proximo={proximo}
             onFechar={() => setFichaId(null)}
-            onSalvar={salvar}
+            onSalvar={salvarLoja}
             onAbrir={(lead) => setFichaId(lead.id)}
             avisar={avisar}
             agenda={(lead) => (
@@ -498,6 +527,14 @@ export function PainelVendas() {
             compromissos={agenda}
             cfg={configAgenda}
             onFechar={() => setRascunho(null)}
+            onNaoQuer={(c, motivo) => {
+              if (c.leadId && porId.has(c.leadId)) naoQuerMais(c.leadId, motivo);
+              else {
+                salvarCompromisso({ ...c, status: "cancelado", resultado: "naofechou" });
+                avisar("Não quer mais: horário cancelado.");
+              }
+              setRascunho(null);
+            }}
             onSalvar={(c, deLegado) => {
               salvarCompromisso(c);
               // Combinado antigo que virou horário marcado sai da loja, para não aparecer duas vezes.
@@ -524,6 +561,14 @@ export function PainelVendas() {
                 : null
             }
             onDesmarcarLegado={(id) => salvar(id, { compromisso: null })}
+            onNaoQuer={(c, motivo) => {
+              if (c.leadId && porId.has(c.leadId)) naoQuerMais(c.leadId, motivo);
+              else {
+                salvarCompromisso({ ...c, status: "cancelado", resultado: "naofechou" });
+                avisar("Não quer mais: horário cancelado.");
+              }
+              setCompromissoId(null);
+            }}
             avisar={avisar}
           />
           <ConfigAgendaFolha
@@ -596,7 +641,7 @@ export function PainelVendas() {
             leads={leads}
             conversa={conversa}
             onConversa={salvarConversa}
-            onSalvar={salvar}
+            onSalvar={salvarLoja}
             onAbrir={(lead) => setFichaId(lead.id)}
             avisar={avisar}
           />

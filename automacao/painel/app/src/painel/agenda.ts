@@ -488,9 +488,12 @@ export function precisamDeRetorno(leads: Lead[], todos: Compromisso[], agora = a
   const perdidos = new Set(
     todos.filter((c) => !c.apagado && (c.status === "cancelado" || c.status === "faltou")).map((c) => c.leadId),
   );
+  // Quem já disse que não quer, ou já fechou, não precisa de retorno.
   return leads.filter(
     (l) =>
       !comFuturo.has(l.id) &&
+      statusDe(l) !== "nao" &&
+      statusDe(l) !== "fechou" &&
       (perdidos.has(l.id) || statusDe(l) === "respondeu" || statusDe(l) === "depois"),
   );
 }

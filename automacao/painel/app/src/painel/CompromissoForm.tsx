@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { AlertTriangle, Search, X } from "lucide-react";
+import { AlertTriangle, Search, UserX, X } from "lucide-react";
 import {
   BlockButton,
   BlockDrawer,
@@ -43,6 +43,7 @@ export function CompromissoForm({
   cfg,
   onFechar,
   onSalvar,
+  onNaoQuer,
 }: {
   rascunho: Rascunho | null;
   leads: Lead[];
@@ -50,6 +51,7 @@ export function CompromissoForm({
   cfg: ConfigAgenda;
   onFechar: () => void;
   onSalvar: (c: Compromisso, deLegado?: string) => void;
+  onNaoQuer: (c: Compromisso, motivo: string) => void;
 }) {
   const [mostrado, setMostrado] = useState(rascunho);
   useEffect(() => {
@@ -72,6 +74,7 @@ export function CompromissoForm({
           cfg={cfg}
           onFechar={onFechar}
           onSalvar={onSalvar}
+          onNaoQuer={onNaoQuer}
         />
       )}
     </BlockDrawer>
@@ -85,6 +88,7 @@ function Formulario({
   cfg,
   onFechar,
   onSalvar,
+  onNaoQuer,
 }: {
   rascunho: Rascunho;
   leads: Lead[];
@@ -92,8 +96,11 @@ function Formulario({
   cfg: ConfigAgenda;
   onFechar: () => void;
   onSalvar: (c: Compromisso, deLegado?: string) => void;
+  onNaoQuer: (c: Compromisso, motivo: string) => void;
 }) {
   const editando = Boolean(rascunho.id);
+  const [desistiu, setDesistiu] = useState(false);
+  const [motivo, setMotivo] = useState("");
   const porId = useMemo(() => new Map(leads.map((l) => [l.id, l])), [leads]);
   const agora = agoraSP();
   // Hora inicial: a pedida, ou o primeiro horário livre de hoje/amanhã.
@@ -458,6 +465,34 @@ function Formulario({
         <BlockButton size="lg" onClick={salvar}>
           {confirmarPassado ? "Salvar mesmo assim" : editando ? "Salvar mudanças" : "Marcar horário"}
         </BlockButton>
+        {editando && !desistiu && (
+          <BlockButton variant="ghost" className="text-[color:var(--blk-error)]" onClick={() => setDesistiu(true)}>
+            <UserX aria-hidden="true" />
+            Cliente não quer mais
+          </BlockButton>
+        )}
+        {editando && desistiu && (
+          <div className="flex flex-col gap-2 rounded-[12px] border border-[color:var(--blk-error)] p-3">
+            <p className="text-[13px] leading-snug">
+              Marcar que {lead?.nome ?? cliente.nome ?? "o cliente"} não quer mais? Sai da agenda e vai pra "Não querem".
+            </p>
+            <input
+              value={motivo}
+              onChange={(e) => setMotivo(e.target.value)}
+              placeholder="Motivo (opcional), ex.: achou caro"
+              aria-label="Motivo de não querer"
+              className={cn(fieldClass, "h-10 text-[13.5px]")}
+            />
+            <div className="flex gap-2">
+              <BlockButton variant="secondary" onClick={() => onNaoQuer(rascunho as Compromisso, motivo)}>
+                Sim, não quer mais
+              </BlockButton>
+              <BlockButton variant="ghost" onClick={() => setDesistiu(false)}>
+                Voltar
+              </BlockButton>
+            </div>
+          </div>
+        )}
       </div>
     </>
   );

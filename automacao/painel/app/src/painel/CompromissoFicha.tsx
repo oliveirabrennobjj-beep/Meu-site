@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { CalendarPlus, Check, ChevronRight, Copy, MapPin, MessageCircle, X } from "lucide-react";
+import { CalendarPlus, Check, ChevronRight, Copy, MapPin, MessageCircle, UserX, X } from "lucide-react";
 import {
   BlockButton,
   BlockDrawer,
@@ -128,6 +128,7 @@ export function CompromissoFicha({
   onFormulario,
   onAbrirLead,
   onDesmarcarLegado,
+  onNaoQuer,
   avisar,
 }: {
   compromisso: Compromisso | null;
@@ -139,6 +140,7 @@ export function CompromissoFicha({
   onFormulario: (r: Rascunho) => void;
   onAbrirLead: ((lead: Lead) => void) | null;
   onDesmarcarLegado: (leadId: string) => void;
+  onNaoQuer: (c: Compromisso, motivo: string) => void;
   avisar: (t: string) => void;
 }) {
   const [mostrado, setMostrado] = useState({ compromisso, lead });
@@ -166,6 +168,7 @@ export function CompromissoFicha({
           onFormulario={onFormulario}
           onAbrirLead={onAbrirLead}
           onDesmarcarLegado={onDesmarcarLegado}
+          onNaoQuer={onNaoQuer}
           avisar={avisar}
         />
       )}
@@ -173,7 +176,7 @@ export function CompromissoFicha({
   );
 }
 
-type Painel = null | "realizado" | "remarcar" | "cancelar";
+type Painel = null | "realizado" | "remarcar" | "cancelar" | "naoquer";
 
 function Ficha({
   c,
@@ -185,6 +188,7 @@ function Ficha({
   onFormulario,
   onAbrirLead,
   onDesmarcarLegado,
+  onNaoQuer,
   avisar,
 }: {
   c: Compromisso;
@@ -196,9 +200,11 @@ function Ficha({
   onFormulario: (r: Rascunho) => void;
   onAbrirLead: ((lead: Lead) => void) | null;
   onDesmarcarLegado: (leadId: string) => void;
+  onNaoQuer: (c: Compromisso, motivo: string) => void;
   avisar: (t: string) => void;
 }) {
   const [painel, setPainel] = useState<Painel>(null);
+  const [motivo, setMotivo] = useState("");
   const [nova, setNova] = useState({ data: c.data, hora: c.hora });
   const agora = agoraSP();
   const Icone = TIPO_ICONE[c.tipo];
@@ -381,7 +387,33 @@ function Ficha({
               Cancelar
             </BlockButton>
           )}
+          <BlockButton
+            variant="ghost"
+            className="text-[color:var(--blk-error)]"
+            onClick={() => setPainel(painel === "naoquer" ? null : "naoquer")}
+          >
+            <UserX aria-hidden="true" />
+            Não quer mais
+          </BlockButton>
         </div>
+
+        {painel === "naoquer" && (
+          <div className="flex flex-col gap-2 rounded-[12px] border border-[color:var(--blk-error)] p-3">
+            <p className="text-[13px] leading-snug">
+              Marcar que <strong>{lead.nome}</strong> não quer mais? Sai da agenda e vai pra "Não querem".
+            </p>
+            <input
+              value={motivo}
+              onChange={(e) => setMotivo(e.target.value)}
+              placeholder="Motivo (opcional), ex.: achou caro"
+              aria-label="Motivo de não querer"
+              className={cn(fieldClass, "h-10 text-[13.5px]")}
+            />
+            <BlockButton variant="secondary" className="self-start" onClick={() => onNaoQuer(c, motivo)}>
+              Sim, não quer mais
+            </BlockButton>
+          </div>
+        )}
 
         {painel === "realizado" && (
           <div className="flex flex-col gap-2 rounded-[12px] border border-[color:var(--bjork-border-strong)] p-3">
