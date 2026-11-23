@@ -7,6 +7,7 @@ import {
   tipoDe,
   type Lead,
 } from "./leads";
+import { STATUS_COMPROMISSO, TIPOS, inicioDe, porHorario, vivo, type Compromisso } from "./agenda";
 
 // O que o assistente do painel sabe sobre o negócio e a abordagem do Brenno.
 // Fonte das regras: bn-digital/prospeccao/abordagem-presencial.md e as decisões no segundo cérebro.
@@ -15,7 +16,7 @@ const REGRAS = `Você é o assistente de vendas do Brenno, dentro do painel de p
 SOBRE O NEGÓCIO
 - A BN Digital é do Brenno, de Casimiro de Abreu (RJ). Vende pra comércio local: site (abre rápido no celular, botão do WhatsApp, ajuda a aparecer no Google) e placa NFC de avaliação do Google (o cliente encosta o celular e cai direto na tela de avaliar; tem QR Code atrás).
 - Site: ele prefere alugar (entrada pequena + mensalidade). Os valores ainda não foram definidos.
-- Horário marcado online (só barbearia, novidade de 18/11): o cliente escolhe serviço e horário pelo celular e já cai na agenda do barbeiro. Ainda em teste: sem preço definido; o objetivo é achar 2 ou 3 barbearias que topem usar. Não prometa função que o Brenno não confirmou.
+- Sistema (novidade de 18/11): horário marcado (barbearia, salão, estética, saúde, pet, lava-jato…: o cliente escolhe serviço e horário pelo celular e já cai na agenda) ou controle de alunos (academia, pilates, luta, dança, escola: turmas, aula marcada e mensalidade). Ainda em teste, sem preço definido. Não prometa função que o Brenno não confirmou.
 - Placa: venda única. Na lista de 20/10 a referência era R$ 129 (duas por R$ 229). Só fale de valor se o Brenno perguntar. Nunca ponha preço em mensagem de primeiro contato.
 
 COMO ABORDAR
@@ -68,9 +69,15 @@ O QUE VOCÊ FAZ
 - Lê prints de conversa que ele mandar: diga em uma linha o que a pessoa respondeu e o que fazer agora. Ache a loja pelo número ou pelo nome na lista abaixo.
 - Organiza o painel. Quando a conversa disser algo que deve ficar registrado (a loja respondeu, marcou conversa, pediu pra falar depois, não quer, fechou), termine a resposta com um bloco exatamente assim, sem comentar o bloco:
 \`\`\`painel
-[{"loja": "<id da loja na lista>", "status": "respondeu" | "fechou" | "depois" | "nao" | "enviado" | null, "compromisso": {"quando": "AAAA-MM-DD" ou "AAAA-MM-DDTHH:mm", "oque": "texto curto"} | null, "anotacao": "1 ou 2 frases"}]
+[{"loja": "<id da loja na lista>", "status": "respondeu" | "fechou" | "depois" | "nao" | "enviado" | null, "compromisso": {"quando": "AAAA-MM-DD", "oque": "texto curto"} | null, "horario": <veja abaixo> | null, "anotacao": "1 ou 2 frases"}]
 \`\`\`
-  Use só ids da lista. status null = não muda a situação. Sem hora dita, use só a data. Se não souber qual é a loja, pergunte antes. O Brenno confere antes de salvar.
+  Use só ids da lista. status null = não muda a situação. Se não souber qual é a loja, pergunte antes. O Brenno confere antes de salvar.
+- Agenda: com dia E hora combinados (visita, reunião, ligação, entrega), use "horario" (não use "compromisso"):
+  marcar: {"acao": "marcar", "data": "AAAA-MM-DD", "hora": "HH:mm", "tipo": "visita" | "online" | "ligacao" | "proposta" | "retorno" | "instalacao", "duracao": minutos, "obs": "texto curto"}
+  mudar dia/hora de um horário da AGENDA: {"acao": "remarcar", "id": "<id da agenda>", "data": "AAAA-MM-DD", "hora": "HH:mm"}
+  cancelar: {"acao": "cancelar", "id": "<id>"}; cliente confirmou: {"acao": "confirmado", "id": "<id>"}; já aconteceu: {"acao": "realizado", "id": "<id>", "resultado": "fechou" | "pensar" | "naofechou"}
+  "compromisso" fica só pra lembrete sem hora (ex.: mandar mensagem amanhã). Antes de marcar, olhe a AGENDA abaixo e evite horário que bate com outro.
+- Quando a loja disser que não quer mais: status "nao" e anotação com o motivo. O painel já tira os horários dela da agenda.
 - Respostas curtas: umas 6 linhas no máximo, fora a mensagem pronta.`;
 
 const DIAS = ["domingo", "segunda", "terça", "quarta", "quinta", "sexta", "sábado"];
@@ -102,7 +109,7 @@ function linhaDaLoja(lead: Lead) {
 }
 
 /** Primeira mensagem da conversa com o assistente: regras, data de hoje e a lista de lojas. */
-export function montarInstrucoes(leads: Lead[], agora = new Date()) {
+export function montarInstrucoes(leads: Lead[], agora = new Date(), agenda: Compromisso[] = []) {
   const calendario = Array.from({ length: 8 }, (_, i) => {
     const d = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate() + i);
     const nome = i === 0 ? "hoje" : i === 1 ? "amanhã" : DIAS[d.getDay()];
@@ -115,5 +122,29 @@ export function montarInstrucoes(leads: Lead[], agora = new Date()) {
     "",
     "LOJAS NO PAINEL (id | nome | ramo | lugar | WhatsApp | situação | avaliações | marcado | nota):",
     ...leads.map(linhaDaLoja),
+    "",
+    "AGENDA (id | loja | dia e hora | tipo | situação | obs): os que ainda vão acontecer e os dos últimos 7 dias",
+    ...linhasDaAgenda(leads, agenda, agora),
   ].join("\n");
+}
+
+function linhasDaAgenda(leads: Lead[], agenda: Compromisso[], agora: Date) {
+  const nomes = new Map(leads.map((l) => [l.id, l.nome]));
+  const limite = agora.getTime() - 7 * 86_400_000;
+  const lista = agenda
+    .filter((c) => !c.apagado && !c.legado && (vivo(c) || inicioDe(c).getTime() >= limite))
+    .sort(porHorario)
+    .map((c) =>
+      [
+        c.id,
+        `${c.leadId} ${nomes.get(c.leadId) ?? c.cliente?.nome ?? ""}`.trim(),
+        `${c.data} ${c.hora}`,
+        TIPOS[c.tipo].curto,
+        STATUS_COMPROMISSO[c.status].nome,
+        c.obs,
+      ]
+        .filter(Boolean)
+        .join(" | "),
+    );
+  return lista.length ? lista : ["(nada marcado)"];
 }

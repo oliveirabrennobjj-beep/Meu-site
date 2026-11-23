@@ -19,6 +19,15 @@ import {
   type Turno,
 } from "./assistente";
 import { montarInstrucoes } from "./conhecimento";
+import {
+  TIPOS,
+  RESULTADOS,
+  dataCurta,
+  diaFalado,
+  novoId,
+  type Compromisso as Horario,
+  type ConfigAgenda,
+} from "./agenda";
 import { statusDe, type Lead } from "./leads";
 
 const HISTORICO_NO_PEDIDO = 20;
@@ -53,6 +62,9 @@ export function Assistente({
   onSalvar,
   onAbrir,
   avisar,
+  agenda,
+  cfg,
+  onCompromisso,
 }: {
   leads: Lead[];
   conversa: Mensagem[];
@@ -60,6 +72,10 @@ export function Assistente({
   onSalvar: (id: string, mudanca: Partial<Lead>) => void;
   onAbrir: (lead: Lead) => void;
   avisar: (texto: string) => void;
+  /** Agenda (horários marcados) que o assistente lê e pode mudar. */
+  agenda: Horario[];
+  cfg: ConfigAgenda;
+  onCompromisso: (c: Horario) => void;
 }) {
   const [texto, setTexto] = useState("");
   const [foto, setFoto] = useState<File | null>(null);
@@ -120,7 +136,7 @@ export function Assistente({
 
     const recentes = historico.slice(-HISTORICO_NO_PEDIDO);
     const turnos: Turno[] = [
-      { role: "user", content: montarInstrucoes(leads) },
+      { role: "user", content: montarInstrucoes(leads, new Date(), agenda) },
       ...recentes.map((m, i) => ({
         role: m.papel === "brenno" ? ("user" as const) : ("assistant" as const),
         content: conteudo(m, i === recentes.length - 1),
@@ -135,7 +151,11 @@ export function Assistente({
         onText: ({ text: parcial }: { text: string }) => setResposta(textoVisivel(parcial)),
         ...(fotoEnviada ? { images: [fotoEnviada] } : {}),
       });
-      const { visivel, acoes } = separarAcoes(text, new Set(leads.map((l) => l.id)));
+      const { visivel, acoes } = separarAcoes(
+        text,
+        new Set(leads.map((l) => l.id)),
+        new Set(agenda.filter((c) => !c.legado && !c.apagado).map((c) => c.id)),
+      );
       onConversa([
         ...historico,
         { papel: "assistente", texto: visivel, em: new Date().toISOString(), ...(acoes.length ? { acoes } : {}) },
@@ -170,10 +190,51 @@ export function Assistente({
       ...(acao.status && acao.status !== statusDe(lead) ? { status: acao.status } : {}),
       ...(acao.compromisso ? { compromisso: acao.compromisso } : {}),
     });
+    salvarHorario(acao, lead);
     onConversa(
       conversa.map((m, i) => (i === indice ? { ...m, salvas: [...(m.salvas ?? []), posicao] } : m)),
     );
     avisar(`${lead.nome}: salvo no painel`);
+  };
+
+  /** Aplica na agenda o que o assistente propôs (marcar, remarcar, cancelar, confirmar, realizado). */
+  const salvarHorario = (acao: Acao, lead: Lead) => {
+    const h = acao.horario;
+    if (!h) return;
+    if (h.acao === "marcar") {
+      onCompromisso({
+        id: novoId(),
+        leadId: lead.id,
+        tipo: h.tipo,
+        servico: "ambos",
+        data: h.data,
+        hora: h.hora,
+        duracao: h.duracao ?? cfg.duracao,
+        local: "",
+        obs: h.obs ?? acao.anotacao ?? "",
+        prioridade: "media",
+        status: "agendado",
+        resultado: null,
+        historico: [],
+        avisos: {},
+        criado: new Date().toISOString(),
+      });
+      return;
+    }
+    const c = agenda.find((x) => x.id === h.id);
+    if (!c) return;
+    if (h.acao === "remarcar")
+      onCompromisso({
+        ...c,
+        data: h.data,
+        hora: h.hora,
+        status: "remarcado",
+        avisos: {},
+        historico: [...c.historico, { de: `${c.data} ${c.hora}`, para: `${h.data} ${h.hora}`, em: new Date().toISOString() }],
+      });
+    else if (h.acao === "cancelar") onCompromisso({ ...c, status: "cancelado" });
+    else if (h.acao === "confirmado") onCompromisso({ ...c, status: "confirmado" });
+    else if (h.acao === "realizado") onCompromisso({ ...c, status: "realizado", resultado: h.resultado });
   };
 
   const copiar = async (t: string) => {
@@ -243,6 +304,7 @@ export function Assistente({
                     acao={acao}
                     lead={leads.find((l) => l.id === acao.loja)}
                     salva={m.salvas?.includes(posicao) ?? false}
+                    agenda={agenda}
                     onSalvar={() => salvarAcao(i, posicao)}
                     onAbrir={onAbrir}
                   />
@@ -335,20 +397,36 @@ export function Assistente({
   );
 }
 
+/** "Marcar visita · ter, 24/11 10:00", "Cancelar o horário de seg, 23/11 09:00"… */
+function linhaDoHorario(acao: Acao, agenda: Horario[]) {
+  const h = acao.horario;
+  if (!h) return null;
+  if (h.acao === "marcar") return `Marcar ${TIPOS[h.tipo].curto.toLowerCase()} · ${diaFalado(h.data)} ${h.hora}`;
+  const c = agenda.find((x) => x.id === h.id);
+  const quando = c ? `${diaFalado(c.data)} ${c.hora}` : "";
+  if (h.acao === "remarcar") return `Remarcar ${quando} para ${dataCurta(h.data)} ${h.hora}`;
+  if (h.acao === "cancelar") return `Cancelar o horário de ${quando}`;
+  if (h.acao === "confirmado") return `Cliente confirmou ${quando}`;
+  return h.acao === "realizado" ? `Realizado ${quando}: ${RESULTADOS[h.resultado].toLowerCase()}` : null;
+}
+
 function CartaoAcao({
   acao,
   lead,
   salva,
+  agenda,
   onSalvar,
   onAbrir,
 }: {
   acao: Acao;
   lead?: Lead;
   salva: boolean;
+  agenda: Horario[];
   onSalvar: () => void;
   onAbrir: (lead: Lead) => void;
 }) {
   if (!lead) return null;
+  const horario = linhaDoHorario(acao, agenda);
   return (
     <div className="flex flex-col gap-1.5 rounded-[12px] border border-[color:var(--bjork-border-strong)] bg-[var(--bjork-accent-soft)] p-3 text-[13px]">
       <p className="font-medium">Atualizar {lead.nome}</p>
@@ -360,6 +438,11 @@ function CartaoAcao({
       {acao.compromisso && (
         <p>
           Marcado: <span className="font-medium">{quandoCurto(acao.compromisso.quando)}</span> · {acao.compromisso.oque}
+        </p>
+      )}
+      {horario && (
+        <p>
+          Agenda: <span className="font-medium">{horario}</span>
         </p>
       )}
       {acao.anotacao && <p className="text-[color:var(--bjork-text-medium)]">Anotação: {acao.anotacao}</p>}

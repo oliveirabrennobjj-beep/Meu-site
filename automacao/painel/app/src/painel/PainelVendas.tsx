@@ -644,6 +644,9 @@ export function PainelVendas() {
             onSalvar={salvarLoja}
             onAbrir={(lead) => setFichaId(lead.id)}
             avisar={avisar}
+            agenda={agenda}
+            cfg={configAgenda}
+            onCompromisso={salvarCompromisso}
           />
         )}
 

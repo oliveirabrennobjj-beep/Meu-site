@@ -1,4 +1,5 @@
 import { STATUS, cidadeDe, statusDe, tipoDe, type Lead, type Status } from "./leads";
+import { RESULTADOS, TIPOS, type Resultado, type TipoCompromisso } from "./agenda";
 
 /** O que o Brenno combinou com a loja: quando ("AAAA-MM-DD" ou "AAAA-MM-DDTHH:mm", hora local) e o quê. */
 export interface Compromisso {
@@ -49,9 +50,49 @@ export async function tiposDeFoto(): Promise<string[]> {
   return limites?.images?.mediaTypes ?? [];
 }
 
+/** Mudança na agenda (coleção `compromissos`) que o assistente propôs junto com a da loja. */
+export type HorarioAcao =
+  | { acao: "marcar"; data: string; hora: string; tipo: TipoCompromisso; duracao?: number; obs?: string }
+  | { acao: "remarcar"; id: string; data: string; hora: string }
+  | { acao: "cancelar" | "confirmado"; id: string }
+  | { acao: "realizado"; id: string; resultado: Resultado };
+
 /** Uma mudança no painel que o assistente propôs na conversa. */
 export interface Acao extends Proposta {
   loja: string;
+  horario?: HorarioAcao | null;
+}
+
+const DATA = /^\d{4}-\d{2}-\d{2}$/;
+const HORA = /^\d{2}:\d{2}$/;
+
+/** Confere o pedido de agenda do assistente; o que vier fora do formato (ou com id que não existe) é ignorado. */
+export function lerHorario(valor: unknown, idsAgenda: Set<string>): HorarioAcao | null {
+  if (!valor || typeof valor !== "object") return null;
+  const h = valor as Record<string, unknown>;
+  const id = String(h.id ?? "");
+  const data = String(h.data ?? "");
+  const hora = String(h.hora ?? "");
+  switch (h.acao) {
+    case "marcar": {
+      if (!DATA.test(data) || !HORA.test(hora)) return null;
+      const tipo = typeof h.tipo === "string" && h.tipo in TIPOS ? (h.tipo as TipoCompromisso) : "visita";
+      const duracao = typeof h.duracao === "number" && h.duracao >= 5 && h.duracao <= 600 ? Math.round(h.duracao) : undefined;
+      const obs = typeof h.obs === "string" && h.obs.trim() ? h.obs.trim() : undefined;
+      return { acao: "marcar", data, hora, tipo, ...(duracao ? { duracao } : {}), ...(obs ? { obs } : {}) };
+    }
+    case "remarcar":
+      return idsAgenda.has(id) && DATA.test(data) && HORA.test(hora) ? { acao: "remarcar", id, data, hora } : null;
+    case "cancelar":
+    case "confirmado":
+      return idsAgenda.has(id) ? { acao: h.acao, id } : null;
+    case "realizado":
+      return idsAgenda.has(id) && typeof h.resultado === "string" && h.resultado in RESULTADOS
+        ? { acao: "realizado", id, resultado: h.resultado as Resultado }
+        : null;
+    default:
+      return null;
+  }
 }
 
 /** Uma fala da conversa com o assistente, como fica guardada no banco. */
@@ -71,7 +112,11 @@ const INICIO_BLOCO = "```painel";
 export const textoVisivel = (texto: string) => texto.split(INICIO_BLOCO)[0].trimEnd();
 
 /** Separa o texto da resposta do bloco ```painel com as mudanças propostas. */
-export function separarAcoes(texto: string, idsValidos: Set<string>): { visivel: string; acoes: Acao[] } {
+export function separarAcoes(
+  texto: string,
+  idsValidos: Set<string>,
+  idsAgenda: Set<string> = new Set(),
+): { visivel: string; acoes: Acao[] } {
   const visivel = textoVisivel(texto);
   const bloco = texto.split(INICIO_BLOCO)[1]?.split("```")[0];
   if (!bloco) return { visivel, acoes: [] };
@@ -87,8 +132,9 @@ export function separarAcoes(texto: string, idsValidos: Set<string>): { visivel:
     const loja = String((item as { loja?: unknown })?.loja ?? "");
     if (!idsValidos.has(loja)) continue;
     const proposta = lerProposta(item, "");
-    if (!proposta.anotacao && !proposta.status && !proposta.compromisso) continue;
-    acoes.push({ loja, ...proposta });
+    const horario = lerHorario((item as { horario?: unknown })?.horario, idsAgenda);
+    if (!proposta.anotacao && !proposta.status && !proposta.compromisso && !horario) continue;
+    acoes.push({ loja, ...proposta, ...(horario ? { horario } : {}) });
   }
   return { visivel, acoes };
 }
