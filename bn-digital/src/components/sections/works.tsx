@@ -1,5 +1,6 @@
 import { Reveal } from "@/components/reveal";
 import { Carousel_003 } from "@/components/ui/skiper49";
+import { Button } from "@/components/ui/button";
 import { trabalhos } from "@/data/site";
 
 export function Works() {
@@ -17,6 +18,12 @@ export function Works() {
 
       <div className="portfolio mt-12 flex justify-center overflow-hidden">
         <Carousel_003 images={trabalhos} showPagination showNavigation loop className="max-w-6xl px-0" />
+      </div>
+
+      <div className="container-page mt-10 flex justify-center">
+        <Button asChild variant="contrast" size="lg">
+          <a href="portfolio/">Ver todos os sites</a>
+        </Button>
       </div>
     </section>
   );

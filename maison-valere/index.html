@@ -1,0 +1,1338 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Maison Valère</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Maison Valère, alta relojoaria de Genebra desde 1921. Conheça o Lune 40 em aço e ouro rosé com mostrador chocolate e agende uma visita privada.">
+<meta name="theme-color" content="#0B1A14">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%230B1A14'/%3E%3Cpath d='M12 18.4 L4.8 6.4 M12 18.4 L19.2 6.4' stroke='%23D4A384' stroke-width='1.8' stroke-linecap='round'/%3E%3Ccircle cx='12' cy='18.4' r='2.1' fill='%23D4A384'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Brygada+1918:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@400&family=Hanken+Grotesk:wght@300;400;500&family=Marcellus&display=swap">
+<style>
+/* Layout: boutique noturna. Hero de scroll com o relógio desenhado em código, depois salas alternadas (couro verde, mostrador chocolate) que afunilam para o atendimento privado. */
+:root{
+  --canvas:#0B1A14;
+  --canvas-2:#10251C;
+  --panel:#14301F;
+  --choco:#24150E;
+  --choco-2:#311D13;
+  --accent:#D4A384;
+  --accent-hover:#E5BC9F;
+  --accent-muted:rgba(212,163,132,.32);
+  --text-primary:#EFE8DA;
+  --text-secondary:#B4AC9C;
+  --ink:#1A110C;
+  --line:rgba(239,232,218,.12);
+  --line-strong:rgba(239,232,218,.42);
+  --scrim:rgba(5,12,9,.7);
+  --tshadow:0 1px 2px rgba(4,10,7,.9),0 3px 14px rgba(4,10,7,.7),0 10px 44px rgba(4,10,7,.75);
+  --f-display:"Brygada 1918",Georgia,"Times New Roman",serif;
+  --f-text:"Hanken Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"DM Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  --f-mark:"Marcellus",Georgia,serif;
+  --ease:cubic-bezier(.22,.61,.36,1);
+  --ease-soft:cubic-bezier(.65,.05,.36,1);
+  --gut-l:max(16px, env(safe-area-inset-left, 0px));
+  --gut-r:max(16px, env(safe-area-inset-right, 0px));
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html{overflow-x:hidden;overflow-x:clip;scroll-behavior:smooth;background:var(--canvas)}
+body{overflow-x:hidden;overflow-x:clip;background:var(--canvas);color:var(--text-primary);font-family:var(--f-text);font-size:17px;line-height:1.6;font-weight:300;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--canvas)}
+::selection{background:var(--accent);color:var(--ink)}
+a{color:inherit}
+img,svg{max-width:100%}
+h1,h2,h3{font-family:var(--f-display);font-weight:400;line-height:1.06;letter-spacing:-.01em;margin:0;text-wrap:balance}
+p{margin:0}
+.sr{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.skip{position:fixed;left:16px;top:-60px;z-index:40;background:var(--accent);color:var(--ink);padding:10px 16px;border-radius:2px;font-weight:500;transition:top .3s var(--ease)}
+.skip:focus{top:calc(env(safe-area-inset-top,0px) + 12px)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.wrap{max-width:1280px;margin:0 auto;padding-left:var(--gut-l);padding-right:var(--gut-r)}
+.eyebrow{font-family:var(--f-mono);font-size:.74rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);font-weight:400}
+.mono{font-family:var(--f-mono);font-weight:400;font-variant-numeric:tabular-nums}
+
+/* Ambiente: grão de couro fixo e uma luz que deriva devagar */
+.ambient{position:fixed;inset:0;z-index:-1;pointer-events:none;background:var(--canvas);overflow:hidden}
+.ambient::before{content:"";position:absolute;inset:-20%;background:radial-gradient(40% 36% at 30% 30%,rgba(46,112,85,.22),transparent 70%),radial-gradient(34% 30% at 75% 70%,rgba(212,163,132,.08),transparent 70%);animation:drift 90s var(--ease-soft) -23s infinite alternate}
+.ambient::after{content:"";position:absolute;inset:0;opacity:.32;mix-blend-mode:soft-light;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .9 0 0 0 0 .86 0 0 0 0 .8 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E")}
+@keyframes drift{0%{transform:translate3d(0,0,0) scale(1)}100%{transform:translate3d(6%,-5%,0) scale(1.08)}}
+
+/* Botões */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;font-family:var(--f-text);font-weight:500;font-size:.95rem;letter-spacing:.02em;text-decoration:none;padding:15px 26px;border-radius:2px;border:1px solid transparent;cursor:pointer;transition:background-color .45s var(--ease),color .45s var(--ease),border-color .45s var(--ease),transform .45s var(--ease)}
+.btn-gold{background:var(--accent);color:var(--ink)}
+.btn-gold:hover{background:var(--accent-hover)}
+.btn-line{background:transparent;color:var(--text-primary);border-color:var(--line-strong)}
+.btn-line:hover{border-color:var(--accent);color:var(--accent-hover)}
+.btn:active{transform:translateY(1px)}
+@media (pointer:coarse){.btn{min-height:48px;display:inline-flex;align-items:center;justify-content:center}}
+
+/* Cabeçalho */
+.top{position:fixed;inset:0 0 auto;z-index:20;padding-top:env(safe-area-inset-top,0px);transition:background-color .6s var(--ease),border-color .6s var(--ease);border-bottom:1px solid transparent}
+.top::before{content:"";position:absolute;inset:0 0 -48px;z-index:-1;pointer-events:none;background:linear-gradient(rgba(11,26,20,.78),rgba(11,26,20,0));transition:opacity .6s var(--ease)}
+.top.solid::before{opacity:0}
+.top.solid{background:rgba(11,26,20,.88);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom-color:var(--line)}
+.top .bar{display:flex;align-items:center;justify-content:space-between;gap:24px;height:72px;max-width:1440px;margin:0 auto;padding-left:var(--gut-l);padding-right:var(--gut-r)}
+.mark{display:inline-flex;align-items:center;gap:12px;text-decoration:none;color:var(--text-primary)}
+.mark svg{width:26px;height:26px;color:var(--accent)}
+.mark b{font-family:var(--f-mark);font-weight:400;font-size:1.18rem;letter-spacing:.34em;margin-right:-.34em}
+.nav{display:flex;gap:30px;font-size:.88rem;letter-spacing:.04em}
+.nav a{text-decoration:none;color:var(--text-secondary);transition:color .4s var(--ease)}
+.nav a:hover{color:var(--text-primary)}
+.top .btn{padding:11px 18px;font-size:.86rem}
+@media (max-width:980px){.nav{display:none}}
+@media (max-width:420px){.top .btn{padding:10px 13px;font-size:.8rem}.mark b{font-size:1.02rem}}
+
+/* Hero de scroll */
+.hero{position:relative;height:600vh}
+.stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
+.hero-glow{position:absolute;inset:0;pointer-events:none;background:radial-gradient(46% 62% at 72% 52%,rgba(212,163,132,.13),transparent 64%),radial-gradient(80% 90% at 50% 50%,transparent 50%,rgba(3,9,6,.55) 100%)}
+.watch-wrap{position:absolute;left:50%;top:50%;width:0;height:0;perspective:2600px;--head:min(54vh, 38vw);--ww:calc(var(--head) * 2.2)}
+.watch-wrap .watch{position:absolute;left:calc(var(--ww) / -2);top:calc(var(--ww) * -.95);transform:translate3d(22vw,0,0) scale(.4545);will-change:transform}
+.bands{position:absolute;inset:0;pointer-events:none}
+.band{position:absolute;left:max(6vw, 24px, calc(env(safe-area-inset-left, 0px) + 16px));top:50%;width:min(42vw, 580px);transform:translateY(-50%);opacity:0;text-shadow:var(--tshadow)}
+.band.on{pointer-events:auto}
+.band .btn{text-shadow:none}
+.b1{opacity:1}
+.band h1,.band h2{font-size:clamp(2.5rem,4.6vw,4.9rem);margin:18px 0 0}
+.band h2.sm{font-size:clamp(2.1rem,3.6vw,3.7rem)}
+.band p.lede{margin-top:22px;font-size:clamp(1.02rem,1.3vw,1.2rem);color:var(--text-secondary);max-width:40ch}
+.band .row{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+.band .price{margin-top:22px;font-family:var(--f-mono);font-size:.84rem;letter-spacing:.06em;color:var(--text-secondary)}
+.band .price strong{color:var(--text-primary);font-weight:400}
+.band .w{display:inline-block;white-space:pre;--kc:clamp(0,(var(--k,1) - var(--th,0)) * 3,1);opacity:var(--kc)}
+.rise .w{transform:translateY(calc((1 - var(--kc)) * .55em))}
+.approach .w{transform:scale(calc(.8 + .2 * var(--kc)))}
+.turn .w{transform:perspective(700px) rotateY(calc((1 - var(--kc)) * -84deg))}
+.settle .w{transform:translateY(calc((1 - var(--kc)) * .5em))}
+.band .then{--ks:clamp(0,(var(--k,1) - .55) * 4,1);opacity:var(--ks);transform:translateY(calc((1 - var(--ks)) * 14px))}
+.band .last{--kb:clamp(0,(var(--k,1) - .74) * 5,1);opacity:var(--kb);transform:translateY(calc((1 - var(--kb)) * 14px))}
+.chip{position:absolute;right:var(--gut-r);bottom:calc(env(safe-area-inset-bottom,0px) + 26px);font-family:var(--f-mono);font-size:.74rem;letter-spacing:.08em;color:var(--text-secondary);background:rgba(8,20,14,.6);border:1px solid var(--line);border-radius:999px;padding:8px 14px;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.chip i{font-style:normal;color:var(--accent)}
+.cue{position:absolute;left:max(6vw, 24px, calc(env(safe-area-inset-left, 0px) + 16px));bottom:calc(env(safe-area-inset-bottom,0px) + 28px);display:flex;align-items:center;gap:12px;font-family:var(--f-mono);font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-secondary);transition:opacity .6s var(--ease)}
+.cue span{display:block;width:1px;height:38px;background:linear-gradient(var(--accent),transparent);animation:cue 2.6s var(--ease-soft) -.8s infinite}
+@keyframes cue{0%{transform:scaleY(0);transform-origin:top}45%{transform:scaleY(1);transform-origin:top}55%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+@media (max-height:560px){.cue,.chip{display:none}}
+
+/* Retrato (celular e tablet em pé): relógio em cima, texto embaixo */
+@media (orientation:portrait){
+  .watch-wrap{--head:min(80vw, 44vh)}
+  .watch-wrap .watch{transform:translate3d(0,-17vh,0) scale(.4545)}
+  .hero-glow{background:radial-gradient(70% 40% at 50% 32%,rgba(212,163,132,.14),transparent 66%),radial-gradient(90% 90% at 50% 50%,transparent 46%,rgba(3,9,6,.55) 100%)}
+  .band{left:var(--gut-l);right:var(--gut-r);width:auto;top:auto;bottom:calc(env(safe-area-inset-bottom,0px) + 72px);transform:none}
+  .band::before{content:"";position:absolute;inset:-40px -24px -30px;z-index:-1;pointer-events:none;background:radial-gradient(ellipse 80% 70% at 50% 60%,var(--scrim) 0%,rgba(5,12,9,.45) 50%,rgba(5,12,9,0) 78%)}
+  .band h1,.band h2{font-size:clamp(2.1rem,9.4vw,3.4rem)}
+  .band h2.sm{font-size:clamp(1.9rem,8.2vw,3rem)}
+  .band p.lede{font-size:1rem;margin-top:14px}
+  .band .row{margin-top:22px}
+  .band .row .btn{flex:1 1 auto}
+  .band .row .btn-line{display:none}
+  .chip{left:var(--gut-l);right:auto;bottom:calc(env(safe-area-inset-bottom,0px) + 20px)}
+  .cue{display:none}
+}
+
+/* O relógio */
+.watch{position:relative;width:var(--ww);height:calc(var(--ww) * 1.9);transform-style:preserve-3d}
+.wface{position:absolute;inset:0;-webkit-backface-visibility:hidden;backface-visibility:hidden}
+.wface.back{transform:rotateY(180deg)}
+.strap{position:absolute;inset:0;width:100%;height:100%;display:block}
+.head{position:absolute;left:0;top:23.684%;width:100%;height:52.632%}
+.head>svg,.hands,.hand,.balance,.rotor{position:absolute;inset:0;width:100%;height:100%;display:block}
+.hand svg,.balance svg,.rotor svg{width:100%;height:100%;display:block}
+.dial{position:absolute;left:20%;top:20%;width:60%;height:60%;border-radius:50%;transform:rotate(var(--rot,0deg));background:radial-gradient(circle,rgba(0,0,0,0) 56%,rgba(0,0,0,.3) 100%),repeating-conic-gradient(from 0deg,rgba(255,255,255,.04) 0deg .5deg,rgba(0,0,0,.05) .5deg 1deg),conic-gradient(from -24deg,var(--da) 0deg,var(--db) 40deg,var(--dc) 82deg,var(--da) 132deg,var(--dc) 176deg,var(--db) 220deg,var(--dc) 262deg,var(--da) 312deg,var(--da) 360deg)}
+.glass{position:absolute;left:20.4%;top:20.4%;width:59.2%;height:59.2%;border-radius:50%;pointer-events:none;background:radial-gradient(110% 76% at 28% 16%,rgba(255,255,255,.17),rgba(255,255,255,0) 44%),linear-gradient(160deg,rgba(255,255,255,.05),rgba(255,255,255,0) 42%,rgba(255,255,255,0) 72%,rgba(255,255,255,.04))}
+.hands{filter:drop-shadow(3px 6px 4px rgba(0,0,0,.42))}
+.hand{animation:spin 60s linear infinite}
+.hand.h{animation-duration:43200s}
+.hand.m{animation-duration:3600s}
+.hand.s{animation-timing-function:steps(480,end)}
+@keyframes spin{to{transform:rotate(1turn)}}
+.balance{transform-origin:65% 38%;animation:osc .125s ease-in-out infinite alternate;animation-play-state:paused}
+.live .balance{animation-play-state:running}
+@keyframes osc{from{transform:rotate(-150deg)}to{transform:rotate(150deg)}}
+.rotor{transform:rotate(var(--rotor,0deg))}
+
+/* Seções abaixo do hero */
+.eyebrow{display:inline-flex;align-items:center;gap:12px;color:var(--text-secondary)}
+.eyebrow::before{content:"";width:22px;height:1px;background:var(--accent)}
+.lede{color:var(--text-secondary);font-size:clamp(1.02rem,1.25vw,1.15rem);max-width:46ch}
+section h2{font-size:clamp(2.1rem,4.2vw,3.7rem)}
+
+.maison{position:relative;padding-block:clamp(110px,16vw,220px) clamp(80px,12vw,160px);overflow:hidden}
+.maison-grid{position:relative;display:grid;gap:30px}
+.maison .big{font-size:clamp(2.4rem,5.8vw,5.8rem);line-height:1.02;max-width:15ch}
+.maison .big em{font-style:italic;color:var(--accent)}
+.maison-cols{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,4vw,64px);max-width:880px;margin-left:auto;margin-top:clamp(20px,4vw,48px);color:var(--text-secondary);font-size:1.06rem}
+.maison-cols p{max-width:42ch}
+.orbit{position:absolute;right:-10%;top:-16%;width:min(50vw,600px);color:var(--accent);opacity:.3;pointer-events:none}
+.orbit svg{display:block;width:100%;height:auto}
+.maison.live .orbit svg{animation:spin 150s linear -40s infinite}
+
+.dias{background:var(--canvas-2);padding-block:clamp(80px,12vw,150px)}
+.dias-head{display:flex;flex-direction:column;gap:16px;margin-bottom:48px}
+.dias-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--line)}
+.dia{display:flex;flex-direction:column;gap:14px;padding:34px 28px 30px;border-right:1px solid var(--line);min-width:0}
+.dia:first-child{padding-left:0}
+.dia:last-child{border-right:0;padding-right:0}
+.ico{width:46px;height:46px;overflow:visible}
+.ico *{fill:none;stroke:var(--accent);stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:0}
+.pre .ico *{stroke-dashoffset:1}
+.pre.in .ico *{stroke-dashoffset:0;transition:stroke-dashoffset 1.8s var(--ease) .25s}
+.dia h3{font-size:1.65rem}
+.dia p{color:var(--text-secondary);font-size:.98rem}
+.dia .eg{margin-top:auto;padding-top:16px;font-size:.72rem;letter-spacing:.1em;color:var(--text-primary);opacity:.78}
+.link-arrow{display:inline-flex;gap:10px;margin-top:44px;text-decoration:none;border-bottom:1px solid var(--accent-muted);padding-bottom:6px;transition:border-color .4s var(--ease),color .4s var(--ease)}
+.link-arrow:hover{border-color:var(--accent);color:var(--accent-hover)}
+
+.monte{background:linear-gradient(180deg,var(--choco),var(--choco-2));padding-block:clamp(80px,12vw,160px)}
+.monte-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:clamp(32px,6vw,96px);align-items:center}
+.cfg-stage{--head:min(30vw,430px);--ww:var(--head);position:relative;height:calc(var(--head) * 1.55);overflow:hidden}
+.cfg-stage::before{content:"";position:absolute;inset:8% 4%;border-radius:50%;background:radial-gradient(closest-side,rgba(212,163,132,.16),transparent 72%)}
+.cfg-wrap{position:absolute;left:50%;top:50%;width:var(--ww);height:calc(var(--ww) * 1.9);margin:calc(var(--ww) * -.95) 0 0 calc(var(--ww) / -2);transform:scale(var(--sz,1));transition:transform .9s var(--ease)}
+.cfg-wrap .watch,.cal-wrap .watch{position:absolute;left:0;top:0}
+.cfg-note{position:absolute;bottom:4px;left:0;right:0;text-align:center;font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--text-secondary)}
+.cfg{display:grid;gap:22px;margin:30px 0 26px}
+fieldset{border:0;margin:0;padding:0;min-width:0}
+legend{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--text-secondary);margin-bottom:12px;padding:0}
+.opts{display:flex;flex-wrap:wrap;gap:10px}
+.sw,.pill{position:relative;display:inline-flex;align-items:center;gap:10px;padding:9px 15px 9px 10px;border:1px solid var(--line-strong);border-radius:999px;cursor:pointer;font-size:.9rem;font-weight:400;transition:border-color .4s var(--ease),background-color .4s var(--ease)}
+.pill{padding:9px 18px}
+.sw input,.pill input{position:absolute;inset:0;width:100%;height:100%;opacity:0;margin:0;cursor:pointer}
+.sw .dot{width:20px;height:20px;border-radius:50%;flex:none;background:conic-gradient(from 210deg,var(--c2),var(--c1),var(--c2),var(--c1),var(--c2));box-shadow:inset 0 0 0 1px rgba(255,255,255,.2)}
+.sw.on,.pill.on{border-color:var(--accent);background:rgba(212,163,132,.1)}
+.sw:has(input:focus-visible),.pill:has(input:focus-visible){outline:2px solid var(--accent);outline-offset:2px}
+@media (pointer:coarse){.sw,.pill{min-height:44px}}
+.cfg-sum{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:10px 24px;padding-top:22px;border-top:1px solid var(--line)}
+.cfg-name{font-size:.8rem;letter-spacing:.08em;color:var(--text-secondary)}
+.cfg-price{display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+.cfg-price span{font-family:var(--f-display);font-size:clamp(1.8rem,3vw,2.5rem);line-height:1;font-variant-numeric:tabular-nums}
+.cfg-price small{font-family:var(--f-mono);font-size:.68rem;letter-spacing:.08em;color:var(--text-secondary)}
+.specs{display:grid;grid-template-columns:1fr 1fr;gap:0 28px;margin:24px 0 32px}
+.specs div{display:flex;flex-direction:column;gap:3px;padding:13px 0;border-bottom:1px solid var(--line);min-width:0}
+.specs dt{font-family:var(--f-mono);font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--text-secondary)}
+.specs dd{margin:0;font-size:.95rem;font-weight:400}
+
+.grave{padding-block:clamp(80px,12vw,160px);position:relative}
+.grave-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:clamp(32px,6vw,96px);align-items:center}
+.fields{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:16px;margin:32px 0 24px}
+.field{display:flex;flex-direction:column;gap:8px;min-width:0}
+.field>label{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--text-secondary)}
+input,select{font:inherit;font-size:1rem;font-weight:400;color:var(--text-primary);background:rgba(20,48,31,.7);border:1px solid var(--line-strong);border-radius:2px;padding:13px 14px;width:100%;min-width:0;transition:border-color .4s var(--ease)}
+select{appearance:none;-webkit-appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--accent) 50%),linear-gradient(135deg,var(--accent) 50%,transparent 50%);background-position:calc(100% - 20px) 55%,calc(100% - 15px) 55%;background-size:5px 5px;background-repeat:no-repeat;padding-right:40px}
+input:hover,select:hover{border-color:rgba(239,232,218,.5)}
+input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+input[aria-invalid="true"]{border-color:#E59A8A}
+.hold{position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;min-width:min(100%,300px);min-height:58px;padding:16px 28px;border:1px solid var(--accent);border-radius:2px;background:transparent;color:var(--text-primary);font:inherit;font-weight:500;font-size:1rem;letter-spacing:.02em;cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:none;-webkit-touch-callout:none}
+.hold-fill{position:absolute;inset:0;background:var(--accent-muted);transform-origin:left center;transform:scaleX(var(--p,0))}
+.hold-t{position:relative}
+.hold.done{background:var(--accent);color:var(--ink)}
+.hold-help{margin-top:12px;font-size:.72rem;letter-spacing:.06em;color:var(--text-secondary)}
+.hold-done{margin-top:18px;min-height:1.6em;font-family:var(--f-display);font-style:italic;font-size:1.2rem;color:var(--accent-hover);opacity:0;transform:translateY(8px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.hold-done.show{opacity:1;transform:none}
+.cb-wrap{display:grid;place-items:center}
+.caseback{position:relative;width:min(100%,540px);aspect-ratio:1}
+.caseback>*{position:absolute;inset:0;width:100%;height:100%}
+.cb-metal{inset:5.6%;width:auto;height:auto;border-radius:50%;background:repeating-radial-gradient(circle at 50% 50%,rgba(255,255,255,.05) 0 1px,rgba(0,0,0,.06) 1px 3px),conic-gradient(from 210deg,#9C6A4F,#F2D3BE,#B98163,#E8C2A8,#9C6A4F,#F2D3BE,#A47257,#9C6A4F);box-shadow:0 40px 80px rgba(0,0,0,.5),inset 0 0 0 2px rgba(255,255,255,.2)}
+.laser{filter:drop-shadow(0 0 6px #FFD9B8) drop-shadow(0 0 16px #FF9F6B)}
+
+.calibre{background:var(--canvas-2);padding-block:clamp(80px,12vw,160px)}
+.cal-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(32px,6vw,96px);align-items:center}
+.cal-art{--head:min(38vw,560px);--ww:var(--head);position:relative;height:calc(var(--head) * 1.22);overflow:hidden}
+.cal-wrap{position:absolute;left:50%;top:50%;width:var(--ww);height:calc(var(--ww) * 1.9);margin:calc(var(--ww) * -.95) 0 0 calc(var(--ww) / -2);perspective:2000px}
+.cal-wrap .watch{transform:rotateY(180deg)}
+.steps{list-style:none;padding:0;margin:40px 0 0;display:grid;grid-template-columns:1fr 1fr;gap:28px 32px}
+.steps li{display:flex;gap:16px;align-items:baseline;min-width:0}
+.steps .mono{color:var(--accent);font-size:.8rem}
+.steps h3{font-size:1.25rem;margin-bottom:6px}
+.steps p{color:var(--text-secondary);font-size:.95rem}
+.nums{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;margin:clamp(56px,8vw,100px) 0 0;padding-top:36px;border-top:1px solid var(--line)}
+.nums div{min-width:0}
+.nums dt{font-size:clamp(2rem,4.2vw,3.5rem);line-height:1;letter-spacing:-.02em}
+.nums dd{margin:10px 0 0;color:var(--text-secondary);font-size:.92rem}
+
+.geracoes{padding-block:clamp(80px,12vw,160px)}
+.ger-grid{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);gap:clamp(32px,6vw,96px)}
+.ger-head{position:sticky;top:120px;align-self:start}
+.ger-head h2{margin-top:16px;max-width:14ch}
+.timeline{list-style:none;margin:40px 0 0;padding:0 0 0 22px;display:grid;gap:14px;border-left:1px solid var(--line-strong)}
+.timeline li{display:flex;gap:16px;align-items:baseline;color:var(--text-secondary);font-size:.95rem}
+.timeline .mono{color:var(--text-primary);min-width:3.2em}
+.trust{list-style:none;margin:0;padding:0}
+.trust li{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:20px;align-items:baseline;padding:28px 0;border-top:1px solid var(--line)}
+.trust li:last-child{border-bottom:1px solid var(--line)}
+.trust h3{font-size:1.35rem}
+.trust p{color:var(--text-secondary)}
+
+.perguntas{background:var(--canvas-2);padding-block:clamp(80px,12vw,150px)}
+.faq-head{margin-bottom:44px}
+.faq-head h2{margin-top:16px;max-width:22ch}
+.faq{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 44px;align-items:start}
+.faq details{border-top:1px solid var(--line)}
+.faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;gap:18px;align-items:baseline;padding:22px 0;font-family:var(--f-display);font-size:1.22rem;line-height:1.3}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-family:var(--f-mono);font-size:1.1rem;color:var(--accent);transition:transform .45s var(--ease)}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq details p{padding:0 0 24px;color:var(--text-secondary);max-width:58ch}
+
+.visita{padding-block:clamp(80px,12vw,160px);background:radial-gradient(60% 70% at 85% 30%,rgba(46,112,85,.2),transparent 70%)}
+.vis-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:clamp(32px,6vw,96px);align-items:start}
+.vis-copy h2{margin-top:16px;max-width:14ch}
+.vis-copy .lede{margin-top:20px}
+.boutiques{list-style:none;padding:0;margin:34px 0 24px;border-top:1px solid var(--line)}
+.boutiques li{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:14px 0;border-bottom:1px solid var(--line);color:var(--text-secondary);font-size:.95rem}
+.boutiques .mono{color:var(--text-primary);font-size:.8rem;letter-spacing:.08em}
+.privacy{font-size:.9rem;color:var(--text-secondary);max-width:44ch}
+.vis-box{background:rgba(20,48,31,.55);border:1px solid var(--line);border-radius:2px;padding:clamp(22px,3.4vw,40px)}
+.vis-form{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px}
+.vis-form .full,.form-err,.form-note{grid-column:1/-1}
+.when .opts{margin-top:2px}
+.form-err{min-height:1.2em;color:#F0B4A6;font-size:.9rem}
+.form-err:empty{display:none}
+.form-note{font-size:.7rem;letter-spacing:.06em;color:var(--text-secondary);text-align:center}
+.btn.full{width:100%}
+.vis-ok{display:grid;justify-items:start;gap:14px;outline:none}
+.vis-ok svg{width:52px;height:52px;color:var(--accent)}
+.vis-ok h3{font-size:2rem}
+.vis-ok p{color:var(--text-secondary)}
+
+.foot{border-top:1px solid var(--line);padding-block:56px calc(40px + env(safe-area-inset-bottom,0px))}
+.foot-grid{display:grid;grid-template-columns:auto minmax(0,1fr);gap:28px 48px;align-items:center}
+.foot-nav{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:12px 26px;font-size:.9rem}
+.foot-nav a{color:var(--text-secondary);text-decoration:none;transition:color .4s var(--ease)}
+.foot-nav a:hover{color:var(--text-primary)}
+.fict{grid-column:1/-1;color:var(--text-secondary);font-size:.86rem;max-width:80ch}
+.copy{grid-column:1/-1;font-size:.72rem;letter-spacing:.12em;color:var(--text-secondary);text-transform:uppercase}
+
+/* Entradas: só para o que estava abaixo da dobra no carregamento */
+.pre{opacity:0;transform:translateY(22px)}
+.pre.in{opacity:1;transform:none;transition:opacity 1.1s var(--ease) var(--d,0s),transform 1.1s var(--ease) var(--d,0s)}
+.pre.in.settled{transition-delay:0s}
+
+body.paused *:not(.hand),body.paused *::before,body.paused *::after{animation-play-state:paused!important}
+
+@media (max-width:980px){
+  .monte-grid,.grave-grid,.cal-grid,.ger-grid,.vis-grid{grid-template-columns:minmax(0,1fr)}
+  .cfg-stage{--head:min(70vw,400px)}
+  .cal-art{--head:min(80vw,460px)}
+  .ger-head{position:static}
+  .dias-list{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .dia:nth-child(2){border-right:0;padding-right:0}
+  .dia:nth-child(3){padding-left:0}
+  .dia:nth-child(n+3){border-top:1px solid var(--line)}
+  .maison-cols{margin-left:0}
+  .grave-copy{order:2}
+  .cb-wrap{order:1}
+  .caseback{width:min(88vw,460px)}
+}
+@media (max-width:720px){
+  .maison-cols,.steps,.faq,.specs{grid-template-columns:minmax(0,1fr)}
+  .nums{grid-template-columns:repeat(2,minmax(0,1fr));gap:30px 20px}
+  .trust li{grid-template-columns:minmax(0,1fr);gap:8px}
+  .foot-grid{grid-template-columns:minmax(0,1fr)}
+  .foot-nav{justify-content:flex-start}
+  .orbit{width:90vw;right:-40%;top:-6%}
+}
+@media (max-width:560px){
+  .dias-list{grid-template-columns:minmax(0,1fr)}
+  .dia,.dia:first-child,.dia:nth-child(3){padding:28px 0;border-right:0}
+  .dia+.dia{border-top:1px solid var(--line)}
+  .fields,.vis-form{grid-template-columns:minmax(0,1fr)}
+  .cfg-price{align-items:flex-start}
+  .hold{width:100%}
+}
+
+/* Portão do hero estático (precisa bater com GATES no JS) */
+@media (prefers-reduced-motion: reduce), (orientation: landscape) and (pointer: coarse) and (max-height: 560px){
+  .hero{height:auto}
+  .stage{position:relative;height:auto;min-height:100vh;min-height:100svh}
+  .b2,.b3,.b4,.cue{display:none}
+  .b1,.b1 .w,.b1 .then,.b1 .last{opacity:1!important;transform:none!important}
+}
+@media (orientation: landscape) and (pointer: coarse) and (max-height: 560px){
+  .stage{min-height:520px}
+  .watch-wrap{--head:min(70vh, 34vw)}
+}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  *:not(.hand),*::before,*::after{animation:none!important;transition:none!important;transition-delay:0s!important}
+  .hand.s{animation-timing-function:steps(60,end)}
+  .pre{opacity:1;transform:none}
+  .pre .ico *{stroke-dashoffset:0}
+  .hold-done{opacity:1;transform:none}
+}
+
+</style>
+<a class="skip" href="#main">Pular para o conteúdo</a>
+<div class="ambient" aria-hidden="true"></div>
+
+<header class="top" id="topbar">
+  <div class="bar">
+    <a class="mark" href="#inicio" aria-label="Maison Valère, voltar ao início">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 18.4 L4.8 6.4 M12 18.4 L19.2 6.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="18.4" r="2.1" fill="currentColor"/><circle cx="12" cy="4.4" r="1.1" fill="currentColor"/></svg>
+      <b>VALÈRE</b>
+    </a>
+    <nav class="nav" aria-label="Principal">
+      <a href="#maison">A maison</a>
+      <a href="#dias">Os dias</a>
+      <a href="#monte">Monte o seu</a>
+      <a href="#calibre">O calibre</a>
+      <a href="#perguntas">Perguntas</a>
+    </nav>
+    <a class="btn btn-gold" href="#visita">Agendar visita</a>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+
+<section class="hero" id="inicio" aria-label="Apresentação do Valère Lune 40">
+  <div class="stage">
+    <div class="hero-glow" aria-hidden="true"></div>
+    <div class="watch-wrap" aria-hidden="true"><div class="watch" id="heroWatch"></div></div>
+    <div class="bands">
+      <div class="band b1 rise" data-a="0" data-b=".22">
+        <p class="eyebrow">Maison Valère · Genebra, desde 1921</p>
+        <h1 data-split>Alguns dias merecem durar para sempre.</h1>
+        <p class="lede then">Alta relojoaria para quem marca a vida em conquistas.</p>
+        <div class="row last"><a class="btn btn-gold" href="#visita">Agendar visita privada</a><a class="btn btn-line" href="#monte">Conhecer o Lune 40</a></div>
+      </div>
+      <div class="band b2 approach" data-a=".27" data-b=".49">
+        <p class="eyebrow">Fase da lua · ao vivo</p>
+        <h2 data-split>A hora que você vê é a sua.</h2>
+        <p class="lede then">Os ponteiros marcam este instante. A lua no mostrador é a desta noite, e o mecanismo só pede um ajuste a cada 122 anos.</p>
+      </div>
+      <div class="band b3 turn" data-a=".54" data-b=".75">
+        <p class="eyebrow">Calibre VA-21 · manufatura</p>
+        <h2 data-split>Do outro lado, 247 peças.</h2>
+        <p class="lede then">Acabadas à mão em Genebra, elas batem 28.800 vezes por hora e guardam 68 horas de energia.</p>
+      </div>
+      <div class="band b4 settle" data-a=".80" data-b="1">
+        <p class="eyebrow">Valère Lune 40</p>
+        <h2 class="sm" data-split>Aço e ouro rosé. Mostrador chocolate.</h2>
+        <p class="lede then">Para o dia que você nunca vai esquecer.</p>
+        <p class="price then">Preço sugerido <strong>R$ 138.000</strong> · em até 10 vezes</p>
+        <div class="row last"><a class="btn btn-gold" href="#visita">Agendar visita privada</a><a class="btn btn-line" href="#monte">Monte o seu</a></div>
+      </div>
+    </div>
+    <p class="chip" id="nowChip">Agora <i id="nowTime">--:--</i> · <span id="nowMoon">fase da lua</span></p>
+    <div class="cue" aria-hidden="true"><span></span>Role devagar</div>
+  </div>
+</section>
+
+<section class="maison" id="maison">
+  <div class="wrap maison-grid">
+    <div class="orbit" aria-hidden="true"><svg viewBox="0 0 400 400"><circle cx="200" cy="200" r="190" fill="none" stroke="currentColor" stroke-width=".8" stroke-dasharray="2 7"/><circle cx="200" cy="200" r="150" fill="none" stroke="currentColor" stroke-width=".6" opacity=".5"/><g class="orbit-dot"><circle cx="200" cy="10" r="5" fill="currentColor"/></g></svg></div>
+    <p class="eyebrow reveal">A maison</p>
+    <h2 class="big reveal">Um relógio marca as horas. <em>Um Valère marca o dia.</em></h2>
+    <div class="maison-cols reveal">
+      <p>Desde 1921, em Genebra, fazemos relógios para os dias que mudam uma vida. O contrato assinado. O sim. A primeira noite com um filho no colo.</p>
+      <p>Cada peça sai da maison com o fundo da caixa pronto para receber a data que importa para você. É ela que vai contar a sua história, no seu pulso e depois no de quem você escolher.</p>
+    </div>
+  </div>
+</section>
+
+<section class="dias" id="dias">
+  <div class="wrap">
+    <div class="dias-head reveal">
+      <p class="eyebrow">Os dias</p>
+      <h2>Para que dia é o seu?</h2>
+    </div>
+    <ol class="dias-list">
+      <li class="dia reveal">
+        <svg class="ico" viewBox="0 0 48 48" aria-hidden="true"><path pathLength="1" d="M24 4 L33 22 L24 44 L15 22 Z M24 4 L24 30 M20 36 L28 36"/><circle pathLength="1" cx="24" cy="30" r="3"/></svg>
+        <h3>A conquista</h3>
+        <p>A sociedade fechada, a empresa vendida, a promoção que levou dez anos. Para quem sabe quanto custou chegar até aqui.</p>
+        <p class="eg mono">Gravação: SÓCIA · 12.03.2026</p>
+      </li>
+      <li class="dia reveal">
+        <svg class="ico" viewBox="0 0 48 48" aria-hidden="true"><circle pathLength="1" cx="18" cy="26" r="11"/><circle pathLength="1" cx="30" cy="26" r="11"/><path pathLength="1" d="M15 10 L18 6 L21 10"/></svg>
+        <h3>O sim</h3>
+        <p>Um par para o casal, ou um só para guardar a mesma data. O dia em que duas histórias viraram uma.</p>
+        <p class="eg mono">Gravação: M &amp; T · 21.11.2026</p>
+      </li>
+      <li class="dia reveal">
+        <svg class="ico" viewBox="0 0 48 48" aria-hidden="true"><path pathLength="1" d="M30 8 A17 17 0 1 0 40 34 A13 13 0 1 1 30 8 Z"/><path pathLength="1" d="M36 12 L37.2 15 L40 16 L37.2 17 L36 20 L34.8 17 L32 16 L34.8 15 Z"/></svg>
+        <h3>A chegada</h3>
+        <p>A primeira noite em casa com um filho. A lua daquela noite cabe no fundo da caixa, na fase exata.</p>
+        <p class="eg mono">Gravação: ALICE · 04.08.2026</p>
+      </li>
+      <li class="dia reveal">
+        <svg class="ico" viewBox="0 0 48 48" aria-hidden="true"><path pathLength="1" d="M14 6 L34 6 M14 42 L34 42 M16 6 C16 18 32 20 32 24 C32 28 16 30 16 42 M32 6 C32 18 16 20 16 24 C16 28 32 30 32 42"/></svg>
+        <h3>O legado</h3>
+        <p>A formatura da filha, os 18 anos do neto, a aposentadoria. Um relógio feito para mudar de pulso e continuar contando.</p>
+        <p class="eg mono">Gravação: DE ANTÔNIO PARA PEDRO</p>
+      </li>
+    </ol>
+    <a class="link-arrow reveal" href="#grave">Grave o seu dia no fundo da caixa <span aria-hidden="true">↓</span></a>
+  </div>
+</section>
+
+
+<section class="monte" id="monte">
+  <div class="wrap monte-grid">
+    <div class="cfg-stage" aria-hidden="true">
+      <div class="cfg-wrap"><div class="watch" id="cfgWatch"></div></div>
+      <p class="cfg-note mono">Hora real · lua desta noite</p>
+    </div>
+    <div class="cfg-panel">
+      <p class="eyebrow">Monte o seu</p>
+      <h2>O seu Lune, do seu jeito.</h2>
+      <p class="lede">Escolha o mostrador, o metal, o tamanho e a pulseira. O consultor recebe a sua escolha antes da visita.</p>
+      <form id="cfg" class="cfg" aria-label="Configuração do relógio">
+        <fieldset>
+          <legend>Mostrador</legend>
+          <div class="opts">
+            <label class="sw"><input type="radio" name="dial" value="chocolate" checked><span class="dot" style="--c1:#6A4330;--c2:#26140C"></span><span>Chocolate</span></label>
+            <label class="sw"><input type="radio" name="dial" value="verde"><span class="dot" style="--c1:#2E7055;--c2:#08201A"></span><span>Verde floresta</span></label>
+            <label class="sw"><input type="radio" name="dial" value="ardosia"><span class="dot" style="--c1:#626A72;--c2:#191D21"></span><span>Ardósia</span></label>
+            <label class="sw"><input type="radio" name="dial" value="marfim"><span class="dot" style="--c1:#FFFAF0;--c2:#D6CBB4"></span><span>Marfim</span></label>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Caixa</legend>
+          <div class="opts">
+            <label class="sw"><input type="radio" name="case" value="bicolor" checked><span class="dot" style="--c1:#D7A688;--c2:#CACDC9"></span><span>Aço e ouro rosé</span></label>
+            <label class="sw"><input type="radio" name="case" value="rose"><span class="dot" style="--c1:#F7DAC6;--c2:#A06E52"></span><span>Ouro rosé 18 k</span></label>
+            <label class="sw"><input type="radio" name="case" value="steel"><span class="dot" style="--c1:#F5F6F3;--c2:#8E9290"></span><span>Aço</span></label>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Tamanho</legend>
+          <div class="opts">
+            <label class="pill"><input type="radio" name="size" value="40" checked><span>40 mm</span></label>
+            <label class="pill"><input type="radio" name="size" value="36"><span>36 mm</span></label>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Pulseira</legend>
+          <div class="opts">
+            <label class="sw"><input type="radio" name="strap" value="chocolate" checked><span class="dot" style="--c1:#4D3121;--c2:#24150D"></span><span>Couro chocolate</span></label>
+            <label class="sw"><input type="radio" name="strap" value="verde"><span class="dot" style="--c1:#1F4B39;--c2:#0B241A"></span><span>Couro verde inglês</span></label>
+            <label class="sw"><input type="radio" name="strap" value="preto"><span class="dot" style="--c1:#2B2927;--c2:#0F0E0D"></span><span>Couro preto</span></label>
+          </div>
+        </fieldset>
+      </form>
+      <div class="cfg-sum">
+        <p class="mono cfg-name" id="cfgName">Lune 40 · Aço e ouro rosé · Chocolate</p>
+        <p class="cfg-price"><span id="cfgPrice">R$ 138.000</span><small>preço sugerido · em até 10 vezes</small></p>
+      </div>
+      <dl class="specs" id="cfgSpecs">
+        <div><dt>Caixa</dt><dd id="spCase">40 mm, aço e ouro rosé 18 k</dd></div>
+        <div><dt>Mostrador</dt><dd id="spDial">Chocolate raiado, fase da lua às 6 h</dd></div>
+        <div><dt>Calibre</dt><dd>VA-21, automático de manufatura</dd></div>
+        <div><dt>Reserva de marcha</dt><dd>68 horas</dd></div>
+        <div><dt>Estanqueidade</dt><dd>50 metros</dd></div>
+        <div><dt>Pulseira</dt><dd id="spStrap">Couro de bezerro chocolate, fivela em ouro rosé</dd></div>
+      </dl>
+      <a class="btn btn-gold" id="cfgSend" href="#visita">Levar esta escolha para a visita</a>
+    </div>
+  </div>
+</section>
+
+<section class="grave" id="grave">
+  <div class="wrap grave-grid">
+    <div class="grave-copy">
+      <p class="eyebrow">O momento</p>
+      <h2>Grave o seu dia.</h2>
+      <p class="lede">Escreva um nome e a data. Segure o botão para o laser passar pelo fundo da caixa. A lua daquela noite entra junto, na fase exata.</p>
+      <div class="fields">
+        <div class="field"><label for="egName">Nome ou iniciais</label><input id="egName" maxlength="20" value="Para o Pedro" autocomplete="off" spellcheck="false"></div>
+        <div class="field"><label for="egDate">A data</label><input id="egDate" type="date" value="2026-03-12"></div>
+      </div>
+      <button class="hold" id="holdBtn" type="button" aria-describedby="holdHelp"><span class="hold-fill" aria-hidden="true"></span><span class="hold-t" id="holdLabel">Segure para gravar</span></button>
+      <p class="hold-help mono" id="holdHelp">Pressione e mantenha. No teclado, segure a barra de espaço.</p>
+      <p class="hold-done" id="holdDone" aria-live="polite"></p>
+    </div>
+    <div class="cb-wrap" aria-hidden="true"><div class="caseback" id="caseback"></div></div>
+  </div>
+</section>
+
+<section class="calibre" id="calibre">
+  <div class="wrap cal-grid">
+    <div class="cal-art" aria-hidden="true"><div class="cal-wrap"><div class="watch" id="calWatch"></div></div></div>
+    <div class="cal-copy">
+      <p class="eyebrow reveal">O calibre</p>
+      <h2 class="reveal">VA-21. Feito, acabado e regulado sob o mesmo teto.</h2>
+      <ol class="steps">
+        <li class="reveal"><span class="mono">01</span><div><h3>Desenho</h3><p>Cada peça nasce no papel e no microscópio, em Genebra.</p></div></li>
+        <li class="reveal"><span class="mono">02</span><div><h3>Usinagem</h3><p>Platina e pontes saem de latão maciço, com tolerância de dois mícrons.</p></div></li>
+        <li class="reveal"><span class="mono">03</span><div><h3>Acabamento à mão</h3><p>Côtes de Genève nas pontes, perlage na platina, parafusos azulados no fogo.</p></div></li>
+        <li class="reveal"><span class="mono">04</span><div><h3>Montagem</h3><p>Um único relojoeiro monta as 247 peças e assina o registro do relógio.</p></div></li>
+        <li class="reveal"><span class="mono">05</span><div><h3>Regulagem</h3><p>O balanço é ajustado em cinco posições, as mesmas que o pulso faz num dia.</p></div></li>
+        <li class="reveal"><span class="mono">06</span><div><h3>Quinze dias de testes</h3><p>Precisão, reserva de marcha e estanqueidade, já com a caixa fechada.</p></div></li>
+      </ol>
+    </div>
+  </div>
+  <div class="wrap">
+    <dl class="nums reveal">
+      <div><dt class="mono" data-count="247">247</dt><dd>componentes</dd></div>
+      <div><dt class="mono" data-count="68" data-suffix=" h">68 h</dt><dd>de reserva de marcha</dd></div>
+      <div><dt class="mono" data-count="28800">28.800</dt><dd>alternâncias por hora</dd></div>
+      <div><dt class="mono" data-count="122">122</dt><dd>anos até a lua pedir ajuste</dd></div>
+    </dl>
+  </div>
+</section>
+
+<section class="geracoes" id="geracoes">
+  <div class="wrap ger-grid">
+    <div class="ger-head">
+      <p class="eyebrow reveal">Para a próxima geração</p>
+      <h2 class="reveal">Feito para ser seu. E depois, de quem você escolher.</h2>
+      <ol class="timeline reveal">
+        <li><span class="mono">1921</span>Augustin Valère abre a oficina na Rue du Rhône.</li>
+        <li><span class="mono">1958</span>O primeiro calibre com fase da lua.</li>
+        <li><span class="mono">1994</span>Manufatura própria, do primeiro ao último componente.</li>
+        <li><span class="mono">2021</span>Cem anos, e o calibre VA-21.</li>
+      </ol>
+    </div>
+    <ul class="trust">
+      <li class="reveal"><h3>Certificado numerado</h3><p>O número da sua peça fica registrado na maison, com a data da compra e cada revisão.</p></li>
+      <li class="reveal"><h3>Garantia internacional de 5 anos</h3><p>Válida em qualquer boutique Valère ou centro de serviço autorizado.</p></li>
+      <li class="reveal"><h3>Revisão na maison</h3><p>Uma revisão completa a cada dez anos. O histórico acompanha o relógio quando ele muda de pulso.</p></li>
+      <li class="reveal"><h3>Entrega reservada</h3><p>Retirada em sala privada ou entrega em mãos por um consultor, com orientação de seguro.</p></li>
+      <li class="reveal"><h3>Valère Certificado</h3><p>Peças de segunda mão revisadas e certificadas pela maison, com dois anos de garantia.</p></li>
+    </ul>
+  </div>
+</section>
+
+<section class="perguntas" id="perguntas">
+  <div class="wrap faq-grid">
+    <div class="faq-head">
+      <p class="eyebrow reveal">Perguntas</p>
+      <h2 class="reveal">O que costumam nos perguntar antes da primeira visita.</h2>
+    </div>
+    <div class="faq">
+      <details class="reveal"><summary>Como sei que o meu Valère é autêntico?</summary><p>Todo relógio sai com certificado numerado, e o mesmo número fica gravado na caixa e registrado na maison. Vendemos só nas nossas boutiques e por consultores da casa. Se um dia tiver dúvida sobre uma peça, a boutique confere o registro para você.</p></details>
+      <details class="reveal"><summary>Preciso decidir na primeira visita?</summary><p>Não. A visita serve para experimentar no pulso, comparar tamanhos e tirar dúvidas. Muita gente volta uma segunda vez, ou fecha depois pelo WhatsApp com o mesmo consultor.</p></details>
+      <details class="reveal"><summary>Posso receber em casa com segurança?</summary><p>Pode. O consultor entrega em mãos, em horário combinado, ou você retira numa sala privada da boutique. Explicamos também como colocar o relógio no seguro.</p></details>
+      <details class="reveal"><summary>Ele mantém o valor com o tempo?</summary><p>Não prometemos valorização. O que mantém um Valère inteiro por gerações é a garantia, a revisão na maison e um histórico registrado, que acompanha a peça se ela mudar de dono.</p></details>
+      <details class="reveal"><summary>Existe Valère para pulsos menores?</summary><p>Sim. O Lune 36 tem o mesmo calibre e a mesma fase da lua numa caixa de 36 mm. Na visita você experimenta os dois tamanhos lado a lado.</p></details>
+      <details class="reveal"><summary>Como funciona a manutenção?</summary><p>Recomendamos uma revisão completa a cada dez anos, feita na maison. Durante os cinco anos de garantia, qualquer ajuste é por nossa conta.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="visita" id="visita">
+  <div class="wrap vis-grid">
+    <div class="vis-copy">
+      <p class="eyebrow">Atendimento privado</p>
+      <h2>Experimente com calma. Decida no seu tempo.</h2>
+      <p class="lede">Uma hora reservada, numa sala da boutique ou onde você preferir. Seu consultor responde pessoalmente pelo WhatsApp.</p>
+      <ul class="boutiques">
+        <li><span class="mono">São Paulo</span>Jardins</li>
+        <li><span class="mono">Rio de Janeiro</span>Leblon</li>
+        <li><span class="mono">Ribeirão Preto</span>Sala privada com hora marcada</li>
+        <li><span class="mono">Genebra</span>Rue du Rhône</li>
+      </ul>
+      <p class="privacy">Atendimento reservado. Seus dados ficam só com a maison, e nunca publicamos o nome de clientes.</p>
+    </div>
+    <div class="vis-box">
+      <form class="vis-form" id="visitForm" novalidate>
+        <div class="field"><label for="vNome">Seu nome</label><input id="vNome" name="nome" autocomplete="name" required></div>
+        <div class="field"><label for="vZap">WhatsApp</label><input id="vZap" name="whatsapp" type="tel" inputmode="tel" autocomplete="tel" placeholder="(11) 90000-0000" required></div>
+        <div class="field"><label for="vOnde">Onde prefere</label>
+          <select id="vOnde" name="onde"><option>São Paulo, Jardins</option><option>Rio de Janeiro, Leblon</option><option>Ribeirão Preto</option><option>Em casa ou no escritório</option></select></div>
+        <div class="field"><label for="vOcasiao">Qual é o dia</label>
+          <select id="vOcasiao" name="ocasiao"><option>Uma conquista</option><option>Um casamento</option><option>Uma chegada</option><option>Um legado</option><option>Ainda não sei</option></select></div>
+        <div class="field full"><label for="vModelo">Modelo de interesse</label><input id="vModelo" name="modelo" value="Lune 40 · Aço e ouro rosé · Chocolate"></div>
+        <fieldset class="field full when"><legend>Melhor horário para o consultor chamar</legend>
+          <div class="opts"><label class="pill"><input type="radio" name="hora" value="manhã"><span>Manhã</span></label><label class="pill"><input type="radio" name="hora" value="tarde" checked><span>Tarde</span></label><label class="pill"><input type="radio" name="hora" value="noite"><span>Noite</span></label></div>
+        </fieldset>
+        <p class="form-err" id="formErr" role="alert"></p>
+        <button class="btn btn-gold full" type="submit">Pedir minha visita</button>
+        <p class="form-note mono">Site de demonstração. Nenhum dado sai desta página.</p>
+      </form>
+      <div class="vis-ok" id="visitOk" hidden tabindex="-1">
+        <svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="21" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M15 25 L21.5 31 L33 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <h3 id="okTitle">Pedido pronto.</h3>
+        <p id="okText">Num site real, o consultor chamaria você no WhatsApp no horário escolhido.</p>
+        <p class="form-note mono">Demonstração: nada foi enviado.</p>
+        <button class="btn btn-line" id="okBack" type="button">Fazer outro pedido</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-grid">
+    <a class="mark" href="#inicio" aria-label="Maison Valère, voltar ao início">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 18.4 L4.8 6.4 M12 18.4 L19.2 6.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="18.4" r="2.1" fill="currentColor"/><circle cx="12" cy="4.4" r="1.1" fill="currentColor"/></svg>
+      <b>VALÈRE</b>
+    </a>
+    <nav class="foot-nav" aria-label="Rodapé">
+      <a href="#maison">A maison</a><a href="#monte">Monte o seu</a><a href="#calibre">O calibre</a><a href="#geracoes">Garantia e revisão</a><a href="#visita">Atendimento privado</a>
+    </nav>
+    <p class="fict">Valère é uma marca fictícia, criada como projeto-modelo de site. Nomes, preços, história e endereços são ilustrativos. O relógio é desenhado em código e mostra a hora e a lua reais de quem visita.</p>
+    <p class="mono copy">Maison Valère · Genebra, desde 1921</p>
+  </div>
+</footer>
+
+<script>
+/* Valère: o relógio é desenhado inteiro em código (SVG + CSS). */
+const VW = (() => {
+  const METALS = {
+    rose:  { hi: '#F7DAC6', mid: '#D7A688', lo: '#A06E52', deep: '#6B4431' },
+    steel: { hi: '#F5F6F3', mid: '#CACDC9', lo: '#8E9290', deep: '#565A58' }
+  };
+  const CASES = {
+    bicolor: { bezel: 'rose', body: 'steel', hands: 'rose' },
+    rose:    { bezel: 'rose', body: 'rose', hands: 'rose' },
+    steel:   { bezel: 'steel', body: 'steel', hands: 'steel' }
+  };
+  const DIALS = {
+    chocolate: { a: '#26140C', b: '#6A4330', c: '#3B2216', print: '#EBDFCB', track: 'rgba(235,223,203,.5)' },
+    verde:     { a: '#08201A', b: '#2E7055', c: '#123D2D', print: '#E8E3D3', track: 'rgba(232,227,211,.5)' },
+    ardosia:   { a: '#191D21', b: '#626A72', c: '#2C3136', print: '#EEECE6', track: 'rgba(238,236,230,.48)' },
+    marfim:    { a: '#D6CBB4', b: '#FFFAF0', c: '#E9E0CC', print: '#3B2A1F', track: 'rgba(59,42,31,.5)' }
+  };
+  const STRAPS = {
+    chocolate: { a: '#24150D', b: '#4D3121', l: '#8A6A50', st: 'rgba(230,204,172,.5)' },
+    verde:     { a: '#0B241A', b: '#1F4B39', l: '#5E7D6C', st: 'rgba(214,228,214,.42)' },
+    preto:     { a: '#0F0E0D', b: '#2B2927', l: '#5A5550', st: 'rgba(222,216,206,.38)' }
+  };
+  let n = 0;
+
+  const lin = (id, m, v) => {
+    const M = METALS[m];
+    const d = v ? 'x1="0" y1="0" x2="0" y2="1"' : 'x1="0" y1="0" x2="1" y2="1"';
+    return `<linearGradient id="${id}" ${d}><stop offset="0" stop-color="${M.hi}"/><stop offset=".22" stop-color="${M.mid}"/><stop offset=".46" stop-color="${M.lo}"/><stop offset=".56" stop-color="${M.hi}"/><stop offset=".76" stop-color="${M.mid}"/><stop offset="1" stop-color="${M.deep}"/></linearGradient>`;
+  };
+  const facet = (id, m) => {
+    const M = METALS[m];
+    return `<linearGradient id="${id}l" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${M.hi}"/><stop offset="1" stop-color="${M.mid}"/></linearGradient>` +
+      `<linearGradient id="${id}d" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${M.lo}"/><stop offset="1" stop-color="${M.deep}"/></linearGradient>`;
+  };
+  const pt = (r, deg) => {
+    const a = (deg - 90) * Math.PI / 180;
+    return [500 + r * Math.cos(a), 500 + r * Math.sin(a)];
+  };
+  const f1 = v => Math.round(v * 10) / 10;
+
+  // Quatro alças, desenhadas uma vez e espelhadas.
+  const lugs = id => {
+    const p = 'M298 238 C295 170 297 112 303 70 Q306 50 326 50 L341 50 L341 214 Z';
+    return `<g fill="url(#${id})" stroke="rgba(0,0,0,.35)" stroke-width="1.5">` +
+      `<path d="${p}"/><path d="${p}" transform="translate(1000 0) scale(-1 1)"/>` +
+      `<path d="${p}" transform="translate(0 1000) scale(1 -1)"/><path d="${p}" transform="translate(1000 1000) scale(-1 -1)"/></g>`;
+  };
+
+  function strapSVG(o, back) {
+    const S = STRAPS[o.strap];
+    const id = 'st' + n;
+    const top = 'M340 680 L340 150 Q342 60 352 0 L648 0 Q658 60 660 150 L660 680 Z';
+    const bot = 'M340 1220 L340 1750 Q342 1840 352 1900 L648 1900 Q658 1840 660 1750 L660 1220 Z';
+    const fill = back ? S.l : `url(#${id}g)`;
+    const stitch = (y1, y2) => `<path d="M360 ${y1} L360 ${y2} M640 ${y1} L640 ${y2}" stroke="${S.st}" stroke-width="3" stroke-dasharray="11 9" fill="none"/>`;
+    return `<svg class="strap" viewBox="0 0 1000 1900" aria-hidden="true"><defs>` +
+      `<linearGradient id="${id}g" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${S.a}"/><stop offset=".5" stop-color="${S.b}"/><stop offset="1" stop-color="${S.a}"/></linearGradient>` +
+      `<linearGradient id="${id}f" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".2" stop-color="#fff" stop-opacity="1"/><stop offset=".8" stop-color="#fff" stop-opacity="1"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>` +
+      `<mask id="${id}m"><rect width="1000" height="1900" fill="url(#${id}f)"/></mask></defs>` +
+      `<g mask="url(#${id}m)"><path d="${top}" fill="${fill}"/><path d="${bot}" fill="${fill}"/>` +
+      stitch(40, 540) + stitch(1360, 1860) +
+      `<rect x="330" y="1610" width="340" height="46" rx="10" fill="${S.a}" opacity=".9"/>` +
+      (back ? `<text x="500" y="300" text-anchor="middle" font-family="Marcellus, serif" font-size="26" letter-spacing="6" fill="rgba(30,20,14,.55)">VALÈRE · GENÈVE</text>` : '') +
+      `</g></svg>`;
+  }
+
+  function caseSVG(o) {
+    const C = CASES[o.case];
+    const id = 'c' + n;
+    let grooves = '';
+    for (let i = 0; i < 9; i++) grooves += `<path d="M${f1(843 + i * 4.3)} 466 L${f1(843 + i * 4.3)} 534" stroke="rgba(0,0,0,.28)" stroke-width="1.6"/>`;
+    return `<svg class="case" viewBox="0 0 1000 1000" aria-hidden="true"><defs>${lin(id + 'b', C.body)}${lin(id + 'z', C.bezel, true)}` +
+      `<filter id="${id}s" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="22"/></filter></defs>` +
+      `<ellipse cx="528" cy="548" rx="350" ry="352" fill="rgba(0,0,0,.55)" filter="url(#${id}s)"/>` +
+      lugs(id + 'b') +
+      `<rect x="824" y="481" width="18" height="38" fill="url(#${id}b)"/>` +
+      `<rect x="836" y="461" width="44" height="78" rx="10" fill="url(#${id}z)" stroke="rgba(0,0,0,.35)" stroke-width="1.5"/>${grooves}` +
+      `<circle cx="500" cy="500" r="339" fill="url(#${id}b)" stroke="rgba(0,0,0,.45)" stroke-width="2"/></svg>`;
+  }
+
+  function printSVG(o) {
+    const C = CASES[o.case], D = DIALS[o.dial], M = METALS[C.bezel], H = METALS[C.hands];
+    const id = 'p' + n;
+    let ticks = '';
+    for (let i = 0; i < 60; i++) {
+      const big = i % 5 === 0;
+      const [x1, y1] = pt(big ? 266 : 272, i * 6), [x2, y2] = pt(285, i * 6);
+      ticks += `<path d="M${f1(x1)} ${f1(y1)} L${f1(x2)} ${f1(y2)}" stroke="${D.track}" stroke-width="${big ? 3.4 : 1.6}"/>`;
+    }
+    let marks = '';
+    for (let h = 1; h < 12; h++) {
+      if (h === 6) continue;
+      marks += `<g transform="rotate(${h * 30} 500 500)"><path d="M492 250 L500 246 L500 304 L492 300 Z" fill="url(#${id}ml)"/><path d="M508 250 L500 246 L500 304 L508 300 Z" fill="url(#${id}md)"/></g>`;
+    }
+    let stars = '';
+    [[462, 618, 1.6], [538, 612, 1.3], [470, 690, 1.2], [546, 676, 1.7], [512, 600, 1.1], [446, 652, 1.2], [556, 640, 1]].forEach(s => {
+      stars += `<circle cx="${s[0]}" cy="${s[1]}" r="${s[2]}" fill="#F3E6C8" opacity=".85"/>`;
+    });
+    return `<svg class="print" viewBox="0 0 1000 1000" aria-hidden="true"><defs>${facet(id + 'm', C.hands)}${lin(id + 'z', C.bezel)}` +
+      `<radialGradient id="${id}v"><stop offset=".62" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".42"/></radialGradient>` +
+      `<radialGradient id="${id}k" cx=".5" cy=".42" r=".6"><stop offset="0" stop-color="#12303A"/><stop offset="1" stop-color="#050E12"/></radialGradient>` +
+      `<radialGradient id="${id}o" cx=".38" cy=".36" r=".7"><stop offset="0" stop-color="#FFF1CF"/><stop offset=".55" stop-color="#E6C68E"/><stop offset="1" stop-color="#B48A4E"/></radialGradient></defs>` +
+      `<circle cx="500" cy="500" r="300" fill="url(#${id}v)"/>` +
+      `<circle cx="500" cy="500" r="286" fill="none" stroke="${D.track}" stroke-width="1.2"/>${ticks}${marks}` +
+      `<text x="500" y="286" text-anchor="middle" font-family="Marcellus, serif" font-size="66" fill="url(#${id}ml)" stroke="${H.deep}" stroke-width="1">XII</text>` +
+      `<text x="504" y="374" text-anchor="middle" font-family="Marcellus, serif" font-size="40" letter-spacing="9" fill="${D.print}">VALÈRE</text>` +
+      `<text x="503" y="402" text-anchor="middle" font-family="Marcellus, serif" font-size="16" letter-spacing="6" fill="${D.print}" opacity=".72">GENÈVE</text>` +
+      `<text x="502" y="757" text-anchor="middle" font-family="Marcellus, serif" font-size="15" letter-spacing="5" fill="${D.print}" opacity=".7">AUTOMATIQUE</text>` +
+      `<g class="moon"><circle cx="500" cy="650" r="64" fill="url(#${id}k)"/>${stars}` +
+      `<circle cx="500" cy="650" r="40" fill="#2A2418" opacity=".75"/><path class="moon-lit" d="" fill="url(#${id}o)"/>` +
+      `<circle cx="500" cy="650" r="63" fill="none" stroke="rgba(0,0,0,.6)" stroke-width="4"/><circle cx="500" cy="650" r="65.5" fill="none" stroke="${M.mid}" stroke-width="3"/></g>` +
+      `<circle cx="500" cy="500" r="313" fill="none" stroke="url(#${id}z)" stroke-width="34"/>` +
+      `<circle cx="500" cy="500" r="296.5" fill="none" stroke="rgba(0,0,0,.55)" stroke-width="3"/>` +
+      `<circle cx="500" cy="500" r="329.5" fill="none" stroke="${M.hi}" stroke-width="1.5" opacity=".7"/></svg>`;
+  }
+
+  function handsHTML(o) {
+    const C = CASES[o.case], H = METALS[C.hands];
+    const id = 'h' + n;
+    const g = `<defs>${facet(id, C.hands)}</defs>`;
+    const svg = (cls, body, defs) => `<div class="hand ${cls}"><svg viewBox="0 0 1000 1000" aria-hidden="true">${defs || ''}${body}</svg></div>`;
+    return `<div class="hands">` +
+      svg('h', `<path d="M500 334 L485 470 L500 536 Z" fill="url(#${id}l)"/><path d="M500 334 L515 470 L500 536 Z" fill="url(#${id}d)"/>`, g) +
+      svg('m', `<path d="M500 236 L488 472 L500 532 Z" fill="url(#${id}l)"/><path d="M500 236 L512 472 L500 532 Z" fill="url(#${id}d)"/>`) +
+      svg('s', `<rect x="498.3" y="226" width="3.4" height="352" fill="${H.mid}"/><circle cx="500" cy="566" r="11" fill="none" stroke="${H.mid}" stroke-width="4"/>` +
+        `<circle cx="500" cy="500" r="17" fill="url(#${id}l)"/><circle cx="500" cy="500" r="6" fill="${H.deep}"/>`) +
+      `</div>`;
+  }
+
+  function backSVG(o) {
+    const C = CASES[o.case];
+    const id = 'b' + n;
+    const tp = `${id}tp`;
+    let notches = '';
+    for (let i = 0; i < 6; i++) notches += `<rect x="494" y="160" width="12" height="22" rx="2" fill="rgba(0,0,0,.35)" transform="rotate(${i * 60 + 30} 500 500)"/>`;
+    let teeth = '';
+    for (let i = 0; i < 48; i++) {
+      const [x1, y1] = pt(66, i * 7.5), [x2, y2] = pt(76, i * 7.5 + 3.75);
+      teeth += `${i ? 'L' : 'M'}${f1(x1 - 130)} ${f1(y1 - 100)} L${f1(x2 - 130)} ${f1(y2 - 100)} `;
+    }
+    const jewel = (x, y) => `<circle cx="${x}" cy="${y}" r="12" fill="#E4C88E" stroke="rgba(80,50,20,.5)" stroke-width="1.5"/><circle cx="${x}" cy="${y}" r="6.5" fill="url(#${id}r)"/>`;
+    const screw = (x, y, a) => `<circle cx="${x}" cy="${y}" r="9" fill="url(#${id}u)" stroke="rgba(10,15,40,.6)" stroke-width="1.2"/><path d="M${x - 7} ${y} L${x + 7} ${y}" stroke="rgba(5,8,25,.85)" stroke-width="2.2" transform="rotate(${a} ${x} ${y})"/>`;
+    let spiral = 'M650 380';
+    for (let t = 0; t <= 9 * Math.PI * 2; t += 0.35) {
+      const r = 10 + t * 0.92;
+      spiral += ` L${f1(650 + r * Math.cos(t))} ${f1(380 + r * Math.sin(t))}`;
+    }
+    return `<svg class="mvt" viewBox="0 0 1000 1000" aria-hidden="true"><defs>${lin(id + 'b', C.body)}${lin(id + 'z', C.bezel)}` +
+      `<radialGradient id="${id}p" cx=".45" cy=".4" r=".7"><stop offset="0" stop-color="#EAD8AF"/><stop offset="1" stop-color="#A98A58"/></radialGradient>` +
+      `<radialGradient id="${id}q"><stop offset="0" stop-color="#fff" stop-opacity=".45"/><stop offset=".7" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".22"/></radialGradient>` +
+      `<pattern id="${id}pl" width="30" height="30" patternUnits="userSpaceOnUse"><circle cx="15" cy="15" r="16" fill="url(#${id}q)"/></pattern>` +
+      `<linearGradient id="${id}cg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#B8995F"/><stop offset=".5" stop-color="#F3E3BC"/><stop offset="1" stop-color="#B8995F"/></linearGradient>` +
+      `<pattern id="${id}c" width="34" height="34" patternUnits="userSpaceOnUse" patternTransform="rotate(-32)"><rect width="34" height="34" fill="url(#${id}cg)"/></pattern>` +
+      `<radialGradient id="${id}r" cx=".35" cy=".35"><stop offset="0" stop-color="#FF7A90"/><stop offset=".6" stop-color="#B0122E"/><stop offset="1" stop-color="#5C0616"/></radialGradient>` +
+      `<radialGradient id="${id}u" cx=".35" cy=".35"><stop offset="0" stop-color="#6F93E0"/><stop offset="1" stop-color="#1B2F6B"/></radialGradient>` +
+      `<path id="${tp}" d="M500 500 m-319 0 a319 319 0 1 1 638 0 a319 319 0 1 1 -638 0"/></defs>` +
+      lugs(id + 'b') +
+      `<rect x="158" y="481" width="18" height="38" fill="url(#${id}b)"/><rect x="120" y="461" width="44" height="78" rx="10" fill="url(#${id}z)" stroke="rgba(0,0,0,.35)" stroke-width="1.5"/>` +
+      `<circle cx="500" cy="500" r="339" fill="url(#${id}b)" stroke="rgba(0,0,0,.45)" stroke-width="2"/>` +
+      `<circle cx="500" cy="500" r="319" fill="none" stroke="url(#${id}z)" stroke-width="40"/>${notches}` +
+      `<text font-family="Marcellus, serif" font-size="15" letter-spacing="5" fill="rgba(40,26,18,.62)"><textPath href="#${tp}">VALÈRE · GENÈVE · SAPHIR · ÉTANCHE 50 M · Nº 0417 · CALIBRE VA-21 · 68 HEURES · OR ROSE 18 CT · ACIER</textPath></text>` +
+      `<circle cx="500" cy="500" r="299" fill="url(#${id}p)"/><circle cx="500" cy="500" r="299" fill="url(#${id}pl)" opacity=".6"/>` +
+      `<path d="${spiral}" fill="none" stroke="#A9B0B2" stroke-width="1.6"/>` +
+      `<g stroke="#FBF0D2" stroke-width="3" stroke-opacity=".75">` +
+      `<path d="M232 360 C262 286 332 236 414 222 L470 232 C502 300 500 382 468 452 C440 520 380 560 300 566 L238 560 C214 500 214 420 232 360 Z" fill="url(#${id}c)"/>` +
+      `<path d="M300 604 C372 594 442 562 500 522 L590 540 C642 600 652 662 620 722 C560 772 470 792 390 772 C340 732 310 672 300 604 Z" fill="url(#${id}c)"/>` +
+      `<path d="M716 200 C770 214 806 262 812 312 L712 400 C690 414 662 404 646 384 L622 352 C644 300 670 244 716 200 Z" fill="url(#${id}c)"/></g>` +
+      `<path d="${teeth}Z" fill="#D9DCD8" stroke="#8D928F" stroke-width="1.4"/>` +
+      `<circle cx="370" cy="400" r="44" fill="none" stroke="rgba(0,0,0,.18)" stroke-width="2"/>` +
+      `<text x="360" y="500" text-anchor="middle" font-family="Marcellus, serif" font-size="15" letter-spacing="4" fill="rgba(70,46,20,.62)">CALIBRE VA-21</text>` +
+      `<text x="480" y="700" text-anchor="middle" font-family="Marcellus, serif" font-size="14" letter-spacing="4" fill="rgba(70,46,20,.6)">TRENTE ET UN RUBIS · GENÈVE</text>` +
+      jewel(612, 488) + jewel(520, 640) + jewel(430, 726) + jewel(560, 560) + jewel(650, 380) + jewel(300, 470) +
+      screw(370, 400, 30) + screw(262, 384, 70) + screw(300, 538, 10) + screw(444, 252, 120) + screw(334, 650, 45) + screw(600, 724, 160) + screw(770, 268, 95) +
+      `</svg>`;
+  }
+
+  function balanceHTML() {
+    let screws = '';
+    for (let i = 0; i < 10; i++) {
+      const a = i * 36 * Math.PI / 180;
+      screws += `<circle cx="${f1(650 + 90 * Math.cos(a))}" cy="${f1(380 + 90 * Math.sin(a))}" r="4.6" fill="#E9CD8C"/>`;
+    }
+    return `<div class="balance"><svg viewBox="0 0 1000 1000" aria-hidden="true"><circle cx="650" cy="380" r="88" fill="none" stroke="#D8B464" stroke-width="10"/>` +
+      `<path d="M650 380 L650 296 M650 380 L723 422 M650 380 L577 422" stroke="#D8B464" stroke-width="6"/>${screws}</svg></div>`;
+  }
+
+  function rotorHTML(o) {
+    const C = CASES[o.case];
+    const id = 'r' + n;
+    const a0 = -150, a1 = -30, ro = 294, ri = 62;
+    const P = (r, d) => { const a = d * Math.PI / 180; return f1(500 + r * Math.cos(a)) + ' ' + f1(500 + r * Math.sin(a)); };
+    let rings = '';
+    for (let r = 90; r < 290; r += 12) rings += `<path d="M${P(r, a0 + 3)} A${r} ${r} 0 0 1 ${P(r, a1 - 3)}" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="1.2"/>`;
+    return `<div class="rotor"><svg viewBox="0 0 1000 1000" aria-hidden="true"><defs>${lin(id, C.bezel)}<path id="${id}t" d="M${P(232, -150)} A232 232 0 0 1 ${P(232, -30)}"/></defs>` +
+      `<path d="M${P(ro, a0)} A${ro} ${ro} 0 0 1 ${P(ro, a1)} L${P(ri, a1)} A${ri} ${ri} 0 0 0 ${P(ri, a0)} Z" fill="url(#${id})" stroke="rgba(60,30,15,.5)" stroke-width="2"/>${rings}` +
+      `<text font-family="Marcellus, serif" font-size="30" letter-spacing="12" fill="rgba(70,36,20,.55)"><textPath href="#${id}t" startOffset="50%" text-anchor="middle">VALÈRE</textPath></text>` +
+      `<circle cx="500" cy="500" r="40" fill="url(#${id})" stroke="rgba(60,30,15,.5)" stroke-width="2"/><circle cx="500" cy="500" r="10" fill="#1B2F6B"/></svg></div>`;
+  }
+
+  // Constrói o relógio dentro de el. o = {dial, case, strap, back}
+  function build(el, o) {
+    n++;
+    const front = `<div class="wface front">${strapSVG(o)}<div class="head">${caseSVG(o)}<div class="dial"></div>${printSVG(o)}${handsHTML(o)}<div class="glass"></div></div></div>`;
+    const back = o.back ? `<div class="wface back">${strapSVG(o, true)}<div class="head">${backSVG(o)}${balanceHTML()}${rotorHTML(o)}<div class="glass"></div></div></div>` : '';
+    el.innerHTML = front + back;
+    const D = DIALS[o.dial];
+    const dial = el.querySelector('.dial');
+    dial.style.setProperty('--da', D.a);
+    dial.style.setProperty('--db', D.b);
+    dial.style.setProperty('--dc', D.c);
+    setMoon(el);
+    syncHands(el);
+  }
+
+  // Fase da lua real (referência: lua nova de 6 jan 2000, 18:14 UTC).
+  function moonPhase(date) {
+    const syn = 29.530588853;
+    const d = (date - Date.UTC(2000, 0, 6, 18, 14)) / 864e5;
+    let f = (d / syn) % 1;
+    if (f < 0) f += 1;
+    return f;
+  }
+  function moonPath(f, cx, cy, r) {
+    const k = Math.cos(2 * Math.PI * f);
+    const rx = f1(Math.abs(k) * r);
+    const wax = f < 0.5;
+    const outer = wax ? 1 : 0;
+    const term = wax ? (k > 0 ? 0 : 1) : (k > 0 ? 1 : 0);
+    return `M${cx} ${cy - r} A${r} ${r} 0 0 ${outer} ${cx} ${cy + r} A${rx} ${r} 0 0 ${term} ${cx} ${cy - r} Z`;
+  }
+  function moonInfo(date) {
+    const f = moonPhase(date || new Date());
+    const ill = Math.round((1 - Math.cos(2 * Math.PI * f)) / 2 * 100);
+    let name = 'Lua minguante';
+    if (f < 0.033 || f > 0.967) name = 'Lua nova';
+    else if (f < 0.216) name = 'Lua crescente';
+    else if (f < 0.283) name = 'Quarto crescente';
+    else if (f < 0.466) name = 'Crescente gibosa';
+    else if (f < 0.533) name = 'Lua cheia';
+    else if (f < 0.716) name = 'Minguante gibosa';
+    else if (f < 0.783) name = 'Quarto minguante';
+    return { f, ill, name };
+  }
+  function setMoon(el) {
+    const { f } = moonInfo();
+    const lit = el.querySelector('.moon-lit');
+    if (lit) lit.setAttribute('d', f < 0.033 || f > 0.967 ? '' : moonPath(f, 500, 650, 40));
+  }
+
+  // Os ponteiros giram por animação CSS, acertados pela hora do visitante.
+  function syncHands(el) {
+    const now = new Date();
+    const s = now.getSeconds() + now.getMilliseconds() / 1000;
+    const m = now.getMinutes() * 60 + s;
+    const h = (now.getHours() % 12) * 3600 + m;
+    el.querySelectorAll('.hands').forEach(hs => {
+      hs.querySelector('.hand.s').style.animationDelay = `-${s.toFixed(3)}s`;
+      hs.querySelector('.hand.m').style.animationDelay = `-${m.toFixed(2)}s`;
+      hs.querySelector('.hand.h').style.animationDelay = `-${h.toFixed(1)}s`;
+    });
+  }
+
+  return { build, syncHands, setMoon, moonInfo, moonPath, METALS };
+})();
+
+(() => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+  const smooth = (p, e0, e1) => { const t = clamp((p - e0) / (e1 - e0), 0, 1); return t * t * (3 - 2 * t); };
+  const ease = t => (t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+  const RM = matchMedia('(prefers-reduced-motion: reduce)');
+  const esc = s => s.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+  /* Relógios */
+  const heroW = $('#heroWatch'), cfgW = $('#cfgWatch'), calW = $('#calWatch');
+  VW.build(heroW, { dial: 'chocolate', case: 'bicolor', strap: 'chocolate', back: true });
+  VW.build(calW, { dial: 'chocolate', case: 'bicolor', strap: 'chocolate', back: true });
+  const heroDial = heroW.querySelector('.dial');
+  const heroRotor = heroW.querySelector('.rotor');
+
+  /* Hora e lua de agora, no chip do hero */
+  function updateChip() {
+    const now = new Date();
+    $('#nowTime').textContent = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    const m = VW.moonInfo(now);
+    $('#nowMoon').textContent = `${m.name} · ${m.ill}%`;
+  }
+  updateChip();
+  setInterval(updateChip, 15000);
+
+  /* Divisão de títulos em palavras (leitor de tela recebe a frase inteira) */
+  function rng(seed) { let s = seed >>> 0; return () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296; }
+  $$('[data-split]').forEach((el, idx) => {
+    const r = rng(11 + idx * 17);
+    const text = el.textContent.trim();
+    const words = text.split(/\s+/);
+    el.textContent = '';
+    const sr = document.createElement('span');
+    sr.className = 'sr';
+    sr.textContent = text;
+    const vis = document.createElement('span');
+    vis.setAttribute('aria-hidden', 'true');
+    words.forEach((w, i) => {
+      const s = document.createElement('span');
+      s.className = 'w';
+      s.textContent = w;
+      s.style.setProperty('--th', (i / words.length * 0.42 + r() * 0.04).toFixed(3));
+      vis.appendChild(s);
+      if (i < words.length - 1) vis.appendChild(document.createTextNode(' '));
+    });
+    el.append(sr, vis);
+  });
+
+  /* Hero de scroll */
+  const hero = $('.hero'), stage = $('.stage'), cue = $('.cue'), topbar = $('#topbar');
+  const bands = $$('.band').map(el => ({ el, a: +el.dataset.a, b: +el.dataset.b, op: -1, k: -1, on: null }));
+  let KF = [], target = 0, shown = 0, rafId = null, lastTick = 0, heroOnScreen = true, scrubOn = false;
+  let loadK = 0, lastT = '', lastRot = -1, lastRotor = -1, cueOff = null;
+
+  function heroProgress() {
+    const range = hero.offsetHeight - stage.offsetHeight;
+    if (range <= 0) return 0;
+    return clamp(-hero.getBoundingClientRect().top / range, 0, 1);
+  }
+  function buildKF() {
+    const vw = innerWidth / 100, vh = stage.offsetHeight / 100;
+    const head = heroW.offsetWidth / 2.2;
+    if (!matchMedia('(orientation: portrait)').matches) {
+      const rx = 22 * vw;
+      return [[0, rx, 0, 1, 0], [.2, rx, 0, 1, 0], [.3, 18 * vw, 4 * vh - .15 * head * 1.8, 1.8, 0], [.48, 17 * vw, 3 * vh - .15 * head * 1.86, 1.86, 0],
+        [.56, 20 * vw, 0, 1.04, 180], [.74, 20 * vw, 0, 1.04, 180], [.83, rx, 0, 1, 360], [1, rx, 0, 1, 360]];
+    }
+    const ry = -17 * vh;
+    return [[0, 0, ry, 1, 0], [.2, 0, ry, 1, 0], [.3, 0, -16 * vh - .15 * head * 1.9, 1.9, 0], [.48, 0, -17 * vh - .15 * head * 1.96, 1.96, 0],
+      [.56, 0, ry, 1.02, 180], [.74, 0, ry, 1.02, 180], [.83, 0, ry, 1, 360], [1, 0, ry, 1, 360]];
+  }
+  function pose(p) {
+    let i = 0;
+    while (i < KF.length - 2 && p > KF[i + 1][0]) i++;
+    const A = KF[i], B = KF[i + 1];
+    const t = ease(clamp((p - A[0]) / (B[0] - A[0] || 1), 0, 1));
+    return [1, 2, 3, 4].map(j => A[j] + (B[j] - A[j]) * t);
+  }
+  function render(p) {
+    const [x, y, s, ry] = pose(p);
+    const tf = `translate3d(${x.toFixed(1)}px,${y.toFixed(1)}px,0) rotateY(${ry.toFixed(2)}deg) scale(${(s / 2.2).toFixed(4)})`;
+    if (tf !== lastT) { heroW.style.transform = tf; lastT = tf; }
+    const rot = Math.round(p * 60 * 10) / 10;
+    if (rot !== lastRot) { heroDial.style.setProperty('--rot', rot + 'deg'); lastRot = rot; }
+    const rotor = Math.round(smooth(p, .5, .8) * 540);
+    if (rotor !== lastRotor) { heroRotor.style.setProperty('--rotor', rotor + 'deg'); lastRotor = rotor; }
+    bands.forEach((B, i) => {
+      const f = Math.min(0.03, (B.b - B.a) / 3);
+      let op = (i === 0 ? 1 : smooth(p, B.a, B.a + f)) * (i === bands.length - 1 ? 1 : 1 - smooth(p, B.b - f, B.b));
+      op = Math.round(op * 250) / 250;
+      if (Math.abs(op - B.op) > 0.003) { B.el.style.opacity = op; B.op = op; }
+      let k = clamp((p - B.a) / 0.06, 0, 1);
+      if (i === 0) k = Math.max(k, loadK);
+      if (Math.abs(k - B.k) > 0.008 || (k === 1 && B.k !== 1) || (k === 0 && B.k !== 0)) { B.el.style.setProperty('--k', k.toFixed(3)); B.k = k; }
+      const on = op > 0.5;
+      if (on !== B.on) { B.el.classList.toggle('on', on); B.on = on; }
+    });
+    const off = p > 0.03;
+    if (off !== cueOff) { cue.style.opacity = off ? 0 : 1; cueOff = off; }
+  }
+  function tick(now) {
+    const dt = Math.min(100, now - (lastTick || now));
+    lastTick = now;
+    shown += (target - shown) * (1 - Math.pow(1 - 0.14, dt / 16.667));
+    if (Math.abs(target - shown) < 0.0004) { shown = target; rafId = null; lastTick = 0; }
+    else rafId = requestAnimationFrame(tick);
+    render(shown);
+  }
+  function onScroll() {
+    target = heroProgress();
+    if (rafId === null && heroOnScreen) rafId = requestAnimationFrame(tick);
+  }
+  function loadRamp() {
+    if (RM.matches) { loadK = 1; return; }
+    const t0 = performance.now();
+    const step = now => {
+      loadK = clamp((now - t0) / 1500, 0, 1);
+      if (scrubOn) render(shown);
+      if (loadK < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+
+  const GATES = [
+    '(prefers-reduced-motion: reduce)',
+    '(orientation: landscape) and (pointer: coarse) and (max-height: 560px)'
+  ];
+  function enableScrub() {
+    if (scrubOn) return;
+    scrubOn = true;
+    addEventListener('scroll', onScroll, { passive: true });
+    bands.forEach(b => { b.op = -1; b.k = -1; b.on = null; });
+    lastT = ''; lastRot = -1; lastRotor = -1; cueOff = null;
+    KF = buildKF();
+    target = shown = heroProgress();
+    render(shown);
+  }
+  function disableScrub() {
+    if (!scrubOn) return;
+    scrubOn = false;
+    removeEventListener('scroll', onScroll);
+    if (rafId !== null) { cancelAnimationFrame(rafId); rafId = null; }
+    heroW.style.transform = '';
+    heroDial.style.removeProperty('--rot');
+    bands.forEach(b => { b.el.style.opacity = ''; b.el.style.removeProperty('--k'); b.el.classList.remove('on'); });
+    bands[0].el.classList.add('on');
+    cue.style.opacity = '';
+  }
+  function applyHeroMode() {
+    if (GATES.some(q => matchMedia(q).matches)) disableScrub();
+    else enableScrub();
+  }
+  const MQLS = GATES.map(q => matchMedia(q));
+  MQLS.forEach(m => m.addEventListener('change', applyHeroMode));
+  let rz = null;
+  addEventListener('resize', () => {
+    clearTimeout(rz);
+    rz = setTimeout(() => { if (scrubOn) { KF = buildKF(); lastT = ''; render(shown); } }, 120);
+  });
+  new IntersectionObserver(es => es.forEach(e => { heroOnScreen = e.isIntersecting; if (heroOnScreen && scrubOn) onScroll(); })).observe(hero);
+
+  /* Cabeçalho ganha fundo depois do hero */
+  let solid = null;
+  function headerState() {
+    const end = scrubOn ? hero.offsetHeight - stage.offsetHeight - 40 : 40;
+    const s = scrollY > end;
+    if (s !== solid) { topbar.classList.toggle('solid', s); solid = s; }
+  }
+  addEventListener('scroll', headerState, { passive: true });
+
+  /* Entradas das seções e elementos vivos */
+  const revIO = new IntersectionObserver(es => es.forEach(e => {
+    if (!e.isIntersecting) return;
+    const el = e.target;
+    el.classList.add('in');
+    revIO.unobserve(el);
+    setTimeout(() => el.classList.add('settled'), 2200);
+  }), { rootMargin: '0px 0px -8% 0px' });
+  function armReveals() {
+    const groups = new Map();
+    $$('.reveal').forEach(el => {
+      const p = el.parentElement;
+      const i = groups.get(p) || 0;
+      groups.set(p, i + 1);
+      if (RM.matches) return;
+      if (el.getBoundingClientRect().top > innerHeight * 0.95) {
+        el.style.setProperty('--d', (Math.min(i, 6) * 0.09).toFixed(2) + 's');
+        el.classList.add('pre');
+        revIO.observe(el);
+      }
+    });
+  }
+  const liveIO = new IntersectionObserver(es => es.forEach(e => e.target.classList.toggle('live', e.isIntersecting)));
+  [$('.maison'), heroW, calW].forEach(el => liveIO.observe(el));
+
+  /* Contadores do calibre */
+  const nums = $$('.nums [data-count]');
+  const fmt = (v, el) => Math.round(v).toLocaleString('pt-BR') + (el.dataset.suffix || '');
+  function armCounters() {
+    const box = $('.nums');
+    if (RM.matches || box.getBoundingClientRect().top < innerHeight) return;
+    nums.forEach(el => { el.textContent = fmt(0, el); });
+    new IntersectionObserver((es, obs) => es.forEach(e => {
+      if (!e.isIntersecting) return;
+      obs.disconnect();
+      const t0 = performance.now();
+      const step = now => {
+        const t = clamp((now - t0) / 1600, 0, 1), k = 1 - Math.pow(1 - t, 3);
+        nums.forEach(el => { el.textContent = fmt(+el.dataset.count * k, el); });
+        if (t < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    }), { threshold: 0.4 }).observe(box);
+  }
+  RM.addEventListener('change', e => {
+    if (!e.matches) return;
+    $$('.pre').forEach(el => el.classList.add('in', 'settled'));
+    nums.forEach(el => { el.textContent = fmt(+el.dataset.count, el); });
+    if (eg.hp > 0 && !eg.done) { eg.hp = 1; renderEngrave(1); finish(); }
+  });
+
+  /* Configurador */
+  const cfg = $('#cfg'), cfgWrap = $('.cfg-wrap');
+  const PRICES = { bicolor: { 40: 138000, 36: 127000 }, rose: { 40: 246000, 36: 226000 }, steel: { 40: 89000, 36: 82000 } };
+  const N = {
+    dial: { chocolate: 'Chocolate', verde: 'Verde floresta', ardosia: 'Ardósia', marfim: 'Marfim' },
+    dialSpec: { chocolate: 'Chocolate raiado', verde: 'Verde floresta raiado', ardosia: 'Ardósia raiado', marfim: 'Marfim opalino' },
+    case: { bicolor: 'Aço e ouro rosé', rose: 'Ouro rosé 18 k', steel: 'Aço' },
+    caseSpec: { bicolor: 'aço e ouro rosé 18 k', rose: 'ouro rosé 18 k', steel: 'aço' },
+    strap: { chocolate: 'chocolate', verde: 'verde inglês', preto: 'preto' },
+    buckle: { bicolor: 'ouro rosé', rose: 'ouro rosé', steel: 'aço' }
+  };
+  const val = name => cfg.elements.namedItem(name).value;
+  let cfgName = 'Lune 40 · Aço e ouro rosé · Chocolate';
+  function renderCfg() {
+    const s = { dial: val('dial'), case: val('case'), size: val('size'), strap: val('strap') };
+    VW.build(cfgW, { dial: s.dial, case: s.case, strap: s.strap });
+    cfgWrap.style.setProperty('--sz', s.size === '36' ? 0.9 : 1);
+    cfgName = `Lune ${s.size} · ${N.case[s.case]} · ${N.dial[s.dial]}`;
+    $('#cfgName').textContent = cfgName;
+    $('#cfgPrice').textContent = 'R$ ' + PRICES[s.case][s.size].toLocaleString('pt-BR');
+    $('#spCase').textContent = `${s.size} mm, ${N.caseSpec[s.case]}`;
+    $('#spDial').textContent = `${N.dialSpec[s.dial]}, fase da lua às 6 h`;
+    $('#spStrap').textContent = `Couro de bezerro ${N.strap[s.strap]}, fivela em ${N.buckle[s.case]}`;
+    $$('.sw, .pill', cfg).forEach(l => l.classList.toggle('on', l.querySelector('input').checked));
+  }
+  cfg.addEventListener('change', renderCfg);
+  renderCfg();
+  $('#cfgSend').addEventListener('click', () => { $('#vModelo').value = cfgName; });
+  $$('.when .pill').forEach(l => l.classList.toggle('on', l.querySelector('input').checked));
+  $('.when').addEventListener('change', () => $$('.when .pill').forEach(l => l.classList.toggle('on', l.querySelector('input').checked)));
+
+  /* O momento: segurar para gravar */
+  const cb = $('#caseback'), holdBtn = $('#holdBtn'), holdLabel = $('#holdLabel'), holdDone = $('#holdDone');
+  const egName = $('#egName'), egDate = $('#egDate');
+  const eg = { hp: 0, holding: false, raf: null, last: 0, done: false };
+  (function buildCaseback() {
+    let notches = '';
+    for (let i = 0; i < 6; i++) notches += `<rect x="492" y="8" width="16" height="30" rx="3" fill="rgba(0,0,0,.35)" transform="rotate(${i * 60 + 30} 500 500)"/>`;
+    cb.innerHTML = `<div class="cb-metal"></div><svg viewBox="0 0 1000 1000" aria-hidden="true"><defs>` +
+      `<linearGradient id="cbs" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F5F6F3"/><stop offset=".3" stop-color="#B9BDBA"/><stop offset=".5" stop-color="#EEF0EC"/><stop offset=".8" stop-color="#8E9290"/><stop offset="1" stop-color="#D5D8D4"/></linearGradient>` +
+      `<path id="cbp" d="M500 500 m-404 0 a404 404 0 1 1 808 0 a404 404 0 1 1 -808 0"/>` +
+      `<clipPath id="cbclip"><rect id="cbrect" x="190" y="300" width="0" height="400"/></clipPath></defs>` +
+      `<circle cx="500" cy="500" r="472" fill="none" stroke="url(#cbs)" stroke-width="56"/>${notches}` +
+      `<circle cx="500" cy="500" r="444" fill="none" stroke="rgba(60,34,22,.35)" stroke-width="2"/>` +
+      `<text font-family="Marcellus, serif" font-size="25" letter-spacing="9" fill="rgba(70,40,26,.5)"><textPath href="#cbp">VALÈRE · GENÈVE · Nº 0417 · ÉTANCHE 50 M · OR ROSE 18 CT · CALIBRE VA-21 · </textPath></text>` +
+      `<g class="ghost" fill="none" stroke="rgba(70,40,26,.3)" stroke-width="1.3" stroke-dasharray="3 4"></g>` +
+      `<g clip-path="url(#cbclip)"><g class="eng"></g></g>` +
+      `<circle class="laser" cx="190" cy="500" r="8" fill="#FFF1E2" opacity="0"/></svg>`;
+  })();
+  const cbRect = $('#cbrect', cb), laser = $('.laser', cb), engG = $('.eng', cb), ghostG = $('.ghost', cb);
+  function dateParts() {
+    const v = egDate.value;
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(v)) return null;
+    const [y, m, d] = v.split('-');
+    return { str: `${d}.${m}.${y}`, date: new Date(Date.UTC(+y, +m - 1, +d, 22)) };
+  }
+  function engraveMarkup() {
+    const name = (egName.value.trim() || 'Seu nome').toUpperCase();
+    const dp = dateParts();
+    const moon = dp ? VW.moonInfo(dp.date) : null;
+    const lit = moon && moon.ill > 2 ? `<path d="${VW.moonPath(moon.f, 500, 392, 34)}"/>` : '';
+    const size = Math.min(64, Math.floor(620 / Math.max(6, name.length * 0.8)));
+    const body = (dx, dy) => `<g transform="translate(${dx} ${dy})"><circle cx="500" cy="392" r="34" fill="none" stroke-width="3"/>${lit}` +
+      `<text x="505" y="${520 + size * 0.15}" text-anchor="middle" font-family="Marcellus, serif" font-size="${size}" letter-spacing="${Math.round(size * 0.14)}">${esc(name)}</text>` +
+      `<text x="507" y="610" text-anchor="middle" font-family="Marcellus, serif" font-size="40" letter-spacing="12">${dp ? dp.str : ''}</text></g>`;
+    engG.innerHTML = `<g fill="rgba(255,238,224,.55)" stroke="rgba(255,238,224,.55)">${body(0, 2)}</g><g fill="rgba(74,40,24,.82)" stroke="rgba(74,40,24,.82)">${body(0, 0)}</g>`;
+    ghostG.innerHTML = body(0, 0);
+    return moon;
+  }
+  let moonNow = engraveMarkup();
+  function renderEngrave(p) {
+    cbRect.setAttribute('width', (p * 620).toFixed(1));
+    const live = p > 0 && p < 1 && eg.holding;
+    laser.setAttribute('opacity', live ? 1 : 0);
+    if (live) {
+      laser.setAttribute('cx', (190 + p * 620).toFixed(1));
+      laser.setAttribute('cy', (480 + Math.sin(p * 70) * 120).toFixed(1));
+    }
+    holdBtn.style.setProperty('--p', p.toFixed(3));
+    ghostG.setAttribute('opacity', (1 - p).toFixed(2));
+  }
+  const PHRASE = { 'Lua nova': 'nova', 'Lua crescente': 'crescente', 'Quarto crescente': 'em quarto crescente', 'Crescente gibosa': 'crescente gibosa',
+    'Lua cheia': 'cheia', 'Minguante gibosa': 'minguante gibosa', 'Quarto minguante': 'em quarto minguante', 'Lua minguante': 'minguante' };
+  function finish() {
+    eg.done = true;
+    eg.holding = false;
+    renderEngrave(1);
+    holdBtn.classList.add('done');
+    holdLabel.textContent = 'Gravado';
+    const dp = dateParts();
+    holdDone.innerHTML = dp && moonNow ? `Na noite de ${dp.str}, a lua estava ${PHRASE[moonNow.name]}. Ela fica no fundo da caixa para sempre.` : 'Gravado no fundo da caixa.';
+    holdDone.classList.add('show');
+  }
+  function holdTick(now) {
+    const dt = Math.min(64, now - (eg.last || now));
+    eg.last = now;
+    if (!eg.done) eg.hp = eg.holding ? Math.min(1, eg.hp + dt / 2200) : Math.max(0, eg.hp - dt / 1300);
+    renderEngrave(eg.hp);
+    if (eg.hp >= 1 && !eg.done) finish();
+    if (!eg.done && (eg.holding || eg.hp > 0)) eg.raf = requestAnimationFrame(holdTick);
+    else { eg.raf = null; eg.last = 0; }
+  }
+  function holdStart() {
+    if (eg.done) return;
+    if (RM.matches) { eg.hp = 1; finish(); return; }
+    eg.holding = true;
+    if (!eg.raf) { eg.last = 0; eg.raf = requestAnimationFrame(holdTick); }
+  }
+  function holdStop() { eg.holding = false; }
+  holdBtn.addEventListener('pointerdown', e => { e.preventDefault(); try { holdBtn.setPointerCapture(e.pointerId); } catch (_) {} holdStart(); });
+  ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(t => holdBtn.addEventListener(t, holdStop));
+  holdBtn.addEventListener('keydown', e => { if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) { e.preventDefault(); holdStart(); } });
+  holdBtn.addEventListener('keyup', e => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); holdStop(); } });
+  holdBtn.addEventListener('contextmenu', e => e.preventDefault());
+  function resetEngrave() {
+    moonNow = engraveMarkup();
+    eg.done = false; eg.hp = 0; eg.holding = false;
+    holdBtn.classList.remove('done');
+    holdLabel.textContent = 'Segure para gravar';
+    holdDone.classList.remove('show');
+    holdDone.textContent = '';
+    renderEngrave(0);
+  }
+  egName.addEventListener('input', resetEngrave);
+  egDate.addEventListener('change', resetEngrave);
+  renderEngrave(0);
+
+  /* Formulário de visita (site de demonstração: nada é enviado) */
+  const form = $('#visitForm'), ok = $('#visitOk'), err = $('#formErr');
+  const zap = $('#vZap');
+  zap.addEventListener('input', () => {
+    const d = zap.value.replace(/\D/g, '').slice(0, 11);
+    let v = d;
+    if (d.length > 2) v = `(${d.slice(0, 2)}) ${d.slice(2)}`;
+    if (d.length > 7) v = `(${d.slice(0, 2)}) ${d.slice(2, d.length - 4)}-${d.slice(-4)}`;
+    zap.value = v;
+  });
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const nome = $('#vNome');
+    const bad = [];
+    nome.setAttribute('aria-invalid', nome.value.trim().length < 2);
+    if (nome.value.trim().length < 2) bad.push(nome);
+    const digits = zap.value.replace(/\D/g, '').length;
+    zap.setAttribute('aria-invalid', digits < 10);
+    if (digits < 10) bad.push(zap);
+    if (bad.length) {
+      err.textContent = bad.length === 2 ? 'Falta o seu nome e um WhatsApp com DDD.' : bad[0] === nome ? 'Falta o seu nome.' : 'Confira o WhatsApp: use o DDD e o número, como (11) 91234-5678.';
+      bad[0].focus();
+      return;
+    }
+    err.textContent = '';
+    const first = nome.value.trim().split(/\s+/)[0];
+    const hora = form.elements.namedItem('hora').value;
+    $('#okTitle').textContent = `Obrigado, ${first}.`;
+    $('#okText').textContent = `Seu pedido de visita ficou pronto: ${$('#vOnde').value}, para ${$('#vModelo').value || 'conhecer a coleção'}. Num site real, o consultor chamaria você no WhatsApp ${zap.value} pela ${hora}.`;
+    form.hidden = true;
+    ok.hidden = false;
+    ok.focus();
+  });
+  $('#okBack').addEventListener('click', () => { ok.hidden = true; form.hidden = false; $('#vNome').focus(); });
+
+  /* Aba escondida pausa o ambiente; os ponteiros ressincronizam na volta */
+  document.addEventListener('visibilitychange', () => {
+    document.body.classList.toggle('paused', document.hidden);
+    if (!document.hidden) { $$('.watch').forEach(w => VW.syncHands(w)); updateChip(); }
+  });
+
+  armReveals();
+  armCounters();
+  applyHeroMode();
+  headerState();
+  loadRamp();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (scrubOn) { KF = buildKF(); lastT = ''; render(shown); } });
+})();
+
+</script>
+
+</body></html>

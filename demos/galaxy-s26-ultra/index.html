@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Galaxy S26 Ultra · Conceito</title>
+<meta name="description" content="Página conceito do Galaxy S26 Ultra com fotos de estúdio e animação de rolagem no estilo de filme de lançamento.">
+<meta name="theme-color" content="#000000">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@200;300;400;600;800&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="https://d8j0ntlcm91z4.cloudfront.net/user_3JtZC6ddwx6YVRQn4yG6QiUXAde/hf_20261029_105725_8f0f9951-9a12-499d-829a-fe6bd254d180.png">
+<style>
+  :root {
+    --bg: #000;
+    --fg: #f4f5f7;
+    --muted: #8d939e;
+    --accent: #9db7ff;
+    --accent-2: #c7a6ff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { background: var(--bg); }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: "Inter Tight", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* acabamento de filme: grão, vinheta e faixas de cinema */
+  .grao { position: fixed; inset: -50%; z-index: 20; pointer-events: none; opacity: .07;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    animation: grao .6s steps(3) infinite; }
+  @keyframes grao { 0% { transform: translate(0,0); } 33% { transform: translate(-3%,2%); } 66% { transform: translate(2%,-3%); } }
+  .vinheta { position: fixed; inset: 0; z-index: 19; pointer-events: none;
+    background: radial-gradient(120% 90% at 50% 50%, transparent 55%, rgba(0,0,0,.75)); }
+  .faixa { position: fixed; left: 0; right: 0; height: 0; background: #000; z-index: 18; }
+  .faixa.cima { top: 0; } .faixa.baixo { bottom: 0; }
+
+  header {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 30;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px clamp(16px, 4vw, 40px);
+    font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted);
+  }
+  header strong { color: #fff; font-weight: 600; }
+  .tempo { font-variant-numeric: tabular-nums; }
+
+  /* cenas: cada uma é alta e o quadro fica preso na tela enquanto o scroll avança */
+  .cena { position: relative; height: 260vh; }
+  .cena.curta { height: 200vh; }
+  /* a próxima cena começa por cima da anterior: corte direto, sem tela preta rolando no meio */
+  .cena + .cena { margin-top: -100vh; margin-top: -100svh; }
+  .quadro { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
+  .foto { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; will-change: transform, opacity, filter; }
+  .foto img { height: 100%; width: auto; max-width: none; display: block; user-select: none;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent);
+            mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent); }
+  .foto.direita { justify-content: flex-end; padding-right: 6vw; }
+  .foto.esquerda { justify-content: flex-start; padding-left: 6vw; }
+  .reflexo { position: absolute; inset: 0; pointer-events: none; mix-blend-mode: screen; opacity: 0;
+    background: linear-gradient(105deg, transparent 40%, rgba(170,195,255,.14) 50%, transparent 60%);
+    background-size: 250% 100%; }
+
+  .texto { position: absolute; z-index: 2; left: clamp(16px, 7vw, 110px); top: 50%; transform: translateY(-50%); max-width: 520px; }
+  .texto.lado-direito { left: auto; right: clamp(16px, 7vw, 110px); }
+  .tag { display: block; font-size: 12px; letter-spacing: .3em; text-transform: uppercase; color: var(--accent); margin-bottom: 18px; }
+  h1, h2 { font-weight: 800; letter-spacing: -.04em; line-height: .92; }
+  h1 { font-size: clamp(56px, 10vw, 150px); }
+  h2 { font-size: clamp(40px, 6vw, 88px); }
+  .grad { background: linear-gradient(100deg, #fff 15%, var(--accent) 60%, var(--accent-2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  p { color: var(--muted); font-size: clamp(16px, 1.5vw, 19px); line-height: 1.55; font-weight: 300; margin-top: 22px; max-width: 420px; }
+
+  /* linhas que sobem de dentro de uma máscara, como corte de edição */
+  .linha { display: block; overflow: hidden; padding-bottom: .12em; }
+  .linha > span { display: inline-block; transform: translateY(110%); will-change: transform; }
+  .abertura .linha > span { transform: none; }
+
+  .numero { font-size: clamp(90px, 17vw, 260px); font-weight: 200; letter-spacing: -.06em; line-height: .85;
+    font-variant-numeric: tabular-nums; }
+  .numero small { font-size: .28em; font-weight: 600; letter-spacing: 0; margin-left: .1em; color: var(--accent); }
+
+  .abertura .texto { left: 50%; top: 50%; transform: translate(-50%, -50%); text-align: center; max-width: none; width: 100%; }
+  .abertura .sub { font-size: 13px; letter-spacing: .4em; text-transform: uppercase; color: var(--muted); margin-top: 26px; }
+  .rolar { position: absolute; bottom: 34px; left: 50%; transform: translateX(-50%); z-index: 3;
+    font-size: 11px; letter-spacing: .3em; text-transform: uppercase; color: var(--muted); display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .rolar i { width: 1px; height: 44px; background: linear-gradient(var(--fg), transparent); animation: desce 1.8s ease-in-out infinite; transform-origin: top; }
+  @keyframes desce { 0% { transform: scaleY(0); } 60% { transform: scaleY(1); opacity: 1; } 100% { transform: scaleY(1); opacity: 0; } }
+
+  .final { min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 80px 16px; position: relative; }
+  .final p { margin-left: auto; margin-right: auto; }
+  .cta { display: inline-block; margin-top: 34px; padding: 15px 30px; border-radius: 999px; background: var(--fg); color: #000; text-decoration: none; font-weight: 600; font-size: 15px; }
+  .aviso { margin-top: 30px; font-size: 12px; color: #5d626b; max-width: 520px; }
+
+  @media (max-width: 760px) {
+    .foto img { height: 100%; width: 100%; object-fit: cover; -webkit-mask-image: none; mask-image: none; }
+    .foto.direita, .foto.esquerda { padding: 0; justify-content: center; }
+    .quadro::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+      background: linear-gradient(transparent 45%, rgba(0,0,0,.88) 80%); }
+    .texto, .texto.lado-direito { left: 16px; right: 16px; top: auto; bottom: 64px; transform: none; max-width: none; }
+    .abertura .quadro::after { background: rgba(0,0,0,.3); }
+    .abertura .texto { left: 0; right: 0; top: 50%; bottom: auto; transform: translateY(-50%); }
+    .numero { font-size: 96px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .grao, .rolar i { animation: none; }
+    .linha > span { transform: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="grao"></div>
+<div class="vinheta"></div>
+<div class="faixa cima" id="faixaCima"></div>
+<div class="faixa baixo" id="faixaBaixo"></div>
+
+<header><strong>Galaxy S26 Ultra</strong><span class="tempo" id="tempo">00:00:00</span></header>
+
+<main>
+  <!-- 1. abertura: título no escuro, a foto acende por trás -->
+  <section class="cena abertura" data-cena="abertura">
+    <div class="quadro">
+      <div class="foto" data-foto="hero"><img alt="Galaxy S26 Ultra visto de trás, em estúdio escuro"></div>
+      <div class="reflexo"></div>
+      <div class="texto">
+        <h1><span class="linha"><span>Galaxy</span></span><span class="linha"><span class="grad">S26 Ultra</span></span></h1>
+        <div class="sub"><span class="linha"><span>Titânio. Vidro. Luz.</span></span></div>
+      </div>
+      <div class="rolar"><i></i>Role</div>
+    </div>
+  </section>
+
+  <!-- 2. câmera: macro que se afasta enquanto o número sobe -->
+  <section class="cena" data-cena="camera">
+    <div class="quadro">
+      <div class="foto direita" data-foto="camera"><img alt="Close das lentes traseiras do Galaxy S26 Ultra"></div>
+      <div class="reflexo"></div>
+      <div class="texto">
+        <span class="tag"><span class="linha"><span>Câmera</span></span></span>
+        <div class="numero"><span class="linha"><span><b id="mp">0</b><small>MP</small></span></span></div>
+        <p><span class="linha"><span>Um sensor de 200 megapixels e zoom</span></span><span class="linha"><span>que chega perto do que está longe.</span></span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. design: a foto principal volta do outro lado, com deslize de câmera -->
+  <section class="cena curta" data-cena="design">
+    <div class="quadro">
+      <div class="foto esquerda" data-foto="hero"><img alt="Galaxy S26 Ultra em titânio"></div>
+      <div class="reflexo"></div>
+      <div class="texto lado-direito">
+        <span class="tag"><span class="linha"><span>Design</span></span></span>
+        <h2><span class="linha"><span>Moldura de</span></span><span class="linha"><span class="grad">titânio.</span></span></h2>
+        <p><span class="linha"><span>Laterais retas, cantos suaves e vidro fosco</span></span><span class="linha"><span>que não guarda marca de dedo.</span></span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. S Pen -->
+  <section class="cena" data-cena="pen">
+    <div class="quadro">
+      <div class="foto direita" data-foto="pen"><img alt="Galaxy S26 Ultra com a S Pen saindo do encaixe"></div>
+      <div class="reflexo"></div>
+      <div class="texto">
+        <span class="tag"><span class="linha"><span>S Pen</span></span></span>
+        <h2><span class="linha"><span>A caneta</span></span><span class="linha"><span>mora <span class="grad">dentro.</span></span></span></h2>
+        <p><span class="linha"><span>Puxe, anote, recorte, assine.</span></span><span class="linha"><span>Ela volta pro lugar e carrega sozinha.</span></span></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="final">
+    <h2 class="grad">O Ultra.</h2>
+    <p>Feito para ser visto de perto.</p>
+    <a class="cta" href="#" id="voltar">Assistir de novo</a>
+    <p class="aviso">Conceito de fã, sem ligação com a Samsung. Imagens geradas por IA a partir da aparência do aparelho, só para ilustrar.</p>
+  </section>
+</main>
+
+<script>
+// Fotos geradas no Higgsfield (Nano Banana), servidas pelo CDN deles.
+const CDN = "https://d8j0ntlcm91z4.cloudfront.net/user_3JtZC6ddwx6YVRQn4yG6QiUXAde/";
+const FOTOS = {
+  hero: CDN + "hf_20261029_105725_8f0f9951-9a12-499d-829a-fe6bd254d180.png",
+  camera: CDN + "hf_20261029_105921_93dcdf2c-84ea-4a39-9285-0dfe2c4659d3.png",
+  pen: CDN + "hf_20261029_105921_b8b4f597-baa6-4d1e-a955-f3a1362aa9d5.png",
+};
+document.querySelectorAll("[data-foto]").forEach((el) => {
+  el.querySelector("img").src = FOTOS[el.dataset.foto];
+});
+
+const reduzir = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const limita = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const faixa = (p, a, b) => limita((p - a) / (b - a));           // 0→1 entre a e b
+const ease = (t) => 1 - Math.pow(1 - t, 3);                      // desacelera no fim
+const easeIO = (t) => (t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+
+const cenas = [...document.querySelectorAll(".cena")].map((el) => ({
+  el,
+  tipo: el.dataset.cena,
+  foto: el.querySelector(".foto"),
+  reflexo: el.querySelector(".reflexo"),
+  linhas: [...el.querySelectorAll(".linha > span")],
+}));
+const mp = document.getElementById("mp");
+const faixaCima = document.getElementById("faixaCima");
+const faixaBaixo = document.getElementById("faixaBaixo");
+const tempo = document.getElementById("tempo");
+const rolar = document.querySelector(".rolar");
+
+// texto entra linha por linha e sai junto no fim da cena
+function linhas(c, p, entra = 0.08, sai = 0.82) {
+  c.linhas.forEach((s, i) => {
+    const e = ease(faixa(p, entra + i * 0.035, entra + 0.14 + i * 0.035));
+    const x = easeIO(faixa(p, sai, sai + 0.12));
+    s.style.transform = `translateY(${(1 - e) * 110 - x * 110}%)`;
+  });
+}
+
+function progresso(el) {
+  const r = el.getBoundingClientRect();
+  return limita(-r.top / (r.height - innerHeight));
+}
+
+function quadro() {
+  for (const c of cenas) {
+    const p = progresso(c.el);
+    const f = c.foto.style;
+    const entrada = ease(faixa(p, 0, 0.14));
+    const saida = easeIO(faixa(p, 0.86, 1));
+
+    if (c.tipo === "abertura") {
+      // a foto acende devagar por trás do título e se aproxima
+      const acende = reduzir ? 1 : ease(faixa(p, 0.02, 0.55));
+      f.opacity = 0.35 + acende * 0.65 - saida;
+      f.filter = `brightness(${0.45 + acende * 0.6}) blur(${(1 - acende) * 4}px)`;
+      f.transform = `scale(${1.15 - acende * 0.1 + saida * 0.25})`;
+      rolar.style.opacity = 1 - faixa(p, 0, 0.08);
+      c.linhas.forEach((s, i) => {
+        const sai = easeIO(faixa(p, 0.4 + i * 0.03, 0.65 + i * 0.03));
+        s.style.transform = `translateY(${-sai * 110}%)`;
+      });
+    } else if (c.tipo === "camera") {
+      // macro muito perto que vai abrindo; o número conta até 200
+      f.opacity = entrada * (1 - saida);
+      f.transform = `scale(${1.5 - ease(faixa(p, 0, 0.85)) * 0.45}) translateY(${(1 - entrada) * 6}%)`;
+      f.filter = `blur(${(1 - entrada) * 10}px)`;
+      mp.textContent = Math.round(ease(faixa(p, 0.15, 0.55)) * 200);
+      linhas(c, p);
+    } else if (c.tipo === "design") {
+      // corte seco com deslize lateral e leve giro, como um dolly de câmera
+      f.opacity = ease(faixa(p, 0, 0.12)) * (1 - saida);
+      f.transform = `translateX(${(1 - ease(faixa(p, 0, 0.6))) * -8}%) scale(${1.08 - ease(p) * 0.1}) rotate(${(1 - ease(faixa(p, 0, 0.7))) * -4}deg)`;
+      f.filter = "none";
+      linhas(c, p, 0.12, 0.78);
+    } else if (c.tipo === "pen") {
+      f.opacity = entrada * (1 - saida);
+      f.transform = `translateY(${(1 - ease(faixa(p, 0, 0.7))) * 10}%) scale(${1.12 - ease(p) * 0.12})`;
+      f.filter = `blur(${(1 - entrada) * 8}px)`;
+      linhas(c, p);
+    }
+
+    // brilho que atravessa a foto no meio de cada cena
+    const brilho = faixa(p, 0.3, 0.65);
+    c.reflexo.style.opacity = Math.sin(brilho * Math.PI) * 0.6;
+    c.reflexo.style.backgroundPosition = `${100 - brilho * 100}% 0`;
+  }
+
+  // faixas de cinema nas cenas do meio (só na tela larga)
+  const doc = document.documentElement;
+  const g = scrollY / (doc.scrollHeight - innerHeight || 1);
+  const barra = innerWidth > 760 ? Math.sin(limita((g - 0.12) / 0.7) * Math.PI) * 6 : 0;
+  faixaCima.style.height = faixaBaixo.style.height = barra + "vh";
+
+  // contador como numa timeline de edição (24 quadros por segundo)
+  const q = Math.floor(g * 60 * 24);
+  tempo.textContent = [Math.floor(q / 1440), Math.floor(q / 24) % 60, q % 24].map((n) => String(n).padStart(2, "0")).join(":");
+
+  requestAnimationFrame(quadro);
+}
+quadro();
+
+document.getElementById("voltar").addEventListener("click", (ev) => {
+  ev.preventDefault();
+  scrollTo({ top: 0, behavior: reduzir ? "auto" : "smooth" });
+});
+</script>
+</body>
+</html>
