@@ -466,6 +466,9 @@ export function PainelVendas() {
           >
             <Search />
           </IconButton>
+          <IconButton label="Assistente: peça pra marcar, remarcar ou registrar" onClick={() => navegar("assistente")}>
+            <Sparkles />
+          </IconButton>
           <IconButton
             label={
               responderam > 0

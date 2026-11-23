@@ -208,6 +208,7 @@ function bancoDeMentira(iniciais) {
         loja: "w5522900000001",
         status: "respondeu",
         compromisso: { quando: `${dia}T12:00`, oque: "Mandar mensagem pro dono" },
+        horario: { acao: "marcar", data: dia, hora: "16:30", tipo: "visita", duracao: 30 },
         anotacao: "Funcionária disse que o dono chega meio-dia.",
       },
     ]) +
@@ -866,6 +867,11 @@ try {
   const salvaPeloAssistente = (await p.evaluate(() => window.__escritas)).filter((e) => e.id === "w5522900000001").at(-1);
   assert.equal(salvaPeloAssistente.dados.status, "respondeu");
   assert.equal(salvaPeloAssistente.dados.compromisso.oque, "Mandar mensagem pro dono");
+  // O assistente também marca na agenda: visita amanhã às 16:30.
+  const marcadoPeloAssistente = (await p.evaluate(() => window.__escritas)).filter((e) => e.colecao === "compromissos").at(-1);
+  assert.equal(marcadoPeloAssistente.dados.leadId, "w5522900000001");
+  assert.equal(marcadoPeloAssistente.dados.hora, "16:30");
+  assert.equal(marcadoPeloAssistente.dados.tipo, "visita");
   const guardada = (await p.evaluate(() => window.__escritas)).filter((e) => e.caminho === "assistente/conversa").at(-1);
   assert.equal(guardada.dados.mensagens.length, 2);
   assert.deepEqual(guardada.dados.mensagens[1].salvas, [0]);
@@ -950,6 +956,24 @@ try {
     5,
   );
   await p.getByRole("button", { name: "Pôr 5 exemplos" }).waitFor();
+
+  // "Não quer mais": a loja vai pra "Não quer" e todos os horários futuros dela são cancelados.
+  await p.getByRole("radio", { name: "Lista" }).click();
+  await p.getByRole("button", { name: new RegExp(`${ANTIGA}.*12:00–12:30 · Visita`) }).click();
+  const desistiu = p.getByRole("dialog", { name: `Horário com ${ANTIGA}` });
+  await desistiu.getByRole("button", { name: "Não quer mais" }).click();
+  await desistiu.getByLabel("Motivo de não querer").fill("achou caro");
+  await desistiu.getByRole("button", { name: "Sim, não quer mais" }).click();
+  await p.waitForTimeout(300);
+  const escritasDesistiu = await p.evaluate(() => window.__escritas);
+  const loja = escritasDesistiu.filter((e) => e.colecao === "leads" && e.id === "w5522900000001").at(-1).dados;
+  assert.equal(loja.status, "nao");
+  assert.equal(loja.obs, "Não quer mais: achou caro");
+  const cancelados = escritasDesistiu.filter(
+    (e) => e.colecao === "compromissos" && e.dados.leadId === "w5522900000001" && e.dados.status === "cancelado",
+  );
+  assert.equal(cancelados.length, 2, "a visita das 12:00 e a das 16:30 saem da agenda");
+  assert.ok(cancelados.every((e) => e.dados.resultado === "naofechou"));
 
   // Funil: o fluxo mostra as etapas e tocar numa leva à lista filtrada.
   await p.getByRole("button", { name: "Abrir menu" }).click();
