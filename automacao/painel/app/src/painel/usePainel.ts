@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Mensagem } from "./assistente";
 import { CONFIG_PADRAO, exemplos, lerCompromisso, lerConfigAgenda, type Compromisso, type ConfigAgenda } from "./agenda";
-import { TEXTOS_PADRAO, lerDono, lerFoto, lerImportacao, lerZap, type ChaveTexto, type Lead, type Textos } from "./leads";
+import { TEXTOS_PADRAO, lerDono, lerFoto, lerImportacao, lerNumero, lerZap, type ChaveTexto, type Lead, type Textos } from "./leads";
 
 interface DocSnap {
   id: string;
@@ -227,6 +227,7 @@ export function usePainel(avisar: (texto: string) => void) {
         fotos?: unknown;
         donos?: unknown;
         telCnpj?: unknown;
+        insta?: unknown;
       };
       try {
         const resposta = await fetch("pesquisa/lote.json", { cache: "no-store" });
@@ -271,6 +272,8 @@ export function usePainel(avisar: (texto: string) => void) {
       // WhatsApp da loja que é telefone do CNPJ dela ({whatsapp: true}): número confirmado.
       const telCnpj =
         arquivo.telCnpj && typeof arquivo.telCnpj === "object" ? (arquivo.telCnpj as Record<string, unknown>) : {};
+      // WhatsApp que a loja publica no Instagram ({whatsapp do Google: whatsapp do Instagram}).
+      const insta = arquivo.insta && typeof arquivo.insta === "object" ? (arquivo.insta as Record<string, unknown>) : {};
       const conferir = leads.flatMap((l) => {
         const zap = lerZap(conferencia[l.whatsapp]);
         const foto = lerFoto(fotos[l.whatsapp]);
@@ -280,6 +283,9 @@ export function usePainel(avisar: (texto: string) => void) {
           ...(foto && foto !== l.foto ? { foto } : {}),
           ...(dono && dono.em !== l.dono?.em ? { dono } : {}),
           ...(telCnpj[l.whatsapp] === true && !l.telNoCnpj ? { telNoCnpj: true } : {}),
+          ...(lerNumero(String(insta[l.whatsapp] ?? "")) && lerNumero(String(insta[l.whatsapp])) !== l.whatsappInsta
+            ? { whatsappInsta: lerNumero(String(insta[l.whatsapp]))! }
+            : {}),
         };
         return Object.keys(mudanca).length ? [{ id: l.id, mudanca }] : [];
       });

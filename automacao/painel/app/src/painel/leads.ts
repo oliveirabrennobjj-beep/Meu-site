@@ -70,6 +70,8 @@ export interface Lead {
   whatsappCerto?: string | null;
   /** O WhatsApp da loja é um dos telefones do CNPJ dela (cadastro público da Receita). */
   telNoCnpj?: boolean;
+  /** WhatsApp que a própria loja publica no perfil do Instagram (pode ser outro que o do Google). */
+  whatsappInsta?: string;
 }
 
 /* Conferência do WhatsApp ---------------------------------------------------------------------- */
@@ -100,7 +102,9 @@ export function lerNumero(texto: string) {
 
 /** Número da loja para mandar mensagem: o que o Brenno corrigiu, o do link da loja ou o do Google. */
 export const numeroDaLoja = (lead: Lead) =>
-  lead.whatsappCerto || (lead.zap?.confere ? lead.whatsapp : zapDoLink(lead) || lead.whatsapp);
+  lead.whatsappCerto ||
+  lead.whatsappInsta ||
+  (lead.zap?.confere ? lead.whatsapp : zapDoLink(lead) || lead.whatsapp);
 
 /** (22) 99743-1349 */
 export function numeroVisivel(n: string) {
@@ -111,7 +115,7 @@ export function numeroVisivel(n: string) {
 export function situacaoZap(lead: Lead): SituacaoZap | null {
   if (lead.whatsappCerto) return "corrigido";
   if (lead.zap?.nome && lead.zap.confere) return "conferido";
-  if (zapDoLink(lead) || lead.telNoCnpj) return "confirmado";
+  if (lead.whatsappInsta || zapDoLink(lead) || lead.telNoCnpj) return "confirmado";
   if (!lead.zap) return null;
   return lead.zap.nome ? "outroNome" : "semBusiness";
 }
@@ -1396,6 +1400,7 @@ export function lerImportacao(texto: string, existentes: Iterable<string>): Lead
       ...(lerFoto(x.foto) ? { foto: lerFoto(x.foto)! } : {}),
       ...(lerDono(x.dono) ? { dono: lerDono(x.dono)! } : {}),
       ...(x.telNoCnpj === true ? { telNoCnpj: true } : {}),
+      ...(lerNumero(String(x.whatsappInsta ?? "")) ? { whatsappInsta: lerNumero(String(x.whatsappInsta))! } : {}),
       status: "novo",
       criado: agora,
     });

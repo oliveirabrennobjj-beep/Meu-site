@@ -137,6 +137,10 @@ for (const [i, nome, tipo] of [[3, MASSO, "Salão de beleza"], [4, CT, "Academia
     // Contato do dono pelo cadastro do CNPJ: celular dele (aquário) e WhatsApp da loja que já é dele (dentista).
     ...(nome === AQUARIO ? { dono: { nome: "Ana", whatsapp: "5522988887777", em: "2026-11-20T00:00:00.000Z" } } : {}),
     ...(nome === DENTISTA ? { dono: { nome: "Rui", mesmo: true, em: "2026-11-20T00:00:00.000Z" } } : {}),
+    // Caso Rua do Muro de Hera (23/11): o Instagram da loja mostra outro WhatsApp; esse vale.
+    ...(nome === FRANGO
+      ? { zap: { nome: "", confere: false, em: "2026-11-20T00:00:00.000Z" }, whatsappInsta: "5522999990077" }
+      : {}),
     // Caso Raffus (22/11): número do Google sem WhatsApp Business; o certo estava no Instagram.
     ...(nome === PESCA
       ? { zap: { nome: "", confere: false, em: "2026-11-20T00:00:00.000Z" }, link: "https://www.instagram.com/pesca_teste/" }
@@ -559,6 +563,13 @@ try {
     await ficha.getByText("Número corrigido por você: (22) 99743-1349.").waitFor();
     assert.match(await ficha.getByRole("link", { name: "Enviar no WhatsApp" }).getAttribute("href"), /^https:\/\/wa\.me\/5522997431349\?text=/);
     await p.screenshot({ path: path.join(saida, "celular-numero-corrigido.png") });
+    await ficha.getByRole("button", { name: "Fechar ficha" }).click();
+  }
+  {
+    await p.getByRole("button", { name: FRANGO, exact: true }).click();
+    const ficha = p.getByRole("dialog");
+    await ficha.getByText("(22) 99999-0077 é o WhatsApp que a loja põe no Instagram.").waitFor();
+    assert.match(await ficha.getByRole("link", { name: "Enviar no WhatsApp" }).getAttribute("href"), /^https:\/\/wa\.me\/5522999990077\?text=/);
     await ficha.getByRole("button", { name: "Fechar ficha" }).click();
   }
 

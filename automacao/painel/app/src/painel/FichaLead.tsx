@@ -130,9 +130,11 @@ function ConferenciaZap({
               "var(--blk-success)",
               "var(--blk-success-soft)",
               BadgeCheck,
-              zapDoLink(lead)
-                ? `${numero} é o WhatsApp que a própria loja põe na ficha do Google.`
-                : `${numero} está no cadastro do CNPJ da loja.`,
+              lead.whatsappInsta
+                ? `${numero} é o WhatsApp que a loja põe no Instagram.`
+                : zapDoLink(lead)
+                  ? `${numero} é o WhatsApp que a própria loja põe na ficha do Google.`
+                  : `${numero} está no cadastro do CNPJ da loja.`,
             ] as const)
           : situacao === "outroNome"
             ? ([
