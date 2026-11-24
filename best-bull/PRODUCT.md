@@ -16,7 +16,7 @@ Moradores de Casimiro de Abreu e região, quase sempre no celular, que querem ve
 
 ## Product Purpose
 
-Prévia de site para a Best Bull SteakHouse mostrar ao dono. Leva o cliente a pedir pelo WhatsApp e mostra o delivery e o Espaço Kids. Sem carrinho nem pagamento.
+Prévia premium de site para mostrar ao dono da Best Bull SteakHouse. Leva o cliente a montar o pedido e enviar pelo WhatsApp, e mostra o delivery e o Espaço Kids. O carrinho só monta a mensagem; sem pagamento.
 
 ## Positioning
 
@@ -25,7 +25,7 @@ Hamburgueria artesanal de Casimiro de Abreu, entrega rápida, Espaço Kids e not
 ## Capabilities and Constraints
 
 - Pedidos pelo WhatsApp da loja. O delivery de verdade é pelo Anota Aí; o site não substitui.
-- Sem cardápio, preço, endereço completo e horário confirmados: campos vazios no `config.js`.
+- Sem preço, cardápio completo e horário confirmados: campos vazios no `config.js` e o site mostra "valor pelo WhatsApp".
 
 ## Brand Commitments
 

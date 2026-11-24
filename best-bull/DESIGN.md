@@ -2,29 +2,37 @@
 
 ## Mundo
 
-Preto do touro e creme da marca, com vermelho só nas ações. Jeito de rua e de brasa, sem enfeite: foto grande de lanche em fundo escuro, título condensado e uma palavra em letra manuscrita como a da logo.
+Casa de carne de luxo, em modo escuro: marrom quase preto, bordô e dourado. Títulos em serifa elegante, texto em sans limpa, foto grande de lanche saindo do escuro. A referência foi o clima de site de hotel de luxo, adaptado para hamburgueria.
 
 ## Cores
 
 | Papel | Valor |
 |---|---|
-| Preto (fundo) | `#0B0A09` |
-| Creme (texto e seção clara) | `#F2E8D5`, `#FAF5EA` |
-| Areia (texto de apoio) | `#D9CDB6` |
-| Vermelho (botões, ponto de destaque) | `#D33A1D` (hover `#B72F16`) |
+| Fundo | `#0E0A08` (faixas `#16100D`, rodapé `#090605`) |
+| Bordô (faixa que corre, delivery, brilho do topo) | `#6B1325`, `#4A0D1A` |
+| Dourado (botões, itálico dos títulos, ícones) | `#D9A94A`, hover `#EBC987` |
+| Creme (texto) | `#F2E8D5` |
+| Cinza quente (apoio) | `#AEA190` |
 
 ## Tipografia
 
-- Títulos: Anton, caixa alta.
-- Palavra de destaque: Yellowtail, vermelho, uma por seção.
+- Títulos: Cormorant 600, com a palavra de destaque em itálico dourado.
 - Texto: Barlow 400, 500 e 700. Fontes hospedadas em `assets/fonts/`.
+
+## Componentes
+
+- Cabeçalho com logo, menu centralizado, ícone de pedido e botão dourado "Peça agora". No celular: menu em tela cheia.
+- Barra flutuante no topo com 3 fatos (entrega rápida, nota no Google, Espaço Kids).
+- Cartões de favoritos: foto em cima, nome e valor embaixo, botão "+" que monta o pedido.
+- Gaveta do pedido: lista com +/−, observações e envio pelo WhatsApp.
+- Faixa bordô que corre, diferenciais em 4 colunas, ambiente com foto grande e a foto real do Espaço Kids, galeria que rola, faixa de delivery, rodapé escuro.
 
 ## Detalhe assinatura
 
-O selo redondo da logo na emenda entre o topo escuro e o cardápio claro, como um carimbo. O touro em creme volta grande em "Onde fica".
+O topo: título serifado gigante com "premium" em itálico dourado ao lado do hambúrguer em close, com um brilho bordô no canto. A barra flutuante de fatos, como a barra de reserva de um hotel.
 
 ## Regras
 
-- Foto do lanche em fundo escuro; nada escrito por cima do produto (nos cartões o texto fica embaixo da foto).
-- Um par de botões: vermelho cheio e contorno creme.
-- Nada inventado: o que não foi confirmado fica vazio e some do site.
+- Nada escrito por cima do produto: texto fica ao lado ou embaixo da foto.
+- Um par de botões: dourado cheio e contorno creme.
+- Nada inventado: preço, cardápio e horário que não foram confirmados ficam vazios e o site mostra "valor pelo WhatsApp".
