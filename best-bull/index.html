@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Best Bull SteakHouse | Hambúrguer artesanal em Casimiro de Abreu</title>
 <meta name="description" content="Hambúrgueres artesanais, milk shakes e acompanhamentos em Casimiro de Abreu, RJ. Peça pelo WhatsApp com entrega rápida ou venha comer com a família no Espaço Kids.">
-<meta name="theme-color" content="#0E0A08">
+<meta name="theme-color" content="#0B0705">
 <link rel="canonical" href="https://oliveirabrennobjj-beep.github.io/Meu-site/best-bull/">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="pt_BR">
@@ -14,8 +14,8 @@
 <meta property="og:image" content="https://oliveirabrennobjj-beep.github.io/Meu-site/best-bull/assets/img/og.jpg">
 <meta property="og:url" content="https://oliveirabrennobjj-beep.github.io/Meu-site/best-bull/">
 <link rel="icon" type="image/png" href="assets/img/favicon.png">
-<link rel="preload" as="image" href="assets/img/hero-1600.webp" imagesrcset="assets/img/hero-900.webp 900w, assets/img/hero-1600.webp 1600w" imagesizes="(min-width: 900px) 64vw, 100vw">
-<link rel="preload" as="font" type="font/woff2" href="assets/fonts/cormorant-600.woff2" crossorigin>
+<link rel="preload" as="image" href="assets/img/hero-1600.webp" imagesrcset="assets/img/hero-900.webp 900w, assets/img/hero-1600.webp 1600w" imagesizes="(min-width: 900px) 62vw, 100vw">
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/anton-400.woff2" crossorigin>
 <link rel="stylesheet" href="assets/css/styles.css">
 <script type="application/ld+json">
 {
@@ -35,7 +35,6 @@
   <symbol id="i-estrela" viewBox="0 0 24 24"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></symbol>
   <symbol id="i-kids" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8.5 14.2s1.3 2 3.5 2 3.5-2 3.5-2M9 9.5h.01M15 9.5h.01"/></symbol>
   <symbol id="i-burger" viewBox="0 0 24 24"><path d="M4 11c0-3.6 3.6-6 8-6s8 2.4 8 6zM3 14.5h18M5 17.5h14l-.9 1.6a2 2 0 0 1-1.7 1H7.6a2 2 0 0 1-1.7-1z"/></symbol>
-  <symbol id="i-porcao" viewBox="0 0 24 24"><path d="M6 10h12l-1.4 10H7.4zM8 10 7 4M12 10V3M16 10l1-6"/></symbol>
   <symbol id="i-sacola" viewBox="0 0 24 24"><path d="M5.5 8h13l1 12h-15zM9 8a3 3 0 0 1 6 0"/></symbol>
   <symbol id="i-carrinho" viewBox="0 0 24 24"><path d="M3 4h2.2l2.1 10.1a1.5 1.5 0 0 0 1.5 1.2h8.3a1.5 1.5 0 0 0 1.5-1.1L20 8H6.3"/><circle cx="9.5" cy="19.5" r="1.3"/><circle cx="17" cy="19.5" r="1.3"/></symbol>
   <symbol id="i-mais" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
@@ -49,17 +48,17 @@
   <symbol id="i-zap" viewBox="0 0 24 24"><path d="M12 3a9 9 0 0 0-7.7 13.6L3 21l4.5-1.2A9 9 0 1 0 12 3z"/><path d="M9 8.5c.2 2.6 3.2 5.6 6 6l1.3-1.3-2-1-.9.8c-.9-.3-1.9-1.3-2.2-2.2l.8-.9-1-2z"/></symbol>
 </svg>
 
-<a class="pular" href="#favoritos">Pular para o conteúdo</a>
+<a class="pular" href="#cardapio">Pular para o conteúdo</a>
 
 <header class="cabeca" id="topo">
   <div class="cabeca-grade">
     <a class="marca" href="#topo" aria-label="Best Bull SteakHouse, início">
       <img src="assets/img/logo-circulo.png" alt="" width="48" height="48">
-      <span>Best Bull</span>
+      <span>Best Bull<small>SteakHouse</small></span>
     </a>
     <nav class="menu" aria-label="Principal">
-      <a href="#topo">Início</a>
-      <a href="#favoritos">Cardápio</a>
+      <a href="#topo" class="ativo">Início</a>
+      <a href="#cardapio">Cardápio</a>
       <a href="#delivery">Delivery</a>
       <a href="#ambiente">Ambiente</a>
       <a href="#contato">Contato</a>
@@ -69,7 +68,7 @@
         <svg class="ic" aria-hidden="true"><use href="#i-carrinho"/></svg>
         <span class="contagem" data-contagem hidden>0</span>
       </button>
-      <a class="btn btn-pequeno" data-wa="geral" href="#">Peça agora</a>
+      <a class="btn btn-pequeno" data-wa="geral" href="#">Peça agora <svg class="ic" aria-hidden="true"><use href="#i-seta"/></svg></a>
       <button class="icone-btn menu-btn" type="button" data-abrir-menu aria-label="Abrir o menu" aria-expanded="false" aria-controls="menu-celular">
         <svg class="ic" aria-hidden="true"><use href="#i-menu"/></svg>
       </button>
@@ -81,92 +80,104 @@
   <button class="icone-btn menu-fechar" type="button" data-fechar-menu aria-label="Fechar o menu"><svg class="ic" aria-hidden="true"><use href="#i-fechar"/></svg></button>
   <nav aria-label="Menu do celular">
     <a href="#topo">Início</a>
-    <a href="#favoritos">Cardápio</a>
+    <a href="#cardapio">Cardápio</a>
     <a href="#delivery">Delivery</a>
     <a href="#ambiente">Ambiente</a>
     <a href="#contato">Contato</a>
   </nav>
-  <a class="btn" data-wa="geral" href="#">Peça agora</a>
+  <a class="btn" data-wa="geral" href="#">Peça agora <svg class="ic" aria-hidden="true"><use href="#i-seta"/></svg></a>
 </div>
 
 <main>
   <section class="hero">
-    <div class="hero-foto">
-      <img src="assets/img/hero-1600.webp" srcset="assets/img/hero-900.webp 900w, assets/img/hero-1600.webp 1600w" sizes="(min-width: 900px) 64vw, 100vw" width="1600" height="1200" fetchpriority="high" alt="Hambúrguer artesanal de dois blends com bacon e queijo, ao lado de batata frita">
+    <div class="hero-fundo" aria-hidden="true"></div>
+    <canvas class="brasas" data-brasas aria-hidden="true"></canvas>
+
+    <div class="hero-burger">
+      <img src="assets/img/hero-1600.webp" srcset="assets/img/hero-900.webp 900w, assets/img/hero-1600.webp 1600w" sizes="(min-width: 900px) 62vw, 100vw" width="1600" height="1200" fetchpriority="high" alt="Hambúrguer artesanal de dois blends com bacon e queijo, ao lado de batata frita">
     </div>
+
+    <div class="selo" aria-hidden="true">
+      <svg viewBox="0 0 200 200">
+        <defs><path id="selo-circulo" d="M100,100 m-79,0 a79,79 0 1,1 158,0 a79,79 0 1,1 -158,0"/></defs>
+        <circle cx="100" cy="100" r="97" class="selo-borda"/>
+        <circle cx="100" cy="100" r="58" class="selo-borda fino"/>
+        <g class="selo-anel"><text><textPath href="#selo-circulo" textLength="488" lengthAdjust="spacing">HAMBÚRGUER ARTESANAL • BEST BULL STEAKHOUSE • CASIMIRO DE ABREU •</textPath></text></g>
+        <image href="assets/img/logo-creme.png" x="64" y="64" width="72" height="72"/>
+      </svg>
+    </div>
+
     <div class="hero-texto">
-      <h1>Sabor artesanal <em>&amp;</em> experiência <em>premium</em></h1>
+      <h1><span>Sabor artesanal.</span><span>Experiência premium.</span><em>do nosso jeito.</em></h1>
       <p class="sub">Hambúrgueres artesanais, acompanhamentos incríveis e entrega rápida. A verdadeira experiência do Best Bull.</p>
       <div class="acoes">
-        <a class="btn" data-wa="geral" href="#">Fazer pedido</a>
-        <a class="btn btn-contorno" href="#favoritos">Ver menu</a>
+        <a class="btn" data-wa="geral" href="#">Fazer pedido <svg class="ic" aria-hidden="true"><use href="#i-seta"/></svg></a>
+        <a class="btn btn-contorno" href="#cardapio">Ver menu</a>
       </div>
     </div>
 
-    <ul class="barra" aria-label="Destaques">
-      <li>
-        <svg class="ic" aria-hidden="true"><use href="#i-relogio"/></svg>
-        <span><strong>Entrega rápida</strong><small>Peça e receba em casa</small></span>
-      </li>
-      <li data-nota hidden>
-        <svg class="ic" aria-hidden="true"><use href="#i-estrela"/></svg>
-        <span><strong data-nota-valor></strong><small data-nota-texto></small></span>
-      </li>
-      <li>
-        <svg class="ic" aria-hidden="true"><use href="#i-kids"/></svg>
-        <span><strong>Espaço Kids</strong><small>Um cantinho pra criançada</small></span>
-      </li>
-    </ul>
+    <div class="assinaturas" id="cardapio">
+      <h2 class="rotulo-linha"><svg class="ic" aria-hidden="true"><use href="#i-estrela"/></svg> Nossas assinaturas</h2>
+      <div class="assina-grade">
+        <article class="assina" data-item="xbacon">
+          <img src="assets/img/fav-xbacon-900.webp" alt="Hambúrguer artesanal com bacon crocante e queijo" width="900" height="600">
+          <div class="assina-texto">
+            <h3 data-nome></h3>
+            <p class="preco" data-preco hidden></p>
+            <p class="consulte" data-consulte>Valor pelo WhatsApp</p>
+          </div>
+          <button class="mais" type="button" data-add aria-label="Adicionar ao pedido"><svg class="ic" aria-hidden="true"><use href="#i-mais"/></svg></button>
+        </article>
+        <article class="assina" data-item="supreme">
+          <img src="assets/img/fav-supreme-900.webp" alt="Hambúrguer duplo com cheddar derretido sobre tábua de madeira" width="900" height="1200">
+          <div class="assina-texto">
+            <h3 data-nome></h3>
+            <p class="preco" data-preco hidden></p>
+            <p class="consulte" data-consulte>Valor pelo WhatsApp</p>
+          </div>
+          <button class="mais" type="button" data-add aria-label="Adicionar ao pedido"><svg class="ic" aria-hidden="true"><use href="#i-mais"/></svg></button>
+        </article>
+        <article class="assina" data-item="acomp">
+          <img src="assets/img/gal-5.webp" alt="Cesta de aço com anéis de cebola empanados e molhos" width="900" height="1221">
+          <div class="assina-texto">
+            <h3 data-nome></h3>
+            <p class="preco" data-preco hidden></p>
+            <p class="consulte" data-consulte>Valor pelo WhatsApp</p>
+          </div>
+          <button class="mais" type="button" data-add aria-label="Adicionar ao pedido"><svg class="ic" aria-hidden="true"><use href="#i-mais"/></svg></button>
+        </article>
+        <article class="assina" data-item="shake">
+          <img src="assets/img/fav-shake-900.webp" alt="Milk shake de chocolate com chantilly e cobertura crocante" width="900" height="1000">
+          <div class="assina-texto">
+            <h3 data-nome></h3>
+            <p class="preco" data-preco hidden></p>
+            <p class="consulte" data-consulte>Valor pelo WhatsApp</p>
+          </div>
+          <button class="mais" type="button" data-add aria-label="Adicionar ao pedido"><svg class="ic" aria-hidden="true"><use href="#i-mais"/></svg></button>
+        </article>
+      </div>
+    </div>
   </section>
 
-  <section class="favoritos" id="favoritos">
-    <div class="miolo">
-      <div class="titulo-bloco">
-        <h2>Nossos <em>favoritos</em></h2>
-        <p>Os lanches e o milk shake que a casa mais mostra. Monte o pedido e envie pelo WhatsApp.</p>
-      </div>
-
-      <div class="cartoes">
-        <article class="cartao" data-item="xbacon">
-          <div class="cartao-foto"><img src="assets/img/fav-xbacon-900.webp" alt="Hambúrguer artesanal com bacon crocante e queijo sobre fundo escuro" width="900" height="600" loading="lazy"></div>
-          <div class="cartao-corpo">
-            <div>
-              <h3 data-nome></h3>
-              <p class="desc" data-desc hidden></p>
-              <p class="preco" data-preco hidden></p>
-              <p class="consulte" data-consulte>Valor pelo WhatsApp</p>
-            </div>
-            <button class="mais" type="button" data-add aria-label="Adicionar ao pedido"><svg class="ic" aria-hidden="true"><use href="#i-mais"/></svg></button>
-          </div>
-        </article>
-
-        <article class="cartao" data-item="supreme">
-          <div class="cartao-foto"><img src="assets/img/fav-supreme-900.webp" alt="Hambúrguer duplo com cheddar derretido sobre tábua de madeira" width="900" height="1200" loading="lazy"></div>
-          <div class="cartao-corpo">
-            <div>
-              <h3 data-nome></h3>
-              <p class="desc" data-desc hidden></p>
-              <p class="preco" data-preco hidden></p>
-              <p class="consulte" data-consulte>Valor pelo WhatsApp</p>
-            </div>
-            <button class="mais" type="button" data-add aria-label="Adicionar ao pedido"><svg class="ic" aria-hidden="true"><use href="#i-mais"/></svg></button>
-          </div>
-        </article>
-
-        <article class="cartao" data-item="shake">
-          <div class="cartao-foto"><img src="assets/img/fav-shake-900.webp" alt="Milk shake de chocolate com chantilly e cobertura crocante" width="900" height="1000" loading="lazy"></div>
-          <div class="cartao-corpo">
-            <div>
-              <h3 data-nome></h3>
-              <p class="desc" data-desc hidden></p>
-              <p class="preco" data-preco hidden></p>
-              <p class="consulte" data-consulte>Valor pelo WhatsApp</p>
-            </div>
-            <button class="mais" type="button" data-add aria-label="Adicionar ao pedido"><svg class="ic" aria-hidden="true"><use href="#i-mais"/></svg></button>
-          </div>
-        </article>
-      </div>
-    </div>
+  <section class="diferenciais" id="porque">
+    <ul class="miolo quatro">
+      <li>
+        <span class="medalha"><svg class="ic" aria-hidden="true"><use href="#i-burger"/></svg></span>
+        <div><h3>Hambúrgueres artesanais</h3><p>Lanches da casa, com a cara da Best Bull.</p></div>
+      </li>
+      <li>
+        <span class="medalha"><svg class="ic" aria-hidden="true"><use href="#i-sacola"/></svg></span>
+        <div><h3>Entrega rápida</h3><p>Peça pelo WhatsApp e receba em casa.</p></div>
+      </li>
+      <li>
+        <span class="medalha"><svg class="ic" aria-hidden="true"><use href="#i-kids"/></svg></span>
+        <div><h3>Espaço Kids</h3><p>Um cantinho para a criançada brincar.</p></div>
+      </li>
+      <li data-nota hidden>
+        <span class="medalha"><svg class="ic" aria-hidden="true"><use href="#i-estrela"/></svg></span>
+        <div><h3 data-nota-valor></h3><p data-nota-texto></p></div>
+      </li>
+    </ul>
   </section>
 
   <div class="faixa" aria-hidden="true">
@@ -175,36 +186,6 @@
       <span>Hambúrguer artesanal</span><i></i><span>Acompanhamentos</span><i></i><span>Milk shake</span><i></i><span>Delivery</span><i></i><span>Espaço Kids</span><i></i>
     </div>
   </div>
-
-  <section class="porque" id="porque">
-    <div class="miolo">
-      <div class="titulo-bloco centro">
-        <h2>Por que escolher o <em>Best Bull</em>?</h2>
-      </div>
-      <ul class="quatro">
-        <li>
-          <svg class="ic ic-grande" aria-hidden="true"><use href="#i-burger"/></svg>
-          <h3>Hambúrgueres artesanais</h3>
-          <p>Lanches da casa, com a cara da Best Bull.</p>
-        </li>
-        <li>
-          <svg class="ic ic-grande" aria-hidden="true"><use href="#i-porcao"/></svg>
-          <h3>Acompanhamentos</h3>
-          <p>Porções e extras para dividir na mesa.</p>
-        </li>
-        <li>
-          <svg class="ic ic-grande" aria-hidden="true"><use href="#i-sacola"/></svg>
-          <h3>Entrega rápida</h3>
-          <p>Peça pelo WhatsApp e receba em casa.</p>
-        </li>
-        <li>
-          <svg class="ic ic-grande" aria-hidden="true"><use href="#i-kids"/></svg>
-          <h3>Espaço Kids</h3>
-          <p>Um cantinho para a criançada brincar.</p>
-        </li>
-      </ul>
-    </div>
-  </section>
 
   <section class="ambiente" id="ambiente">
     <div class="miolo ambiente-grade">
@@ -221,7 +202,7 @@
           <li>Entrega rápida quando o dia pede sofá</li>
         </ul>
         <div class="acoes">
-          <a class="btn" data-wa="kids" href="#">Perguntar do Espaço Kids</a>
+          <a class="btn" data-wa="kids" href="#">Perguntar do Espaço Kids <svg class="ic" aria-hidden="true"><use href="#i-seta"/></svg></a>
           <a class="btn btn-contorno" data-maps href="#" target="_blank" rel="noopener">Como chegar</a>
         </div>
       </div>
@@ -241,9 +222,9 @@
     <div class="galeria-trilho" tabindex="0" role="region" aria-label="Fotos dos lanches">
       <img src="assets/img/gal-1.webp" alt="Hambúrguer com alface, tomate e cebola roxa em close" width="720" height="1083" loading="lazy">
       <img src="assets/img/gal-2.webp" alt="Cheeseburger sobre ardósia em fundo escuro" width="720" height="900" loading="lazy">
-      <img src="assets/img/gal-5.webp" alt="Cesta de aço com anéis de cebola empanados e molhos" width="900" height="1221" loading="lazy">
       <img src="assets/img/gal-3.webp" alt="Cheeseburger clássico com queijo derretido" width="720" height="480" loading="lazy">
       <img src="assets/img/gal-4.webp" alt="Hambúrguer duplo com batata e tomates ao lado" width="720" height="1080" loading="lazy">
+      <img src="assets/img/fav-xbacon-900.webp" alt="Hambúrguer com bacon crocante em fundo escuro" width="900" height="600" loading="lazy">
     </div>
   </section>
 
@@ -253,7 +234,7 @@
         <h2>Bateu a fome? <em>A entrega é rápida.</em></h2>
         <p>Mande o seu pedido pelo WhatsApp e a Best Bull leva até você.</p>
         <div class="acoes">
-          <a class="btn" data-wa="geral" href="#">Fazer pedido</a>
+          <a class="btn" data-wa="geral" href="#">Fazer pedido <svg class="ic" aria-hidden="true"><use href="#i-seta"/></svg></a>
           <a class="btn btn-contorno" data-anotaai href="#" hidden target="_blank" rel="noopener">Cardápio no Anota Aí</a>
         </div>
       </div>
@@ -287,7 +268,7 @@
       </div>
       <div class="rodape-col rodape-cta">
         <h3>Bateu a fome?</h3>
-        <a class="btn" data-wa="geral" href="#">Peça agora</a>
+        <a class="btn" data-wa="geral" href="#">Peça agora <svg class="ic" aria-hidden="true"><use href="#i-seta"/></svg></a>
       </div>
     </div>
     <div class="rodape-base">

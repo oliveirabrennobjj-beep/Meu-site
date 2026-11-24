@@ -2,37 +2,44 @@
 
 ## Mundo
 
-Casa de carne de luxo, em modo escuro: marrom quase preto, bordô e dourado. Títulos em serifa elegante, texto em sans limpa, foto grande de lanche saindo do escuro. A referência foi o clima de site de hotel de luxo, adaptado para hamburgueria.
+Casa de carne em modo escuro, no clima da referência do Brenno: marrom-preto quente, luz de bar desfocada, brasas subindo e o hambúrguer grande flutuando no escuro. Título condensado e grosso, com uma linha manuscrita dourada. Tudo com cantos pouco arredondados, sem cara de modelo pronto.
 
 ## Cores
 
 | Papel | Valor |
 |---|---|
-| Fundo | `#0E0A08` (faixas `#16100D`, rodapé `#090605`) |
-| Bordô (faixa que corre, delivery, brilho do topo) | `#6B1325`, `#4A0D1A` |
-| Dourado (botões, itálico dos títulos, ícones) | `#D9A94A`, hover `#EBC987` |
-| Creme (texto) | `#F2E8D5` |
-| Cinza quente (apoio) | `#AEA190` |
+| Fundo | `#0B0705` (faixas `#1B120D`, rodapé `#070403`) |
+| Dourado (botões, linha manuscrita, ícones, bordas finas) | `#D9A441`, hover `#EDC271` |
+| Brasa (partículas, brilho, pontos) | `#F29A38` |
+| Creme (texto) | `#F3E9D8` |
+| Cinza quente (apoio) | `#B3A593` |
 
 ## Tipografia
 
-- Títulos: Cormorant 600, com a palavra de destaque em itálico dourado.
-- Texto: Barlow 400, 500 e 700. Fontes hospedadas em `assets/fonts/`.
+- Títulos: Anton, caixa alta.
+- Linha de destaque: Yellowtail, dourado, uma por bloco ("do nosso jeito.", "toda a família", "cozinha").
+- Texto e botões: Barlow 400, 500 e 700; botões e menu em caixa alta com espaçamento. Fontes em `assets/fonts/`.
 
 ## Componentes
 
-- Cabeçalho com logo, menu centralizado, ícone de pedido e botão dourado "Peça agora". No celular: menu em tela cheia.
-- Barra flutuante no topo com 3 fatos (entrega rápida, nota no Google, Espaço Kids).
-- Cartões de favoritos: foto em cima, nome e valor embaixo, botão "+" que monta o pedido.
+- Cabeçalho com logo + "SteakHouse", menu em caixa alta, ícone do pedido e botão dourado retangular com seta.
+- Topo: fundo com luzes de bar feitas em CSS, canvas de brasas, burger com `mix-blend-mode: screen` e bordas esmaecidas, selo redondo com texto girando devagar e o touro no centro.
+- Fileira "Nossas assinaturas": 4 mini cartões com miniatura, nome e botão "+" que monta o pedido.
+- Faixa de 4 diferenciais com ícone fino em medalha dourada.
+- Faixa que corre, ambiente com a foto real do Espaço Kids, galeria que rola, delivery com brilho de brasa, rodapé.
 - Gaveta do pedido: lista com +/−, observações e envio pelo WhatsApp.
-- Faixa bordô que corre, diferenciais em 4 colunas, ambiente com foto grande e a foto real do Espaço Kids, galeria que rola, faixa de delivery, rodapé escuro.
+
+## Botões
+
+Retangulares (raio 6 px), caixa alta, texto pequeno e espaçado, seta que anda no hover. Nada de pílula larga nem botão de largura total no celular.
 
 ## Detalhe assinatura
 
-O topo: título serifado gigante com "premium" em itálico dourado ao lado do hambúrguer em close, com um brilho bordô no canto. A barra flutuante de fatos, como a barra de reserva de um hotel.
+O hambúrguer saindo do escuro no meio das luzes e das brasas, com o selo ao lado.
 
 ## Regras
 
-- Nada escrito por cima do produto: texto fica ao lado ou embaixo da foto.
+- Nada escrito por cima do produto.
 - Um par de botões: dourado cheio e contorno creme.
-- Nada inventado: preço, cardápio e horário que não foram confirmados ficam vazios e o site mostra "valor pelo WhatsApp".
+- Nada inventado: preço, cardápio, ano de fundação e horário não confirmados ficam de fora; o site mostra "valor pelo WhatsApp".
+- Brasas e giro do selo desligam com "reduzir movimento".

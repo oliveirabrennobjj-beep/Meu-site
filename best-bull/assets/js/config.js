@@ -24,6 +24,7 @@ window.SITE = {
   itens: {
     xbacon: { nome: "X-Bacon sabor picanha", descricao: "", preco: "" },
     supreme: { nome: "Supreme", descricao: "", preco: "" },
+    acomp: { nome: "Acompanhamentos", descricao: "", preco: "" },
     shake: { nome: "Milk shake", descricao: "", preco: "" }
   },
 

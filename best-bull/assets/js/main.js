@@ -209,4 +209,44 @@
   } else if (barra) {
     barra.classList.add("visivel");
   }
+
+  // ---------- Brasas subindo no fundo do topo (desliga com "reduzir movimento") ----------
+  var tela = $("[data-brasas]");
+  if (tela && !(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches)) {
+    var ctx = tela.getContext("2d");
+    var W = 0, H = 0, dpr = Math.min(window.devicePixelRatio || 1, 2), parts = [], rodando = true, quadro = 0;
+    var N = window.innerWidth < 900 ? 22 : 46;
+    var medir = function () {
+      var r = tela.getBoundingClientRect();
+      W = r.width; H = r.height;
+      tela.width = Math.round(W * dpr); tela.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+    var nova = function (cheio) {
+      return { x: Math.random() * W, y: cheio ? Math.random() * H : H + 10, r: 0.7 + Math.random() * 1.9, v: 0.25 + Math.random() * 0.75, d: (Math.random() - 0.5) * 0.35, f: Math.random() * 6.28, a: 0.35 + Math.random() * 0.55 };
+    };
+    medir();
+    for (var i = 0; i < N; i++) parts.push(nova(true));
+    var desenhar2 = function () {
+      quadro = requestAnimationFrame(desenhar2);
+      ctx.clearRect(0, 0, W, H);
+      for (var i = 0; i < parts.length; i++) {
+        var p = parts[i];
+        p.y -= p.v; p.x += p.d + Math.sin(p.f += 0.02) * 0.25;
+        if (p.y < -10) parts[i] = nova(false);
+        var vida = Math.max(0, Math.min(1, p.y / H));
+        ctx.globalAlpha = p.a * (0.35 + 0.65 * vida) * (0.75 + 0.25 * Math.sin(p.f * 3));
+        ctx.fillStyle = vida > 0.55 ? "#FFC36B" : "#F29A38";
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 6.2832); ctx.fill();
+      }
+    };
+    desenhar2();
+    window.addEventListener("resize", medir);
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (e) {
+        if (e[0].isIntersecting && !rodando) { rodando = true; desenhar2(); }
+        else if (!e[0].isIntersecting && rodando) { rodando = false; cancelAnimationFrame(quadro); }
+      }).observe(tela);
+    }
+  }
 })();
