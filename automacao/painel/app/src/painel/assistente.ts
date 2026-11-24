@@ -1,5 +1,13 @@
 import { STATUS, cidadeDe, statusDe, tipoDe, type Lead, type Status } from "./leads";
-import { RESULTADOS, TIPOS, type Resultado, type TipoCompromisso } from "./agenda";
+import {
+  RESULTADOS,
+  TIPOS,
+  novoId,
+  type Compromisso as Horario,
+  type ConfigAgenda,
+  type Resultado,
+  type TipoCompromisso,
+} from "./agenda";
 
 /** O que o Brenno combinou com a loja: quando ("AAAA-MM-DD" ou "AAAA-MM-DDTHH:mm", hora local) e o quê. */
 export interface Compromisso {
@@ -223,4 +231,69 @@ export function quandoCurto(quando: string, agora = new Date()) {
 export function atrasado(quando: string, agora = new Date()) {
   const data = dataDoCompromisso(quando);
   return dataIso(data) < dataIso(agora);
+}
+
+/** A mensagem pronta que o assistente pôs entre aspas na resposta (a primeira), ou null. */
+export function mensagemPronta(texto: string): string | null {
+  const m = texto.match(/["\u201c]([^"\u201c\u201d]{12,})["\u201d]/);
+  return m ? m[1].trim() : null;
+}
+
+/**
+ * Aplica no painel o que o assistente propôs: anotação, situação e lembrete na loja, e o pedido de agenda
+ * (marcar, remarcar, cancelar, confirmar, realizado). Usado pelo Assistente e pela ficha do horário.
+ */
+export function aplicarAcao(
+  acao: Acao,
+  lead: Lead,
+  ctx: {
+    agenda: Horario[];
+    cfg: ConfigAgenda;
+    onSalvar: (id: string, mudanca: Partial<Lead>) => void;
+    onCompromisso: (c: Horario) => void;
+  },
+) {
+  const agora = new Date().toISOString();
+  ctx.onSalvar(lead.id, {
+    ...(acao.anotacao ? { obs: acao.anotacao } : {}),
+    historico: [...(lead.historico ?? []), ...(acao.anotacao ? [{ em: agora, texto: acao.anotacao }] : [])].slice(-20),
+    ...(acao.status && acao.status !== statusDe(lead) ? { status: acao.status } : {}),
+    ...(acao.compromisso ? { compromisso: acao.compromisso } : {}),
+  });
+  const h = acao.horario;
+  if (!h) return;
+  if (h.acao === "marcar") {
+    ctx.onCompromisso({
+      id: novoId(),
+      leadId: lead.id,
+      tipo: h.tipo,
+      servico: "ambos",
+      data: h.data,
+      hora: h.hora,
+      duracao: h.duracao ?? ctx.cfg.duracao,
+      local: "",
+      obs: h.obs ?? acao.anotacao ?? "",
+      prioridade: "media",
+      status: "agendado",
+      resultado: null,
+      historico: [],
+      avisos: {},
+      criado: agora,
+    });
+    return;
+  }
+  const c = ctx.agenda.find((x) => x.id === h.id);
+  if (!c) return;
+  if (h.acao === "remarcar")
+    ctx.onCompromisso({
+      ...c,
+      data: h.data,
+      hora: h.hora,
+      status: "remarcado",
+      avisos: {},
+      historico: [...c.historico, { de: `${c.data} ${c.hora}`, para: `${h.data} ${h.hora}`, em: agora }],
+    });
+  else if (h.acao === "cancelar") ctx.onCompromisso({ ...c, status: "cancelado" });
+  else if (h.acao === "confirmado") ctx.onCompromisso({ ...c, status: "confirmado" });
+  else if (h.acao === "realizado") ctx.onCompromisso({ ...c, status: "realizado", resultado: h.resultado });
 }

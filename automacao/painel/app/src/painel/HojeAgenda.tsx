@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import {
   MODELOS_NOMES,
   TIPOS,
+  aConfirmar,
   agoraSP,
   chaveDia,
   deHoje,
@@ -74,9 +75,26 @@ export function HojeAgenda({
   const vazio = !hoje.length && !amanha.length && !lembretes.length && !retorno.length && !atrasados.length;
 
   const minutosProx = prox ? (inicioDe(prox).getTime() - agora.getTime()) / 60_000 : 0;
+  // Sem a confirmação do cliente, passar da hora não é atraso do Brenno: fica em aviso, nunca vermelho.
+  const proxAConfirmar = prox ? aConfirmar(prox) : false;
+  const naoConfirmou = proxAConfirmar && minutosProx < 0;
   // Laranja com menos de 15 min, vermelho quando atrasa; longe ainda, cor normal.
-  const corProx =
-    minutosProx < 0 ? "var(--blk-error)" : minutosProx <= 15 ? "var(--blk-warning)" : minutosProx <= 60 ? "var(--blk-accent-ink)" : "var(--bjork-text)";
+  const corProx = naoConfirmou
+    ? "var(--blk-warning)"
+    : minutosProx < 0
+      ? "var(--blk-error)"
+      : minutosProx <= 15
+        ? "var(--blk-warning)"
+        : minutosProx <= 60
+          ? "var(--blk-accent-ink)"
+          : "var(--bjork-text)";
+  const rotuloProx = naoConfirmou
+    ? "Não confirmou"
+    : minutosProx < 0
+      ? "Atrasado"
+      : proxAConfirmar
+        ? "Próximo · a confirmar"
+        : "Próximo";
 
   return (
     <section aria-labelledby="agenda-hoje" className={cn(cardSurface, "flex flex-col gap-3 p-3 @3xl:p-4")}>
@@ -106,10 +124,10 @@ export function HojeAgenda({
         >
           <span className="flex flex-col">
             <span className="text-[11px] font-semibold uppercase tracking-[0.04em]" style={{ color: corProx }}>
-              {minutosProx < 0 ? "Atrasado" : "Próximo"}
+              {rotuloProx}
             </span>
             <span className="font-mono text-[20px] font-bold tabular-nums leading-tight" style={{ color: corProx }}>
-              {falta(inicioDe(prox), agora)}
+              {naoConfirmou ? prox.hora : falta(inicioDe(prox), agora)}
             </span>
           </span>
           <span className="min-w-0 flex-1">
@@ -192,7 +210,9 @@ export function HojeAgenda({
               key={c.id}
               c={c}
               nome={nomeDe(c)}
-              detalhe={`${diaFalado(c.data, agora)}${c.semHora ? "" : ` ${c.hora}`} · ${c.legado ? c.obs : "marcar como realizado ou remarcar"}`}
+              detalhe={`${diaFalado(c.data, agora)}${c.semHora ? "" : ` ${c.hora}`} · ${
+                c.legado ? c.obs : aConfirmar(c) ? "não confirmou · cobrar ou remarcar" : "marcar como realizado ou remarcar"
+              }`}
               cfg={cfg}
               onAbrir={onAbrir}
             />
@@ -251,7 +271,7 @@ export function HojeAgenda({
       {semana.agendados + semana.confirmados + semana.realizados + semana.cancelados > 0 && (
         <dl className="grid grid-cols-4 gap-2 border-t border-[color:var(--bjork-border)] pt-3 text-center">
           {[
-            ["Agendados", semana.agendados],
+            ["A confirmar", semana.agendados],
             ["Confirmados", semana.confirmados],
             ["Realizados", semana.realizados],
             ["Cancelados", semana.cancelados],

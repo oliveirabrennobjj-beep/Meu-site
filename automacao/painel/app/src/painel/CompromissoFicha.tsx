@@ -16,6 +16,7 @@ import {
   RESULTADOS,
   SERVICOS,
   TIPOS,
+  aConfirmar,
   agoraSP,
   dataBr,
   diaFalado,
@@ -34,6 +35,7 @@ import {
 } from "./agenda";
 import { EtiquetaStatus, Pilula, TIPO_ICONE, faixaHorario, rotulo } from "./agendaUi";
 import type { Rascunho } from "./CompromissoForm";
+import { AssistenteHorario } from "./AssistenteHorario";
 import { linkMaps, linkWhatsApp, numeroConversa, type Lead } from "./leads";
 
 /** Texto pronto + botões para abrir no WhatsApp (mesmo número da conversa), copiar e marcar "cliente avisado". */
@@ -129,6 +131,8 @@ export function CompromissoFicha({
   onAbrirLead,
   onDesmarcarLegado,
   onNaoQuer,
+  leads,
+  onSalvarLoja,
   avisar,
 }: {
   compromisso: Compromisso | null;
@@ -141,6 +145,9 @@ export function CompromissoFicha({
   onAbrirLead: ((lead: Lead) => void) | null;
   onDesmarcarLegado: (leadId: string) => void;
   onNaoQuer: (c: Compromisso, motivo: string) => void;
+  /** Lojas e gravação da loja, para o assistente da ficha. */
+  leads: Lead[];
+  onSalvarLoja: (id: string, mudanca: Partial<Lead>) => void;
   avisar: (t: string) => void;
 }) {
   const [mostrado, setMostrado] = useState({ compromisso, lead });
@@ -169,6 +176,8 @@ export function CompromissoFicha({
           onAbrirLead={onAbrirLead}
           onDesmarcarLegado={onDesmarcarLegado}
           onNaoQuer={onNaoQuer}
+          leads={leads}
+          onSalvarLoja={onSalvarLoja}
           avisar={avisar}
         />
       )}
@@ -189,6 +198,8 @@ function Ficha({
   onAbrirLead,
   onDesmarcarLegado,
   onNaoQuer,
+  leads,
+  onSalvarLoja,
   avisar,
 }: {
   c: Compromisso;
@@ -201,6 +212,8 @@ function Ficha({
   onAbrirLead: ((lead: Lead) => void) | null;
   onDesmarcarLegado: (leadId: string) => void;
   onNaoQuer: (c: Compromisso, motivo: string) => void;
+  leads: Lead[];
+  onSalvarLoja: (id: string, mudanca: Partial<Lead>) => void;
   avisar: (t: string) => void;
 }) {
   const [painel, setPainel] = useState<Painel>(null);
@@ -210,8 +223,11 @@ function Ficha({
   const Icone = TIPO_ICONE[c.tipo];
   const inicio = inicioDe(c);
   const minutos = (inicio.getTime() - agora.getTime()) / 60_000;
-  const aconteceu = vivo(c) && minutos < 0;
-  const corFalta = minutos < 0 ? "var(--blk-error)" : minutos <= 15 ? "var(--blk-warning)" : "var(--blk-accent-ink)";
+  // Sem a confirmação do cliente, passar da hora não é atraso: o horário fica "a confirmar".
+  const semConfirmar = aConfirmar(c);
+  const aconteceu = vivo(c) && !semConfirmar && minutos < 0;
+  const corFalta =
+    minutos < 0 ? (semConfirmar ? "var(--blk-warning)" : "var(--blk-error)") : minutos <= 15 ? "var(--blk-warning)" : "var(--blk-accent-ink)";
   const livres = useMemo(
     () => horariosLivres(nova.data, c.duracao, compromissos, cfg, c.id).slice(0, 10),
     [nova.data, c.duracao, c.id, compromissos, cfg],
@@ -288,9 +304,13 @@ function Ficha({
             <dd className="font-medium">
               {diaFalado(c.data, agora).replace(/^./, (x) => x.toUpperCase())} · {faixaHorario(c)}
             </dd>
-            {vivo(c) && minutos > -c.duracao && (
+            {vivo(c) && (semConfirmar ? minutos > -24 * 60 : minutos > -c.duracao) && (
               <dd className="text-[12.5px] font-medium" style={{ color: corFalta }}>
-                {minutos < 0 ? `começou ${falta(inicio, agora)}` : falta(inicio, agora)}
+                {minutos < 0
+                  ? semConfirmar
+                    ? "o cliente ainda não confirmou"
+                    : `começou ${falta(inicio, agora)}`
+                  : `${falta(inicio, agora)}${semConfirmar ? " · falta o cliente confirmar" : ""}`}
               </dd>
             )}
           </div>
@@ -526,6 +546,18 @@ function Ficha({
             </BlockButton>
           </div>
         )}
+
+        <AssistenteHorario
+          c={c}
+          lead={lead}
+          leads={leads}
+          agenda={compromissos}
+          cfg={cfg}
+          onSalvarLoja={onSalvarLoja}
+          onCompromisso={onSalvar}
+          onAbrirLead={onAbrirLead}
+          avisar={avisar}
+        />
 
         {c.historico.length > 0 && (
           <section aria-label="Histórico">

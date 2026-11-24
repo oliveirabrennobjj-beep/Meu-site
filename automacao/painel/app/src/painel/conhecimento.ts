@@ -7,7 +7,7 @@ import {
   tipoDe,
   type Lead,
 } from "./leads";
-import { STATUS_COMPROMISSO, TIPOS, inicioDe, porHorario, vivo, type Compromisso } from "./agenda";
+import { MODELOS_NOMES, STATUS_COMPROMISSO, TIPOS, aConfirmar, inicioDe, porHorario, vivo, type Compromisso, type ModeloId } from "./agenda";
 
 // O que o assistente do painel sabe sobre o negócio e a abordagem do Brenno.
 // Fonte das regras: bn-digital/prospeccao/abordagem-presencial.md e as decisões no segundo cérebro.
@@ -147,4 +147,39 @@ function linhasDaAgenda(leads: Lead[], agenda: Compromisso[], agora: Date) {
         .join(" | "),
     );
   return lista.length ? lista : ["(nada marcado)"];
+}
+
+/**
+ * Pedido feito pela ficha de um horário: o Brenno conta o que aconteceu com aquele cliente e o assistente
+ * diz o que fazer, escreve a mensagem e propõe a mudança (sempre com o bloco ```painel).
+ */
+export function pedidoDoHorario(c: Compromisso, lead: Lead, texto: string, agora = new Date()) {
+  const quando = inicioDe(c);
+  const passou = quando.getTime() < agora.getTime();
+  const avisos = (Object.entries(c.avisos) as [ModeloId, string | undefined][])
+    .filter(([, em]) => em)
+    .map(([m, em]) => `${MODELOS_NOMES[m]} em ${new Date(em as string).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" })}`);
+  const notas = (lead.historico ?? [])
+    .slice(-3)
+    .map((n) => `${new Date(n.em).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" })}: ${n.texto}`);
+  return [
+    "FICHA ABERTA: o Brenno está na ficha deste horário da AGENDA e escreveu sobre ele.",
+    `Horário: ${[c.id, `${lead.id} ${lead.nome}`, `${DIAS[quando.getDay()]} ${c.data} ${c.hora}`, TIPOS[c.tipo].nome, STATUS_COMPROMISSO[c.status].nome, c.obs].filter(Boolean).join(" | ")}`,
+    aConfirmar(c)
+      ? `Situação: o Brenno propôs esse horário e o cliente AINDA NÃO CONFIRMOU${passou ? ". A hora já passou" : ""}.`
+      : `Situação: ${STATUS_COMPROMISSO[c.status].nome}${passou ? " (a hora já passou)" : ""}.`,
+    `Mensagens já mandadas por esse horário: ${avisos.length ? avisos.join("; ") : "nenhuma marcada no painel"}.`,
+    notas.length ? `Últimas anotações da loja: ${notas.join(" / ")}` : "",
+    "",
+    `O que ele escreveu: "${texto}"`,
+    "",
+    "Responda sobre ESTE cliente:",
+    "- Em até 3 linhas: o que aconteceu e o que fazer agora. Passar da hora sem o cliente confirmar não é atraso do Brenno.",
+    "- Se for pra mandar mensagem, ponha a mensagem pronta entre aspas, sozinha num parágrafo. Se o melhor for esperar, diga até quando e ponha a mensagem pra mandar depois. Nunca cobre nem mande várias seguidas (regra 7).",
+    `- Termine SEMPRE com o bloco \`\`\`painel desta loja (id ${lead.id}), com a anotação do que ele contou. Pra mexer neste horário use o id ${c.id}.`,
+    `- Cliente não confirmou e a hora já passou: proponha {"acao": "cancelar", "id": "${c.id}"} e um "compromisso" (lembrete sem hora) pra cobrar de leve no próximo dia útil. Pediu outro dia e hora: "remarcar". Confirmou: "confirmado". Disse que não quer: status "nao".`,
+    "- Não invente o que o cliente disse.",
+  ]
+    .filter((linha, i, todas) => linha !== "" || todas[i - 1] !== "")
+    .join("\n");
 }

@@ -213,12 +213,31 @@ function bancoDeMentira(iniciais) {
       },
     ]) +
     "\n```";
+  // Pedido feito pela ficha do horário: o cliente não confirmou, então cancela o horário e deixa o lembrete.
+  const respostaFicha = (entrada) => {
+    const id = entrada.match(/use o id (\S+)\./)[1];
+    const loja = entrada.match(/desta loja \(id (\S+)\)/)[1];
+    return (
+      'Ele não confirmou, então esse horário caiu. Espera até amanhã cedo e manda:\n"Oi, tudo bem? Conseguiu ver minha mensagem sobre a visita?"\n```painel\n' +
+      JSON.stringify([
+        {
+          loja,
+          status: null,
+          compromisso: { quando: dia, oque: "Cobrar de leve a resposta" },
+          horario: { acao: "cancelar", id },
+          anotacao: "Cliente não confirmou a visita.",
+        },
+      ]) +
+      "\n```"
+    );
+  };
   const sample = async (entrada, opcoes = {}) => {
     window.__conversas.push({ entrada, fotos: opcoes.images?.length ?? 0 });
-    opcoes.onText?.({ text: resposta.slice(0, 40), delta: resposta.slice(0, 40) });
+    const texto = typeof entrada === "string" && entrada.includes("FICHA ABERTA") ? respostaFicha(entrada) : resposta;
+    opcoes.onText?.({ text: texto.slice(0, 40), delta: texto.slice(0, 40) });
     await new Promise((fim) => setTimeout(fim, 200));
-    opcoes.onText?.({ text: resposta, delta: resposta.slice(40) });
-    return { text: resposta, truncated: false };
+    opcoes.onText?.({ text: texto, delta: texto.slice(40) });
+    return { text: texto, truncated: false };
   };
   sample.limits = async () => ({
     maxPromptBytes: 262144,
@@ -974,6 +993,71 @@ try {
   );
   assert.equal(cancelados.length, 2, "a visita das 12:00 e a das 16:30 saem da agenda");
   assert.ok(cancelados.every((e) => e.dados.resultado === "naofechou"));
+
+  // Horário que o cliente não confirmou (caso Casarão, 24/11): passar da hora não é "Atrasado".
+  const mudarSemConf = (dados) =>
+    p.evaluate(async (d) => {
+      const db = await window.claude.use("db");
+      const dois = (n) => String(n).padStart(2, "0");
+      const ini = new Date(Date.now() - 30 * 60_000);
+      const base = {
+        leadId: "w5522900000005",
+        tipo: "visita",
+        servico: "ambos",
+        data: `${ini.getFullYear()}-${dois(ini.getMonth() + 1)}-${dois(ini.getDate())}`,
+        hora: `${dois(ini.getHours())}:${dois(ini.getMinutes())}`,
+        duracao: 45,
+        local: "",
+        obs: "",
+        prioridade: "alta",
+        resultado: null,
+        historico: [],
+        avisos: {},
+        criado: new Date().toISOString(),
+      };
+      await db.collection("compromissos").doc("c-semconf").set({ ...base, ...d });
+    }, dados);
+  await mudarSemConf({ status: "agendado" });
+  await p.getByRole("button", { name: "Abrir menu" }).click();
+  await p.getByRole("dialog", { name: "Menu" }).getByRole("link", { name: "Visão geral" }).click();
+  const cartaoHoje = p.getByRole("region", { name: /^Agenda de hoje/ });
+  await cartaoHoje.getByText("Não confirmou").waitFor();
+  assert.doesNotMatch(await cartaoHoje.innerText(), /atrasado/i);
+  // Confirmado e passou da hora: aí sim é atraso.
+  await mudarSemConf({ status: "confirmado" });
+  await cartaoHoje.getByText("Atrasado").waitFor();
+  await mudarSemConf({ status: "agendado" });
+  await cartaoHoje.getByText("Não confirmou").waitFor();
+
+  // Assistente na ficha do horário: "Não respondeu" → o que fazer, a mensagem pronta e a mudança no painel.
+  await cartaoHoje.getByRole("button", { name: /Não confirmou/ }).click();
+  const fichaSem = p.getByRole("dialog", { name: `Horário com ${DENTISTA}` });
+  await fichaSem.getByText("o cliente ainda não confirmou").waitFor();
+  await fichaSem.getByRole("button", { name: "Não respondeu" }).click();
+  await fichaSem.getByRole("button", { name: "Salvar no painel" }).waitFor();
+  const pedidoFicha = (await p.evaluate(() => window.__conversas)).at(-1).entrada;
+  assert.match(pedidoFicha, /FICHA ABERTA/);
+  assert.match(pedidoFicha, /c-semconf/);
+  assert.match(pedidoFicha, /AINDA NÃO CONFIRMOU/);
+  const zapFicha = decodeURIComponent(
+    await fichaSem.getByRole("link", { name: "Mandar essa mensagem" }).getAttribute("href"),
+  );
+  assert.match(zapFicha, /^https:\/\/wa\.me\/5522900000005\?text=Oi, tudo bem\? Conseguiu ver minha mensagem sobre a visita\?$/);
+  await fichaSem.getByRole("region", { name: "Assistente do horário" }).scrollIntoViewIfNeeded();
+  await p.screenshot({ path: path.join(saida, "celular-horario-assistente.png") });
+  await fichaSem.getByRole("button", { name: "Salvar no painel" }).click();
+  await p.waitForTimeout(300);
+  const escritasFicha = await p.evaluate(() => window.__escritas);
+  assert.equal(
+    escritasFicha.filter((e) => e.colecao === "compromissos" && e.id === "c-semconf").at(-1).dados.status,
+    "cancelado",
+  );
+  const lojaFicha = escritasFicha.filter((e) => e.colecao === "leads" && e.id === "w5522900000005").at(-1).dados;
+  assert.equal(lojaFicha.obs, "Cliente não confirmou a visita.");
+  assert.equal(lojaFicha.compromisso.oque, "Cobrar de leve a resposta");
+  await fichaSem.getByText("Salvo no painel").waitFor();
+  await fichaSem.getByRole("button", { name: "Fechar" }).first().click();
+  await p.waitForTimeout(300);
 
   // Funil: o fluxo mostra as etapas e tocar numa leva à lista filtrada.
   await p.getByRole("button", { name: "Abrir menu" }).click();

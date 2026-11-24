@@ -9,6 +9,7 @@ import {
 import { cn } from "@/lib/utils";
 import { StatusChip } from "./TabelaLeads";
 import {
+  aplicarAcao,
   quandoCurto,
   separarAcoes,
   textoVisivel,
@@ -24,7 +25,6 @@ import {
   RESULTADOS,
   dataCurta,
   diaFalado,
-  novoId,
   type Compromisso as Horario,
   type ConfigAgenda,
 } from "./agenda";
@@ -181,60 +181,11 @@ export function Assistente({
     const acao = mensagem.acoes?.[posicao];
     const lead = acao && leads.find((l) => l.id === acao.loja);
     if (!acao || !lead) return;
-    onSalvar(lead.id, {
-      ...(acao.anotacao ? { obs: acao.anotacao } : {}),
-      historico: [
-        ...(lead.historico ?? []),
-        ...(acao.anotacao ? [{ em: new Date().toISOString(), texto: acao.anotacao }] : []),
-      ].slice(-20),
-      ...(acao.status && acao.status !== statusDe(lead) ? { status: acao.status } : {}),
-      ...(acao.compromisso ? { compromisso: acao.compromisso } : {}),
-    });
-    salvarHorario(acao, lead);
+    aplicarAcao(acao, lead, { agenda, cfg, onSalvar, onCompromisso });
     onConversa(
       conversa.map((m, i) => (i === indice ? { ...m, salvas: [...(m.salvas ?? []), posicao] } : m)),
     );
     avisar(`${lead.nome}: salvo no painel`);
-  };
-
-  /** Aplica na agenda o que o assistente propôs (marcar, remarcar, cancelar, confirmar, realizado). */
-  const salvarHorario = (acao: Acao, lead: Lead) => {
-    const h = acao.horario;
-    if (!h) return;
-    if (h.acao === "marcar") {
-      onCompromisso({
-        id: novoId(),
-        leadId: lead.id,
-        tipo: h.tipo,
-        servico: "ambos",
-        data: h.data,
-        hora: h.hora,
-        duracao: h.duracao ?? cfg.duracao,
-        local: "",
-        obs: h.obs ?? acao.anotacao ?? "",
-        prioridade: "media",
-        status: "agendado",
-        resultado: null,
-        historico: [],
-        avisos: {},
-        criado: new Date().toISOString(),
-      });
-      return;
-    }
-    const c = agenda.find((x) => x.id === h.id);
-    if (!c) return;
-    if (h.acao === "remarcar")
-      onCompromisso({
-        ...c,
-        data: h.data,
-        hora: h.hora,
-        status: "remarcado",
-        avisos: {},
-        historico: [...c.historico, { de: `${c.data} ${c.hora}`, para: `${h.data} ${h.hora}`, em: new Date().toISOString() }],
-      });
-    else if (h.acao === "cancelar") onCompromisso({ ...c, status: "cancelado" });
-    else if (h.acao === "confirmado") onCompromisso({ ...c, status: "confirmado" });
-    else if (h.acao === "realizado") onCompromisso({ ...c, status: "realizado", resultado: h.resultado });
   };
 
   const copiar = async (t: string) => {
@@ -410,7 +361,7 @@ function linhaDoHorario(acao: Acao, agenda: Horario[]) {
   return h.acao === "realizado" ? `Realizado ${quando}: ${RESULTADOS[h.resultado].toLowerCase()}` : null;
 }
 
-function CartaoAcao({
+export function CartaoAcao({
   acao,
   lead,
   salva,
@@ -423,7 +374,7 @@ function CartaoAcao({
   salva: boolean;
   agenda: Horario[];
   onSalvar: () => void;
-  onAbrir: (lead: Lead) => void;
+  onAbrir: ((lead: Lead) => void) | null;
 }) {
   if (!lead) return null;
   const horario = linhaDoHorario(acao, agenda);
@@ -458,9 +409,11 @@ function CartaoAcao({
             Salvar no painel
           </BlockButton>
         )}
-        <BlockButton size="sm" variant="ghost" onClick={() => onAbrir(lead)}>
-          Ver ficha
-        </BlockButton>
+        {onAbrir && (
+          <BlockButton size="sm" variant="ghost" onClick={() => onAbrir(lead)}>
+            Ver ficha
+          </BlockButton>
+        )}
       </div>
     </div>
   );

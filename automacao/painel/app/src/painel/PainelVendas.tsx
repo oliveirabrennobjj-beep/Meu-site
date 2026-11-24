@@ -548,6 +548,8 @@ export function PainelVendas() {
             }}
           />
           <CompromissoFicha
+            leads={leads}
+            onSalvarLoja={salvarLoja}
             compromisso={compromisso}
             lead={compromisso ? leadDo(compromisso, porId) : null}
             compromissos={agenda}

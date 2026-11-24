@@ -94,9 +94,12 @@ const SERVICO_NA_FRASE: Record<ServicoCompromisso, string> = {
 
 export const PRIORIDADES: Record<Prioridade, string> = { alta: "Alta", media: "Média", baixa: "Baixa" };
 
-/** Rótulo e cor da etiqueta de status (verde confirmado, amarelo remarcado, vermelho cancelado/faltou). */
+/**
+ * Rótulo e cor da etiqueta de status (verde confirmado, amarelo remarcado, vermelho cancelado/faltou).
+ * "agendado" = o Brenno propôs o horário e o cliente ainda não disse sim.
+ */
 export const STATUS_COMPROMISSO: Record<StatusCompromisso, { nome: string; cor: string; fundo: string }> = {
-  agendado: { nome: "Agendado", cor: "var(--blk-accent-ink)", fundo: "var(--bjork-accent-soft)" },
+  agendado: { nome: "A confirmar", cor: "var(--blk-accent-ink)", fundo: "var(--bjork-accent-soft)" },
   confirmado: { nome: "Confirmado", cor: "var(--blk-success)", fundo: "var(--blk-success-soft)" },
   realizado: { nome: "Realizado", cor: "var(--blk-success)", fundo: "var(--blk-success-soft)" },
   remarcado: { nome: "Remarcado", cor: "var(--blk-warning)", fundo: "var(--blk-warning-soft)" },
@@ -413,6 +416,9 @@ export function preencherModelo(
 export const vivo = (c: Compromisso) =>
   !c.apagado && (c.status === "agendado" || c.status === "confirmado" || c.status === "remarcado");
 
+/** Horário proposto que o cliente ainda não confirmou: passar da hora não é atraso do Brenno. */
+export const aConfirmar = (c: Compromisso) => !c.legado && (c.status === "agendado" || c.status === "remarcado");
+
 /** Combinados antigos (`lead.compromisso`) aparecem na agenda como itens de retorno. */
 export function combinadosAntigos(leads: Lead[], cfg: ConfigAgenda): Compromisso[] {
   return leads.flatMap((lead) => {
@@ -488,10 +494,12 @@ export function precisamDeRetorno(leads: Lead[], todos: Compromisso[], agora = a
   const perdidos = new Set(
     todos.filter((c) => !c.apagado && (c.status === "cancelado" || c.status === "faltou")).map((c) => c.leadId),
   );
-  // Quem já disse que não quer, ou já fechou, não precisa de retorno.
+  // Quem já disse que não quer, ou já fechou, não precisa de retorno; quem tem lembrete marcado já está na agenda.
+  const hoje = chaveDia(agora);
   return leads.filter(
     (l) =>
       !comFuturo.has(l.id) &&
+      !((l.compromisso?.quando ?? "").slice(0, 10) >= hoje) &&
       statusDe(l) !== "nao" &&
       statusDe(l) !== "fechou" &&
       (perdidos.has(l.id) || statusDe(l) === "respondeu" || statusDe(l) === "depois"),
