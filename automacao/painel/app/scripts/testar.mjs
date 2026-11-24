@@ -75,6 +75,21 @@ leads.push({
   enviadoEm: new Date(Date.now() - 86_400_000).toISOString(),
 });
 
+// Caso Greiffe (23/11): o Google diz Casimiro, mas a ficha do Maps fica a 22 km do centro (Jardim Miramar).
+const PRAIANO = "Salão Praiano Teste";
+leads.push({
+  id: "w5522900000020",
+  nome: PRAIANO,
+  tipo: "Salão de Beleza",
+  cidade: "Casimiro de Abreu",
+  whatsapp: "5522900000020",
+  endereco: "R. Haydeia, 555 - Jardim Miramar, Casimiro de Abreu - RJ, 28860-000, Brasil",
+  maps: "https://www.google.com/maps/place/Teste/data=!4m7!3m6!1s0x0:0x0!8m2!3d-22.5569257!4d-41.983613!16s",
+  nota: 5,
+  avaliacoes: 999997,
+  status: "novo",
+});
+
 // Loja longe do centro que recebeu o pedido de visita antes da correção (caso da Parada Ideal).
 const LONGE = "Loja Longe de Teste";
 leads.push({
@@ -101,7 +116,14 @@ leads.push({
 const MASSO = "Yasmim Teste - Massoterapeuta";
 const CT = "CT Teste";
 const DENTISTA = "Dra. Deise Barbosa Teste";
-for (const [i, nome, tipo] of [[3, MASSO, "Salão de beleza"], [4, CT, "Academia"], [5, DENTISTA, "Dentista"]]) {
+// Caso real de 20/11: loja de aquário cadastrada como "Fornecedor" saía com prévia de banho e tosa.
+const AQUARIO = "Aquarismo Peixes Teste - casa de ração";
+// Caso real de 20/11: vende frango assado e quentinha, e a prévia mostrava costela.
+const FRANGO = "Frango Assado Teste e Quentinha";
+const QUEIJO = "Ateliê do Queijo Teste";
+const PIZZA = "Gran Pizza Teste";
+const PESCA = "Oficina da Pesca Teste";
+for (const [i, nome, tipo] of [[3, MASSO, "Salão de beleza"], [4, CT, "Academia"], [5, DENTISTA, "Dentista"], [6, AQUARIO, "Loja de ração"], [7, FRANGO, "Restaurante"], [8, QUEIJO, "Fabricante de queijo"], [9, PIZZA, "Delivery"], [10, PESCA, "Loja de artigos para pesca"]]) {
   leads.push({
     id: `w552290000000${i}`,
     nome,
@@ -112,6 +134,17 @@ for (const [i, nome, tipo] of [[3, MASSO, "Salão de beleza"], [4, CT, "Academia
     nota: 5,
     avaliacoes: 999990 + i,
     status: "novo",
+    // Contato do dono pelo cadastro do CNPJ: celular dele (aquário) e WhatsApp da loja que já é dele (dentista).
+    ...(nome === AQUARIO ? { dono: { nome: "Ana", whatsapp: "5522988887777", em: "2026-11-20T00:00:00.000Z" } } : {}),
+    ...(nome === DENTISTA ? { dono: { nome: "Rui", mesmo: true, em: "2026-11-20T00:00:00.000Z" } } : {}),
+    // Caso Rua do Muro de Hera (23/11): o Instagram da loja mostra outro WhatsApp; esse vale.
+    ...(nome === FRANGO
+      ? { zap: { nome: "", confere: false, em: "2026-11-20T00:00:00.000Z" }, whatsappInsta: "5522999990077" }
+      : {}),
+    // Caso Raffus (22/11): número do Google sem WhatsApp Business; o certo estava no Instagram.
+    ...(nome === PESCA
+      ? { zap: { nome: "", confere: false, em: "2026-11-20T00:00:00.000Z" }, link: "https://www.instagram.com/pesca_teste/" }
+      : {}),
   });
 }
 
@@ -121,33 +154,43 @@ ${corpo}
 </body></html>`;
 
 function bancoDeMentira(iniciais) {
-  const docs = new Map(iniciais.map(({ id, ...dados }) => [id, dados]));
-  const ouvintes = new Set();
+  // Uma coleção por caminho (leads, compromissos…), como no banco do Artifact.
+  const colecoes = new Map([["leads", new Map(iniciais.map(({ id, ...dados }) => [id, dados]))]]);
+  const ouvintes = new Map();
+  const docsDe = (caminho) => {
+    if (!colecoes.has(caminho)) colecoes.set(caminho, new Map());
+    return colecoes.get(caminho);
+  };
   window.__escritas = [];
-  const emitir = () => {
+  const emitir = (caminho) => {
     const snap = {
       metadata: { fromCache: false },
-      docs: [...docs].map(([id, dados]) => ({ id, exists: true, data: () => dados })),
+      docs: [...docsDe(caminho)].map(([id, dados]) => ({ id, exists: true, data: () => dados })),
     };
-    ouvintes.forEach((fn) => fn(snap));
+    (ouvintes.get(caminho) ?? new Set()).forEach((fn) => fn(snap));
   };
   const db = {
     doc: (caminho) => ({
       onSnapshot: (next) => (setTimeout(() => next({ exists: false, data: () => undefined }), 0), () => {}),
       set: async (dados) => void window.__escritas.push({ op: "set", caminho, dados }),
     }),
-    collection: () => ({
-      onSnapshot: (next) => (ouvintes.add(next), setTimeout(emitir, 30), () => ouvintes.delete(next)),
+    collection: (caminho) => ({
+      onSnapshot: (next) => {
+        if (!ouvintes.has(caminho)) ouvintes.set(caminho, new Set());
+        ouvintes.get(caminho).add(next);
+        setTimeout(() => emitir(caminho), 30);
+        return () => ouvintes.get(caminho).delete(next);
+      },
       doc: (id) => ({
         update: async (dados) => {
-          window.__escritas.push({ op: "update", id, dados });
-          docs.set(id, { ...docs.get(id), ...dados });
-          emitir();
+          window.__escritas.push({ op: "update", colecao: caminho, id, dados });
+          docsDe(caminho).set(id, { ...docsDe(caminho).get(id), ...dados });
+          emitir(caminho);
         },
         set: async (dados) => {
-          window.__escritas.push({ op: "set", id, dados });
-          docs.set(id, dados);
-          emitir();
+          window.__escritas.push({ op: "set", colecao: caminho, id, dados });
+          docsDe(caminho).set(id, dados);
+          emitir(caminho);
         },
       }),
     }),
@@ -165,16 +208,36 @@ function bancoDeMentira(iniciais) {
         loja: "w5522900000001",
         status: "respondeu",
         compromisso: { quando: `${dia}T12:00`, oque: "Mandar mensagem pro dono" },
+        horario: { acao: "marcar", data: dia, hora: "16:30", tipo: "visita", duracao: 30 },
         anotacao: "Funcionária disse que o dono chega meio-dia.",
       },
     ]) +
     "\n```";
+  // Pedido feito pela ficha do horário: o cliente não confirmou, então cancela o horário e deixa o lembrete.
+  const respostaFicha = (entrada) => {
+    const id = entrada.match(/use o id (\S+)\./)[1];
+    const loja = entrada.match(/desta loja \(id (\S+)\)/)[1];
+    return (
+      'Ele não confirmou, então esse horário caiu. Espera até amanhã cedo e manda:\n"Oi, tudo bem? Conseguiu ver minha mensagem sobre a visita?"\n```painel\n' +
+      JSON.stringify([
+        {
+          loja,
+          status: null,
+          compromisso: { quando: dia, oque: "Cobrar de leve a resposta" },
+          horario: { acao: "cancelar", id },
+          anotacao: "Cliente não confirmou a visita.",
+        },
+      ]) +
+      "\n```"
+    );
+  };
   const sample = async (entrada, opcoes = {}) => {
     window.__conversas.push({ entrada, fotos: opcoes.images?.length ?? 0 });
-    opcoes.onText?.({ text: resposta.slice(0, 40), delta: resposta.slice(0, 40) });
+    const texto = typeof entrada === "string" && entrada.includes("FICHA ABERTA") ? respostaFicha(entrada) : resposta;
+    opcoes.onText?.({ text: texto.slice(0, 40), delta: texto.slice(0, 40) });
     await new Promise((fim) => setTimeout(fim, 200));
-    opcoes.onText?.({ text: resposta, delta: resposta.slice(40) });
-    return { text: resposta, truncated: false };
+    opcoes.onText?.({ text: texto, delta: texto.slice(40) });
+    return { text: texto, truncated: false };
   };
   sample.limits = async () => ({
     maxPromptBytes: 262144,
@@ -195,7 +258,8 @@ const umd = (pacote, arquivo) =>
   readFileSync(path.join(raiz, "node_modules", pacote, "umd", arquivo), "utf8");
 
 async function abrir(browser, opcoes) {
-  const contexto = await browser.newContext(opcoes);
+  // Horário de Brasília, como no celular do Brenno (a agenda usa o relógio de São Paulo).
+  const contexto = await browser.newContext({ timezoneId: "America/Sao_Paulo", ...opcoes });
   const pagina = await contexto.newPage();
   const erros = [];
   pagina.on("pageerror", (e) => erros.push(String(e)));
@@ -242,7 +306,7 @@ const browser = await chromium.launch();
 try {
   // Barra de São João é distrito de Casimiro, mas o painel conta como fora.
   const casimiro = leads.filter(
-    (l) => /casimiro/i.test(l.cidade ?? "") && !/barra de s[aã]o jo[aã]o/i.test(`${l.nome} ${l.cidade}`),
+    (l) => /casimiro/i.test(l.cidade ?? "") && !/barra de s[aã]o jo[aã]o|Praiano Teste/i.test(`${l.nome} ${l.cidade}`),
   ).length;
 
   // Celular
@@ -262,13 +326,50 @@ try {
     await previa.getByRole("heading", { level: 1 }).waitFor();
     await p.waitForTimeout(600);
     await p.screenshot({ path: path.join(saida, "celular-demonstracao.png") });
+    // SISTEMAS=todos: para cada estilo que tem sistema, abre o "Ver funcionando" e tira um print.
+    if (process.env.SISTEMAS) {
+      const ficha = p.getByRole("dialog").first();
+      const ids =
+        process.env.SISTEMAS === "todos"
+          ? await previa.getByLabel("Estilo da prévia").locator("option").evaluateAll((os) => os.map((o) => o.value).filter(Boolean))
+          : process.env.SISTEMAS.split(",");
+      let feitos = 0;
+      for (const id of ids) {
+        if (!(await previa.count())) await ficha.getByRole("button", { name: "Mostrar demonstração do site" }).click();
+        await previa.getByLabel("Estilo da prévia").selectOption(id);
+        await p.waitForTimeout(150);
+        await previa.getByRole("button", { name: "Fechar demonstração" }).click();
+        const abrir = ficha.getByRole("button", { name: /^Mostrar o sistema/ });
+        if (!(await abrir.count())) continue;
+        await abrir.click();
+        const sistema = p.getByRole("dialog", { name: /^Sistema de / });
+        await sistema.getByRole("button", { name: "Ver funcionando" }).click();
+        const demo = p.getByRole("dialog", { name: `Demonstração de clicar: ${nomeExtra}` });
+        await demo.getByRole("heading", { level: 1 }).waitFor();
+        await demo.locator("img").first().evaluate((img) => img.complete || new Promise((ok) => (img.onload = img.onerror = ok)));
+        await p.waitForTimeout(200);
+        await p.screenshot({ path: path.join(saida, `demo-${id.replace("/", "_")}.png`) });
+        await demo.getByRole("button", { name: "Fechar demonstração de clicar" }).click();
+        await sistema.getByRole("button", { name: "Fechar sistema" }).click();
+        await sistema.waitFor({ state: "detached" });
+        feitos += 1;
+      }
+      assert.deepEqual(cel.erros, []);
+      console.log(`${feitos} demonstrações de clicar em ${saida}`);
+      await browser.close();
+      process.exit(0);
+    }
     // RAMOS=crossfit,pilates troca o estilo da prévia e tira um print de cada (sem gerar a foto).
     if (process.env.RAMOS) {
+      // Tela bem alta: a prévia rola dentro do diálogo e o que fica fora da rolagem sai em branco no print.
+      await p.setViewportSize({ width: 412, height: 4200 });
       for (const id of process.env.RAMOS.split(",")) {
         await previa.getByLabel("Estilo da prévia").selectOption(id);
-        await previa.locator(`img[src*="img/demo/${id}-1"]`).first().waitFor();
-        await p.waitForTimeout(500);
-        await p.screenshot({ path: path.join(saida, `previa-${id}.png`) });
+        const foto = id.split("/").at(-1);
+        await previa.locator(`img[src*="img/demo/${foto}-"]`).first().waitFor();
+        await p.waitForTimeout(400);
+        // Página inteira da prévia (o artigo), não só a parte que cabe na tela.
+        await previa.locator("article").screenshot({ path: path.join(saida, `previa-${id.replace("/", "_")}.png`) });
       }
       assert.deepEqual(cel.erros, []);
       console.log(`Prévias de ${process.env.RAMOS} em ${saida}`);
@@ -307,17 +408,39 @@ try {
     assert.doesNotMatch(textoHorario, /R\$|\{/);
     await p.waitForTimeout(300);
     await p.screenshot({ path: path.join(saida, "celular-horario.png") });
-    // O sistema no notebook e no celular, nos dois tipos: horário marcado e controle de alunos.
-    for (const [ramo, nomeSistema, arquivoFoto] of [
-      [null, "horário marcado", "celular-sistema.png"],
-      ["pilates", "controle de alunos", "celular-sistema-alunos.png"],
+    // O sistema no notebook e no celular, nos dois tipos (horário marcado e controle de alunos), e a
+    // demonstração de clicar com os serviços do tipo da loja: nunca a barbearia de exemplo em outro ramo.
+    for (const [ramo, nomeSistema, arquivoFoto, primeiro] of [
+      [null, "horário marcado", "celular-sistema.png", "Corte"],
+      ["salao", "horário marcado", null, "Escova"],
+      ["saude", "horário marcado", null, "Primeira consulta"],
+      ["pet", "horário marcado", null, "Banho"],
+      ["pilates", "controle de alunos", "celular-sistema-alunos.png", "Reformer"],
     ]) {
       if (ramo) await barbearia.getByLabel("Ramo da loja").selectOption(ramo);
       await barbearia.getByRole("button", { name: `Mostrar o sistema (${nomeSistema})` }).click();
       const sistema = p.getByRole("dialog", { name: `Sistema de ${nomeSistema} de Barbearia Exemplo 16` });
       await sistema.getByRole("heading", { level: 1 }).waitFor();
       await p.waitForTimeout(500);
-      await p.screenshot({ path: path.join(saida, arquivoFoto) });
+      if (arquivoFoto) await p.screenshot({ path: path.join(saida, arquivoFoto) });
+      await sistema.getByRole("button", { name: "Ver funcionando" }).click();
+      const demo = p.getByRole("dialog", { name: "Demonstração de clicar: Barbearia Exemplo 16" });
+      await demo.getByRole("heading", { level: 1 }).waitFor();
+      const texto = await demo.innerText();
+      assert.ok(texto.includes(primeiro), `${ramo ?? "barbearia"}: mostra ${primeiro}`);
+      if (ramo) assert.doesNotMatch(texto, /Sua Barbearia|Corte na régua|barbeiro/i, `${ramo}: nada de barbearia`);
+      // Marca de ponta a ponta e o horário aparece na agenda (ou nas turmas) com o selo "Novo".
+      await demo.getByRole("button", { name: new RegExp(`^${primeiro}`) }).first().click();
+      await demo.locator("section button[aria-pressed]").first().click();
+      await demo.locator("button:not([disabled])", { hasText: /^\d\d:00$/ }).first().click();
+      await demo.getByRole("button", { name: "Continuar" }).click();
+      await demo.getByLabel("Seu nome").fill("Cliente Teste");
+      await demo.getByRole("button", { name: /^Confirmar/ }).click();
+      await demo.getByRole("status").filter({ hasText: /marcad[oa]!/ }).waitFor();
+      if (!ramo || ramo === "pilates") await p.screenshot({ path: path.join(saida, `celular-demo-${ramo ?? "barbearia"}.png`) });
+      await demo.getByRole("button", { name: /^Ver n/ }).click();
+      assert.match(await demo.getByRole("listitem").filter({ hasText: "Novo" }).innerText(), new RegExp(`Cliente Teste[\\s\\S]*${primeiro}`));
+      await demo.getByRole("button", { name: "Fechar demonstração de clicar" }).click();
       await sistema.getByRole("button", { name: "Fechar sistema" }).click();
       await sistema.waitFor({ state: "detached" });
     }
@@ -335,7 +458,11 @@ try {
   await nicho.click();
 
   // Fora de Casimiro: mensagem de site, sem preço e sem pedido de visita.
-  const cidadeFora = p.locator("[data-tabelas] section[aria-labelledby]").filter({ hasText: "WhatsApp · site" }).first();
+  const cidadeFora = p
+    .locator("[data-tabelas] section[aria-labelledby]")
+    .filter({ hasText: "WhatsApp · site" })
+    .filter({ hasNotText: "longe do centro" })
+    .first();
   await cidadeFora.locator("tbody tr button").first().click();
   const textoFora = decodeURIComponent(
     await p.getByRole("dialog").getByRole("link", { name: "Enviar no WhatsApp" }).getAttribute("href"),
@@ -349,6 +476,17 @@ try {
   }
   assert.doesNotMatch(textoFora, /R\$|passar aí/);
   await p.getByRole("dialog").getByRole("button", { name: "Fechar ficha" }).click();
+
+  // Loja que o Google põe em Casimiro mas fica longe do centro: vai pra FORA, sem pedido de visita.
+  {
+    await p.getByRole("button", { name: PRAIANO, exact: true }).click();
+    const ficha = p.getByRole("dialog");
+    await ficha.getByText("Salão de Beleza · Casimiro, longe do centro").waitFor();
+    const texto = decodeURIComponent(await ficha.getByRole("link", { name: "Enviar no WhatsApp" }).getAttribute("href"));
+    assert.match(texto, /Sou de Casimiro, pertinho de Jardim Miramar\./);
+    assert.doesNotMatch(texto, /passar aí|pessoalmente/);
+    await ficha.getByRole("button", { name: "Fechar ficha" }).click();
+  }
 
   // Número sem WhatsApp: a loja sai das listas e da contagem; em "Tiradas" dá para trazer de volta.
   const kpiAEnviar = () => p.getByRole("article").filter({ hasText: "A enviar" }).locator("p").first().innerText();
@@ -384,12 +522,19 @@ try {
     [MASSO, "Massoterapia em Cidade de Teste", "massagem-1.webp"],
     [CT, "Academia de luta em Cidade de Teste", "luta-1.webp"],
     [DENTISTA, "Dentista em Cidade de Teste", "dentista-1.webp"],
+    [AQUARIO, "Aquarismo em Cidade de Teste", "aquario-1.webp"],
+    [FRANGO, "Frango assado em Cidade de Teste", "frango-1.webp"],
+    // Queijaria não é supermercado; pizzaria com tipo "Delivery" é pizzaria (o nome vence o tipo genérico).
+    [QUEIJO, "Cidade de Teste", "queijaria-1.webp"],
+    [PIZZA, "Cidade de Teste", "pizzaria-1.webp"],
+    // "Oficina" no nome de loja de pesca não é mecânica.
+    [PESCA, "Cidade de Teste", "pesca-1.webp"],
   ]) {
     await p.getByRole("button", { name: loja, exact: true }).click();
     await p.getByRole("dialog").first().getByRole("button", { name: "Mostrar demonstração do site" }).click();
     const previa = p.getByRole("dialog", { name: `Demonstração do site de ${loja}` });
     await previa.getByText(rotulo).first().waitFor();
-    assert.equal(await previa.locator(`img[src$="${foto}"]`).count(), 1, `${loja} usa a foto ${foto}`);
+    assert.ok((await previa.locator(`img[src$="${foto}"]`).count()) >= 1, `${loja} usa a foto ${foto}`);
     if (loja === MASSO) {
       await p.waitForTimeout(500);
       await p.screenshot({ path: path.join(saida, "celular-previa-massagem.png") });
@@ -405,12 +550,18 @@ try {
       await p.screenshot({ path: path.join(saida, "celular-previa-luta.png") });
       // Trocar o estilo na prévia grava o ramo escolhido e muda as fotos na hora.
       await previa.getByLabel("Estilo da prévia").selectOption("academia");
-      await previa.locator('img[src$="academia-1.webp"]').waitFor();
+      await previa.locator('img[src$="academia-1.webp"]').first().waitFor();
       const troca = (await p.evaluate(() => window.__escritas)).at(-1).dados;
       assert.equal(troca.ramo, "academia");
       await previa.getByLabel("Estilo da prévia").selectOption("luta");
-      await previa.locator('img[src$="luta-1.webp"]').waitFor();
+      await previa.locator('img[src$="luta-1.webp"]').first().waitFor();
       assert.equal((await p.evaluate(() => window.__escritas)).at(-1).dados.tipo, "Academia de luta");
+      await previa.getByRole("button", { name: "Fechar demonstração" }).click();
+    } else if (loja === FRANGO) {
+      // O Brenno pode escolher o sub-nicho na prévia: grava e troca as fotos.
+      await previa.getByLabel("Estilo da prévia").selectOption("restaurante/marmita");
+      await previa.locator('img[src$="marmita-1.webp"]').first().waitFor();
+      assert.equal((await p.evaluate(() => window.__escritas)).at(-1).dados.subnicho, "marmita");
       await previa.getByRole("button", { name: "Fechar demonstração" }).click();
     } else {
       await previa.getByRole("button", { name: "Fechar demonstração" }).click();
@@ -418,6 +569,49 @@ try {
     await p.getByRole("dialog").getByRole("button", { name: "Fechar ficha" }).click();
   }
   await p.evaluate(() => (window.__escritas.length = 0));
+
+  // Número não confirmado: aviso com Instagram e "Corrigir número"; depois disso todo envio vai pro número certo.
+  {
+    await p.getByRole("button", { name: PESCA, exact: true }).click();
+    const ficha = p.getByRole("dialog");
+    await ficha.getByText(/Número não confirmado: \(22\) [\d-]+ veio do Google/).waitFor();
+    assert.equal(await ficha.getByRole("link", { name: "Ver no Instagram" }).getAttribute("href"), "https://www.instagram.com/pesca_teste/");
+    await ficha.getByRole("button", { name: "Corrigir número" }).click();
+    await ficha.getByLabel("WhatsApp certo da loja, com DDD").fill("(22) 99743-1349");
+    await ficha.getByRole("button", { name: "Salvar", exact: true }).click();
+    assert.equal((await p.evaluate(() => window.__escritas)).at(-1).dados.whatsappCerto, "5522997431349");
+    await ficha.getByText("Número corrigido por você: (22) 99743-1349.").waitFor();
+    assert.match(await ficha.getByRole("link", { name: "Enviar no WhatsApp" }).getAttribute("href"), /^https:\/\/wa\.me\/5522997431349\?text=/);
+    await p.screenshot({ path: path.join(saida, "celular-numero-corrigido.png") });
+    await ficha.getByRole("button", { name: "Fechar ficha" }).click();
+  }
+  {
+    await p.getByRole("button", { name: FRANGO, exact: true }).click();
+    const ficha = p.getByRole("dialog");
+    await ficha.getByText("(22) 99999-0077 é o WhatsApp que a loja põe no Instagram.").waitFor();
+    assert.match(await ficha.getByRole("link", { name: "Enviar no WhatsApp" }).getAttribute("href"), /^https:\/\/wa\.me\/5522999990077\?text=/);
+    await ficha.getByRole("button", { name: "Fechar ficha" }).click();
+  }
+
+  // Dono pelo CNPJ: mensagem pro celular dele chamando pelo nome; a da loja fica como segunda opção.
+  {
+    await p.getByRole("button", { name: AQUARIO, exact: true }).click();
+    const ficha = p.getByRole("dialog");
+    await ficha.getByText("Celular do dono, Ana, no cadastro do CNPJ").waitFor();
+    const praDono = await ficha.getByRole("link", { name: "Enviar pro dono (Ana)" }).getAttribute("href");
+    assert.match(praDono, /^https:\/\/wa\.me\/5522988887777\?text=/);
+    assert.match(decodeURIComponent(praDono), /text=Oi, Ana, /);
+    const praLoja = decodeURIComponent(await ficha.getByRole("link", { name: "Mandar pra loja" }).getAttribute("href"));
+    assert.match(praLoja, /^https:\/\/wa\.me\/5522900000006\?text=Oi, (?!Ana)/);
+    await p.screenshot({ path: path.join(saida, "celular-dono-cnpj.png") });
+    await ficha.getByRole("button", { name: "Fechar ficha" }).click();
+
+    await p.getByRole("button", { name: DENTISTA, exact: true }).click();
+    await ficha.getByText("Esse WhatsApp é o do dono (Rui) no cadastro do CNPJ.").waitFor();
+    const mesmo = decodeURIComponent(await ficha.getByRole("link", { name: "Enviar no WhatsApp" }).getAttribute("href"));
+    assert.match(mesmo, /^https:\/\/wa\.me\/5522900000005\?text=Oi, Rui, /);
+    await ficha.getByRole("button", { name: "Fechar ficha" }).click();
+  }
 
   await p.getByRole("radio", { name: "Só Casimiro de Abreu" }).click();
   assert.equal(await p.locator("[data-tabelas] section[aria-labelledby]").count(), 1);
@@ -427,7 +621,7 @@ try {
 
   // Quem já recebeu o site pela versão antiga ainda pode receber a placa.
   // Loja longe que já recebeu pedido de visita: a ficha oferece a correção, uma vez só.
-  await p.getByRole("button", { name: LONGE }).click();
+  await p.getByRole("button", { name: LONGE, exact: true }).click();
   const longe = p.getByRole("dialog");
   const correcao = decodeURIComponent(
     await longe.getByRole("link", { name: "Mandar a correção" }).getAttribute("href"),
@@ -449,7 +643,7 @@ try {
   await longe.getByRole("button", { name: "Fechar ficha" }).click();
   await p.evaluate(() => (window.__escritas.length = 0));
 
-  await p.getByRole("button", { name: ANTIGA }).click();
+  await p.getByRole("button", { name: ANTIGA, exact: true }).click();
   const antiga = p.getByRole("dialog");
   await antiga.getByRole("radio", { name: "Dá pra ir: mensagem pedindo visita" }).click();
   await antiga.getByRole("radio", { name: "Site: mensagem já enviada" }).waitFor();
@@ -643,12 +837,18 @@ try {
   await ficha.getByRole("button", { name: "Feito" }).waitFor();
 
   await ficha.getByRole("button", { name: "Fechar ficha" }).click();
-  // O compromisso aparece em "Próximos passos", no topo do painel.
-  const passos = p.getByRole("region", { name: "Próximos passos" });
-  assert.match(await passos.innerText(), new RegExp(`amanhã 12:00[\\s\\S]*${nome}`));
+  // O combinado aparece na "Agenda de hoje", no topo do painel, na linha de amanhã.
+  const hojeAgenda = p.getByRole("region", { name: /^Agenda de hoje/ });
+  assert.match(await hojeAgenda.innerText(), new RegExp(`Amanhã:[\\s\\S]*12:00 ${nome}`));
+  // Quem respondeu e não tem horário: "Pedir horário" abre o WhatsApp com a mensagem formal pronta.
+  const lojaLonge = hojeAgenda.getByRole("listitem").filter({ hasText: LONGE });
+  await lojaLonge.getByRole("button", { name: "Pedir horário" }).click();
+  const pedido = decodeURIComponent(await lojaLonge.getByRole("link", { name: "Abrir no WhatsApp" }).getAttribute("href"));
+  assert.match(pedido, /^https:\/\/wa\.me\/5522900000002\?text=Olá, Loja Longe de Teste! Tudo bem\? Aqui é o Brenno, da BN Digital\./);
+  assert.match(pedido, /Tenho disponibilidade (na|no) \S+ \(\d\d\/\d\d\) ou (na|no) \S+ \(\d\d\/\d\d\)\. Qual dia e horário/);
   await p.getByRole("main").evaluate((el) => el.scrollTo({ top: 0 }));
   await p.waitForTimeout(300);
-  await p.screenshot({ path: path.join(saida, "celular-proximos-passos.png") });
+  await p.screenshot({ path: path.join(saida, "celular-hoje.png") });
   await p.getByRole("button", { name: "Abrir menu" }).click();
   await p.getByRole("dialog", { name: "Menu" }).getByText("Meta de hoje").waitFor();
   // Meta de 30 comércios: a padaria recebeu placa, site e dono hoje e conta como 1 contato.
@@ -686,22 +886,178 @@ try {
   const salvaPeloAssistente = (await p.evaluate(() => window.__escritas)).filter((e) => e.id === "w5522900000001").at(-1);
   assert.equal(salvaPeloAssistente.dados.status, "respondeu");
   assert.equal(salvaPeloAssistente.dados.compromisso.oque, "Mandar mensagem pro dono");
+  // O assistente também marca na agenda: visita amanhã às 16:30.
+  const marcadoPeloAssistente = (await p.evaluate(() => window.__escritas)).filter((e) => e.colecao === "compromissos").at(-1);
+  assert.equal(marcadoPeloAssistente.dados.leadId, "w5522900000001");
+  assert.equal(marcadoPeloAssistente.dados.hora, "16:30");
+  assert.equal(marcadoPeloAssistente.dados.tipo, "visita");
   const guardada = (await p.evaluate(() => window.__escritas)).filter((e) => e.caminho === "assistente/conversa").at(-1);
   assert.equal(guardada.dados.mensagens.length, 2);
   assert.deepEqual(guardada.dados.mensagens[1].salvas, [0]);
 
-  // Agenda: o dia de amanhã tem o ponto e lista as lojas combinadas.
+  // Agenda: no celular abre no Dia; o combinado de amanhã (anotado pelo assistente) aparece no dia seguinte.
   await p.getByRole("button", { name: "Abrir menu" }).click();
   await p.getByRole("dialog", { name: "Menu" }).getByRole("link", { name: /Agenda/ }).click();
   await p.getByRole("heading", { name: "Agenda" }).waitFor();
-  const amanha = new Date(Date.now() + 86_400_000);
-  const MESES = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
-  await p.getByRole("button", { name: new RegExp(`^${amanha.getDate()} de ${MESES[amanha.getMonth()]}, \\d lojas? marcadas?$`) }).click();
-  const doDia = await p.getByRole("main").innerText();
-  assert.match(doDia, /Amanhã, /);
-  assert.match(doDia, new RegExp(nome));
+  await p.getByRole("button", { name: "Próximo" }).click();
+  assert.match(await p.getByRole("region", { name: "Dia" }).innerText(), new RegExp(nome));
+  const compromissoSalvo = async () =>
+    (await p.evaluate(() => window.__escritas)).filter((e) => e.colecao === "compromissos").at(-1).dados;
+
+  // Marcar: visita na Loja Antiga amanhã às 12:00.
+  await p.getByRole("button", { name: "Novo horário" }).click();
+  let form = p.getByRole("dialog", { name: "Novo horário" });
+  await form.getByPlaceholder("Buscar loja pelo nome").fill("Loja Antiga");
+  await form.getByRole("button", { name: new RegExp(ANTIGA) }).click();
+  await form.getByLabel("Hora").fill("12:00");
+  await form.getByRole("button", { name: "Marcar horário" }).click();
+  let salvo = await compromissoSalvo();
+  assert.equal(salvo.leadId, "w5522900000001");
+  assert.equal(salvo.hora, "12:00");
+  assert.equal(salvo.tipo, "visita");
+  await p.getByRole("dialog", { name: `Horário com ${ANTIGA}` }).getByRole("button", { name: "Fechar" }).click();
+
+  // Choque: 12:15 bate com a visita (30 min + 15 de deslocamento) e o painel sugere 12:45.
+  await p.waitForTimeout(300);
+  await p.getByRole("button", { name: "Novo horário" }).click();
+  form = p.getByRole("dialog", { name: "Novo horário" });
+  await form.getByPlaceholder("Buscar loja pelo nome").fill("Loja Longe");
+  await form.getByRole("button", { name: new RegExp(LONGE) }).click();
+  await form.getByRole("button", { name: "Sistema de agendamento" }).click();
+  await form.getByLabel("Hora").fill("12:15");
+  assert.match(await form.getByRole("alert").innerText(), new RegExp(`Bate com ${ANTIGA} \\(12:00\\)`));
+  await form.getByRole("button", { name: /^Usar / }).click();
+  assert.equal(await form.getByLabel("Hora").inputValue(), "12:45");
+  await form.getByRole("button", { name: "Marcar horário" }).click();
+  assert.equal((await compromissoSalvo()).hora, "12:45");
+
+  // Ficha do horário: remarcar guarda o histórico e a confirmação já usa a hora nova.
+  const horario = p.getByRole("dialog", { name: `Horário com ${LONGE}` });
+  await horario.getByRole("button", { name: "Remarcar" }).click();
+  await horario.getByLabel("Nova hora").fill("15:00");
+  await horario.getByRole("button", { name: "Salvar novo horário" }).click();
+  salvo = await compromissoSalvo();
+  assert.equal(salvo.status, "remarcado");
+  assert.equal(salvo.hora, "15:00");
+  assert.equal(salvo.historico.length, 1);
+  await p.waitForTimeout(300);
+  const confirmacao = decodeURIComponent(await horario.getByRole("link", { name: "Abrir no WhatsApp" }).getAttribute("href"));
+  assert.match(confirmacao, /^https:\/\/wa\.me\/5522900000002\?text=Oi Loja Longe de Teste, tudo bem\? Confirmando nossa conversa .+, às 15:00, aí na loja\./);
+  await p.screenshot({ path: path.join(saida, "celular-horario.png") });
+  // O serviço entra na frase do jeito que se fala.
+  await horario.getByRole("button", { name: "Pós-reunião" }).click();
+  assert.match(await horario.getByLabel("Mensagem: Pós-reunião").inputValue(), /Qualquer dúvida sobre o sistema de agendamento, estou à disposição/);
+  // Realizado → "Vai pensar" já abre o retorno.
+  await horario.getByRole("button", { name: "Realizado" }).click();
+  await horario.getByRole("button", { name: "Vai pensar" }).click();
+  salvo = await compromissoSalvo();
+  assert.equal(salvo.status, "realizado");
+  assert.equal(salvo.resultado, "pensar");
+  form = p.getByRole("dialog", { name: "Novo horário" });
+  await form.getByRole("button", { name: "Fechar" }).click();
+  await p.waitForTimeout(300);
   assert.ok(await semTransbordo(p));
-  await p.screenshot({ path: path.join(saida, "celular-agenda.png") });
+  await p.screenshot({ path: path.join(saida, "celular-agenda-dia.png") });
+
+  // Exemplos: 5 horários de mentira, sem telefone, e o botão para apagar.
+  await p.getByRole("radio", { name: "Semana" }).click();
+  await p.getByRole("button", { name: "Pôr 5 exemplos" }).click();
+  await p.waitForTimeout(300);
+  const exemplos = (await p.evaluate(() => window.__escritas)).filter((e) => e.colecao === "compromissos" && e.dados.exemplo);
+  assert.equal(exemplos.length, 5);
+  assert.ok(exemplos.every((e) => e.dados.cliente.whatsapp === ""));
+  assert.ok(await semTransbordo(p));
+  await p.screenshot({ path: path.join(saida, "celular-agenda-semana.png") });
+  await p.getByRole("button", { name: "Apagar exemplos" }).click();
+  await p.waitForTimeout(300);
+  assert.equal(
+    (await p.evaluate(() => window.__escritas)).filter((e) => e.colecao === "compromissos" && e.dados.apagado).length,
+    5,
+  );
+  await p.getByRole("button", { name: "Pôr 5 exemplos" }).waitFor();
+
+  // "Não quer mais": a loja vai pra "Não quer" e todos os horários futuros dela são cancelados.
+  await p.getByRole("radio", { name: "Lista" }).click();
+  await p.getByRole("button", { name: new RegExp(`${ANTIGA}.*12:00–12:30 · Visita`) }).click();
+  const desistiu = p.getByRole("dialog", { name: `Horário com ${ANTIGA}` });
+  await desistiu.getByRole("button", { name: "Não quer mais" }).click();
+  await desistiu.getByLabel("Motivo de não querer").fill("achou caro");
+  await desistiu.getByRole("button", { name: "Sim, não quer mais" }).click();
+  await p.waitForTimeout(300);
+  const escritasDesistiu = await p.evaluate(() => window.__escritas);
+  const loja = escritasDesistiu.filter((e) => e.colecao === "leads" && e.id === "w5522900000001").at(-1).dados;
+  assert.equal(loja.status, "nao");
+  assert.equal(loja.obs, "Não quer mais: achou caro");
+  const cancelados = escritasDesistiu.filter(
+    (e) => e.colecao === "compromissos" && e.dados.leadId === "w5522900000001" && e.dados.status === "cancelado",
+  );
+  assert.equal(cancelados.length, 2, "a visita das 12:00 e a das 16:30 saem da agenda");
+  assert.ok(cancelados.every((e) => e.dados.resultado === "naofechou"));
+
+  // Horário que o cliente não confirmou (caso Casarão, 24/11): passar da hora não é "Atrasado".
+  const mudarSemConf = (dados) =>
+    p.evaluate(async (d) => {
+      const db = await window.claude.use("db");
+      const dois = (n) => String(n).padStart(2, "0");
+      const ini = new Date(Date.now() - 30 * 60_000);
+      const base = {
+        leadId: "w5522900000005",
+        tipo: "visita",
+        servico: "ambos",
+        data: `${ini.getFullYear()}-${dois(ini.getMonth() + 1)}-${dois(ini.getDate())}`,
+        hora: `${dois(ini.getHours())}:${dois(ini.getMinutes())}`,
+        duracao: 45,
+        local: "",
+        obs: "",
+        prioridade: "alta",
+        resultado: null,
+        historico: [],
+        avisos: {},
+        criado: new Date().toISOString(),
+      };
+      await db.collection("compromissos").doc("c-semconf").set({ ...base, ...d });
+    }, dados);
+  await mudarSemConf({ status: "agendado" });
+  await p.getByRole("button", { name: "Abrir menu" }).click();
+  await p.getByRole("dialog", { name: "Menu" }).getByRole("link", { name: "Visão geral" }).click();
+  const cartaoHoje = p.getByRole("region", { name: /^Agenda de hoje/ });
+  await cartaoHoje.getByText("Não confirmou").waitFor();
+  assert.doesNotMatch(await cartaoHoje.innerText(), /atrasado/i);
+  // Confirmado e passou da hora: aí sim é atraso.
+  await mudarSemConf({ status: "confirmado" });
+  await cartaoHoje.getByText("Atrasado").waitFor();
+  await mudarSemConf({ status: "agendado" });
+  await cartaoHoje.getByText("Não confirmou").waitFor();
+
+  // Assistente na ficha do horário: "Não respondeu" → o que fazer, a mensagem pronta e a mudança no painel.
+  await cartaoHoje.getByRole("button", { name: /Não confirmou/ }).click();
+  const fichaSem = p.getByRole("dialog", { name: `Horário com ${DENTISTA}` });
+  await fichaSem.getByText("o cliente ainda não confirmou").waitFor();
+  await fichaSem.getByRole("button", { name: "Não respondeu" }).click();
+  await fichaSem.getByRole("button", { name: "Salvar no painel" }).waitFor();
+  const pedidoFicha = (await p.evaluate(() => window.__conversas)).at(-1).entrada;
+  assert.match(pedidoFicha, /FICHA ABERTA/);
+  assert.match(pedidoFicha, /c-semconf/);
+  assert.match(pedidoFicha, /AINDA NÃO CONFIRMOU/);
+  const zapFicha = decodeURIComponent(
+    await fichaSem.getByRole("link", { name: "Mandar essa mensagem" }).getAttribute("href"),
+  );
+  assert.match(zapFicha, /^https:\/\/wa\.me\/5522900000005\?text=Oi, tudo bem\? Conseguiu ver minha mensagem sobre a visita\?$/);
+  await fichaSem.getByRole("region", { name: "Assistente do horário" }).scrollIntoViewIfNeeded();
+  await p.screenshot({ path: path.join(saida, "celular-horario-assistente.png") });
+  await fichaSem.getByRole("button", { name: "Salvar no painel" }).click();
+  await p.waitForTimeout(300);
+  const escritasFicha = await p.evaluate(() => window.__escritas);
+  assert.equal(
+    escritasFicha.filter((e) => e.colecao === "compromissos" && e.id === "c-semconf").at(-1).dados.status,
+    "cancelado",
+  );
+  const lojaFicha = escritasFicha.filter((e) => e.colecao === "leads" && e.id === "w5522900000005").at(-1).dados;
+  assert.equal(lojaFicha.obs, "Cliente não confirmou a visita.");
+  assert.equal(lojaFicha.compromisso.oque, "Cobrar de leve a resposta");
+  await fichaSem.getByText("Salvo no painel").waitFor();
+  await fichaSem.getByRole("button", { name: "Fechar" }).first().click();
+  await p.waitForTimeout(300);
 
   // Funil: o fluxo mostra as etapas e tocar numa leva à lista filtrada.
   await p.getByRole("button", { name: "Abrir menu" }).click();

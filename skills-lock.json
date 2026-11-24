@@ -1,6 +1,13 @@
 {
   "version": 2,
   "skills": {
+    "agent-browser": {
+      "source": "vercel-labs/agent-browser",
+      "commit": "d2dfc782ccdd79d25a9b4f0acced9321789cecb8",
+      "sourceType": "github",
+      "skillPath": "skills/agent-browser/SKILL.md",
+      "computedHash": "a0dfac7503f69bcf529b2660fc79964064c4f179eb65695904ddc45fc0d99d20"
+    },
     "apple-design": {
       "source": "emilkowalski/skills",
       "sourceType": "github",
@@ -114,6 +121,13 @@
       "sourceType": "github",
       "skillPath": "plugins/claude-code-setup/skills/claude-automation-recommender/SKILL.md",
       "computedHash": "77eacdf8f94c87706f3d840ddd94aa246a0d9b83201d6249dce2d7584112afe5"
+    },
+    "codebase-design": {
+      "source": "mattpocock/skills",
+      "commit": "abeeaf95660ba9e8b7c753eb38f441ca707a8823",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/codebase-design/SKILL.md",
+      "computedHash": "d40f025dc1b0f2020663260f38f2bcb8d6ed3523afb11e5fda624b01238677e8"
     },
     "copywriting": {
       "source": "coreyhaines31/marketingskills",
@@ -265,6 +279,13 @@
       "skillPath": "skills/ig-viral/SKILL.md",
       "computedHash": "7ba57f5ddaaff8d8d58008e233f2f0d354eea848bb68d6d2fbe2ee0bf1f2f332",
       "installMode": "copy"
+    },
+    "improve-codebase-architecture": {
+      "source": "mattpocock/skills",
+      "commit": "abeeaf95660ba9e8b7c753eb38f441ca707a8823",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/improve-codebase-architecture/SKILL.md",
+      "computedHash": "f0820b18426a7d9a6c823a890988ba0ac70bf0fd596d30d7ef07c88558728c23"
     },
     "instagram-marketing": {
       "source": "sergebulaev/instagram-skills",
@@ -428,6 +449,13 @@
       "skillPath": "skills/systematic-debugging/SKILL.md",
       "computedHash": "79ff0583175346e39431b0dc713b223edd1bd7a7ea2b6c8b78b2fb9a3fed6782"
     },
+    "tdd": {
+      "source": "mattpocock/skills",
+      "commit": "abeeaf95660ba9e8b7c753eb38f441ca707a8823",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/tdd/SKILL.md",
+      "computedHash": "e3e0f78ff1c2d52ffefa0378baa1e80e129d359288cf9a56f4e59afcd2aac86c"
+    },
     "test-driven-development": {
       "source": "obra/superpowers",
       "sourceType": "github",
@@ -451,6 +479,13 @@
       "sourceType": "github",
       "skillPath": "skills/using-superpowers/SKILL.md",
       "computedHash": "6a9104fac7e16c3cec2bc118943aefd331cac35b4cfabd427cea4dc16337c6a5"
+    },
+    "vercel-react-best-practices": {
+      "source": "vercel-labs/agent-skills",
+      "commit": "5a37a6329fbad3666c3207392a6a7c0110e92efb",
+      "sourceType": "github",
+      "skillPath": "skills/react-best-practices/SKILL.md",
+      "computedHash": "7991ed4fbecdac23f47c1a40c243e00a212a9e7f3604db93959b3ae11dffe299"
     },
     "verification-before-completion": {
       "source": "obra/superpowers",

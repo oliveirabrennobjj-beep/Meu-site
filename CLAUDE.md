@@ -28,9 +28,11 @@ O Brenno instalou as skills para serem usadas em toda conversa. Regras:
 | Instagram (legenda, carrossel, hashtag, plano de Reels) | `instagram-marketing`, `copywriting` + a `ig-*` do caso: `ig-reel` (roteiro e gancho), `ig-caption`, `ig-carousel`, `ig-story`, `ig-plan` (semana), `ig-profile` (bio), `ig-viral` (o que está dando certo no nicho), `ig-audit`, `ig-repurpose`, `ig-comment`, `ig-reply`, `ig-dm`, `ig-human` (tirar cara de IA) |
 | SEO, aparecer no Google | `seo-audit` |
 | Erro, bug, algo quebrado | `systematic-debugging`, `investigate-first` |
-| Mudança grande em código | `writing-plans`, `executing-plans`, `lean-build` |
+| Mudança grande em código | `writing-plans`, `executing-plans`, `lean-build`, `tdd` (teste antes de fazer) |
 | Mexer em código existente | `surgical-patch` ou `safe-refactor` |
-| Testar site no navegador | `webapp-testing` |
+| Código React (painel, sites em React) | `vercel-react-best-practices` |
+| Projeto ficando grande ou confuso | `improve-codebase-architecture` (usa `codebase-design`) |
+| Testar site no navegador | `webapp-testing`, `agent-browser` (clicar, preencher e conferir a página pelo navegador) |
 | Word, PDF, Excel | `docx`, `pdf`, `xlsx` |
 | Instalar skill ou plugin | `find-skills`; ler o código antes de instalar |
 | Commit | `caveman-commit` |

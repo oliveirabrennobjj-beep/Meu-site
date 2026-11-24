@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import {
   ArrowRight,
   BadgeCheck,
@@ -6,9 +6,11 @@ import {
   CircleHelp,
   TriangleAlert,
   Copy,
+  UserRound,
   ExternalLink,
   Handshake,
   Instagram,
+  Pencil,
   LayoutDashboard,
   MapPin,
   MessageCircle,
@@ -24,6 +26,7 @@ import {
   IconButton,
   InitialsAvatar,
   buttonClass,
+  fieldClass,
 } from "@/components/ui/app-dashboard-shell-utils/app-block-kit";
 import { SegmentedControl, type SegmentOption } from "@/components/ui/dashboard-parts";
 import { cn } from "@/lib/utils";
@@ -35,15 +38,21 @@ import {
   MOTIVO_TIRADA,
   RAMOS,
   RAMOS_ESCOLHA,
+  SUBNICHOS,
   STATUS,
   buscaInstagram,
   chaveTexto,
   cidadeDe,
   dataEnvio,
+  donoConhecido,
   ehCasimiro,
   enderecoCurto,
   podeVisitar,
   situacaoZap,
+  lerNumero,
+  numeroDaLoja,
+  numeroVisivel,
+  zapDoLink,
   ramoDe,
   recebeuPedidoDeVisita,
   textoCorrecao,
@@ -59,6 +68,7 @@ import {
   ofertaInicial,
   proximaOferta,
   paginaDe,
+  paraODono,
   statusDe,
   textoGostou,
   textoMensagem,
@@ -67,40 +77,145 @@ import {
   type Lead,
   type MotivoTirada,
   type Oferta,
-  type RamoId,
   type Status,
   type Textos,
 } from "./leads";
 
-/** O que a página pública do WhatsApp Business disse sobre o número (ver `zap` em leads.ts). */
-function ConferenciaZap({ lead }: { lead: Lead }) {
-  const situacao = situacaoZap(lead);
-  if (!situacao) return null;
-  const nome = lead.zap?.nome ?? "";
-  const [cor, fundo, Icone, texto] =
-    situacao === "conferido"
-      ? (["var(--blk-success)", "var(--blk-success-soft)", BadgeCheck, `WhatsApp conferido: a conta se chama "${nome}".`] as const)
-      : situacao === "outroNome"
-        ? ([
-            "var(--blk-warning)",
-            "var(--blk-warning-soft)",
-            TriangleAlert,
-            `No WhatsApp esse número aparece como "${nome}". Pode ser de outra pessoa: confira no Instagram antes de mandar.`,
-          ] as const)
-        : ([
-            "var(--bjork-text-muted)",
-            "var(--bjork-surface)",
-            CircleHelp,
-            "Esse número não tem WhatsApp Business. Pode ser WhatsApp comum ou número errado: se não entregar, veja o Instagram.",
-          ] as const);
+/** De onde veio o contato do dono: cadastro público do CNPJ (ver `dono` em leads.ts). */
+function DonoDoCnpj({ lead }: { lead: Lead }) {
+  const dono = lead.dono;
+  if (!dono) return null;
+  const numero = dono.whatsapp ? dono.whatsapp.slice(2).replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3") : "";
   return (
-    <p
-      className="flex items-start gap-2 rounded-[10px] px-3 py-2 text-[12.5px] leading-snug"
-      style={{ background: fundo, color: cor }}
-    >
-      <Icone aria-hidden="true" className="mt-px size-4 shrink-0" />
-      <span className="[overflow-wrap:anywhere]">{texto}</span>
+    <p className="flex items-start gap-2 rounded-[12px] border border-[color:var(--bjork-border)] bg-[var(--bjork-accent-soft)] p-3 text-[13px] leading-snug">
+      <UserRound aria-hidden="true" className="mt-px size-4 shrink-0" />
+      <span>
+        {dono.whatsapp
+          ? dono.nome
+            ? `Celular do dono, ${dono.nome}, no cadastro do CNPJ: ${numero}.`
+            : `Outro celular no cadastro do CNPJ da loja: ${numero}. Costuma ser do dono ou do responsável.`
+          : `Esse WhatsApp é o do dono${dono.nome ? ` (${dono.nome})` : ""} no cadastro do CNPJ.`}
+        <span className="block text-[12px] text-[color:var(--bjork-text-medium)]">
+          {dono.whatsapp ? "Pode estar desatualizado: se não responder, mande pra loja." : "Pode falar direto com ele por aqui."}
+        </span>
+      </span>
     </p>
+  );
+}
+
+/** O que a página pública do WhatsApp Business disse sobre o número (ver `zap` em leads.ts). */
+function ConferenciaZap({
+  lead,
+  onSalvar,
+  avisar,
+}: {
+  lead: Lead;
+  onSalvar: (id: string, mudanca: Partial<Lead>) => void;
+  avisar: (texto: string) => void;
+}) {
+  const [corrigindo, setCorrigindo] = useState(false);
+  const [digitado, setDigitado] = useState("");
+  const situacao = situacaoZap(lead);
+  const numero = numeroVisivel(numeroDaLoja(lead));
+  const nome = lead.zap?.nome ?? "";
+  const duvida = situacao === "outroNome" || situacao === "semBusiness";
+  const instagram = instagramDe(lead);
+  const [cor, fundo, Icone, texto] =
+    situacao === "corrigido"
+      ? (["var(--blk-success)", "var(--blk-success-soft)", BadgeCheck, `Número corrigido por você: ${numero}.`] as const)
+      : situacao === "conferido"
+        ? (["var(--blk-success)", "var(--blk-success-soft)", BadgeCheck, `WhatsApp conferido: a conta se chama "${nome}".`] as const)
+        : situacao === "confirmado"
+          ? ([
+              "var(--blk-success)",
+              "var(--blk-success-soft)",
+              BadgeCheck,
+              lead.whatsappInsta
+                ? `${numero} é o WhatsApp que a loja põe no Instagram.`
+                : zapDoLink(lead)
+                  ? `${numero} é o WhatsApp que a própria loja põe na ficha do Google.`
+                  : `${numero} está no cadastro do CNPJ da loja.`,
+            ] as const)
+          : situacao === "outroNome"
+            ? ([
+                "var(--blk-warning)",
+                "var(--blk-warning-soft)",
+                TriangleAlert,
+                `Cuidado: no WhatsApp, ${numero} aparece como "${nome}". Pode ser de outra pessoa. Confira no Instagram antes de mandar.`,
+              ] as const)
+            : ([
+                "var(--blk-warning)",
+                "var(--blk-warning-soft)",
+                CircleHelp,
+                `Número não confirmado: ${numero} veio do Google e não tem WhatsApp Business. Pode ser de outra pessoa ou nem ter WhatsApp. Se der "convidar para o WhatsApp", pegue o certo no Instagram.`,
+              ] as const);
+  if (!situacao) return null;
+  const salvar = () => {
+    const n = lerNumero(digitado);
+    if (!n) return avisar("Número inválido: coloque o DDD (ex.: 22 99999-0000)");
+    onSalvar(lead.id, { whatsappCerto: n });
+    avisar(`${lead.nome}: agora as mensagens vão para ${numeroVisivel(n)}`);
+    setCorrigindo(false);
+    setDigitado("");
+  };
+  return (
+    <div className="flex flex-col gap-2 rounded-[10px] px-3 py-2" style={{ background: fundo }}>
+      <p className="flex items-start gap-2 text-[12.5px] leading-snug" style={{ color: cor }}>
+        <Icone aria-hidden="true" className="mt-px size-4 shrink-0" />
+        <span className="[overflow-wrap:anywhere]">{texto}</span>
+      </p>
+      {(duvida || situacao === "corrigido") && !corrigindo && (
+        <div className="flex flex-wrap gap-2">
+          {duvida && (
+            <a
+              href={instagram?.url ?? buscaInstagram(lead)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={buttonClass("secondary", "sm")}
+            >
+              {instagram ? <Instagram aria-hidden="true" /> : <Search aria-hidden="true" />}
+              {instagram ? "Ver no Instagram" : "Buscar Instagram"}
+            </a>
+          )}
+          <BlockButton variant="secondary" size="sm" onClick={() => setCorrigindo(true)}>
+            <Pencil aria-hidden="true" />
+            {situacao === "corrigido" ? "Trocar número" : "Corrigir número"}
+          </BlockButton>
+          {situacao === "corrigido" && (
+            <BlockButton
+              variant="ghost"
+              size="sm"
+              onClick={() => {
+                onSalvar(lead.id, { whatsappCerto: null });
+                avisar(`${lead.nome}: voltou para o número do Google`);
+              }}
+            >
+              Voltar ao do Google
+            </BlockButton>
+          )}
+        </div>
+      )}
+      {corrigindo && (
+        <div className="flex flex-wrap gap-2">
+          <input
+            autoFocus
+            inputMode="tel"
+            value={digitado}
+            onChange={(e) => setDigitado(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && salvar()}
+            placeholder="WhatsApp certo, com DDD"
+            aria-label="WhatsApp certo da loja, com DDD"
+            className={cn(fieldClass, "h-9 min-w-0 flex-1 text-[13.5px]")}
+          />
+          <BlockButton size="sm" onClick={salvar}>
+            Salvar
+          </BlockButton>
+          <BlockButton variant="ghost" size="sm" onClick={() => setCorrigindo(false)}>
+            Cancelar
+          </BlockButton>
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -164,6 +279,7 @@ export function FichaLead({
   onSalvar,
   onAbrir,
   avisar,
+  agenda,
 }: {
   lead: Lead | null;
   textos: Textos;
@@ -173,6 +289,8 @@ export function FichaLead({
   onSalvar: (id: string, mudanca: Partial<Lead>) => void;
   onAbrir: (lead: Lead) => void;
   avisar: (texto: string) => void;
+  /** Seção da agenda dessa loja (próximo horário, agendar, pedir horário). */
+  agenda?: (lead: Lead) => ReactNode;
 }) {
   // Guarda o último comércio para o conteúdo não sumir enquanto a ficha desce.
   const [mostrado, setMostrado] = useState(lead);
@@ -198,6 +316,7 @@ export function FichaLead({
           onSalvar={onSalvar}
           onAbrir={onAbrir}
           avisar={avisar}
+          agenda={agenda}
         />
       )}
     </BlockDrawer>
@@ -212,6 +331,7 @@ function Conteudo({
   onSalvar,
   onAbrir,
   avisar,
+  agenda,
 }: {
   lead: Lead;
   textos: Textos;
@@ -220,6 +340,7 @@ function Conteudo({
   onSalvar: (id: string, mudanca: Partial<Lead>) => void;
   onAbrir: (lead: Lead) => void;
   avisar: (texto: string) => void;
+  agenda?: (lead: Lead) => ReactNode;
 }) {
   const status = statusDe(lead);
   const novo = status === "novo";
@@ -241,11 +362,15 @@ function Conteudo({
   const chave = chaveTexto(lead, oferta);
   const continuacao =
     chave === "depoisPlaca" || chave === "depoisSite" || chave === "depoisDono" || chave === "depoisAgenda";
-  const mensagem = textoMensagem(textos, lead, oferta);
+  const textoLoja = textoMensagem(textos, lead, oferta);
+  // Com o dono conhecido (celular dele ou WhatsApp da loja que é dele), a mensagem já chama pelo nome.
+  const comDono = donoConhecido(lead);
+  const celularDono = lead.dono?.whatsapp ?? "";
+  const mensagem = comDono ? paraODono(textoLoja, lead) : textoLoja;
   const opcoes: SegmentOption<Oferta>[] = [
     // Fica sempre na lista: se o WhatsApp não abrir, dá para voltar nela e mandar de novo.
     ambasEnviada ? { id: "ambas", label: "AS DUAS ✓", long: "As duas: mensagem já enviada" } : AS_DUAS,
-    ...(["placa", "site", "dono"] as const).map(opcao),
+    ...(["placa", "site", "dono"] as const).filter((id) => id !== "dono" || !comDono || dataEnvio(lead, "dono")).map(opcao),
     ...(agendaOk ? [opcao("agenda")] : []),
   ];
   // Loja de distrito ou de fora: só WhatsApp, com site ou sistema.
@@ -270,7 +395,7 @@ function Conteudo({
     }
   };
 
-  const registrarContato = (canal: "whatsapp" | "pessoal") => {
+  const registrarContato = (canal: "whatsapp" | "pessoal", para?: "dono" | "loja") => {
     const agora = new Date().toISOString();
     const enviados: Partial<Record<Envio, string>> = {};
     for (const id of ENVIOS) {
@@ -286,6 +411,7 @@ function Conteudo({
       canal,
       enviados,
       ...(daqui ? { pediuVisita: true } : {}),
+      ...(para && celularDono ? { enviadoPara: para } : {}),
     });
     // Já deixa escolhida a próxima mensagem (a oferta que falta, depois o pedido para falar com o dono).
     setOferta(proximaOferta(lead, oferta));
@@ -302,15 +428,21 @@ function Conteudo({
   };
 
   const ramo = ramoDe(lead);
-  const mudarRamo = (id: RamoId) => {
+  /** "ramo" escolhido na ficha (sub-nicho volta a ser detectado) ou, na prévia, "ramo/sub-nicho" e "ramo" puro (estilo geral). */
+  const mudarRamo = (valor: string, daPrevia = false) => {
+    const [id, subId] = valor.split("/");
     const novoRamo = RAMOS.find((r) => r.id === id);
-    if (!novoRamo || novoRamo.id === ramo.id) return;
+    if (!novoRamo) return;
+    const subnicho = subId ?? (daPrevia ? "" : null);
+    if (novoRamo.id === ramo.id && (lead.subnicho ?? null) === subnicho) return;
     onSalvar(lead.id, {
       ramo: novoRamo.id,
+      subnicho,
       // O tipo do Google fica quando já é desse ramo (ex.: "Muay Thai" numa academia de luta).
       ...(novoRamo.id === "geral" || novoRamo.tipo.test(lead.tipo ?? "") ? {} : { tipo: novoRamo.nome }),
     });
-    avisar(`${lead.nome}: ${(novoRamo.opcao ?? novoRamo.nome).toLowerCase()}`);
+    const sub = SUBNICHOS.find((x) => x.id === subId);
+    avisar(`${lead.nome}: ${(sub?.nome ?? novoRamo.opcao ?? novoRamo.nome).toLowerCase()}`);
   };
 
   const tirada = motivoTirada(lead);
@@ -376,7 +508,7 @@ function Conteudo({
           )}
         </dl>
 
-        <ConferenciaZap lead={lead} />
+        <ConferenciaZap lead={lead} onSalvar={onSalvar} avisar={avisar} />
 
         {tirada && (
           <div className="flex flex-col gap-2 rounded-[12px] border border-[color:var(--bjork-border-strong)] bg-[var(--bjork-surface)] p-3">
@@ -403,7 +535,7 @@ function Conteudo({
           Mostrar demonstração do site
         </BlockButton>
         {demo && (
-          <Demonstracao lead={lead} mensagem={textoPrevia(lead)} onFechar={() => setDemo(false)} onRamo={mudarRamo} />
+          <Demonstracao lead={lead} mensagem={textoPrevia(lead)} onFechar={() => setDemo(false)} onRamo={(v) => mudarRamo(v, true)} />
         )}
         {agendaOk && (
           <BlockButton variant="secondary" size="lg" className="w-full" onClick={() => setVerSistema(true)}>
@@ -427,7 +559,7 @@ function Conteudo({
           </span>
           <select
             value={ramo.id}
-            onChange={(e) => mudarRamo(e.target.value as RamoId)}
+            onChange={(e) => mudarRamo(e.target.value)}
             className="h-10 min-w-0 max-w-full cursor-pointer rounded-[10px] border border-[color:var(--bjork-border-strong)] bg-[var(--bjork-field)] px-3 text-[13.5px] font-medium text-[color:var(--bjork-text)] focus-visible:border-[color:var(--bjork-accent)] focus-visible:outline-none"
           >
             {RAMOS_ESCOLHA.map((r) => (
@@ -531,17 +663,32 @@ function Conteudo({
                 {oferta === "ambas" ? "Mensagem das duas ofertas enviada" : OFERTA[oferta].feito} {quando(enviada)}.
               </p>
             )}
+            {comDono && <DonoDoCnpj lead={lead} />}
+            {celularDono && (
+              <a
+                href={linkWhatsApp(lead, mensagem, celularDono)}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => window.setTimeout(() => registrarContato("whatsapp", "dono"), 0)}
+                className={buttonClass(enviada ? "secondary" : "primary", "lg", "w-full")}
+              >
+                <Send aria-hidden="true" />
+                {lead.dono?.nome
+                  ? enviada ? "Enviar de novo pro dono" : `Enviar pro dono (${lead.dono.nome})`
+                  : enviada ? "Enviar de novo pro celular do CNPJ" : "Enviar pro celular do CNPJ"}
+              </a>
+            )}
             <a
-              href={linkWhatsApp(lead, mensagem)}
+              href={linkWhatsApp(lead, celularDono ? textoLoja : mensagem)}
               target="_blank"
               rel="noopener noreferrer"
               // Registrar troca a mensagem da tela, e com ela o endereço deste link. Fica para depois
               // do toque: assim o WhatsApp abre com o texto que o Brenno viu, não com o próximo.
-              onClick={() => window.setTimeout(() => registrarContato("whatsapp"), 0)}
-              className={buttonClass(enviada ? "secondary" : "primary", "lg", "w-full")}
+              onClick={() => window.setTimeout(() => registrarContato("whatsapp", "loja"), 0)}
+              className={buttonClass(enviada || celularDono ? "secondary" : "primary", "lg", "w-full")}
             >
               <Send aria-hidden="true" />
-              {enviada ? "Enviar de novo" : "Enviar no WhatsApp"}
+              {celularDono ? "Mandar pra loja" : enviada ? "Enviar de novo" : "Enviar no WhatsApp"}
             </a>
             <div className="flex flex-wrap gap-2">
               {daqui && !enviada && (
@@ -631,6 +778,8 @@ function Conteudo({
           </fieldset>
         )}
 
+        {agenda?.(lead)}
+
         <Anotar lead={lead} onSalvar={onSalvar} avisar={avisar} />
       </div>
     </>
@@ -667,7 +816,7 @@ function RoteiroPresencial({ placa }: { placa: boolean }) {
 function SobreALoja({ lead }: { lead: Lead }) {
   const instagram = instagramDe(lead);
   const pagina = paginaDe(lead);
-  const temWhatsApp = /\d/.test(lead.whatsapp);
+  const temWhatsApp = /\d/.test(numeroDaLoja(lead));
   const outro = (lead.outroWhatsapp ?? "").replace(/\D/g, "");
   const quantos = 2 + (pagina ? 1 : 0) + (temWhatsApp ? 1 : 0) + (outro ? 1 : 0);
   const atalho = buttonClass("secondary", "md", "min-w-0 px-2.5 text-[13px]");

@@ -26,7 +26,16 @@ fi
 # Skill graphify: instala e monta o mapa do código sem atrasar o começo da sessão.
 nohup "$CLAUDE_PROJECT_DIR/.claude/hooks/graphify-mapa.sh" > "$VENV/graphify-mapa.log" 2>&1 < /dev/null &
 
+# Skill agent-browser: o programa dela, usando o Chromium que já vem na nuvem (sem baixar outro).
+if ! command -v agent-browser > /dev/null 2>&1; then
+  npm i -g --silent agent-browser > /dev/null 2>&1 || echo "Aviso: não instalou o agent-browser." >&2
+fi
+
 if [ -n "${CLAUDE_ENV_FILE:-}" ]; then
   echo "export VIRTUAL_ENV=\"$VENV\"" >> "$CLAUDE_ENV_FILE"
   echo "export PATH=\"$VENV/bin:\$PATH\"" >> "$CLAUDE_ENV_FILE"
+  if [ -x /opt/pw-browsers/chromium ]; then
+    echo "export AGENT_BROWSER_EXECUTABLE_PATH=/opt/pw-browsers/chromium" >> "$CLAUDE_ENV_FILE"
+    echo "export AGENT_BROWSER_ARGS=--no-sandbox" >> "$CLAUDE_ENV_FILE"
+  fi
 fi

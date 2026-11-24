@@ -256,12 +256,12 @@ export function TabelaLeads({
                     </button>
                     <p className="truncate text-[11.5px] leading-tight text-[color:var(--bjork-text-muted)]">
                       {tipoDe(lead)}
-                      {situacaoZap(lead) === "conferido" && (
+                      {["conferido", "confirmado", "corrigido"].includes(situacaoZap(lead) ?? "") && (
                         <span className="font-medium" style={{ color: "var(--blk-success)" }}>
                           {" "}· WhatsApp ✓
                         </span>
                       )}
-                      {situacaoZap(lead) === "outroNome" && (
+                      {(situacaoZap(lead) === "outroNome" || situacaoZap(lead) === "semBusiness") && (
                         <span className="font-medium" style={{ color: "var(--blk-warning)" }}>
                           {" "}· conferir número
                         </span>
