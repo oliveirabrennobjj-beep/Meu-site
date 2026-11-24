@@ -1,6 +1,6 @@
 # Best Bull SteakHouse (prévia de site)
 
-Prévia feita pela BN Digital, no estilo da referência do Brenno (preto quente, dourado, brasas), para a Best Bull SteakHouse, hamburgueria artesanal de Casimiro de Abreu. Montada a partir do Instagram da loja (@bestbull_steakhouse): logo, nome e o que ela mostra (lanches, milk shake, acompanhamentos, delivery, Espaço Kids). Serve de base: se o dono topar, é só preencher o `config.js`.
+Prévia feita pela BN Digital, no estilo da referência do Brenno (preto, laranja, título gigante, cantos retos), para a Best Bull SteakHouse, hamburgueria artesanal de Casimiro de Abreu. Montada a partir do Instagram da loja (@bestbull_steakhouse): logo, nome e o que ela mostra (lanches, milk shake, acompanhamentos, delivery, Espaço Kids). Serve de base: se o dono topar, é só preencher o `config.js`.
 
 Depois do merge na `main`, abre em: https://oliveirabrennobjj-beep.github.io/Meu-site/best-bull/
 
