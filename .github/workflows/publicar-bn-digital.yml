@@ -6,6 +6,9 @@
 #   Construtora (construtora)     → https://oliveirabrennobjj-beep.github.io/Meu-site/construtora/
 #   Carvão (carvao)              → https://oliveirabrennobjj-beep.github.io/Meu-site/carvao/
 #   Prospecção (bn-digital/prospeccao/index.html) → https://oliveirabrennobjj-beep.github.io/Meu-site/prospeccao/
+#   Portfólio (portfolio)        → https://oliveirabrennobjj-beep.github.io/Meu-site/portfolio/
+#   Barbearia Vértice (index.html + assets da raiz) → https://oliveirabrennobjj-beep.github.io/Meu-site/barbearia-vertice/
+#   Demais sites do portfólio: mesma pasta no endereço (ex.: /padaria/, /demos/orvel-abysse/, /your-peel/)
 # Requer, uma vez: Settings → Pages → Build and deployment → Source: "GitHub Actions".
 name: Publicar sites (BN Digital, BR Team e Raio-X)
 
@@ -22,6 +25,19 @@ on:
       - "barbearia-maya/**"
       - "carvao/**"
       - "bn-digital/prospeccao/index.html"
+      - "portfolio/**"
+      - "padaria/**"
+      - "hortifruti/**"
+      - "hamburgueria-modelo/**"
+      - "bela-cafeteria/**"
+      - "otica-ximenes/**"
+      - "maison-valere/**"
+      - "x-coco-lanches/**"
+      - "brasa-77/**"
+      - "demos/**"
+      - "your-peel/dist/**"
+      - "index.html"
+      - "assets/**"
       - ".github/workflows/publicar-bn-digital.yml"
   workflow_dispatch:
 
@@ -68,6 +84,18 @@ jobs:
           rm -f _site/construtora/README.md _site/construtora/assets/video/LEIA.md
           mkdir -p _site/prospeccao
           cp bn-digital/prospeccao/index.html _site/prospeccao/
+          # Portfólio e os sites que ele mostra
+          for p in portfolio padaria hortifruti hamburgueria-modelo bela-cafeteria otica-ximenes maison-valere x-coco-lanches brasa-77 demos; do
+            mkdir -p "_site/$p"
+            cp -r "$p/." "_site/$p/"
+          done
+          rm -rf _site/hortifruti/docs
+          mkdir -p _site/barbearia-vertice
+          cp index.html _site/barbearia-vertice/
+          cp -r assets _site/barbearia-vertice/
+          mkdir -p _site/your-peel
+          cp -r your-peel/dist/. _site/your-peel/
+          find _site -name "*.md" -delete
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
