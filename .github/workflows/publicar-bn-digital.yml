@@ -23,6 +23,7 @@ on:
       - "raiox-das-coisas/**"
       - "construtora/**"
       - "barbearia-modelo/**"
+      - "deposito-do-gordinho/**"
       - "barbearia-maya/**"
       - "carvao/**"
       - "best-bull/**"
@@ -74,6 +75,7 @@ jobs:
           rm -f _site/raiox/README.md
           mkdir -p _site/barbearia-modelo
           cp -r barbearia-modelo/. _site/barbearia-modelo/
+          mkdir -p _site/deposito-do-gordinho && cp -r deposito-do-gordinho/. _site/deposito-do-gordinho/
           rm -f _site/barbearia-modelo/README.md
           mkdir -p _site/barbearia-maya
           cp -r barbearia-maya/. _site/barbearia-maya/
