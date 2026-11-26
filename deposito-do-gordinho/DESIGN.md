@@ -1,25 +1,24 @@
-# DESIGN: Depósito do Gordinho
+# DESIGN: Depósito do Gordinho (v2, estilo loja de bebidas)
 
-## Direção
-Preto e amarelo do logo, com fundo claro "gelo" nas seções de leitura. A cara é de depósito de bairro bem cuidado, não de adega de luxo.
+Referências do Brenno: Winesto e Winestyle (e-commerce de bebidas). Adaptado a depósito de bairro que vende pelo WhatsApp.
 
-## Cores
+## Cores (do logo)
 | Nome | Hex | Uso |
 |---|---|---|
-| breu | #14110b | topo, rail, avaliações, rodapé |
-| ouro | #f4c21a | aba ativa, destaques, botão da entrega |
-| gelo | #eef3f2 | fundo claro das seções |
-| tinta | #17150f | texto |
-| zap | #0e7a3d | todos os botões de pedir (verde de WhatsApp, escuro para contraste AA) |
+| carvão | #141210 | topo, banner, loja, rodapé, botão Pedir |
+| dourado | #e0b03a | botões principais, títulos em fundo escuro, ícones |
+| dourado texto | #7d5e0c | dourado em fundo claro (contraste AA) |
+| verde mascote | #8db63c | só no ponto "Aberto agora" |
+| vinho | #4a191a | aviso do topo, slide 2, promo, selo de desconto |
+| creme / névoa | #f7f5f0 / #eeece6 | áreas de produto e fundo da foto |
 
-## Fontes
-- Títulos: Archivo condensado (largura 72 a 78%), peso 800 a 900. Lembra letreiro.
-- Texto: Atkinson Hyperlegible 19 px. Feita para baixa visão; boa para o público idoso.
-
-## Detalhe assinatura
-A geladeira: porta de vidro escura com luz de LED no topo, garrafas numa prateleira que curva em perspectiva (referência: prateleira de fitas VHS e arara de roupas que o Brenno mandou). A bebida escolhida vem para frente; as outras recuam e giram. Barra lateral de prateleiras (referência: painel com barra lateral).
+## Tipografia
+- Títulos: Marcellus em maiúsculas, espaçado (serifa fina, cara de adega).
+- Texto: Atkinson Hyperlegible 18 a 19 px (legível para idoso).
 
 ## Regras
-- Um botão verde por ação de pedir; nada pisca, nada roda sozinho.
-- Toque mínimo 56 px; setas de 60 px.
-- Garrafas desenhadas em SVG com tamanho proporcional ao real (lata menor que garrafa de 2 L).
+- Cantos de 6 px em tudo; sombra só no hover do card.
+- Sem gradiente, sem brilho, sem emoji de enfeite. Ícones de linha dourados.
+- Animação só ao rolar (aparece 14 px) e ao passar o mouse. O carrossel passa a cada 7 s e para quando a pessoa mexe.
+- Todo conteúdo está no HTML (montar.mjs); o JS só filtra, busca e calcula aberto/fechado.
+- Mascote: card de entrega, citação da loja, rodapé.
