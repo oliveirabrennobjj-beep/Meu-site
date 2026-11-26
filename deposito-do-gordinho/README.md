@@ -8,17 +8,18 @@ Abra `index.html` no navegador. Não precisa instalar nada.
 ## Onde mudar
 - **Textos, telefone, horário, avaliações e produtos:** `assets/js/config.js`.
 - **Cores e fontes:** topo de `assets/css/styles.css`.
-- **Garrafas da geladeira:** são desenhadas pelo `main.js` a partir de `tipo`, `cor` e `rotulo` de cada produto. Quando chegarem fotos reais, dá para trocar o desenho pela foto.
+- **Fotos dos produtos:** `assets/img/produtos/*.webp`, sem fundo. Produto novo: foto em fundo branco, recorte com `convert foto.jpg -fuzz 6% -fill none -draw "color 0,0 floodfill" -trim produto.webp` e uma linha no `config.js` (`img` e `cm`, a altura real).
 
 ## O que tem
-1. Topo com foto, frase e botão do WhatsApp.
-2. **A geladeira do Gordinho:** barra lateral com 5 prateleiras (Cervejas, Destilados, Vinhos e drinks, Sem álcool, Doces e petiscos). Setas grandes, arrastar com o dedo e botão "Pedir esta" que já manda o nome da bebida no WhatsApp.
-3. Lista de todas as bebidas (para quem prefere ler).
-4. Como pedir em 3 passos, com ligação para quem não usa WhatsApp.
-5. Faixa de entrega.
-6. A loja, desde 2019, com fotos reais do Google.
-7. 6 avaliações reais do Google (nota 4,7).
-8. Endereço, horário, pagamento, barra fixa de WhatsApp e Ligar no celular.
+1. Topo com 3 garrafas reais que sobem, flutuam e seguem o mouse.
+2. Círculos de categoria (levam direto para a vitrine).
+3. **Vitrine do Gordinho:** barra lateral com 5 tipos, garrafas em fotos reais no tamanho certo, curva em 3D, arrasta com o dedo, setas grandes, bolinhas e "Pedir esta" com o nome da bebida no WhatsApp.
+4. Duas faixas (cerveja gelada, entrega) com zoom ao passar o mouse.
+5. Grade de todos os produtos com filtro e botão "Pedir".
+6. Como pedir em 3 passos, a loja (fotos reais do Google), avaliações reais correndo em faixa, endereço e horário.
+7. Barra fixa de WhatsApp e Ligar no celular.
+
+Movimento: entrada do topo, coisas aparecendo ao rolar, brilho nos botões verdes, garrafa que balança ao ser escolhida, nota do Google contando até 4,7. Tudo em CSS e JS leve (sem biblioteca), e tudo para quando o celular pede "reduzir movimento".
 
 Pensado para idoso: letra de 19 px, fonte Atkinson Hyperlegible (feita para baixa visão), botões de 56 a 62 px de altura, alto contraste, nada se mexe sozinho.
 
@@ -29,6 +30,7 @@ Pensado para idoso: letra de 19 px, fonte Atkinson Hyperlegible (feita para baix
 - [ ] Bairros atendidos e taxa de entrega.
 - [ ] Aceita dinheiro? Hoje o site diz Pix e cartão.
 - [ ] Logo em alta (o atual foi recortado do print do WhatsApp).
-- [ ] Fotos reais das bebidas (as 3 fotos grandes são do Unsplash: trocar por fotos da loja).
+- [ ] Fotos de produto são de divulgação das marcas (tiradas de lojas online). Para o site oficial: o dono manda as fotos dele ou confirmamos o uso. As 3 fotos de ambiente são do Unsplash.
+- [ ] Gin e Catuaba ficaram de fora (não achei foto boa).
 - [ ] História do depósito: nome do Gordinho, como começou. A citação é do post de 5 anos (parte do texto estava coberta no print; confirmar).
 - [ ] Domínio próprio (ex.: depositodogordinho.com.br).

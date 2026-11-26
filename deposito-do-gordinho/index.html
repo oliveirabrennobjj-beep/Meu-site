@@ -45,6 +45,7 @@
   </script>
 </head>
 <body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="i-zap" viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.3 0 .5l-.3.5-.4.5c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.1 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1.1c.2-.3.4-.2.6-.1l2 1c.3.1.5.2.5.3.1.2.1.6-.1 1.2z"/></symbol></svg>
   <a class="pular" href="#conteudo">Pular para o conteúdo</a>
 
   <header class="topo">
@@ -54,7 +55,7 @@
         <span class="marca-nome">Depósito do Gordinho</span>
       </a>
       <nav class="menu" aria-label="Seções">
-        <a href="#bebidas">Bebidas</a>
+        <a href="#vitrine">Bebidas</a>
         <a href="#como-pedir">Como pedir</a>
         <a href="#loja">A loja</a>
         <a href="#onde">Onde fica</a>
@@ -69,44 +70,61 @@
   <main id="conteudo">
     <!-- 1. TOPO -->
     <section class="hero" id="inicio">
-      <picture class="hero-foto">
+      <picture class="hero-foto" aria-hidden="true">
         <source media="(min-width: 800px)" srcset="assets/img/hero.webp">
-        <img src="assets/img/hero-800.webp" alt="Garrafas de cerveja geladas, cobertas de gotas" width="800" height="533" fetchpriority="high">
+        <img src="assets/img/hero-800.webp" alt="" width="800" height="533" fetchpriority="high">
       </picture>
+      <span class="brilho b1" aria-hidden="true">✦</span>
+      <span class="brilho b2" aria-hidden="true">✦</span>
+      <span class="brilho b3" aria-hidden="true">✦</span>
       <div class="wrap hero-in">
-        <p class="hero-selo"><img src="assets/img/logo.png" alt="" width="40" height="40"> Depósito de bebidas desde 2019</p>
-        <h1>Bebida gelada na sua porta, em Casimiro de Abreu.</h1>
-        <p class="hero-sub">Escolha aqui no site ou mande um áudio no WhatsApp. A gente leva até a sua casa.</p>
-        <div class="hero-acoes">
-          <a class="btn btn-zap btn-grande" data-zap href="#">
-            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.3 0 .5l-.3.5-.4.5c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.1 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1.1c.2-.3.4-.2.6-.1l2 1c.3.1.5.2.5.3.1.2.1.6-.1 1.2z"/></svg>
-            Pedir no WhatsApp
-          </a>
-          <a class="btn btn-claro btn-grande" href="#bebidas">Ver as bebidas</a>
+        <div class="hero-txt">
+          <p class="hero-selo"><img src="assets/img/logo.png" alt="" width="40" height="40"> Depósito de bebidas desde 2019</p>
+          <h1>Bebida gelada na sua porta, em Casimiro de Abreu.</h1>
+          <p class="hero-sub">Escolha aqui no site ou mande um áudio no WhatsApp. A gente leva até a sua casa.</p>
+          <div class="hero-acoes">
+            <a class="btn btn-zap btn-grande btn-brilho" data-zap href="#">
+              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-zap"/></svg>
+              Pedir no WhatsApp
+            </a>
+            <a class="btn btn-claro btn-grande" href="#vitrine">Ver as bebidas</a>
+          </div>
+          <ul class="hero-fatos">
+            <li><strong>★ 4,7</strong> no Google</li>
+            <li><strong>Terça a domingo</strong> das 10h às 22h</li>
+            <li><strong>Pix e cartão</strong> na entrega</li>
+          </ul>
         </div>
-        <ul class="hero-fatos">
-          <li><strong>★ 4,7</strong> no Google</li>
-          <li><strong>Terça a domingo</strong> das 10h às 22h</li>
-          <li><strong>Pix e cartão</strong> na entrega</li>
-        </ul>
+        <div class="trio" data-trio aria-hidden="true">
+          <img class="tg t1" src="assets/img/produtos/heineken.webp" alt="" width="231" height="900">
+          <img class="tg t2" src="assets/img/produtos/brahma.webp" alt="" width="231" height="889">
+          <img class="tg t3" src="assets/img/produtos/redlabel.webp" alt="" width="239" height="900">
+          <span class="trio-chao"></span>
+        </div>
       </div>
     </section>
 
-    <!-- 2. GELADEIRA -->
-    <section class="secao bebidas" id="bebidas" aria-labelledby="t-bebidas">
+    <!-- 2. CATEGORIAS EM CÍRCULO -->
+    <section class="circulos" aria-label="Tipos de bebida">
       <div class="wrap">
-        <div class="cab">
-          <h2 id="t-bebidas">A geladeira do Gordinho</h2>
-          <p>Escolha a prateleira ao lado. Use as setas para ver as bebidas e toque em <strong>Pedir esta</strong>.</p>
+        <ul class="circ-lista" data-circulos data-aparece></ul>
+      </div>
+    </section>
+
+    <!-- 3. VITRINE -->
+    <section class="secao vitrine-sec" id="vitrine" aria-labelledby="t-vitrine">
+      <div class="wrap">
+        <div class="cab" data-aparece>
+          <h2 id="t-vitrine">A vitrine do Gordinho</h2>
+          <p>Escolha o tipo ao lado e arraste para o lado (ou use as setas). Achou? Toque em <strong>Pedir esta</strong>.</p>
         </div>
 
-        <div class="geladeira" data-geladeira>
-          <div class="trilho" role="tablist" aria-orientation="vertical" aria-label="Tipos de bebida" data-abas></div>
+        <div class="vitrine" data-vitrine data-aparece>
+          <div class="trilho" role="tablist" aria-label="Tipos de bebida" data-abas></div>
 
-          <div class="porta">
-            <div class="luz" aria-hidden="true"></div>
-            <div class="palco" id="palco" role="tabpanel" tabindex="0" aria-label="Bebidas desta prateleira. Use as setas do teclado para passar." data-palco></div>
-
+          <div class="vit-caixa">
+            <div class="palco" id="palco" role="tabpanel" tabindex="0" aria-label="Bebidas. Use as setas do teclado para passar." data-palco></div>
+            <div class="pontos" data-pontos></div>
             <div class="painel" aria-live="polite">
               <div class="painel-txt">
                 <p class="painel-cont" data-prod-cont></p>
@@ -114,34 +132,57 @@
                 <p class="painel-tam"><span data-prod-tam></span> <span class="painel-preco" data-prod-preco></span></p>
               </div>
               <div class="painel-acoes">
-                <button type="button" class="btn-seta" data-ant aria-label="Bebida anterior">
-                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
-                </button>
-                <a class="btn btn-zap btn-pedir" data-prod-pedir href="#">Pedir esta<span class="so-desk"> no WhatsApp</span></a>
-                <button type="button" class="btn-seta" data-prox aria-label="Próxima bebida">
-                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
-                </button>
+                <button type="button" class="btn-seta" data-ant aria-label="Bebida anterior"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+                <a class="btn btn-zap btn-pedir btn-brilho" data-prod-pedir href="#">Pedir esta<span class="so-desk"> no WhatsApp</span></a>
+                <button type="button" class="btn-seta" data-prox aria-label="Próxima bebida"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
               </div>
             </div>
           </div>
         </div>
-
-        <p class="nao-achou">Não achou a sua? Tem muito mais na loja. <a data-zap href="#">Pergunte no WhatsApp</a>.</p>
-
-        <details class="lista-toda">
-          <summary>Ver todas as bebidas em lista</summary>
-          <div class="lista" data-lista></div>
-        </details>
       </div>
     </section>
 
-    <!-- 3. COMO PEDIR -->
+    <!-- 4. FAIXAS -->
+    <section class="faixas" aria-label="Destaques">
+      <div class="wrap faixas-grid">
+        <a class="faixa-card" href="#vitrine" data-aparece>
+          <img src="assets/img/gelo-800.webp" srcset="assets/img/gelo-800.webp 800w, assets/img/gelo.webp 1920w" sizes="(min-width: 900px) 50vw, 100vw" alt="Garrafas de cerveja no gelo" width="800" height="533" loading="lazy">
+          <span class="faixa-txt">
+            <strong>Cerveja trincando de gelada</strong>
+            <span>Direto da geladeira para o seu copo.</span>
+            <span class="faixa-btn">Ver as cervejas</span>
+          </span>
+        </a>
+        <a class="faixa-card" data-zap href="#" data-aparece>
+          <img src="assets/img/entrega-800.webp" srcset="assets/img/entrega-800.webp 800w, assets/img/entrega.webp 1920w" sizes="(min-width: 900px) 50vw, 100vw" alt="Garrafas de cerveja enfileiradas" width="800" height="533" loading="lazy">
+          <span class="faixa-txt">
+            <strong>Pediu, a gente leva</strong>
+            <span>Entrega rápida em Casimiro de Abreu.</span>
+            <span class="faixa-btn">Chamar no WhatsApp</span>
+          </span>
+        </a>
+      </div>
+    </section>
+
+    <!-- 5. TODAS AS BEBIDAS -->
+    <section class="secao todas" id="bebidas" aria-labelledby="t-todas">
+      <div class="wrap">
+        <div class="cab" data-aparece>
+          <h2 id="t-todas">Tudo o que tem no depósito</h2>
+          <p>Não achou a sua? Tem muito mais na loja. <a data-zap href="#">Pergunte no WhatsApp</a>.</p>
+        </div>
+        <div class="filtros" data-filtros data-aparece></div>
+        <ul class="grade" data-grade data-aparece></ul>
+      </div>
+    </section>
+
+    <!-- 6. COMO PEDIR -->
     <section class="secao passos" id="como-pedir" aria-labelledby="t-passos">
       <div class="wrap">
         <div class="cab">
           <h2 id="t-passos">Pedir é fácil, do jeito que você preferir</h2>
         </div>
-        <ol class="passos-lista">
+        <ol class="passos-lista" data-aparece>
           <li>
             <span class="passo-n" aria-hidden="true">1</span>
             <h3>Escolha a bebida</h3>
@@ -161,20 +202,10 @@
       </div>
     </section>
 
-    <!-- 4. ENTREGA -->
-    <section class="entrega" aria-labelledby="t-entrega">
-      <img class="entrega-foto" src="assets/img/entrega-800.webp" srcset="assets/img/entrega-800.webp 800w, assets/img/entrega.webp 1920w" sizes="100vw" alt="" width="800" height="533" loading="lazy">
-      <div class="wrap entrega-in">
-        <h2 id="t-entrega">Pediu, a gente leva.</h2>
-        <p>Entrega rápida em Casimiro de Abreu, com a bebida saindo da geladeira direto para a sua casa. Pergunte se atendemos o seu bairro.</p>
-        <a class="btn btn-ouro btn-grande" data-zap href="#">Perguntar sobre a entrega</a>
-      </div>
-    </section>
-
-    <!-- 5. A LOJA -->
+    <!-- 7. A LOJA -->
     <section class="secao loja" id="loja" aria-labelledby="t-loja">
       <div class="wrap loja-grid">
-        <div class="loja-txt">
+        <div class="loja-txt" data-aparece>
           <h2 id="t-loja">Desde 2019 na Vila Mataruna</h2>
           <p>Depósito de bebidas do bairro, com entrega em Casimiro de Abreu. O que o pessoal mais elogia: cerveja bem gelada, preço bom e atendimento atencioso.</p>
           <blockquote class="loja-cit">
@@ -182,7 +213,7 @@
             <footer>Depósito do Gordinho, no aniversário de 5 anos</footer>
           </blockquote>
         </div>
-        <div class="loja-fotos">
+        <div class="loja-fotos" data-aparece>
           <img class="f1" src="assets/img/loja-fachada.webp" alt="Fachada do Depósito do Gordinho com engradados de cerveja na calçada" width="485" height="605" loading="lazy">
           <img class="f2" src="assets/img/loja-geladeira-1.webp" alt="Geladeira com garrafas de Bohemia e Antarctica" width="290" height="290" loading="lazy">
           <img class="f3" src="assets/img/loja-geladeira-2.webp" alt="Geladeira cheia de garrafas de Brahma" width="290" height="290" loading="lazy">
@@ -190,19 +221,21 @@
       </div>
     </section>
 
-    <!-- 6. AVALIAÇÕES -->
+    <!-- 8. AVALIAÇÕES -->
     <section class="secao avaliacoes" id="avaliacoes" aria-labelledby="t-aval">
       <div class="wrap">
-        <div class="cab cab-linha">
-          <h2 id="t-aval">Nota 4,7 no Google</h2>
+        <div class="cab cab-linha" data-aparece>
+          <h2 id="t-aval">Nota <span data-conta>4,7</span> no Google</h2>
           <p>O que o pessoal de Casimiro escreveu sobre o depósito.</p>
         </div>
-        <div class="aval-grid" data-avaliacoes></div>
+      </div>
+      <div class="faixa-aval" data-avaliacoes></div>
+      <div class="wrap">
         <p class="aval-mais"><a data-avaliacoes-link href="#">Ver todas as avaliações no Google</a></p>
       </div>
     </section>
 
-    <!-- 7. ONDE FICA -->
+    <!-- 9. ONDE FICA -->
     <section class="secao onde" id="onde" aria-labelledby="t-onde">
       <div class="wrap onde-grid">
         <div>
@@ -213,7 +246,7 @@
             <a class="btn btn-contorno btn-grande" data-tel href="#">Ligar agora</a>
           </div>
         </div>
-        <div class="onde-cartoes">
+        <div class="onde-cartoes" data-aparece>
           <div class="cartao">
             <h3>Horário</h3>
             <dl class="horas" data-horario></dl>
@@ -242,7 +275,7 @@
         <li><a data-tel href="#">Telefone</a></li>
       </ul>
       <p class="rodape-aviso">Venda proibida para menores de 18 anos. Se beber, não dirija.</p>
-      <p class="rodape-cred">Fotos de bebidas: Unsplash. Site feito por <a href="https://oliveirabrennobjj-beep.github.io/Meu-site/" target="_blank" rel="noopener">BN Digital</a>.</p>
+      <p class="rodape-cred">Fotos de ambiente: Unsplash. Fotos de produto: divulgação das marcas. Site feito por <a href="https://oliveirabrennobjj-beep.github.io/Meu-site/" target="_blank" rel="noopener">BN Digital</a>.</p>
     </div>
   </footer>
 

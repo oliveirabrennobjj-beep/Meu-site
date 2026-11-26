@@ -45,53 +45,51 @@ window.SITE = {
   ],
 
   /*
-    GELADEIRA (produtos)
-    LISTA DE EXEMPLO para a prévia: as cervejas e refrigerantes de garrafa aparecem
-    nas fotos da loja; o Breez Cooler está no catálogo do WhatsApp; o resto é
-    sugestão comum de depósito. Trocar pela lista real que o dono mandar.
+    VITRINE (produtos)
+    LISTA DE EXEMPLO para a prévia: cervejas e refrigerantes vistos nas fotos da loja,
+    Breez Cooler do catálogo do WhatsApp, o resto é sugestão comum de depósito.
+    Trocar pela lista real que o dono mandar.
 
-    tipo: garrafa | longneck | lata | latao | pet | vinho | quadrada | alta | agua
-    cor: cor do vidro/lata · rotulo: cor do rótulo · letra: cor do texto do rótulo
+    img: arquivo em assets/img/produtos (.webp sem fundo)
+    cm: altura real da embalagem, para as garrafas aparecerem no tamanho certo
     preco: "" mostra "Preço no WhatsApp"
+    capa: true = aparece no círculo da categoria
   */
   categorias: [
-    { id: "cervejas", nome: "Cervejas" },
-    { id: "destilados", nome: "Destilados" },
-    { id: "vinhos", nome: "Vinhos e drinks" },
-    { id: "sem-alcool", nome: "Sem álcool" },
-    { id: "petiscos", nome: "Doces e petiscos" }   // confirmar com o dono o que ele vende
+    { id: "cervejas", nome: "Cervejas", capa: "brahma" },
+    { id: "destilados", nome: "Destilados", capa: "redlabel" },
+    { id: "vinhos", nome: "Vinhos e drinks", capa: "pergola" },
+    { id: "sem-alcool", nome: "Sem álcool", capa: "coca" },
+    { id: "petiscos", nome: "Doces e petiscos", capa: "ruffles" }   // confirmar com o dono o que ele vende
   ],
 
   produtos: [
-    { cat: "cervejas", nome: "Brahma Chopp", tamanho: "Garrafa 600 ml", tipo: "garrafa", cor: "#4a2a10", rotulo: "#c8262c", letra: "#f6d36b", tampa: "#d9b24a", preco: "" },
-    { cat: "cervejas", nome: "Antarctica Pilsen", tamanho: "Garrafa 600 ml", tipo: "garrafa", cor: "#3c2410", rotulo: "#1f4fa3", letra: "#ffffff", tampa: "#1f4fa3", preco: "" },
-    { cat: "cervejas", nome: "Bohemia", tamanho: "Garrafa 600 ml", tipo: "garrafa", cor: "#3a2412", rotulo: "#efe6cf", letra: "#5a3a12", tampa: "#c7a04a", preco: "" },
-    { cat: "cervejas", nome: "Heineken", tamanho: "Long neck 330 ml", tipo: "longneck", cor: "#0f5a2a", rotulo: "#0f5a2a", letra: "#ffffff", tampa: "#14612f", preco: "" },
-    { cat: "cervejas", nome: "Skol", tamanho: "Lata 350 ml", tipo: "lata", cor: "#f2c318", rotulo: "#f2c318", letra: "#16357a", preco: "" },
-    { cat: "cervejas", nome: "Brahma Duplo Malte", tamanho: "Latão 473 ml", tipo: "latao", cor: "#9a1c20", rotulo: "#9a1c20", letra: "#f3d27a", preco: "" },
-    { cat: "cervejas", nome: "Amstel", tamanho: "Lata 350 ml", tipo: "lata", cor: "#b3121b", rotulo: "#b3121b", letra: "#ffffff", preco: "" },
-    { cat: "cervejas", nome: "Spaten", tamanho: "Long neck 355 ml", tipo: "longneck", cor: "#16452a", rotulo: "#e9e1cc", letra: "#16452a", tampa: "#c9a54c", preco: "" },
+    { cat: "cervejas", nome: "Brahma Chopp", tamanho: "Garrafa 600 ml", img: "brahma", cm: 29, preco: "" },
+    { cat: "cervejas", nome: "Antarctica Pilsen", tamanho: "Garrafa 600 ml", img: "antarctica", cm: 29, preco: "" },
+    { cat: "cervejas", nome: "Bohemia Puro Malte", tamanho: "Garrafa 600 ml", img: "bohemia", cm: 29, preco: "" },
+    { cat: "cervejas", nome: "Heineken", tamanho: "Long neck 330 ml", img: "heineken", cm: 23, preco: "" },
+    { cat: "cervejas", nome: "Spaten", tamanho: "Long neck 355 ml", img: "spaten", cm: 23, preco: "" },
+    { cat: "cervejas", nome: "Brahma Duplo Malte", tamanho: "Latão 473 ml", img: "duplomalte", cm: 16.5, preco: "" },
+    { cat: "cervejas", nome: "Skol", tamanho: "Lata 350 ml", img: "skol", cm: 12.5, preco: "" },
+    { cat: "cervejas", nome: "Amstel", tamanho: "Lata 350 ml", img: "amstel", cm: 14, preco: "" },
 
-    { cat: "destilados", nome: "Cachaça 51", tamanho: "Garrafa 965 ml", tipo: "alta", cor: "#e9eef0", rotulo: "#f4c430", letra: "#b3121b", tampa: "#b3121b", preco: "" },
-    { cat: "destilados", nome: "Vodka Smirnoff", tamanho: "Garrafa 998 ml", tipo: "alta", cor: "#e6edf2", rotulo: "#c8202f", letra: "#ffffff", tampa: "#c8202f", preco: "" },
-    { cat: "destilados", nome: "Whisky Red Label", tamanho: "Garrafa 1 L", tipo: "quadrada", cor: "#a0561a", rotulo: "#f1e6cc", letra: "#8a1c1c", tampa: "#2a2a2a", preco: "" },
-    { cat: "destilados", nome: "Gin Rocks", tamanho: "Garrafa 1 L", tipo: "quadrada", cor: "#dfe9ee", rotulo: "#1d3b5c", letra: "#ffffff", tampa: "#1d3b5c", preco: "" },
-    { cat: "destilados", nome: "Conhaque Dreher", tamanho: "Garrafa 900 ml", tipo: "garrafa", cor: "#7a3d12", rotulo: "#f2e3b6", letra: "#7a1f14", tampa: "#d6b45a", preco: "" },
+    { cat: "destilados", nome: "Johnnie Walker Red Label", tamanho: "Garrafa 1 L", img: "redlabel", cm: 30, preco: "" },
+    { cat: "destilados", nome: "Vodka Smirnoff", tamanho: "Garrafa 998 ml", img: "smirnoff", cm: 30, preco: "" },
+    { cat: "destilados", nome: "Cachaça 51", tamanho: "Garrafa 965 ml", img: "cachaca51", cm: 30, preco: "" },
+    { cat: "destilados", nome: "Conhaque Dreher", tamanho: "Garrafa 900 ml", img: "dreher", cm: 28, preco: "" },
 
-    { cat: "vinhos", nome: "Breez Cooler", tamanho: "Garrafa 275 ml", tipo: "longneck", cor: "#c23a5c", rotulo: "#f5d9e0", letra: "#8a1f3c", tampa: "#e8e8e8", preco: "" },
-    { cat: "vinhos", nome: "Vinho tinto suave", tamanho: "Garrafa 750 ml", tipo: "vinho", cor: "#2a0f16", rotulo: "#efe4cc", letra: "#6d1424", tampa: "#6d1424", preco: "" },
-    { cat: "vinhos", nome: "Catuaba Selvagem", tamanho: "Garrafa 900 ml", tipo: "garrafa", cor: "#3a120e", rotulo: "#1c1c1c", letra: "#f2c318", tampa: "#c49a3a", preco: "" },
-    { cat: "vinhos", nome: "Smirnoff Ice", tamanho: "Long neck 275 ml", tipo: "longneck", cor: "#d9e4ea", rotulo: "#c8202f", letra: "#ffffff", tampa: "#b9c3c9", preco: "" },
+    { cat: "vinhos", nome: "Vinho Pérgola Tinto Suave", tamanho: "Garrafa 1 L", img: "pergola", cm: 31, preco: "" },
+    { cat: "vinhos", nome: "Breez Cooler", tamanho: "Garrafa 275 ml", img: "breez", cm: 24, preco: "" },
+    { cat: "vinhos", nome: "Smirnoff Ice", tamanho: "Long neck 275 ml", img: "ice", cm: 23, preco: "" },
 
-    { cat: "sem-alcool", nome: "Coca-Cola", tamanho: "Garrafa 2 L", tipo: "pet", cor: "#2a1208", rotulo: "#d0121b", letra: "#ffffff", tampa: "#d0121b", preco: "" },
-    { cat: "sem-alcool", nome: "Guaraná Antarctica", tamanho: "Garrafa 2 L", tipo: "pet", cor: "#1f5a1a", rotulo: "#167a2e", letra: "#ffffff", tampa: "#167a2e", preco: "" },
-    { cat: "sem-alcool", nome: "Energético", tamanho: "Lata 250 ml", tipo: "lata", cor: "#22457a", rotulo: "#22457a", letra: "#e9eef5", preco: "" },
-    { cat: "sem-alcool", nome: "Água mineral", tamanho: "Garrafa 500 ml", tipo: "agua", cor: "#cfe6f2", rotulo: "#2f7fc0", letra: "#ffffff", tampa: "#2f7fc0", preco: "" },
+    { cat: "sem-alcool", nome: "Coca-Cola", tamanho: "Garrafa 2 L", img: "coca", cm: 33, preco: "" },
+    { cat: "sem-alcool", nome: "Guaraná Antarctica", tamanho: "Garrafa 2 L", img: "guarana", cm: 33, preco: "" },
+    { cat: "sem-alcool", nome: "Red Bull", tamanho: "Lata 250 ml", img: "redbull", cm: 13.5, preco: "" },
+    { cat: "sem-alcool", nome: "Água Crystal", tamanho: "Garrafa 500 ml", img: "agua", cm: 21, preco: "" },
 
-    // tipo saco = pacote; caixa = pote/caixinha
-    { cat: "petiscos", nome: "Amendoim", tamanho: "Pacote", tipo: "saco", cor: "#b5432a", rotulo: "#f3d27a", letra: "#5a1e10", preco: "" },
-    { cat: "petiscos", nome: "Salgadinho", tamanho: "Pacote", tipo: "saco", cor: "#e2a521", rotulo: "#1f4fa3", letra: "#ffffff", preco: "" },
-    { cat: "petiscos", nome: "Paçoca", tamanho: "Unidade ou pote", tipo: "caixa", cor: "#c98a3c", rotulo: "#fff4dc", letra: "#7a3d12", preco: "" },
-    { cat: "petiscos", nome: "Balas", tamanho: "Pacote", tipo: "saco", cor: "#d23a74", rotulo: "#ffe36b", letra: "#7a1240", preco: "" }
+    { cat: "petiscos", nome: "Ruffles Original", tamanho: "Pacote", img: "ruffles", cm: 21, preco: "" },
+    { cat: "petiscos", nome: "Amendoim Japonês Dori", tamanho: "Pacote", img: "amendoim", cm: 22, preco: "" },
+    { cat: "petiscos", nome: "Paçoquita", tamanho: "Pote", img: "pacoca", cm: 15, preco: "" },
+    { cat: "petiscos", nome: "Balas Fini", tamanho: "Pacote", img: "bala", cm: 17, preco: "" }
   ]
 };
