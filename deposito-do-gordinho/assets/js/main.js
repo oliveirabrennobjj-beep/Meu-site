@@ -337,5 +337,23 @@
     ultimo = y;
   }, { passive: true });
 
+  /* ---------- modo prévia: nada chega no WhatsApp nem no telefone do dono ---------- */
+  if (S.previa) {
+    var aviso = document.createElement("div");
+    aviso.className = "aviso-previa";
+    aviso.setAttribute("role", "status");
+    document.body.appendChild(aviso);
+    var ta;
+    document.addEventListener("click", function (e) {
+      var a = e.target.closest("a[href*='wa.me'], a[href^='tel:'], .faixa-card[data-zap]");
+      if (!a) return;
+      e.preventDefault();
+      aviso.textContent = "Prévia do site: quando estiver no ar, este botão abre o WhatsApp do depósito.";
+      aviso.classList.add("mostra");
+      clearTimeout(ta);
+      ta = setTimeout(function () { aviso.classList.remove("mostra"); }, 3200);
+    }, true);
+  }
+
   $$("[data-ano]").forEach(function (el) { el.textContent = new Date().getFullYear(); });
 })();

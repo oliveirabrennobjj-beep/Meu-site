@@ -33,4 +33,5 @@ Pensado para idoso: letra de 19 px, fonte Atkinson Hyperlegible (feita para baix
 - [ ] Fotos de produto são de divulgação das marcas (tiradas de lojas online). Para o site oficial: o dono manda as fotos dele ou confirmamos o uso. As 3 fotos de ambiente são do Unsplash.
 - [ ] Gin e Catuaba ficaram de fora (não achei foto boa).
 - [ ] História do depósito: nome do Gordinho, como começou. A citação é do post de 5 anos (parte do texto estava coberta no print; confirmar).
+- [ ] Quando o dono aprovar: `previa: false` no `config.js` (hoje os botões de WhatsApp e Ligar só mostram um aviso).
 - [ ] Domínio próprio (ex.: depositodogordinho.com.br).

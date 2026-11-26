@@ -375,3 +375,8 @@ p { margin: 0; }
   .barra-cel .btn-zap { animation: pulso 2.8s ease-out 2s infinite; }
 }
 @keyframes pulso { 0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, .55); } 70%, 100% { box-shadow: 0 0 0 14px rgba(37, 211, 102, 0); } }
+
+/* aviso do modo prévia */
+.aviso-previa { position: fixed; left: 50%; bottom: 96px; z-index: 300; width: min(92vw, 460px); padding: 16px 20px; border-radius: 16px; background: var(--ouro); color: var(--breu); font-weight: 700; font-size: 18px; text-align: center; box-shadow: 0 20px 40px -16px rgba(0, 0, 0, .5); translate: -50% 30px; opacity: 0; pointer-events: none; transition: translate .4s var(--mola), opacity .3s; }
+.aviso-previa.mostra { translate: -50% 0; opacity: 1; }
+@media (min-width: 900px) { .aviso-previa { bottom: 32px; } }

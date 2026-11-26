@@ -7,6 +7,10 @@
   (prints enviados pelo Brenno em 26/11/2026).
 */
 window.SITE = {
+  // PRÉVIA: true = botões de WhatsApp e Ligar não chamam ninguém (só mostram um aviso).
+  // Quando o dono aprovar, trocar para false.
+  previa: true,
+
   nome: "Depósito do Gordinho",
   desde: "2019",
 
