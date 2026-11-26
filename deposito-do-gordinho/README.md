@@ -21,7 +21,7 @@ Abra `index.html` no navegador. Não precisa instalar nada.
 
 Movimento: entrada do topo, coisas aparecendo ao rolar, brilho nos botões verdes, garrafa que balança ao ser escolhida, nota do Google contando até 4,7. Tudo em CSS e JS leve (sem biblioteca), e tudo para quando o celular pede "reduzir movimento".
 
-Pensado para idoso: letra de 19 px, fonte Atkinson Hyperlegible (feita para baixa visão), botões de 56 a 62 px de altura, alto contraste, nada se mexe sozinho.
+Pensado para idoso: letra de 19 px, fonte Atkinson Hyperlegible (feita para baixa visão), botões de 56 a 62 px de altura, alto contraste. A faixa de avaliações para quando a pessoa toca nela.
 
 ## Pendências (dependem do cliente)
 - [ ] **Lista real de produtos e preços.** A lista atual é de exemplo: cervejas e refrigerantes vistos nas fotos da loja, Breez Cooler do catálogo do WhatsApp, o resto é sugestão comum de depósito.
