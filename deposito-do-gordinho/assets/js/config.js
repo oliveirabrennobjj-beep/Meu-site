@@ -68,10 +68,8 @@ window.SITE = {
     { cat: "cervejas", nome: "Antarctica Pilsen", tamanho: "Garrafa 600 ml", img: "antarctica", cm: 29, preco: "" },
     { cat: "cervejas", nome: "Bohemia Puro Malte", tamanho: "Garrafa 600 ml", img: "bohemia", cm: 29, preco: "" },
     { cat: "cervejas", nome: "Heineken", tamanho: "Long neck 330 ml", img: "heineken", cm: 23, preco: "" },
-    { cat: "cervejas", nome: "Spaten", tamanho: "Long neck 355 ml", img: "spaten", cm: 23, preco: "" },
     { cat: "cervejas", nome: "Brahma Duplo Malte", tamanho: "Latão 473 ml", img: "duplomalte", cm: 16.5, preco: "" },
     { cat: "cervejas", nome: "Skol", tamanho: "Lata 350 ml", img: "skol", cm: 12.5, preco: "" },
-    { cat: "cervejas", nome: "Amstel", tamanho: "Lata 350 ml", img: "amstel", cm: 14, preco: "" },
 
     { cat: "destilados", nome: "Johnnie Walker Red Label", tamanho: "Garrafa 1 L", img: "redlabel", cm: 30, preco: "" },
     { cat: "destilados", nome: "Vodka Smirnoff", tamanho: "Garrafa 998 ml", img: "smirnoff", cm: 30, preco: "" },
