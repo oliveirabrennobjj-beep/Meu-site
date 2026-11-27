@@ -12,6 +12,10 @@ var LOJA = {
   telefoneLink: "+5522988388935",
   mensagemWhatsApp: "Olá, Depósito do Gordinho! Quero fazer um pedido.",
 
+  // Pedido pelo site
+  taxaEntrega: "",                     // ex.: "5,00". Vazio = "a combinar"
+  pagamentos: ["Pix na entrega", "Cartão de crédito", "Cartão de débito"],
+
   // Horário (0 = domingo ... 6 = sábado). null = fechado.
   horario: { 0: [10, 22], 1: null, 2: [10, 22], 3: [10, 22], 4: [10, 22], 5: [10, 22], 6: [10, 22] }
 };

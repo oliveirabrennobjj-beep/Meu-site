@@ -19,8 +19,14 @@ Depois de mexer em `produtos.js`, rode `node deposito-do-gordinho/montar.mjs`: e
 Foto de produto nova: imagem em fundo branco e recorte com
 `convert foto.jpg -fuzz 6% -fill none -draw "color 0,0 floodfill" -trim -resize x640 produto.webp`.
 
+## Pedido pelo site (carrinho)
+- Botão **Comprar** em cada produto abre a ficha (gelada ou natural, quantidade, observação) e põe no carrinho (ícone de sacola no topo).
+- **Finalizar pedido**: nome, WhatsApp, entrega ou retirada, endereço com **busca de rua** (876 ruas do município inteiro em `assets/js/ruas.js`: lista da Prefeitura com bairro + OpenStreetMap; escolher a rua já preenche o bairro), pagamento e observação. Gera a mensagem pronta no WhatsApp do depósito.
+- Taxa de entrega e formas de pagamento: `taxaEntrega` e `pagamentos` em `config.js`. Rua faltando: acrescentar em `ruas.js`.
+- Código: `assets/js/carrinho.js`.
+
 ## Modo prévia
-`previa: true` em `config.js`: os botões de WhatsApp e Ligar só mostram um aviso. Quando o dono aprovar, trocar para `false`.
+`previa: true` em `config.js`: os botões de WhatsApp e Ligar só mostram um aviso, e o "Enviar pedido" mostra como a mensagem chegaria, sem enviar. Quando o dono aprovar, trocar para `false`.
 
 ## Pendências (dependem do cliente)
 - [ ] Preços reais (hoje: "Preço a confirmar").
@@ -30,4 +36,5 @@ Foto de produto nova: imagem em fundo branco e recorte com
 - [ ] Bairros atendidos e taxa de entrega.
 - [ ] Aceita dinheiro? Hoje o site diz Pix e cartão.
 - [ ] Trocar as 4 fotos de clima por fotos reais da loja (dá para tirar com o celular, de noite, luz quente).
+- [ ] Taxa de entrega (hoje "a combinar") e se aceita dinheiro.
 - [ ] Domínio próprio.
