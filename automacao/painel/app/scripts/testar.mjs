@@ -125,13 +125,15 @@ const PIZZA = "Gran Pizza Teste";
 const PESCA = "Oficina da Pesca Teste";
 // Caso real de 26/11: "Barão Classic Suplementos" veio do Google como "Festas e eventos" e a mensagem saiu falando de festa.
 const SUPL = "Barão Suplementos Teste";
-for (const [i, nome, tipo] of [[3, MASSO, "Salão de beleza"], [4, CT, "Academia"], [5, DENTISTA, "Dentista"], [6, AQUARIO, "Loja de ração"], [7, FRANGO, "Restaurante"], [8, QUEIJO, "Fabricante de queijo"], [9, PIZZA, "Delivery"], [10, PESCA, "Loja de artigos para pesca"], [11, SUPL, "Festas e eventos"]]) {
+// Nome de lanchonete cadastrado como pet shop: a regra não pega, então a ficha avisa e deixa o Brenno trocar.
+const DOG = "Dog House Teste";
+for (const [i, nome, tipo] of [[3, MASSO, "Salão de beleza"], [4, CT, "Academia"], [5, DENTISTA, "Dentista"], [6, AQUARIO, "Loja de ração"], [7, FRANGO, "Restaurante"], [8, QUEIJO, "Fabricante de queijo"], [9, PIZZA, "Delivery"], [10, PESCA, "Loja de artigos para pesca"], [11, SUPL, "Festas e eventos"], [12, DOG, "Pet Shop"]]) {
   leads.push({
     id: `w552290000000${i}`,
     nome,
     tipo,
     // Cidade só delas: ficam numa tabela própria, sem mexer na paginação das outras.
-    cidade: nome === SUPL ? "Cidade Suplemento" : "Cidade de Teste",
+    cidade: nome === SUPL || nome === DOG ? "Cidade Suplemento" : "Cidade de Teste",
     whatsapp: `552290000000${i}`,
     nota: 5,
     avaliacoes: 999990 + i,
@@ -616,6 +618,19 @@ try {
     const mesmo = decodeURIComponent(await ficha.getByRole("link", { name: "Enviar no WhatsApp" }).getAttribute("href"));
     assert.match(mesmo, /^https:\/\/wa\.me\/5522900000005\?text=Oi, Rui, /);
     await ficha.getByRole("button", { name: "Fechar ficha" }).click();
+  }
+
+  // Nome aponta outro ramo: a ficha avisa (sem mudar nada sozinha) e o botão grava o ramo certo.
+  {
+    await p.evaluate(() => (window.__escritas.length = 0));
+    await p.getByRole("button", { name: DOG, exact: true }).click();
+    const ficha = p.getByRole("dialog");
+    await ficha.getByText(/O nome parece de lanchonete e hamburgueria/).waitFor();
+    assert.equal(await p.evaluate(() => window.__escritas.length), 0, "o aviso não grava nada");
+    await ficha.getByRole("button", { name: "Usar lanchonete e hamburgueria" }).click();
+    assert.equal((await p.evaluate(() => window.__escritas)).at(-1).dados.ramo, "hamburgueria");
+    await ficha.getByRole("button", { name: "Fechar ficha" }).click();
+    await p.evaluate(() => (window.__escritas.length = 0));
   }
 
   await p.getByRole("radio", { name: "Só Casimiro de Abreu" }).click();

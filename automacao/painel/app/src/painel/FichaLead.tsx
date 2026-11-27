@@ -54,6 +54,7 @@ import {
   numeroVisivel,
   zapDoLink,
   ramoDe,
+  ramoSuspeito,
   recebeuPedidoDeVisita,
   textoCorrecao,
   fmtInt,
@@ -428,6 +429,7 @@ function Conteudo({
   };
 
   const ramo = ramoDe(lead);
+  const suspeito = ramoSuspeito(lead);
   /** "ramo" escolhido na ficha (sub-nicho volta a ser detectado) ou, na prévia, "ramo/sub-nicho" e "ramo" puro (estilo geral). */
   const mudarRamo = (valor: string, daPrevia = false) => {
     const [id, subId] = valor.split("/");
@@ -569,6 +571,21 @@ function Conteudo({
             ))}
           </select>
         </label>
+
+        {suspeito && (
+          <div
+            role="note"
+            className="-mt-1 flex flex-wrap items-center justify-between gap-x-3 gap-y-2 rounded-[12px] border border-[color:var(--bjork-border-strong)] bg-[var(--bjork-accent-soft)] px-3 py-2.5"
+          >
+            <p className="text-[13px] leading-snug">
+              O nome parece de <strong>{(suspeito.opcao ?? suspeito.nome).toLowerCase()}</strong>, mas o Google cadastrou
+              como {ramo.nome.toLowerCase()}.
+            </p>
+            <button type="button" onClick={() => mudarRamo(suspeito.id)} className={buttonClass("secondary", "sm")}>
+              Usar {(suspeito.opcao ?? suspeito.nome).toLowerCase()}
+            </button>
+          </div>
+        )}
 
         {ehCasimiro(lead) && (
           <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
