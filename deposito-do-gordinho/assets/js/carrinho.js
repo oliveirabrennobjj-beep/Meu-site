@@ -276,7 +276,7 @@
           var ia = a.nb.indexOf(w[0]), ib = b.nb.indexOf(w[0]);
           return (ia < 0 ? 999 : ia) - (ib < 0 ? 999 : ib) || a.n.length - b.n.length;
         })
-        .slice(0, 15);
+        .slice(0, 40);
       render();
     }
     function escolher(i) {
