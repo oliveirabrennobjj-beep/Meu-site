@@ -1,5 +1,10 @@
 /* Depósito do Gordinho — cores e fontes aqui no topo */
 html { color-scheme: only light; }
+/* Celular em modo escuro (Samsung Internet e outros) não pode escurecer o site:
+   quando o site "tem" regra de modo escuro, o navegador não força o dele. A regra mantém o claro. */
+@media (prefers-color-scheme: dark) {
+  html { color-scheme: only light; background: #f7f4ef; color: #1a1a1a; }
+}
 :root {
   --creme: #f7f4ef;      /* fundo base */
   --branco: #ffffff;
