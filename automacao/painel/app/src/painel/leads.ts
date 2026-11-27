@@ -422,6 +422,8 @@ const GERAL: Ramo = {
   id: "geral",
   nome: "Outro comércio",
   tipo: /$^/,
+  // "Pousada Tucunaré" cadastrada como imobiliária de temporada: pousada e hotel são hospedagem.
+  certeza: { padrao: /\bpousada|\bhotel\b|\bhospedagem/i, corrige: ["escritorio"] },
   noSite: "o que vocês vendem, o horário, o mapa e um botão que já abre o WhatsApp",
   ondePlaca: "",
 };
@@ -510,7 +512,7 @@ export const RAMOS: Ramo[] = [
     opcao: "Festas, eventos e fotografia",
     tipo: /festa|evento|buffet|cerimon|fot[oó]gr[aá]f|decora[cç][aã]o|entretenimento|casamento|\bdj\b/i,
     nomeLoja: /\bfestas?\b|\beventos?\b|\bbuffet|\bfotografia|\bdecora/i,
-    certeza: { padrao: /\bfestas?\b|\beventos?\b|\bbuffet\b/i, corrige: ["salao"] },
+    certeza: { padrao: /\bfestas?\b|\beventos?\b|\bbuffet\b/i, corrige: ["salao", "danca"] },
     noSite: "as fotos das festas, os pacotes e um botão pra pedir orçamento pelo WhatsApp",
     ondePlaca: " no fim da festa",
   },
@@ -540,6 +542,8 @@ export const RAMOS: Ramo[] = [
     nome: "Barbearia",
     tipo: /barb/i,
     nomeLoja: /\bbarbe(aria|r)/i,
+    // "Barbearia do Rafael" cadastrada como salão. Nome misto ("Salão e Barbearia") fica como veio.
+    certeza: { padrao: /^(?!.*(sal[aã]o|beleza|beauty)).*\bbarbe(aria|r)/i, corrige: ["salao", "estetica"] },
     noSite: SERVICOS,
     ondePlaca: " ainda na cadeira",
   },
@@ -577,7 +581,7 @@ export const RAMOS: Ramo[] = [
     nomeLoja: /\best[eé]tica\b/i,
     certeza: {
       padrao: /cl[ií]nica[^|]*est[eé]tica|centro de [^|]*est[eé]tica|harmoniza|\best[eé]tica\b(?! (automotiva|auto|veicular))/i,
-      corrige: ["salao", "geral"],
+      corrige: ["salao", "geral", "saude"],
     },
     noSite: "os procedimentos, os horários e um botão pra agendar pelo WhatsApp",
     ondePlaca: " depois do atendimento",
@@ -597,6 +601,11 @@ export const RAMOS: Ramo[] = [
     nome: "Pizzaria",
     tipo: /pizz/i,
     nomeLoja: /pizz/i,
+    // "Spallace Pizzaria" cadastrada como lanchonete. Nome misto (restaurante e pizzaria, lanches, salgados) fica como veio.
+    certeza: {
+      padrao: /^(?!.*(restaurante|lanchonete|lanches|hamb|burg|esfiha|salgad)).*pizz/i,
+      corrige: ["restaurante", "hamburgueria", "padaria"],
+    },
     noSite: CARDAPIO,
     ondePlaca: " enquanto espera o pedido",
   },
@@ -623,6 +632,8 @@ export const RAMOS: Ramo[] = [
     nome: "Restaurante",
     tipo: /restaur|churras|grill|marmit|gastronom|steak|self.?service|\bbar\b|\bbares\b|boteco|petisc|quiosque|kiosque|crep|esfi[hr]|catering|frango|comida|\bdelivery\b|casa noturna/i,
     nomeLoja: /\brestaurante|\bchurrasc|\bgrill\b|\bmarmit|\bgastronomia|\bsteak/i,
+    // "Casa da Sogra Restaurante" cadastrada como hamburgueria. Quem tem lanche, burger ou pizza no nome fica como veio.
+    certeza: { padrao: /^(?!.*(burg|hamb|lanch|pizz|padaria)).*\brestaurante/i, corrige: ["hamburgueria", "padaria"] },
     noSite: CARDAPIO,
     ondePlaca: " enquanto espera o pedido",
   },
@@ -713,6 +724,8 @@ export const RAMOS: Ramo[] = [
     opcao: "Assistência técnica e serviços (celular, elétrica, ar)",
     tipo: /celular|dispositivos m[oó]veis|eletr[oô]nic|inform[aá]tic|assist[eê]ncia t[eé]cnica|conserto|eletricista|chaveir|chaves|ar condicionado|climatiza|refrigera|desentup|dedetiz|limpeza|televis|faz.tudo|pedreiro|jardineir|energia solar|piscina|mudan[cç]|transporte|equipamentos el[eé]tricos|internet|saneamento/i,
     nomeLoja: /\bcelular|\bcell\b|\binform[aá]tica|\bassist[eê]ncia|\beletricista|\bchaveiro|\brefrigera|\bclimatiza|\bdesentup|\bdedetiz/i,
+    // "X-Cyber Informática" cadastrada como papelaria. Quem também é papelaria no nome fica como veio.
+    certeza: { padrao: /^(?!.*papelaria).*\binform[aá]tica/i, corrige: ["papelaria", "geral"] },
     noSite: "os serviços com foto, a região que atende e um botão pra pedir orçamento pelo WhatsApp",
     ondePlaca: " no balcão",
   },
@@ -722,6 +735,11 @@ export const RAMOS: Ramo[] = [
     opcao: "Mercado, mercearia e hortifrúti",
     tipo: /mercad|mercearia|hortifr|sacol[aã]o|atacad(?!ista de cosm)|a[cç]ougue|frutar|emp[oó]rio|bebida|cerveja|distribuid|dep[oó]sito|armaz[eé]m|\bg[aá]s\b|butano|peixar|produtos naturais|aliment|queijo|[aá]gua engarrafada|congelad|descart[aá]v|conveni[eê]ncia/i,
     nomeLoja: /\bmercad|\bmercearia|\bhortifr|\bsacol[aã]o|\ba[cç]ougue/i,
+    // "Depósito de Bebidas B.M" cadastrado como lanchonete ou bar: o nome diz que vende bebida. Adega e wine bar seguem restaurante.
+    certeza: {
+      padrao: /\bdep[oó]sito (de|e|d[oa]) [^|]*\b(bebidas|[aá]gua)|\bdistribuidora de bebidas/i,
+      corrige: ["restaurante", "hamburgueria", "padaria", "geral"],
+    },
     noSite: "as ofertas da semana, o horário e um botão pra fazer o pedido pelo WhatsApp",
     ondePlaca: " no caixa",
   },
@@ -729,7 +747,9 @@ export const RAMOS: Ramo[] = [
     id: "farmacia",
     nome: "Farmácia",
     tipo: /farm[aá]c|drogaria|manipula|suplement|vitamin|fitoter|perfum|cosm[eé]tic|produtos de beleza/i,
-    nomeLoja: /\bfarma|\bdrogaria/i,
+    nomeLoja: /\bfarma|\bdrogaria|\bsuplement|nutri[cç][aã]o esportiva/i,
+    // "Barão Classic Suplementos" veio do Google como "Festas e eventos": o nome diz o que a loja vende.
+    certeza: { padrao: /\bsuplement/i, corrige: ["festa", "geral", "salao", "estetica", "academia", "saude"] },
     noSite: "o horário, a entrega e um botão pra pedir pelo WhatsApp",
     ondePlaca: " no balcão",
   },
@@ -995,6 +1015,32 @@ export function subnichoDe(lead: Pick<Lead, "nome" | "tipo" | "ramo" | "subnicho
     doRamo.find((s) => s.nomeLoja?.test(lead.nome)) ?? doRamo.find((s) => s.tipo?.test(lead.tipo ?? "")) ?? null
   );
 }
+
+/**
+ * Ramo que o NOME da loja aponta quando é outro que o do estilo atual: vira o aviso "o nome parece de…" na ficha.
+ * Só avisa: nada muda sozinho. Não avisa quando o Brenno já escolheu o ramo, nem quando o nome é misto
+ * ("Lanchonete e Pizzaria") e o ramo atual também se reconhece pelo nome.
+ */
+export function ramoSuspeito(lead: Pick<Lead, "nome" | "tipo" | "ramo">): Ramo | null {
+  if (lead.ramo) return null;
+  const atual = ramoDe(lead);
+  if (atual.nomeLoja?.test(lead.nome)) return null;
+  if (SUBNICHOS.some((s) => (s.ramo === atual.id || s.outrosRamos?.includes(atual.id)) && s.nomeLoja?.test(lead.nome))) return null;
+  const doNome = RAMOS.find((r) => r.id !== "geral" && r.nomeLoja?.test(lead.nome));
+  const peloSub = SUBNICHOS.find((s) => s.nomeLoja?.test(lead.nome));
+  const alvo = doNome ?? (peloSub && RAMOS.find((r) => r.id === peloSub.ramo));
+  if (!alvo || alvo.id === atual.id) return null;
+  // "Clínica", "Escola" e "Móveis" no nome não decidem nada; e ramos da mesma família (beleza, treino, carro, obra) se parecem demais.
+  if (PALAVRA_FRACA.includes(alvo.id) || FAMILIAS.some((f) => f.includes(alvo.id) && f.includes(atual.id))) return null;
+  return alvo;
+}
+const PALAVRA_FRACA: RamoId[] = ["saude", "escola", "geral"];
+const FAMILIAS: RamoId[][] = [
+  ["salao", "estetica", "barbearia", "massagem"],
+  ["academia", "crossfit", "luta", "pilates", "yoga", "danca", "natacao", "fisioterapia"],
+  ["lavajato", "oficina"],
+  ["construcao", "servicos"],
+];
 
 function fraseSite(lead: Lead) {
   const ramo = ramoDe(lead);

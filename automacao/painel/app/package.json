@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc --noEmit && vite build && node scripts/montar-artifact.mjs",
-    "teste": "node scripts/testar.mjs"
+    "teste": "node scripts/ramos.mjs && node scripts/testar.mjs"
   },
   "dependencies": {
     "@xyflow/react": "^12.12.1",
