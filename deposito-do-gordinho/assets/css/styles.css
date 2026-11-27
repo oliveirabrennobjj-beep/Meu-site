@@ -1,4 +1,5 @@
 /* Depósito do Gordinho — cores e fontes aqui no topo */
+html { color-scheme: only light; }
 :root {
   --creme: #f7f4ef;      /* fundo base */
   --branco: #ffffff;
@@ -219,23 +220,18 @@ button { font: inherit; color: inherit; }
 .vazio[hidden] { display: none; }
 .nota-rodape { margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--linha); font-size: 14px; color: var(--cinza); }
 
-/* ---------- combos ---------- */
-.combos { display: grid; gap: 48px; }
-@media (min-width: 900px) { .combos { grid-template-columns: repeat(3, 1fr); gap: 32px; } }
-.combo-fotos { position: relative; aspect-ratio: 4 / 3; background: var(--estudio); overflow: hidden; margin-bottom: 24px; }
-.combo-fotos img { position: absolute; bottom: 14%; width: auto; max-width: none; transition: transform .6s var(--ease); }
-.cf1 { left: 14%; height: 64%; z-index: 2; }
-.cf2 { left: 42%; height: 50%; z-index: 3; }
-.cf3 { right: 12%; height: 44%; z-index: 1; }
-.combo:hover .combo-fotos img { transform: translateY(-6px); }
-.combo .rotulo { margin-bottom: 8px; }
-.combo-nome { font: 500 30px/1.05 var(--f-titulo); text-transform: uppercase; }
-.combo-itens { margin: 16px 0 24px; border-top: 1px solid var(--linha); }
-.combo-itens li { padding: 10px 0; border-bottom: 1px solid var(--linha); font-size: 15px; color: var(--cinza); }
-.combo-rodape { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
-.combo-preco { font-weight: 500; }
-.combo-preco span { display: block; font-size: 13px; font-weight: 400; color: var(--ouro-texto); }
-.combo .btn { height: 48px; padding: 0 24px; }
+/* ---------- como pedir ---------- */
+.passos { list-style: none; margin: 0; padding: 0; display: grid; border-top: 1px solid var(--linha); }
+.passos li { padding: 40px 0; border-bottom: 1px solid var(--linha); }
+.passo-n { display: block; font: 400 56px/1 var(--f-titulo); color: var(--ouro-texto); margin-bottom: 24px; }
+.passo-tit { font: 500 13px/1.4 var(--f-texto); letter-spacing: .18em; text-transform: uppercase; margin-bottom: 12px; }
+.passos p { color: var(--cinza); max-width: 34ch; }
+@media (min-width: 900px) {
+  .passos { grid-template-columns: repeat(3, 1fr); }
+  .passos li { padding: 56px 48px 56px 0; }
+  .passos li + li { padding-left: 48px; border-left: 1px solid var(--linha); }
+  .passo-n { font-size: 72px; }
+}
 
 /* ---------- 7 e 8. seções meio a meio ---------- */
 .metade { display: grid; gap: 48px; align-items: center; }
@@ -322,7 +318,7 @@ button { font: inherit; color: inherit; }
 .aviso-previa.mostra { translate: -50% 0; opacity: 1; }
 
 /* ---------- fade suave ao rolar (só com JS) ---------- */
-.anima .cab, .anima .cats > li, .anima .produto, .anima .combo, .anima .promo, .anima .avals > li, .anima .metade > *, .anima .onde > *, .anima .difs-lista > li { opacity: 0; transform: translateY(16px); transition: opacity .9s var(--ease), transform .9s var(--ease); }
+.anima .cab, .anima .cats > li, .anima .produto, .anima .passos > li, .anima .promo, .anima .avals > li, .anima .metade > *, .anima .onde > *, .anima .difs-lista > li { opacity: 0; transform: translateY(16px); transition: opacity .9s var(--ease), transform .9s var(--ease); }
 .anima .visto { opacity: 1 !important; transform: none !important; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; scroll-behavior: auto !important; } }
 
@@ -344,3 +340,4 @@ button { font: inherit; color: inherit; }
   .cat-nome { font-size: 10px; letter-spacing: .06em; }
   .btn { padding: 0 24px; }
 }
+.nowrap { white-space: nowrap; }
