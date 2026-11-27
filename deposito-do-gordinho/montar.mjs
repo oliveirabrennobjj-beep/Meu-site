@@ -9,7 +9,7 @@ import { fileURLToPath } from "node:url";
 const aqui = dirname(fileURLToPath(import.meta.url));
 const require = createRequire(import.meta.url);
 const LOJA = require(join(aqui, "assets/js/config.js"));
-const { CATEGORIAS, PRODUTOS, COMBOS } = require(join(aqui, "assets/js/produtos.js"));
+const { CATEGORIAS, PRODUTOS } = require(join(aqui, "assets/js/produtos.js"));
 const M = require(join(aqui, "assets/js/modelos.js"));
 
 const html = join(aqui, "index.html");
@@ -24,7 +24,6 @@ function trocar(nome, conteudo) {
 trocar("categorias", CATEGORIAS.map((c) => "          " + M.circulo(c, PRODUTOS.filter((p) => p.categoria === c.id).length)).join("\n"));
 trocar("linhas", CATEGORIAS.map((c) => "            " + M.linhaCategoria(c, PRODUTOS.filter((p) => p.categoria === c.id).length)).join("\n"));
 trocar("produtos", PRODUTOS.map((p) => "          " + M.card(p, LOJA.whatsapp)).join("\n"));
-trocar("combos", COMBOS.map((c) => "          " + M.combo(c, LOJA.whatsapp)).join("\n"));
 
 writeFileSync(html, s);
-console.log(`ok: ${CATEGORIAS.length} categorias, ${PRODUTOS.length} produtos, ${COMBOS.length} combos`);
+console.log(`ok: ${CATEGORIAS.length} categorias, ${PRODUTOS.length} produtos`);

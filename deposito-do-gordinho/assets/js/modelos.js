@@ -49,22 +49,7 @@ var MODELOS = (function () {
     return "<li><a href=\"#bebidas\" data-cat=\"" + esc(c.id) + "\"><span>" + esc(c.nome) + "</span><span class=\"lc-qtd\">" + qtd + "</span></a></li>";
   }
 
-  function combo(c, numero) {
-    var msg = "Olá, Depósito do Gordinho! Quero o " + c.nome + ": " + c.itens.join(", ") + ".";
-    return "<li class=\"combo\">" +
-      "<div class=\"combo-fotos\">" + c.fotos.map(function (f, i) {
-        return "<img class=\"cf" + (i + 1) + "\" src=\"" + IMG + esc(f) + ".webp\" alt=\"\" loading=\"lazy\" decoding=\"async\">";
-      }).join("") + "</div>" +
-      "<p class=\"rotulo\">Combo</p>" +
-      "<h3 class=\"combo-nome\">" + esc(c.nome) + "</h3>" +
-      "<ul class=\"combo-itens\">" + c.itens.map(function (i) { return "<li>" + esc(i) + "</li>"; }).join("") + "</ul>" +
-      "<div class=\"combo-rodape\"><p class=\"combo-preco\">" + (c.preco ? "R$ " + esc(c.preco) : "Preço a confirmar") +
-      "<span>" + (c.economia ? "Economia de R$ " + esc(c.economia) : "Economia a confirmar") + "</span></p>" +
-      "<a class=\"btn btn-contorno\" href=\"" + zap(numero, msg) + "\" target=\"_blank\" rel=\"noopener\">Pedir " + SETA + "</a></div>" +
-      "</li>";
-  }
-
-  return { card: card, circulo: circulo, linhaCategoria: linhaCategoria, combo: combo, zap: zap, semAcento: semAcento, esc: esc };
+  return { card: card, circulo: circulo, linhaCategoria: linhaCategoria, zap: zap, semAcento: semAcento, esc: esc };
 })();
 
 if (typeof module !== "undefined") module.exports = MODELOS;

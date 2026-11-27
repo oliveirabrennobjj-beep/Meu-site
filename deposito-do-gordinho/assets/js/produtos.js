@@ -1,5 +1,5 @@
 /*
-  PRODUTOS — é só mexer aqui. O layout não muda.
+  PRODUTOS — é só mexer aqui. O layout não muda. (Sem combos: o depósito não vende combo.)
 
   Cada produto:
     nome        "Heineken"
@@ -28,10 +28,9 @@ var PRODUTOS = [
   { nome: "Heineken", categoria: "cervejas", tamanho: "Long neck 330 ml", preco: "", precoAntigo: "", foto: "heineken", destaque: true },
   { nome: "Brahma Chopp", categoria: "cervejas", tamanho: "Garrafa 600 ml", preco: "", precoAntigo: "", foto: "brahma", destaque: true },
   { nome: "Original", categoria: "cervejas", tamanho: "Garrafa 600 ml", preco: "", precoAntigo: "", foto: "original", destaque: true },
-  { nome: "Skol", categoria: "cervejas", tamanho: "Fardo 12 un, lata 350 ml", preco: "", precoAntigo: "", foto: "skol", destaque: true },
+  { nome: "Skol", categoria: "cervejas", tamanho: "Lata 350 ml", preco: "", precoAntigo: "", foto: "skol", destaque: true },
   { nome: "Antarctica Pilsen", categoria: "cervejas", tamanho: "Garrafa 600 ml", preco: "", precoAntigo: "", foto: "antarctica", destaque: false },
   { nome: "Bohemia", categoria: "cervejas", tamanho: "Garrafa 600 ml", preco: "", precoAntigo: "", foto: "bohemia", destaque: false },
-  { nome: "Skol", categoria: "cervejas", tamanho: "Lata 350 ml", preco: "", precoAntigo: "", foto: "skol", destaque: false },
   { nome: "Brahma Duplo Malte", categoria: "cervejas", tamanho: "Latão 473 ml", preco: "", precoAntigo: "", foto: "duplomalte", destaque: false },
   { nome: "Amstel", categoria: "cervejas", tamanho: "Lata 350 ml", preco: "", precoAntigo: "", foto: "amstel", destaque: false },
   { nome: "Spaten", categoria: "cervejas", tamanho: "Long neck 355 ml", preco: "", precoAntigo: "", foto: "spaten", destaque: false },
@@ -61,11 +60,4 @@ var PRODUTOS = [
   { nome: "Balas Fini", categoria: "carvao-outros", tamanho: "Pacote", preco: "", precoAntigo: "", foto: "bala", destaque: false }
 ];
 
-/* COMBOS E FARDOS: preco e economia vazios mostram "a confirmar". */
-var COMBOS = [
-  { nome: "Combo churrasco", itens: ["12 Skol lata 350 ml", "Carvão 3 kg", "Gelo 5 kg"], preco: "", economia: "", fotos: ["skol", "carvao", "gelo"] },
-  { nome: "Combo fim de semana", itens: ["6 Heineken long neck", "Ruffles", "Gelo 5 kg"], preco: "", economia: "", fotos: ["heineken", "ruffles", "gelo"] },
-  { nome: "Kit da noite", itens: ["Red Label 1 L", "4 Red Bull", "Gelo 5 kg"], preco: "", economia: "", fotos: ["redlabel", "redbull", "gelo"] }
-];
-
-if (typeof module !== "undefined") module.exports = { CATEGORIAS: CATEGORIAS, PRODUTOS: PRODUTOS, COMBOS: COMBOS };
+if (typeof module !== "undefined") module.exports = { CATEGORIAS: CATEGORIAS, PRODUTOS: PRODUTOS };

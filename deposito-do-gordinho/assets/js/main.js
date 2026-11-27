@@ -16,8 +16,6 @@
     if (cats && window.CATEGORIAS) cats.innerHTML = window.CATEGORIAS.map(function (c) { return M.circulo(c, contar(c.id)); }).join("");
     var linhas = $("[data-linhas]");
     if (linhas && window.CATEGORIAS) linhas.innerHTML = window.CATEGORIAS.map(function (c) { return M.linhaCategoria(c, contar(c.id)); }).join("");
-    var combos = $("[data-combos]");
-    if (combos && window.COMBOS) combos.innerHTML = window.COMBOS.map(function (c) { return M.combo(c, L.whatsapp); }).join("");
   }
 
   /* ---------- mensagens prontas ---------- */
@@ -128,7 +126,7 @@
 
   /* ---------- fade suave ao rolar (sem JS, tudo já aparece) ---------- */
   if ("IntersectionObserver" in window && !reduz) {
-    var alvos = $$(".cab, .cats > li, .produto, .combo, .promo, .avals > li, .metade > *, .onde > *, .difs-lista > li");
+    var alvos = $$(".cab, .cats > li, .produto, .passos > li, .promo, .avals > li, .metade > *, .onde > *, .difs-lista > li");
     document.documentElement.classList.add("anima");
     var io = new IntersectionObserver(function (es) {
       es.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add("visto"); io.unobserve(en.target); } });
