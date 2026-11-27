@@ -123,13 +123,15 @@ const FRANGO = "Frango Assado Teste e Quentinha";
 const QUEIJO = "Ateliê do Queijo Teste";
 const PIZZA = "Gran Pizza Teste";
 const PESCA = "Oficina da Pesca Teste";
-for (const [i, nome, tipo] of [[3, MASSO, "Salão de beleza"], [4, CT, "Academia"], [5, DENTISTA, "Dentista"], [6, AQUARIO, "Loja de ração"], [7, FRANGO, "Restaurante"], [8, QUEIJO, "Fabricante de queijo"], [9, PIZZA, "Delivery"], [10, PESCA, "Loja de artigos para pesca"]]) {
+// Caso real de 26/11: "Barão Classic Suplementos" veio do Google como "Festas e eventos" e a mensagem saiu falando de festa.
+const SUPL = "Barão Suplementos Teste";
+for (const [i, nome, tipo] of [[3, MASSO, "Salão de beleza"], [4, CT, "Academia"], [5, DENTISTA, "Dentista"], [6, AQUARIO, "Loja de ração"], [7, FRANGO, "Restaurante"], [8, QUEIJO, "Fabricante de queijo"], [9, PIZZA, "Delivery"], [10, PESCA, "Loja de artigos para pesca"], [11, SUPL, "Festas e eventos"]]) {
   leads.push({
     id: `w552290000000${i}`,
     nome,
     tipo,
     // Cidade só delas: ficam numa tabela própria, sem mexer na paginação das outras.
-    cidade: "Cidade de Teste",
+    cidade: nome === SUPL ? "Cidade Suplemento" : "Cidade de Teste",
     whatsapp: `552290000000${i}`,
     nota: 5,
     avaliacoes: 999990 + i,
@@ -529,12 +531,15 @@ try {
     [PIZZA, "Cidade de Teste", "pizzaria-1.webp"],
     // "Oficina" no nome de loja de pesca não é mecânica.
     [PESCA, "Cidade de Teste", "pesca-1.webp"],
+    // Suplemento no nome vence o tipo "Festas e eventos" do Google: prévia de farmácia, sem falar de festa.
+    [SUPL, "Cidade Suplemento", "farmacia-1.webp"],
   ]) {
     await p.getByRole("button", { name: loja, exact: true }).click();
     await p.getByRole("dialog").first().getByRole("button", { name: "Mostrar demonstração do site" }).click();
     const previa = p.getByRole("dialog", { name: `Demonstração do site de ${loja}` });
     await previa.getByText(rotulo).first().waitFor();
     assert.ok((await previa.locator(`img[src$="${foto}"]`).count()) >= 1, `${loja} usa a foto ${foto}`);
+    if (loja === SUPL) await previa.getByText(/farmácia em cidade suplemento/i).first().waitFor();
     if (loja === MASSO) {
       await p.waitForTimeout(500);
       await p.screenshot({ path: path.join(saida, "celular-previa-massagem.png") });

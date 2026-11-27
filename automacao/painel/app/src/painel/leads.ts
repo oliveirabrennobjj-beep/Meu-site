@@ -729,7 +729,9 @@ export const RAMOS: Ramo[] = [
     id: "farmacia",
     nome: "Farmácia",
     tipo: /farm[aá]c|drogaria|manipula|suplement|vitamin|fitoter|perfum|cosm[eé]tic|produtos de beleza/i,
-    nomeLoja: /\bfarma|\bdrogaria/i,
+    nomeLoja: /\bfarma|\bdrogaria|\bsuplement|nutri[cç][aã]o esportiva/i,
+    // "Barão Classic Suplementos" veio do Google como "Festas e eventos": o nome diz o que a loja vende.
+    certeza: { padrao: /\bsuplement/i, corrige: ["festa", "geral", "salao", "estetica", "academia", "saude"] },
     noSite: "o horário, a entrega e um botão pra pedir pelo WhatsApp",
     ondePlaca: " no balcão",
   },

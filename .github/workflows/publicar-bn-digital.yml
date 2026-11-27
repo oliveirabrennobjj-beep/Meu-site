@@ -6,6 +6,7 @@
 #   Construtora (construtora)     → https://oliveirabrennobjj-beep.github.io/Meu-site/construtora/
 #   Carvão (carvao)              → https://oliveirabrennobjj-beep.github.io/Meu-site/carvao/
 #   Best Bull (best-bull)        → https://oliveirabrennobjj-beep.github.io/Meu-site/best-bull/
+#   Barão Classic (barao-suplementos) → https://oliveirabrennobjj-beep.github.io/Meu-site/barao-suplementos/
 #   Prospecção (bn-digital/prospeccao/index.html) → https://oliveirabrennobjj-beep.github.io/Meu-site/prospeccao/
 # Requer, uma vez: Settings → Pages → Build and deployment → Source: "GitHub Actions".
 name: Publicar sites (BN Digital, BR Team e Raio-X)
@@ -23,6 +24,7 @@ on:
       - "barbearia-maya/**"
       - "carvao/**"
       - "best-bull/**"
+      - "barao-suplementos/**"
       - "bn-digital/prospeccao/index.html"
       - ".github/workflows/publicar-bn-digital.yml"
   workflow_dispatch:
@@ -68,6 +70,9 @@ jobs:
           mkdir -p _site/best-bull
           cp -r best-bull/. _site/best-bull/
           rm -f _site/best-bull/README.md _site/best-bull/PRODUCT.md _site/best-bull/DESIGN.md
+          mkdir -p _site/barao-suplementos
+          cp -r barao-suplementos/. _site/barao-suplementos/
+          rm -f _site/barao-suplementos/README.md _site/barao-suplementos/PRODUCT.md _site/barao-suplementos/DESIGN.md
           mkdir -p _site/construtora
           cp -r construtora/. _site/construtora/
           rm -f _site/construtora/README.md _site/construtora/assets/video/LEIA.md
