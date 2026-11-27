@@ -15,6 +15,9 @@ var MODELOS = (function () {
   function semAcento(t) {
     return String(t).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
   }
+  function idDe(p) {
+    return semAcento(p.nome + " " + p.tamanho).replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  }
   function desconto(p) {
     var a = parseFloat(String(p.precoAntigo).replace(",", "."));
     var n = parseFloat(String(p.preco).replace(",", "."));
@@ -31,7 +34,7 @@ var MODELOS = (function () {
     return "<li class=\"produto\" data-cat=\"" + esc(p.categoria) + "\" data-busca=\"" + esc(semAcento(p.nome + " " + p.tamanho + " " + p.categoria)) + "\"" + (p.destaque ? " data-destaque" : " hidden") + ">" +
       "<div class=\"produto-foto\">" + (d ? "<span class=\"selo\">-" + d + "%</span>" : "") +
       "<img src=\"" + IMG + esc(p.foto) + ".webp\" alt=\"" + esc(p.nome + ", " + p.tamanho) + "\" loading=\"lazy\" decoding=\"async\">" +
-      "<a class=\"produto-pedir\" href=\"" + zap(numero, msg) + "\" target=\"_blank\" rel=\"noopener\">Pedir no WhatsApp " + SETA + "</a></div>" +
+      "<a class=\"produto-pedir\" data-add=\"" + esc(idDe(p)) + "\" href=\"" + zap(numero, msg) + "\" target=\"_blank\" rel=\"noopener\">Comprar " + SETA + "</a></div>" +
       "<p class=\"produto-tam\">" + esc(p.tamanho) + "</p>" +
       "<h3 class=\"produto-nome\">" + esc(p.nome) + "</h3>" +
       "<p class=\"produto-preco\">" + preco + "</p>" +
@@ -49,7 +52,7 @@ var MODELOS = (function () {
     return "<li><a href=\"#bebidas\" data-cat=\"" + esc(c.id) + "\"><span>" + esc(c.nome) + "</span><span class=\"lc-qtd\">" + qtd + "</span></a></li>";
   }
 
-  return { card: card, circulo: circulo, linhaCategoria: linhaCategoria, zap: zap, semAcento: semAcento, esc: esc };
+  return { idDe: idDe, card: card, circulo: circulo, linhaCategoria: linhaCategoria, zap: zap, semAcento: semAcento, esc: esc };
 })();
 
 if (typeof module !== "undefined") module.exports = MODELOS;

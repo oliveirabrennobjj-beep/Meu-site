@@ -126,7 +126,7 @@
 
   /* ---------- fade suave ao rolar (sem JS, tudo já aparece) ---------- */
   if ("IntersectionObserver" in window && !reduz) {
-    var alvos = $$(".cab, .cats > li, .produto, .passos > li, .promo, .avals > li, .metade > *, .onde > *, .difs-lista > li");
+    var alvos = $$(".cab, .cats > li, .produto, .passos > li, .vant-lista > li, .promo, .avals > li, .metade > *, .onde > *, .difs-lista > li");
     document.documentElement.classList.add("anima");
     var io = new IntersectionObserver(function (es) {
       es.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add("visto"); io.unobserve(en.target); } });
@@ -140,7 +140,7 @@
     var aviso = $("[data-aviso-previa]");
     var ta;
     document.addEventListener("click", function (e) {
-      var a = e.target.closest("a[href*='wa.me'], a[href^='tel:']");
+      var a = e.target.closest("a[href*='wa.me']:not([data-add]), a[href^='tel:']");
       if (!a) return;
       e.preventDefault();
       aviso.textContent = "Prévia do site: quando estiver no ar, este botão abre o WhatsApp do depósito.";
