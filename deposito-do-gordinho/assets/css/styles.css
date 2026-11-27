@@ -445,3 +445,7 @@ html.trava, html.trava body { overflow: hidden; }
 .auto-lista li { padding: 12px 14px; font-size: 15px; cursor: pointer; border-top: 1px solid var(--linha); }
 .auto-lista li:first-child { border-top: 0; }
 .auto-lista li:hover, .auto-lista li[aria-selected="true"] { background: var(--creme); }
+.auto-lista li { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.auto-lista small { flex: none; max-width: 45%; font-size: 12px; color: var(--cinza-2); text-align: right; }
+.g-dica { margin-top: 8px; font-size: 13px; color: var(--cinza-2); }
+.g-duas .auto-lista { left: auto; right: 0; min-width: 100%; }

@@ -191,8 +191,10 @@
       "<label class=\"g-legenda\" for=\"f-rua\">Rua</label>" +
       "<div class=\"auto\"><input id=\"f-rua\" class=\"campo\" role=\"combobox\" aria-autocomplete=\"list\" aria-expanded=\"false\" aria-controls=\"f-rua-lista\" autocomplete=\"off\" placeholder=\"Comece a digitar: Antônio, Padre...\">" +
       "<ul class=\"auto-lista\" id=\"f-rua-lista\" role=\"listbox\" hidden></ul></div>" +
+      "<p class=\"g-dica\">Todas as ruas de Casimiro de Abreu. Não achou a sua? Escreva do seu jeito.</p>" +
       "<div class=\"g-duas\"><div><label class=\"g-legenda\" for=\"f-num\">Número</label><input id=\"f-num\" class=\"campo\" inputmode=\"numeric\" placeholder=\"Ex.: 120\"></div>" +
-      "<div><label class=\"g-legenda\" for=\"f-bairro\">Bairro</label><input id=\"f-bairro\" class=\"campo\" placeholder=\"Ex.: Vila Mataruna\"></div></div>" +
+      "<div><label class=\"g-legenda\" for=\"f-bairro\">Bairro</label><div class=\"auto\"><input id=\"f-bairro\" class=\"campo\" role=\"combobox\" aria-autocomplete=\"list\" aria-expanded=\"false\" aria-controls=\"f-bairro-lista\" autocomplete=\"off\" placeholder=\"Ex.: Vila Mataruna\">" +
+      "<ul class=\"auto-lista\" id=\"f-bairro-lista\" role=\"listbox\" hidden></ul></div></div></div>" +
       "<label class=\"g-legenda\" for=\"f-ref\">Ponto de referência</label><input id=\"f-ref\" class=\"campo\" placeholder=\"Ex.: casa de muro azul, perto da praça\"></div>" +
       passo(3, "Pagamento") +
       "<div class=\"opcoes\" role=\"radiogroup\" aria-label=\"Pagamento\">" + pags.map(function (x) {
@@ -236,39 +238,53 @@
       e.target.value = f;
     });
     $("[data-voltar]").addEventListener("click", function () { abrirCarrinho(); });
-    autocompletar($("#f-rua"), $("#f-rua-lista"));
+    var bairroAuto = false;
+    autocompletar($("#f-rua"), $("#f-rua-lista"), window.RUAS || [], function (r) {
+      var b = $("#f-bairro");
+      if (r.sub && (!b.value || bairroAuto)) { b.value = r.sub; bairroAuto = true; }
+      $("#f-num").focus();
+    });
+    autocompletar($("#f-bairro"), $("#f-bairro-lista"), (window.BAIRROS || []).map(function (b) { return [b, ""]; }), function () { bairroAuto = false; $("#f-ref").focus(); });
+    $("#f-bairro").addEventListener("input", function () { bairroAuto = false; });
     pe.onclick = function (e) { if (e.target.closest("[data-enviar]")) enviar(); };
     abrir("Finalizar pedido");
   }
 
-  /* ---------- busca de rua (todas as ruas de Casimiro) ---------- */
-  function autocompletar(input, lista) {
-    var ruas = (window.RUAS || []).map(function (n) { return { n: n, b: M.semAcento(n) }; });
+  /* ---------- busca de rua e de bairro (Casimiro de Abreu inteiro) ---------- */
+  var TIPOS = /^(r|rua|av|avenida|tv|trav|travessa|estrada|est|rod|rodovia|al|alameda|pc|praca)\.?$/;
+  function autocompletar(input, lista, itens, aoEscolher) {
+    var base = itens.map(function (x) { return { n: x[0], sub: x[1] || "", b: M.semAcento(x[0] + " " + (x[1] || "")), nb: M.semAcento(x[0]) }; });
     var achados = [], ativo = -1;
+    var pref = lista.id;
     function render() {
       lista.innerHTML = achados.map(function (r, i) {
-        return "<li role=\"option\" id=\"rua-" + i + "\" aria-selected=\"" + (i === ativo) + "\" data-i=\"" + i + "\">" + esc(r.n) + "</li>";
+        return "<li role=\"option\" id=\"" + pref + "-" + i + "\" aria-selected=\"" + (i === ativo) + "\" data-i=\"" + i + "\"><span>" + esc(r.n) + "</span>" +
+          (r.sub ? "<small>" + esc(r.sub) + "</small>" : "") + "</li>";
       }).join("");
       lista.hidden = !achados.length;
       input.setAttribute("aria-expanded", String(!!achados.length));
-      if (ativo > -1) input.setAttribute("aria-activedescendant", "rua-" + ativo); else input.removeAttribute("aria-activedescendant");
+      if (ativo > -1) input.setAttribute("aria-activedescendant", pref + "-" + ativo); else input.removeAttribute("aria-activedescendant");
     }
     function buscar() {
       var q = M.semAcento(input.value.trim());
       ativo = -1;
       if (q.length < 2) { achados = []; render(); return; }
-      var w = q.split(/\s+/).filter(function (x) { return !/^(r|rua|av|avenida|tv|travessa|estrada|est)\.?$/.test(x); });
+      var w = q.split(/\s+/).filter(function (x) { return !TIPOS.test(x); });
       if (!w.length) w = q.split(/\s+/);
-      achados = ruas.filter(function (r) { return w.every(function (x) { return r.b.indexOf(x) > -1; }); })
-        .sort(function (a, b) { return a.b.indexOf(w[0]) - b.b.indexOf(w[0]) || a.n.length - b.n.length; })
-        .slice(0, 12);
+      achados = base.filter(function (r) { return w.every(function (x) { return r.b.indexOf(x) > -1; }); })
+        .sort(function (a, b) {
+          var ia = a.nb.indexOf(w[0]), ib = b.nb.indexOf(w[0]);
+          return (ia < 0 ? 999 : ia) - (ib < 0 ? 999 : ib) || a.n.length - b.n.length;
+        })
+        .slice(0, 15);
       render();
     }
     function escolher(i) {
-      if (!achados[i]) return;
-      input.value = achados[i].n;
+      var r = achados[i];
+      if (!r) return;
+      input.value = r.n;
       achados = []; render();
-      var n = $("#f-num"); if (n) n.focus();
+      if (aoEscolher) aoEscolher(r);
     }
     input.addEventListener("input", buscar);
     input.addEventListener("focus", buscar);

@@ -21,7 +21,7 @@ Foto de produto nova: imagem em fundo branco e recorte com
 
 ## Pedido pelo site (carrinho)
 - Botão **Comprar** em cada produto abre a ficha (gelada ou natural, quantidade, observação) e põe no carrinho (ícone de sacola no topo).
-- **Finalizar pedido**: nome, WhatsApp, entrega ou retirada, endereço com **busca de rua** (485 ruas de Casimiro de Abreu em `assets/js/ruas.js`, do OpenStreetMap), pagamento e observação. Gera a mensagem pronta no WhatsApp do depósito.
+- **Finalizar pedido**: nome, WhatsApp, entrega ou retirada, endereço com **busca de rua** (876 ruas do município inteiro em `assets/js/ruas.js`: lista da Prefeitura com bairro + OpenStreetMap; escolher a rua já preenche o bairro), pagamento e observação. Gera a mensagem pronta no WhatsApp do depósito.
 - Taxa de entrega e formas de pagamento: `taxaEntrega` e `pagamentos` em `config.js`. Rua faltando: acrescentar em `ruas.js`.
 - Código: `assets/js/carrinho.js`.
 
