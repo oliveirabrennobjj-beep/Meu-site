@@ -1,24 +1,26 @@
-# DESIGN: Depósito do Gordinho (v2, estilo loja de bebidas)
+# DESIGN: Depósito do Gordinho (v3, editorial)
 
-Referências do Brenno: Winesto e Winestyle (e-commerce de bebidas). Adaptado a depósito de bairro que vende pelo WhatsApp.
+Referência: tema Winesto (e-commerce premium de bebidas). Pensado primeiro para o computador; no celular empilha mantendo o estilo.
 
-## Cores (do logo)
+## Cores
 | Nome | Hex | Uso |
 |---|---|---|
-| carvão | #141210 | topo, banner, loja, rodapé, botão Pedir |
-| dourado | #e0b03a | botões principais, títulos em fundo escuro, ícones |
-| dourado texto | #7d5e0c | dourado em fundo claro (contraste AA) |
-| verde mascote | #8db63c | só no ponto "Aberto agora" |
-| vinho | #4a191a | aviso do topo, slide 2, promo, selo de desconto |
-| creme / névoa | #f7f5f0 / #eeece6 | áreas de produto e fundo da foto |
+| creme | #f7f4ef | fundo das seções alternadas |
+| estúdio | #f0ece5 | fundo das fotos de produto e dos círculos |
+| tinta | #1a1a1a | títulos |
+| cinza | #5a5650 | texto corrido |
+| linha | #e2ddd3 | linhas de 1 px (no lugar de sombra) |
+| grafite | #161412 | barra do topo, banners escuros, rodapé |
+| dourado | #c9a03d | botão sólido, etiquetas (texto: #86671b) |
 
 ## Tipografia
-- Títulos: Marcellus em maiúsculas, espaçado (serifa fina, cara de adega).
-- Texto: Atkinson Hyperlegible 18 a 19 px (legível para idoso).
+- Títulos: Cormorant Garamond 500 em maiúsculas.
+- Etiquetas, menu e botões: Jost 500, 11 a 12 px, maiúsculas, espaçamento .2em.
+- Texto: Jost 400, 15 a 16 px, cinza.
 
 ## Regras
-- Cantos de 6 px em tudo; sombra só no hover do card.
-- Sem gradiente, sem brilho, sem emoji de enfeite. Ícones de linha dourados.
-- Animação só ao rolar (aparece 14 px) e ao passar o mouse. O carrossel passa a cada 7 s e para quando a pessoa mexe.
-- Todo conteúdo está no HTML (montar.mjs); o JS só filtra, busca e calcula aberto/fechado.
-- Mascote: card de entrega, citação da loja, rodapé.
+- Cantos retos (0). Botões de 52 px de altura, texto pequeno em maiúsculas com seta.
+- Espaço entre seções: 80 px (celular), 104 px, 128 px (computador). Largura máxima 1296 px.
+- Cabeçalho de seção: etiqueta + título à esquerda, linha fina, "Ver todos →" à direita.
+- Animação: fade de 16 px ao rolar, zoom leve nas fotos no hover, sublinhado no menu, botão "Pedir" subindo no card.
+- Sem emoji, sem ícone em círculo colorido, sem gradiente decorativo (só o escurecimento sobre fotos).

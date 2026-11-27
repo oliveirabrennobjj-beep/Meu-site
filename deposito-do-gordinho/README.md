@@ -11,7 +11,8 @@ https://oliveirabrennobjj-beep.github.io/Meu-site/deposito-do-gordinho/
 | WhatsApp, horário, modo prévia | `assets/js/config.js` |
 | Endereço, avaliações, textos | `index.html` |
 | Cores e fontes | topo de `assets/css/styles.css` |
-| Fotos da loja | `assets/img/loja-fachada.webp`, `loja-geladeira-1.webp`, `loja-geladeira-2.webp` |
+| Fotos da loja | `assets/img/loja-fachada.webp`, `loja-geladeira-2.webp` (seção Nossa história) |
+| Fotos de clima (provisórias, Unsplash) | `assets/img/clima/`: `hero-cerveja` (banner), `promo-whisky` (banner lateral), `banner-garrafas` e `banner-tampas` (2 promoções), `clube` (trocar por foto do dono no balcão). No `index.html` cada uma tem o comentário `FOTO PROVISÓRIA` |
 
 Depois de mexer em `produtos.js`, rode `node deposito-do-gordinho/montar.mjs`: ele escreve os cards no `index.html` para a página abrir completa mesmo antes do JavaScript.
 
@@ -28,4 +29,6 @@ Foto de produto nova: imagem em fundo branco e recorte com
 - [ ] Logo em alta (o atual foi recortado do print do WhatsApp).
 - [ ] Bairros atendidos e taxa de entrega.
 - [ ] Aceita dinheiro? Hoje o site diz Pix e cartão.
+- [ ] Clube do Gordinho: confirmar com o dono se ele quer a lista de transmissão de promoções.
+- [ ] Trocar as 5 fotos de clima por fotos reais da loja (dá para tirar com o celular, de noite, luz quente).
 - [ ] Domínio próprio.
