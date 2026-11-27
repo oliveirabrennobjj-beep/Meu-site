@@ -21,9 +21,14 @@ Foto de produto nova: imagem em fundo branco e recorte com
 
 ## Pedido pelo site (carrinho)
 - Botão **Comprar** em cada produto abre a ficha (gelada ou natural, quantidade, observação) e põe no carrinho (ícone de sacola no topo).
-- **Finalizar pedido**: nome, WhatsApp, entrega ou retirada, endereço com **busca de rua** (876 ruas do município inteiro em `assets/js/ruas.js`: lista da Prefeitura com bairro + OpenStreetMap; escolher a rua já preenche o bairro), pagamento e observação. Gera a mensagem pronta no WhatsApp do depósito.
+- **Finalizar pedido**: nome, WhatsApp, entrega ou retirada, endereço com **busca de rua** (1.067 ruas do município inteiro em `assets/js/ruas.js`: Censo 2022 do IBGE + lista da Prefeitura + leis da Câmara + OpenStreetMap; escolher a rua já preenche o bairro), pagamento e observação. Gera a mensagem pronta no WhatsApp do depósito.
 - Taxa de entrega e formas de pagamento: `taxaEntrega` e `pagamentos` em `config.js`. Rua faltando: acrescentar em `ruas.js`.
 - Código: `assets/js/carrinho.js`.
+
+## Painel do dono (estoque)
+Endereço: `painel/` (https://oliveirabrennobjj-beep.github.io/Meu-site/deposito-do-gordinho/painel/). Não aparece no site.
+- Cada produto tem **Tem / Acabou**. Acabou = no site aparece "Esgotado" e não dá para pedir.
+- Hoje (prévia) fica salvo só no aparelho de quem marca. Para valer para todos os clientes: ligar a um banco online (ex.: Supabase) com login do dono, trocando `ler()` e `gravar()` em `painel/painel.js` e a função `estoque()` em `assets/js/main.js`.
 
 ## Modo prévia
 `previa: true` em `config.js`: os botões de WhatsApp e Ligar só mostram um aviso, e o "Enviar pedido" mostra como a mensagem chegaria, sem enviar. Quando o dono aprovar, trocar para `false`.

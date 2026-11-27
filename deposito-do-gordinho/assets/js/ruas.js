@@ -1,15 +1,21 @@
 /*
   Ruas de Casimiro de Abreu (RJ), município inteiro: sede, Barra de São João,
   Rio Dourado, Professor Souza, Boa Esperança e zona rural.
-  1063 ruas (1491 linhas: a mesma rua aparece uma vez por bairro).
+  1067 ruas (1495 linhas: a mesma rua aparece uma vez por bairro).
   Formato: ["Nome da rua", "Bairro"] (bairro vazio quando nenhuma fonte diz).
   Fontes (cruzadas):
     1. IBGE, Cadastro Nacional de Endereços (CNEFE), Censo 2022: todos os endereços visitados.
     2. Prefeitura de Casimiro de Abreu, Planejamento logístico de coleta (Ofício GABPREF/GI 77/2020).
     3. OpenStreetMap (© colaboradores do OSM, licença ODbL).
+    4. Leis de denominação de ruas da Câmara (2021 e 2022; o portal não tem leis mais novas).
   Rua que faltar: acrescente uma linha. O cliente também pode digitar livre.
 */
 var RUAS = [
+// Leis de 2021 e 2022 da Câmara que deram nome novo a ruas (o nome antigo continua na lista)
+["Rua Amaro Viana", "Palmital"],
+["Rua Maria Eduarda Mello Santana", "Industrial"],
+["Rua Melício Marques Gomes", "Jardim Miramar"],
+["Rua Talma Porto Gomes", "Jardim Miramar"],
 ["Acesso à Pousada São João", ""],
 ["Acesso Peixe Dourado II", ""],
 ["Acesso Rua Joana Antunes", "Palmital"],

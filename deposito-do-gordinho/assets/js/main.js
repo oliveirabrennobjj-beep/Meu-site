@@ -18,6 +18,32 @@
     if (linhas && window.CATEGORIAS) linhas.innerHTML = window.CATEGORIAS.map(function (c) { return M.linhaCategoria(c, contar(c.id)); }).join("");
   }
 
+  /* ---------- produtos esgotados (marcados no painel do dono) ---------- */
+  // Hoje: campo disponivel:false no produtos.js ou o painel de prévia (salvo neste aparelho).
+  // Quando o painel for ligado à internet, o estoque passa a vir de lá para todos.
+  function estoque() {
+    var o = {};
+    try { o = JSON.parse(localStorage.getItem("gordinho-estoque")) || {}; } catch (e) { o = {}; }
+    (window.PRODUTOS || []).forEach(function (p) { if (p.disponivel === false && !(M.idDe(p) in o)) o[M.idDe(p)] = false; });
+    return o;
+  }
+  function marcarEsgotados() {
+    var est = estoque();
+    $$(".produto").forEach(function (li) {
+      var a = li.querySelector("[data-add]");
+      if (!a) return;
+      var acabou = est[a.getAttribute("data-add")] === false;
+      li.classList.toggle("esgotado", acabou);
+      var foto = li.querySelector(".produto-foto");
+      var selo = foto.querySelector(".selo-esgotado");
+      if (acabou && !selo) foto.insertAdjacentHTML("afterbegin", "<span class=\"selo-esgotado\">Esgotado</span>");
+      if (!acabou && selo) selo.remove();
+      a.setAttribute("aria-disabled", String(acabou));
+      a.innerHTML = acabou ? "Esgotado no momento" : "Comprar <span class=\"seta-txt\" aria-hidden=\"true\">→</span>";
+    });
+  }
+  if (M) { marcarEsgotados(); window.addEventListener("storage", function (e) { if (e.key === "gordinho-estoque") marcarEsgotados(); }); }
+
   /* ---------- mensagens prontas ---------- */
   $$("[data-zap]").forEach(function (a) {
     if (M && L.whatsapp) a.href = M.zap(L.whatsapp, a.getAttribute("data-msg") || L.mensagemWhatsApp);
