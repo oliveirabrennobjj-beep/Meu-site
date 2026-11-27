@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Painel | Depósito do Gordinho</title>
+  <meta name="description" content="Painel do dono: marcar o que tem e o que acabou no site do Depósito do Gordinho.">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#161412">
+  <meta name="color-scheme" content="only light">
+  <link rel="icon" href="../assets/img/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Jost:wght@400;500&display=swap">
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="stylesheet" href="painel.css">
+</head>
+<body class="painel-corpo">
+  <div class="barra">
+    <div class="wrap barra-in">
+      <p>Painel do dono <span class="ponto-sep" aria-hidden="true">•</span> Prévia</p>
+    </div>
+  </div>
+
+  <header class="topo">
+    <div class="wrap topo-in p-topo">
+      <a class="marca" href="../" aria-label="Ver o site do Depósito do Gordinho">
+        <img src="../assets/img/logo.png" alt="" width="48" height="48">
+        <span class="marca-nome">Painel<small>Depósito do Gordinho</small></span>
+      </a>
+      <a class="link-seta" href="../#bebidas">Ver o site <span class="seta-txt" aria-hidden="true">→</span></a>
+    </div>
+  </header>
+
+  <main class="wrap p-main" id="conteudo">
+    <section class="p-cab">
+      <p class="rotulo">Estoque</p>
+      <h1 class="titulo">O que tem hoje</h1>
+      <p class="p-lead">Acabou alguma bebida? Toque em <strong>Acabou</strong>. No site ela aparece como esgotada e ninguém consegue pedir. Chegou de novo, toque em <strong>Tem</strong>.</p>
+    </section>
+
+    <ul class="p-numeros" aria-live="polite">
+      <li><span class="p-num" data-n-tem>0</span><span class="p-num-txt">Disponíveis</span></li>
+      <li><span class="p-num" data-n-acabou>0</span><span class="p-num-txt">Esgotados</span></li>
+      <li><span class="p-num" data-n-total>0</span><span class="p-num-txt">No site</span></li>
+    </ul>
+
+    <div class="p-ferramentas">
+      <div class="p-busca">
+        <label class="sr" for="p-busca">Buscar produto</label>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg>
+        <input id="p-busca" type="search" placeholder="Buscar: Heineken, gelo..." autocomplete="off" data-p-busca>
+      </div>
+      <div class="p-filtros" role="group" aria-label="Filtrar" data-p-filtros></div>
+    </div>
+
+    <ul class="p-lista" data-p-lista></ul>
+    <p class="p-vazio" data-p-vazio hidden>Nenhum produto com esse nome.</p>
+
+    <div class="p-rodape">
+      <button type="button" class="link-seta" data-p-tudo>Marcar tudo como disponível</button>
+      <p class="p-nota">Prévia do painel: o que você marcar aqui fica salvo neste aparelho e aparece no site aberto nele. Na versão final, vale na hora para todos os clientes, com senha só sua.</p>
+    </div>
+  </main>
+
+  <div class="p-toast" role="status" data-p-toast></div>
+
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/produtos.js"></script>
+  <script src="../assets/js/modelos.js"></script>
+  <script src="painel.js"></script>
+</body>
+</html>

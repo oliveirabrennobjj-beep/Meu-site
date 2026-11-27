@@ -9,6 +9,7 @@
     precoAntigo "9,90"  (opcional: aparece riscado e com selo de desconto)
     foto        nome do arquivo em assets/img/produtos, sem .webp
     destaque    true = aparece em "Mais pedidos"
+    disponivel  false = aparece como "Esgotado" (o painel do dono faz isso sem mexer aqui)
 
   Foto nova: imagem em fundo branco, salva em assets/img/produtos/<nome>.webp
   Depois de mexer: rode  node deposito-do-gordinho/montar.mjs  (atualiza a página

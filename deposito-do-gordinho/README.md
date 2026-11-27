@@ -25,6 +25,11 @@ Foto de produto nova: imagem em fundo branco e recorte com
 - Taxa de entrega e formas de pagamento: `taxaEntrega` e `pagamentos` em `config.js`. Rua faltando: acrescentar em `ruas.js`.
 - Código: `assets/js/carrinho.js`.
 
+## Painel do dono (estoque)
+Endereço: `painel/` (https://oliveirabrennobjj-beep.github.io/Meu-site/deposito-do-gordinho/painel/). Não aparece no site.
+- Cada produto tem **Tem / Acabou**. Acabou = no site aparece "Esgotado" e não dá para pedir.
+- Hoje (prévia) fica salvo só no aparelho de quem marca. Para valer para todos os clientes: ligar a um banco online (ex.: Supabase) com login do dono, trocando `ler()` e `gravar()` em `painel/painel.js` e a função `estoque()` em `assets/js/main.js`.
+
 ## Modo prévia
 `previa: true` em `config.js`: os botões de WhatsApp e Ligar só mostram um aviso, e o "Enviar pedido" mostra como a mensagem chegaria, sem enviar. Quando o dono aprovar, trocar para `false`.
 

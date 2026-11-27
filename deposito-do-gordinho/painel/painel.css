@@ -1,0 +1,54 @@
+/* Painel do dono: mesmo estilo do site (cantos retos, linhas finas, dourado com moderação) */
+.painel-corpo { background: var(--creme); }
+.p-topo { display: flex; justify-content: space-between; height: 72px; }
+.p-main { padding-top: 48px; padding-bottom: 96px; max-width: 960px; }
+.p-cab .titulo { margin-bottom: 16px; }
+.p-lead { color: var(--cinza); max-width: 52ch; }
+.p-lead strong { color: var(--tinta); font-weight: 500; }
+
+.p-numeros { display: grid; grid-template-columns: repeat(3, 1fr); margin: 40px 0; border-top: 1px solid var(--linha); border-bottom: 1px solid var(--linha); }
+.p-numeros li { padding: 20px 0; }
+.p-numeros li + li { padding-left: 20px; border-left: 1px solid var(--linha); }
+.p-num { display: block; font: 500 44px/1 var(--f-titulo); }
+.p-num-txt { font: 500 10px/1.4 var(--f-texto); letter-spacing: .18em; text-transform: uppercase; color: var(--cinza-2); }
+[data-n-acabou] { color: #8e3b30; }
+
+.p-ferramentas { display: grid; gap: 16px; margin-bottom: 24px; }
+.p-busca { position: relative; }
+.p-busca svg { position: absolute; left: 16px; top: 50%; translate: 0 -50%; width: 20px; height: 20px; fill: none; stroke: var(--cinza-2); stroke-width: 1.4; }
+.p-busca input { width: 100%; height: 52px; padding: 0 16px 0 48px; border: 1px solid var(--linha); border-radius: 0; background: #fff; font: 400 16px var(--f-texto); color: var(--tinta); }
+.p-busca input:focus { outline: none; border-color: var(--tinta); }
+.p-filtros { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+.p-filtros::-webkit-scrollbar { display: none; }
+.chip-reto { flex: none; height: 40px; padding: 0 16px; border: 1px solid var(--linha); background: #fff; font: 500 11px/1 var(--f-texto); letter-spacing: .14em; text-transform: uppercase; cursor: pointer; transition: background-color .2s, color .2s, border-color .2s; }
+.chip-reto:hover { border-color: var(--tinta); }
+.chip-reto[aria-pressed="true"] { background: var(--grafite); border-color: var(--grafite); color: #fff; }
+
+.p-lista { list-style: none; margin: 0; padding: 0; background: #fff; border: 1px solid var(--linha); }
+.p-item { display: grid; grid-template-columns: 64px 1fr auto; gap: 16px; align-items: center; padding: 14px 16px; }
+.p-item + .p-item { border-top: 1px solid var(--linha); }
+.p-foto { position: relative; width: 64px; height: 64px; background: var(--estudio); }
+.p-foto img { position: absolute; inset: 0; margin: auto; height: 82%; width: 82%; object-fit: contain; transition: opacity .3s, filter .3s; }
+.p-nome { font: 500 12px/1.4 var(--f-texto); letter-spacing: .12em; text-transform: uppercase; }
+.p-tam { font-size: 13px; color: var(--cinza-2); }
+.p-estado { margin-top: 2px; font-size: 12px; color: var(--ouro-texto); }
+.p-acabou .p-foto img { opacity: .35; filter: grayscale(1); }
+.p-acabou .p-estado { color: #8e3b30; }
+.p-troca { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--tinta); }
+.p-troca button { min-width: 64px; height: 44px; padding: 0 10px; border: 0; background: #fff; font: 500 11px/1 var(--f-texto); letter-spacing: .14em; text-transform: uppercase; color: var(--cinza-2); cursor: pointer; transition: background-color .2s, color .2s; }
+.p-troca button + button { border-left: 1px solid var(--tinta); }
+.p-troca button[data-v="1"][aria-pressed="true"] { background: var(--grafite); color: #fff; }
+.p-troca button[data-v="0"][aria-pressed="true"] { background: #8e3b30; color: #fff; }
+.p-vazio { padding: 24px 0; color: var(--cinza); }
+.p-rodape { margin-top: 32px; display: grid; gap: 16px; justify-items: start; }
+.p-nota { font-size: 13px; color: var(--cinza-2); max-width: 60ch; border-left: 2px solid var(--ouro); padding-left: 12px; }
+.p-toast { position: fixed; left: 50%; bottom: 24px; z-index: 100; width: min(92vw, 420px); padding: 14px 18px; background: var(--grafite); color: #fff; border-left: 2px solid var(--ouro); font-size: 14px; translate: -50% 16px; opacity: 0; pointer-events: none; transition: translate .3s var(--ease), opacity .3s; }
+.p-toast.mostra { translate: -50% 0; opacity: 1; }
+@media (min-width: 700px) {
+  .p-main { padding-top: 72px; }
+  .p-ferramentas { grid-template-columns: 1fr; }
+  .p-item { grid-template-columns: 80px 1fr auto; padding: 16px 24px; }
+  .p-foto { width: 80px; height: 80px; }
+  .p-troca button { min-width: 88px; }
+}
+@media (min-width: 700px) { .p-filtros { flex-wrap: wrap; overflow: visible; } }

@@ -371,7 +371,7 @@
   /* ---------- ganchos ---------- */
   document.addEventListener("click", function (e) {
     var a = e.target.closest("[data-add]");
-    if (a) { e.preventDefault(); e.stopPropagation(); abrirProduto(a.getAttribute("data-add")); return; }
+    if (a) { e.preventDefault(); e.stopPropagation(); if (a.getAttribute("aria-disabled") !== "true") abrirProduto(a.getAttribute("data-add")); return; }
     if (e.target.closest("[data-abre-carrinho]")) { e.preventDefault(); abrirCarrinho(); }
   }, true);
 })();
