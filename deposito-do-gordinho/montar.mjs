@@ -22,6 +22,7 @@ function trocar(nome, conteudo) {
 }
 
 trocar("categorias", CATEGORIAS.map((c) => "          " + M.circulo(c, PRODUTOS.filter((p) => p.categoria === c.id).length)).join("\n"));
+trocar("linhas", CATEGORIAS.map((c) => "            " + M.linhaCategoria(c, PRODUTOS.filter((p) => p.categoria === c.id).length)).join("\n"));
 trocar("produtos", PRODUTOS.map((p) => "          " + M.card(p, LOJA.whatsapp)).join("\n"));
 trocar("combos", COMBOS.map((c) => "          " + M.combo(c, LOJA.whatsapp)).join("\n"));
 
